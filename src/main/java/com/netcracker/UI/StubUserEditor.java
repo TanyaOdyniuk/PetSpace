@@ -13,7 +13,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+
+import java.util.Arrays;
 
 
 @SpringComponent
@@ -44,6 +48,8 @@ public class StubUserEditor extends VerticalLayout {
             stubUser.setFirstName(firstName.getValue());
             stubUser.setLastName(lastName.getValue());
             HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             StubConstants.REST_TEMPLATE
                     .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
         });

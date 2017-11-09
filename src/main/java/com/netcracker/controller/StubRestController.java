@@ -31,6 +31,7 @@ public class StubRestController {
         }
         return res;
     }
+
     @GetMapping
     public List<StubUser> getUsers(){
         return users;
