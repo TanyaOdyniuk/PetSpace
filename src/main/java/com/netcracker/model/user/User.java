@@ -32,4 +32,14 @@ public class User extends Model {
 
     public void setUserTypeId(BigInteger userTypeId) {this.userTypeId = userTypeId;}
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", profileId=" + profileId +
+                ", userTypeId=" + userTypeId +
+                '}';
+    }
 }

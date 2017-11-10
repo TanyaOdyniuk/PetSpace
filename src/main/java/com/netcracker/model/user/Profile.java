@@ -3,6 +3,7 @@ package com.netcracker.model.user;
 import com.netcracker.model.Model;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 
 public class Profile extends Model{
@@ -62,5 +63,18 @@ public class Profile extends Model{
     public void setUserRating(double userRating) { this.userRating = userRating; }
 
 
-
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "avatarUserId=" + avatarUserId +
+                ", userName='" + userName + '\'' +
+                ", userSurname='" + userSurname + '\'' +
+                ", age=" + age +
+                ", userEmail='" + userEmail + '\'' +
+                ", userSkype='" + userSkype + '\'' +
+                ", userHobbies='" + userHobbies + '\'' +
+                ", usersPetsId=" + Arrays.toString(usersPetsId) +
+                ", userRating=" + userRating +
+                '}';
+    }
 }
