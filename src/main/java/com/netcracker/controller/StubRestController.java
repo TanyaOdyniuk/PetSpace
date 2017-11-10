@@ -1,6 +1,7 @@
 package com.netcracker.controller;
 
 import com.netcracker.model.StubUser;
+import com.netcracker.service.StubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,54 +14,30 @@ import java.util.List;
 @RequestMapping("/restcontroller")
 public class StubRestController {
     @Autowired
-    private List<StubUser> users;
-    private StubUser findUserById(Integer id){
-        for (StubUser u:users) {
-            if(u.getId().equals(id)){
-                return u;
-            }
-        }
-        return new StubUser();
-    }
-    private int getIndexById(Integer id){
-        int res = -1;
-        for (int i = 0; i < users.size(); i++) {
-            if(users.get(i).getId().equals(id)){
-                res = i;
-            }
-        }
-        return res;
-    }
+    private StubService stubService;
 
     @GetMapping
     public List<StubUser> getUsers(){
-        return users;
+        return stubService.getUsers();
     }
 
     @GetMapping("/{id}")
     public StubUser getUserById(@PathVariable("id") Integer id){
-        return findUserById(id);
+        return stubService.getUserById(id);
     }
 
     @PostMapping
     public void addUser(@RequestBody StubUser user){
-        users.add(user);
+        stubService.addUser(user);
     }
 
     @PutMapping("/{id}")
     public void editUserById(@PathVariable("id") Integer id, @RequestBody StubUser stubUser){
-        int index = getIndexById(id);
-        if(index >= 0){
-            users.set(index, stubUser);
-        }
-        else{
-            addUser(stubUser);
-        }
-
+        stubService.editUserById(id, stubUser);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable("id") Integer id){
-        users.remove(findUserById(id));
+        stubService.deleteUserById(id);
     }
 }
