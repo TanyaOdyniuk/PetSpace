@@ -1,0 +1,9 @@
+<Context>
+
+<Resource name="jdbc/myDS" auth="Container" type="javax.sql.DataSource"
+          maxActive="50" maxIdle="30" maxWait="10000"
+          username="ODESSA_16" password="testpass"
+          driverClassName="oracle.jdbc.driver.OracleDriver"
+          url="jdbc:oracle:thin:@sql.edu-netcracker.com:1251:XE"/>
+
+</Context>
