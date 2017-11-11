@@ -1,22 +1,28 @@
 package com.netcracker.model.pet;
 
 import com.netcracker.model.Model;
+import com.netcracker.model.Status;
+import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.record.PhotoRecord;
+import com.netcracker.model.user.Profile;
 
-import java.math.BigInteger;
+import java.util.List;
 
 public class Pet extends Model {
 
-    //objectId in Model is for petId
-    private BigInteger avatarId;
+    private PhotoRecord avatarRecord;
     private String petName;
     private int age;
-    private BigInteger speciesId;
+    private PetSpecies species;
     private String breed;
     private double weight;
     private double height;
     private String specificParam;
-    private BigInteger userId;
-    private BigInteger petStateId;
+    private Profile profile;
+    private Status petStatus;
+    private List<Advertisement> advertisements;
+    private List<PhotoAlbum> photoAlbums;
 
     public Pet() {
     }
@@ -29,12 +35,12 @@ public class Pet extends Model {
         super(name, description);
     }
 
-    public BigInteger getAvatarId() {
-        return avatarId;
+    public PhotoRecord getAvatarRecord() {
+        return avatarRecord;
     }
 
-    public void setAvatarId(BigInteger avatarId) {
-        this.avatarId = avatarId;
+    public void setAvatarRecord(PhotoRecord avatarRecord) {
+        this.avatarRecord = avatarRecord;
     }
 
     public String getPetName() {
@@ -53,12 +59,12 @@ public class Pet extends Model {
         this.age = age;
     }
 
-    public BigInteger getSpeciesId() {
-        return speciesId;
+    public PetSpecies getSpecies() {
+        return species;
     }
 
-    public void setSpeciesId(BigInteger speciesId) {
-        this.speciesId = speciesId;
+    public void setSpecies(PetSpecies species) {
+        this.species = species;
     }
 
     public String getBreed() {
@@ -93,35 +99,53 @@ public class Pet extends Model {
         this.specificParam = specificParam;
     }
 
-    public BigInteger getUserId() {
-        return userId;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setUserId(BigInteger userId) {
-        this.userId = userId;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
-    public BigInteger getPetStateId() {
-        return petStateId;
+    public Status getPetStatus() {
+        return petStatus;
     }
 
-    public void setPetStateId(BigInteger petStateId) {
-        this.petStateId = petStateId;
+    public void setPetStatus(Status petStatus) {
+        this.petStatus = petStatus;
+    }
+
+    public List<Advertisement> getAdvertisements() {
+        return advertisements;
+    }
+
+    public void setAdvertisementPets(List<Advertisement> advertisements) {
+        this.advertisements = advertisements;
+    }
+
+    public List<PhotoAlbum> getPhotoAlbums() {
+        return photoAlbums;
+    }
+
+    public void setPhotoAlbums(List<PhotoAlbum> photoAlbums) {
+        this.photoAlbums = photoAlbums;
     }
 
     @Override
     public String toString() {
         return "Pet{" +
-                "avatarId=" + avatarId +
-                ", name='" + petName + '\'' +
+                "avatarRecord=" + avatarRecord +
+                ", petName='" + petName + '\'' +
                 ", age=" + age +
-                ", speciesId=" + speciesId +
+                ", species=" + species +
                 ", breed='" + breed + '\'' +
                 ", weight=" + weight +
                 ", height=" + height +
                 ", specificParam='" + specificParam + '\'' +
-                ", userId=" + userId +
-                ", petStateId=" + petStateId +
+                ", profile=" + profile +
+                ", petStatus=" + petStatus +
+                ", advertisementPets=" + advertisements +
+                ", photoAlbums=" + photoAlbums +
                 '}';
     }
 }

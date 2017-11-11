@@ -1,80 +1,142 @@
 package com.netcracker.model.user;
 
 import com.netcracker.model.Model;
+import com.netcracker.model.album.AvatarAlbum;
+import com.netcracker.model.pet.Pet;
+import com.netcracker.model.record.AvatarRecord;
+import com.netcracker.model.record.WallRecord;
 
-import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.List;
 
 
 public class Profile extends Model{
 
-    private static final byte defaultPets = 2;
-    private BigInteger avatarUserId;
-    private String userName;
-    private String userSurname;
+    private AvatarRecord profileAvatar;
+    private String profileName;
+    private String profileSurname;
     private int age;
-    private String userEmail;
-    private String userSkype;
-    private String userHobbies;
-    private BigInteger[] usersPetsId ;
-    private double userRating;
+    private String profileHobbies;
+    private String favouriteBreeds;
+    private double currencyBalance;
+    private User user;
+    private AvatarAlbum avatarAlbum;
+    private List<WallRecord> wallRecords;
+    private List<Pet> pets;
 
-    public Profile(String userName, String userSurname, String userEmail) {
-        this.userName = userName;
-        this.userSurname = userSurname;
-        this.userEmail = userEmail;
-        this.usersPetsId = new BigInteger[defaultPets];
+
+    public Profile() {
     }
 
-    public BigInteger getAvatarUserId() { return avatarUserId; }
+    public Profile(String name) {
+        super(name);
+    }
 
-    public String getUserName() { return userName; }
+    public Profile(String name, String description) {
+        super(name, description);
+    }
 
-    public String getUserSurname() { return userSurname; }
+    public AvatarRecord getProfileAvatar() {
+        return profileAvatar;
+    }
 
-    public int getAge() { return age; }
+    public void setProfileAvatar(AvatarRecord profileAvatar) {
+        this.profileAvatar = profileAvatar;
+    }
 
-    public String getUserEmail() { return userEmail; }
+    public String getProfileName() {
+        return profileName;
+    }
 
-    public String getUserSkype() { return userSkype; }
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
 
-    public String getUserHobbies() { return userHobbies; }
+    public String getProfileSurname() {
+        return profileSurname;
+    }
 
-    public BigInteger[] getUsersPetsId() { return usersPetsId; }
+    public void setProfileSurname(String profileSurname) {
+        this.profileSurname = profileSurname;
+    }
 
-    public double getUserRating() { return userRating; }
+    public int getAge() {
+        return age;
+    }
 
-    public void setAvatarUserId(BigInteger avatarUserId) { this.avatarUserId = avatarUserId; }
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-    public void setUserName(String userName) { this.userName = userName; }
+    public String getProfileHobbies() {
+        return profileHobbies;
+    }
 
-    public void setUserSurname(String userSurname) { this.userSurname = userSurname; }
+    public void setProfileHobbies(String profileHobbies) {
+        this.profileHobbies = profileHobbies;
+    }
 
-    public void setAge(int age) { this.age = age; }
+    public String getFavouriteBreeds() {
+        return favouriteBreeds;
+    }
 
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public void setFavouriteBreeds(String favouriteBreeds) {
+        this.favouriteBreeds = favouriteBreeds;
+    }
 
-    public void setUserSkype(String userSkype) { this.userSkype = userSkype; }
+    public double getCurrencyBalance() {
+        return currencyBalance;
+    }
 
-    public void setUserHobbies(String userHobbies) { this.userHobbies = userHobbies; }
+    public void setCurrencyBalance(double currencyBalance) {
+        this.currencyBalance = currencyBalance;
+    }
 
-    public void setUsersPetsId(BigInteger[] usersPetsId) { this.usersPetsId = usersPetsId; }
+    public User getUser() {
+        return user;
+    }
 
-    public void setUserRating(double userRating) { this.userRating = userRating; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
+    public AvatarAlbum getAvatarAlbum() {
+        return avatarAlbum;
+    }
+
+    public void setAvatarAlbum(AvatarAlbum avatarAlbum) {
+        this.avatarAlbum = avatarAlbum;
+    }
+
+    public List<WallRecord> getWallRecords() {
+        return wallRecords;
+    }
+
+    public void setWallRecords(List<WallRecord> wallRecords) {
+        this.wallRecords = wallRecords;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
 
     @Override
     public String toString() {
         return "Profile{" +
-                "avatarUserId=" + avatarUserId +
-                ", userName='" + userName + '\'' +
-                ", userSurname='" + userSurname + '\'' +
+                "profileAvatar=" + profileAvatar +
+                ", profileName='" + profileName + '\'' +
+                ", profileSurname='" + profileSurname + '\'' +
                 ", age=" + age +
-                ", userEmail='" + userEmail + '\'' +
-                ", userSkype='" + userSkype + '\'' +
-                ", userHobbies='" + userHobbies + '\'' +
-                ", usersPetsId=" + Arrays.toString(usersPetsId) +
-                ", userRating=" + userRating +
+                ", profileHobbies='" + profileHobbies + '\'' +
+                ", favouriteBreeds='" + favouriteBreeds + '\'' +
+                ", currencyBalance=" + currencyBalance +
+                ", user=" + user +
+                ", avatarAlbum=" + avatarAlbum +
+                ", wallRecords=" + wallRecords +
+                ", pets=" + pets +
                 '}';
     }
 }
