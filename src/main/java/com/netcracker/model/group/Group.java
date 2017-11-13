@@ -6,12 +6,13 @@ import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.user.User;
 
 import java.util.List;
+import java.util.Set;
 
 public class Group extends Model {
 
     private String groupName;
     private String groupDescription;
-    private List<User> groupUsers;
+    private Set<User> groupUsers;
     private GroupType groupType;
     private Status groupStatus;
     private List<GroupRecord> groupRecords;
@@ -43,11 +44,11 @@ public class Group extends Model {
         this.groupDescription = groupDescription;
     }
 
-    public List<User> getGroupUsers() {
+    public Set<User> getGroupUsers() {
         return groupUsers;
     }
 
-    public void setGroupUsers(List<User> groupUsers) {
+    public void setGroupUsers(Set<User> groupUsers) {
         this.groupUsers = groupUsers;
     }
 

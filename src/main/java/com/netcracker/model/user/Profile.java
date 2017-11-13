@@ -1,28 +1,27 @@
 package com.netcracker.model.user;
 
 import com.netcracker.model.Model;
-import com.netcracker.model.album.AvatarAlbum;
+import com.netcracker.model.Status;
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.record.AvatarRecord;
 import com.netcracker.model.record.WallRecord;
 
+import java.util.Arrays;
 import java.util.List;
 
 
-public class Profile extends Model{
+public class Profile extends Model {
 
-    private AvatarRecord profileAvatar;
+    private Object profileAvatar;
     private String profileName;
     private String profileSurname;
     private int age;
-    private String profileHobbies;
-    private String favouriteBreeds;
+    private String[] profileHobbies;
+    private String[] favouriteBreeds;
     private double currencyBalance;
+    private Status profileStatus;
     private User user;
-    private AvatarAlbum avatarAlbum;
     private List<WallRecord> wallRecords;
     private List<Pet> pets;
-
 
     public Profile() {
     }
@@ -35,11 +34,11 @@ public class Profile extends Model{
         super(name, description);
     }
 
-    public AvatarRecord getProfileAvatar() {
+    public Object getProfileAvatar() {
         return profileAvatar;
     }
 
-    public void setProfileAvatar(AvatarRecord profileAvatar) {
+    public void setProfileAvatar(Object profileAvatar) {
         this.profileAvatar = profileAvatar;
     }
 
@@ -67,19 +66,19 @@ public class Profile extends Model{
         this.age = age;
     }
 
-    public String getProfileHobbies() {
+    public String[] getProfileHobbies() {
         return profileHobbies;
     }
 
-    public void setProfileHobbies(String profileHobbies) {
+    public void setProfileHobbies(String[] profileHobbies) {
         this.profileHobbies = profileHobbies;
     }
 
-    public String getFavouriteBreeds() {
+    public String[] getFavouriteBreeds() {
         return favouriteBreeds;
     }
 
-    public void setFavouriteBreeds(String favouriteBreeds) {
+    public void setFavouriteBreeds(String favouriteBreeds[]) {
         this.favouriteBreeds = favouriteBreeds;
     }
 
@@ -99,12 +98,12 @@ public class Profile extends Model{
         this.user = user;
     }
 
-    public AvatarAlbum getAvatarAlbum() {
-        return avatarAlbum;
+    public Status getProfileStatus() {
+        return profileStatus;
     }
 
-    public void setAvatarAlbum(AvatarAlbum avatarAlbum) {
-        this.avatarAlbum = avatarAlbum;
+    public void setProfileStatus(Status profileStatus) {
+        this.profileStatus = profileStatus;
     }
 
     public List<WallRecord> getWallRecords() {
@@ -130,11 +129,10 @@ public class Profile extends Model{
                 ", profileName='" + profileName + '\'' +
                 ", profileSurname='" + profileSurname + '\'' +
                 ", age=" + age +
-                ", profileHobbies='" + profileHobbies + '\'' +
-                ", favouriteBreeds='" + favouriteBreeds + '\'' +
+                ", profileHobbies='" + Arrays.toString(profileHobbies) + '\'' +
+                ", favouriteBreeds='" + Arrays.toString(favouriteBreeds) + '\'' +
                 ", currencyBalance=" + currencyBalance +
                 ", user=" + user +
-                ", avatarAlbum=" + avatarAlbum +
                 ", wallRecords=" + wallRecords +
                 ", pets=" + pets +
                 '}';

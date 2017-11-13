@@ -2,7 +2,7 @@ package com.netcracker.model.record;
 
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.comment.PhotoComment;
-import com.netcracker.model.like.Like;
+import com.netcracker.model.like.PhotoRecordLikeDislike;
 import com.netcracker.model.pet.Pet;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class PhotoRecord extends AbstractRecord {
     private Object photo;
     private List<PhotoComment> photoComments;
     private PhotoAlbum photoAlbum;
-    private List<Like> likes;
+    private List<PhotoRecordLikeDislike> photoRecordLikeDislikes;
     private Pet pet;
 
     public PhotoRecord() {
@@ -50,12 +50,12 @@ public class PhotoRecord extends AbstractRecord {
         this.photoAlbum = photoAlbum;
     }
 
-    public List<Like> getLikes() {
-        return likes;
+    public List<PhotoRecordLikeDislike> getPhotoRecordLikeDislikes() {
+        return photoRecordLikeDislikes;
     }
 
-    public void setLikes(List<Like> likes) {
-        this.likes = likes;
+    public void setPhotoRecordLikeDislikes(List<PhotoRecordLikeDislike> photoRecordLikeDislikes) {
+        this.photoRecordLikeDislikes = photoRecordLikeDislikes;
     }
 
     public Pet getPet() {
@@ -72,7 +72,7 @@ public class PhotoRecord extends AbstractRecord {
                 "photo=" + photo +
                 ", photoComments=" + photoComments +
                 ", photoAlbum=" + photoAlbum +
-                ", likes=" + likes +
+                ", likes=" + photoRecordLikeDislikes +
                 ", pet=" + pet +
                 '}';
     }

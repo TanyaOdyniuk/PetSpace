@@ -1,21 +1,18 @@
 package com.netcracker.model.like;
 
-import com.netcracker.model.Model;
 import com.netcracker.model.record.PhotoRecord;
-import com.netcracker.model.user.User;
 
-public class Like extends Model {
+public class PhotoRecordLikeDislike extends AbstractLikeDislike {
     private PhotoRecord photoRecord;
-    private User user;
 
-    public Like() {
+    public PhotoRecordLikeDislike() {
     }
 
-    public Like(String name) {
+    public PhotoRecordLikeDislike(String name) {
         super(name);
     }
 
-    public Like(String name, String description) {
+    public PhotoRecordLikeDislike(String name, String description) {
         super(name, description);
     }
 
@@ -27,19 +24,10 @@ public class Like extends Model {
         this.photoRecord = photoRecord;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
-        return "Like{" +
+        return "PhotoRecordLikeDislike{" +
                 "photoRecord=" + photoRecord +
-                ", user=" + user +
                 '}';
     }
 }

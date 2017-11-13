@@ -4,14 +4,14 @@ import com.netcracker.model.Model;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.album.PhotoAlbum;
-import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
+import java.util.Set;
 
 public class Pet extends Model {
 
-    private PhotoRecord avatarRecord;
+    private Object avatar;
     private String petName;
     private int age;
     private PetSpecies species;
@@ -21,7 +21,7 @@ public class Pet extends Model {
     private String specificParam;
     private Profile profile;
     private Status petStatus;
-    private List<Advertisement> advertisements;
+    private Set<Advertisement> advertisements;
     private List<PhotoAlbum> photoAlbums;
 
     public Pet() {
@@ -35,12 +35,12 @@ public class Pet extends Model {
         super(name, description);
     }
 
-    public PhotoRecord getAvatarRecord() {
-        return avatarRecord;
+    public Object getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarRecord(PhotoRecord avatarRecord) {
-        this.avatarRecord = avatarRecord;
+    public void setAvatar(Object avatar) {
+        this.avatar = avatar;
     }
 
     public String getPetName() {
@@ -115,11 +115,11 @@ public class Pet extends Model {
         this.petStatus = petStatus;
     }
 
-    public List<Advertisement> getAdvertisements() {
+    public Set<Advertisement> getAdvertisements() {
         return advertisements;
     }
 
-    public void setAdvertisementPets(List<Advertisement> advertisements) {
+    public void setAdvertisementPets(Set<Advertisement> advertisements) {
         this.advertisements = advertisements;
     }
 
@@ -134,7 +134,7 @@ public class Pet extends Model {
     @Override
     public String toString() {
         return "Pet{" +
-                "avatarRecord=" + avatarRecord +
+                "avatar=" + avatar +
                 ", petName='" + petName + '\'' +
                 ", age=" + age +
                 ", species=" + species +
