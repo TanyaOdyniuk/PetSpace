@@ -13,11 +13,11 @@ public class Pet extends Model {
 
     private Object avatar;
     private String petName;
-    private int age;
+    private Integer age;
     private PetSpecies species;
     private String breed;
-    private double weight;
-    private double height;
+    private Double weight;
+    private Double height;
     private String specificParam;
     private Profile profile;
     private Status petStatus;

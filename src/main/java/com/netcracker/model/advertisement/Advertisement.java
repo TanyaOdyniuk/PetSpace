@@ -7,7 +7,6 @@ import com.netcracker.model.comment.AdvertisementComment;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.User;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +14,8 @@ import java.util.Set;
 public class Advertisement extends Model {
     private Date adDate;
     private String adTopic;
-    private String[] adPetSigns;
-    private boolean adIsVip;
+    private List<String> adPetSigns;
+    private Boolean adIsVip;
     private String adLocation;
     private String adBasicInfo;
     private User adUser;
@@ -52,11 +51,11 @@ public class Advertisement extends Model {
         this.adTopic = adTopic;
     }
 
-    public String[] getAdPetSigns() {
+    public List<String> getAdPetSigns() {
         return adPetSigns;
     }
 
-    public void setAdPetSigns(String[] adPetSigns) {
+    public void setAdPetSigns(List<String> adPetSigns) {
         this.adPetSigns = adPetSigns;
     }
 
@@ -129,7 +128,7 @@ public class Advertisement extends Model {
         return "Advertisement{" +
                 "adDate=" + adDate +
                 ", adTopic='" + adTopic + '\'' +
-                ", adPetSigns=" + Arrays.toString(adPetSigns) +
+                ", adPetSigns=" + adPetSigns +
                 ", adIsVip=" + adIsVip +
                 ", adLocation='" + adLocation + '\'' +
                 ", adBasicInfo='" + adBasicInfo + '\'' +

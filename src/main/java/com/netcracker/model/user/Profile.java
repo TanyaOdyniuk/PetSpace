@@ -5,7 +5,7 @@ import com.netcracker.model.Status;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.WallRecord;
 
-import java.util.Arrays;
+
 import java.util.List;
 
 
@@ -14,10 +14,10 @@ public class Profile extends Model {
     private Object profileAvatar;
     private String profileName;
     private String profileSurname;
-    private int age;
-    private String[] profileHobbies;
-    private String[] favouriteBreeds;
-    private double currencyBalance;
+    private Integer age;
+    private List<String> profileHobbies;
+    private List<String> favouriteBreeds;
+    private Double currencyBalance;
     private Status profileStatus;
     private User user;
     private List<WallRecord> wallRecords;
@@ -66,19 +66,19 @@ public class Profile extends Model {
         this.age = age;
     }
 
-    public String[] getProfileHobbies() {
+    public List<String> getProfileHobbies() {
         return profileHobbies;
     }
 
-    public void setProfileHobbies(String[] profileHobbies) {
+    public void setProfileHobbies(List<String> profileHobbies) {
         this.profileHobbies = profileHobbies;
     }
 
-    public String[] getFavouriteBreeds() {
+    public List<String> getFavouriteBreeds() {
         return favouriteBreeds;
     }
 
-    public void setFavouriteBreeds(String favouriteBreeds[]) {
+    public void setFavouriteBreeds(List<String> favouriteBreeds) {
         this.favouriteBreeds = favouriteBreeds;
     }
 
@@ -129,8 +129,8 @@ public class Profile extends Model {
                 ", profileName='" + profileName + '\'' +
                 ", profileSurname='" + profileSurname + '\'' +
                 ", age=" + age +
-                ", profileHobbies='" + Arrays.toString(profileHobbies) + '\'' +
-                ", favouriteBreeds='" + Arrays.toString(favouriteBreeds) + '\'' +
+                ", profileHobbies='" + profileHobbies + '\'' +
+                ", favouriteBreeds='" + favouriteBreeds + '\'' +
                 ", currencyBalance=" + currencyBalance +
                 ", user=" + user +
                 ", wallRecords=" + wallRecords +

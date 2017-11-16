@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class AbstractLikeDislike extends Model {
     private Date likeDislikeDate;
-    private boolean isDislike;
+    private Boolean isDislike;
     private User user;
 
     public AbstractLikeDislike() {

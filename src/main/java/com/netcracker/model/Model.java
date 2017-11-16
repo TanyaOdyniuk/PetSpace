@@ -8,6 +8,7 @@ public abstract class Model {
     private String description;
     private BigInteger objectId;
     private BigInteger parentId;
+    private BigInteger objectTypeId;
 
     public Model() {
     }
@@ -51,5 +52,35 @@ public abstract class Model {
 
     public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
+    }
+
+    public BigInteger getObjectTypeId() {
+        return objectTypeId;
+    }
+
+    public void setObjectTypeId(BigInteger objectTypeId) {
+        this.objectTypeId = objectTypeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Model model = (Model) o;
+
+        return objectId.equals(model.objectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return objectId.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "objectId=" + objectId +
+                '}';
     }
 }

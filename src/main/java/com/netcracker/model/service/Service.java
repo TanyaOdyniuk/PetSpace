@@ -8,7 +8,7 @@ import java.util.Set;
 public class Service extends Model {
     private Object servicePhoto;
     private String serviceName;
-    private double servicePrice;
+    private Double servicePrice;
     private ServiceType serviceType;
     private Set<User> users;
 
