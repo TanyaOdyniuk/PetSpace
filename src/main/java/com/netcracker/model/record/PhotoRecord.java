@@ -5,12 +5,11 @@ import com.netcracker.model.comment.PhotoComment;
 import com.netcracker.model.like.PhotoRecordLikeDislike;
 import com.netcracker.model.pet.Pet;
 
-import java.sql.Blob;
 import java.util.List;
 
 public class PhotoRecord extends AbstractRecord {
 
-    private Blob photo;
+    private String photo;
     private List<PhotoComment> photoComments;
     private PhotoAlbum photoAlbum;
     private List<PhotoRecordLikeDislike> photoRecordLikeDislikes;
@@ -27,11 +26,11 @@ public class PhotoRecord extends AbstractRecord {
         super(name, description);
     }
 
-    public Blob getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Blob photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 
