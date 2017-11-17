@@ -1,14 +1,12 @@
 package com.netcracker.model;
 
-import java.math.BigInteger;
-
 public abstract class Model {
 
     private String name;
     private String description;
-    private BigInteger objectId;
-    private BigInteger parentId;
-    private BigInteger objectTypeId;
+    private Integer objectId;
+    private Integer parentId;
+    private Integer objectTypeId;
 
     public Model() {
     }
@@ -38,27 +36,27 @@ public abstract class Model {
         this.description = description;
     }
 
-    public BigInteger getObjectId() {
+    public Integer getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(BigInteger objectId) {
+    public void setObjectId(Integer objectId) {
         this.objectId = objectId;
     }
 
-    public BigInteger getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(BigInteger parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
-    public BigInteger getObjectTypeId() {
+    public Integer getObjectTypeId() {
         return objectTypeId;
     }
 
-    public void setObjectTypeId(BigInteger objectTypeId) {
+    public void setObjectTypeId(Integer objectTypeId) {
         this.objectTypeId = objectTypeId;
     }
 
