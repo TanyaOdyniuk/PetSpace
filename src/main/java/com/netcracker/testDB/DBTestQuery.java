@@ -30,7 +30,7 @@ public class DBTestQuery implements CommandLineRunner {
         List<ObjectRow> list = objectRowsRepository.findAll();
         list.forEach(System.out::println);
 
-        System.out.println("\nDisplay all objects hierarchy...");
+        System.out.println("\nDisplay objects hierarchy...");
         List<String> hierarchyList = objectRowsRepository.findAllObjectsHierarchy();
         hierarchyList.forEach(System.out::println);
         System.out.println("\nDone!");
