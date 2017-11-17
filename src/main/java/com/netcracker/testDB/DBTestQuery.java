@@ -16,21 +16,24 @@ public class DBTestQuery implements CommandLineRunner {
     DataSource dataSource;
 
     @Autowired
-    RegionsRepository regionsRepository;
+    ObjectRowsRepository objectRowsRepository;
 
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("DATASOURCE = " + dataSource);
+        System.out.println("\nDATASOURCE = " + dataSource);
 
         //Get value of certain tomcat datasource setting
         System.out.println("Max active = " + dataSource.getMaxActive());
 
-        System.out.println("Display all regions...");
-        List<Region> list = regionsRepository.findAll();
-        list.forEach(x -> System.out.println(x));
+        System.out.println("\nDisplay all objects...");
+        List<ObjectRow> list = objectRowsRepository.findAll();
+        list.forEach(System.out::println);
 
-        System.out.println("Done!");
+        System.out.println("\nDisplay objects hierarchy...");
+        List<String> hierarchyList = objectRowsRepository.findAllObjectsHierarchy();
+        hierarchyList.forEach(System.out::println);
+        System.out.println("\nDone!");
 
     }
 }
