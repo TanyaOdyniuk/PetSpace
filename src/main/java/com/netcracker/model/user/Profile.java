@@ -6,12 +6,13 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.WallRecord;
 
 
+import java.sql.Blob;
 import java.util.List;
 
 
 public class Profile extends Model {
 
-    private Object profileAvatar;
+    private Blob profileAvatar;
     private String profileName;
     private String profileSurname;
     private Integer age;
@@ -34,11 +35,11 @@ public class Profile extends Model {
         super(name, description);
     }
 
-    public Object getProfileAvatar() {
+    public Blob getProfileAvatar() {
         return profileAvatar;
     }
 
-    public void setProfileAvatar(Object profileAvatar) {
+    public void setProfileAvatar(Blob profileAvatar) {
         this.profileAvatar = profileAvatar;
     }
 
