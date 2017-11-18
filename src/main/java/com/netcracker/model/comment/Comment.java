@@ -1,6 +1,6 @@
 package com.netcracker.model.comment;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.like.LikeDislike;
 import com.netcracker.model.record.GroupWallRecord;
@@ -9,7 +9,7 @@ import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
-public class Comment extends Model {
+public class Comment extends BaseEntity {
     private String commentText;
     private String commentDate;
     private Profile commentProfile;

@@ -1,12 +1,12 @@
 package com.netcracker.model.securityBook;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.math.BigInteger;
 import java.util.Set;
 
-public class SecurityBook extends Model {
+public class SecurityBook extends BaseEntity {
 
     private BigInteger attributeId;
     private SecurityType securityType;

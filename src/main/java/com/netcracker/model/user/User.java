@@ -1,13 +1,13 @@
 package com.netcracker.model.user;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.securityBook.SecurityBook;
 import com.netcracker.model.service.Service;
 
 import java.util.List;
 import java.util.Set;
 
-public class User extends Model {
+public class User extends BaseEntity {
 
     private String login;
     private String password;
