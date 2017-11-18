@@ -1,6 +1,6 @@
-package com.netcracker.model.comment;
+package com.netcracker.model.comment.old;
 
-import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.old.GroupRecord;
 
 public class GroupComment extends AbstractComment {
 

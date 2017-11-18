@@ -1,18 +1,19 @@
-package com.netcracker.model.like;
+package com.netcracker.model.comment.old;
 
 import com.netcracker.model.record.PhotoRecord;
 
-public class PhotoRecordLikeDislike extends AbstractLikeDislike {
+public class PhotoComment extends AbstractComment {
+
     private PhotoRecord photoRecord;
 
-    public PhotoRecordLikeDislike() {
+    public PhotoComment() {
     }
 
-    public PhotoRecordLikeDislike(String name) {
+    public PhotoComment(String name) {
         super(name);
     }
 
-    public PhotoRecordLikeDislike(String name, String description) {
+    public PhotoComment(String name, String description) {
         super(name, description);
     }
 
@@ -26,7 +27,7 @@ public class PhotoRecordLikeDislike extends AbstractLikeDislike {
 
     @Override
     public String toString() {
-        return "PhotoRecordLikeDislike{" +
+        return "PhotoComment{" +
                 "photoRecord=" + photoRecord +
                 '}';
     }

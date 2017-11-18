@@ -1,6 +1,6 @@
-package com.netcracker.model.like;
+package com.netcracker.model.like.old;
 
-import com.netcracker.model.comment.WallComment;
+import com.netcracker.model.comment.old.WallComment;
 
 public class WallCommentLikeDislike extends AbstractLikeDislike {
     private WallComment wallComment;

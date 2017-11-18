@@ -1,6 +1,7 @@
-package com.netcracker.model.record;
+package com.netcracker.model.record.old;
 
-import com.netcracker.model.comment.WallComment;
+import com.netcracker.model.comment.old.WallComment;
+import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;

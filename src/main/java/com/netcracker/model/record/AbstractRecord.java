@@ -2,9 +2,12 @@ package com.netcracker.model.record;
 
 import com.netcracker.model.Model;
 
-public class AbstractRecord extends Model {
+import java.util.Date;
+
+public abstract class AbstractRecord extends Model {
 
     private String recordText;
+    private Date recordDate;
 
     public AbstractRecord() {
     }
@@ -25,10 +28,19 @@ public class AbstractRecord extends Model {
         this.recordText = recordText;
     }
 
+    public Date getRecordDate() {
+        return recordDate;
+    }
+
+    public void setRecordDate(Date recordDate) {
+        this.recordDate = recordDate;
+    }
+
     @Override
     public String toString() {
         return "AbstractRecord{" +
                 "recordText='" + recordText + '\'' +
+                ", recordDate=" + recordDate +
                 '}';
     }
 }

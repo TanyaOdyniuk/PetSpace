@@ -1,11 +1,11 @@
-package com.netcracker.model.comment;
+package com.netcracker.model.comment.old;
 
 import com.netcracker.model.Model;
 import com.netcracker.model.user.User;
 
 import java.util.Date;
 
-public class AbstractComment extends Model {
+public abstract class AbstractComment extends Model {
     private Date commentDate;
     private String commentText;
     private User user;

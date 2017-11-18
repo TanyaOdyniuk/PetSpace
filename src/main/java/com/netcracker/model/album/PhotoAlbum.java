@@ -11,6 +11,7 @@ public class PhotoAlbum extends Model {
     private String photoAlbumName;
     private String photoAlbumDesc;
     private Pet pet;
+    //TODO SERVICE TO GET PHOTORECORDS
     private List<PhotoRecord> photoRecords;
 
     public PhotoAlbum() {

@@ -3,9 +3,9 @@ package com.netcracker.model.advertisement;
 import com.netcracker.model.Model;
 import com.netcracker.model.Status;
 import com.netcracker.model.category.Category;
-import com.netcracker.model.comment.AdvertisementComment;
+import com.netcracker.model.comment.Comment;
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.user.User;
+import com.netcracker.model.user.Profile;
 
 import java.util.Date;
 import java.util.List;
@@ -18,11 +18,12 @@ public class Advertisement extends Model {
     private Boolean adIsVip;
     private String adLocation;
     private String adBasicInfo;
-    private User adUser;
+    private Profile adProfile;
     private Status adStatus;
     private Category adCategory;
     private Set<Pet> adPets;
-    private List<AdvertisementComment> advertisementComments;
+    //TODO SERVICE GET ADCOMMENTS
+    private List<Comment> advertisementComments;
 
     public Advertisement() {
     }
@@ -83,12 +84,12 @@ public class Advertisement extends Model {
         this.adBasicInfo = adBasicInfo;
     }
 
-    public User getAdUser() {
-        return adUser;
+    public Profile getAdProfile() {
+        return adProfile;
     }
 
-    public void setAdUser(User adUser) {
-        this.adUser = adUser;
+    public void setAdProfile(Profile adProfile) {
+        this.adProfile = adProfile;
     }
 
     public Status getAdStatus() {
@@ -115,11 +116,11 @@ public class Advertisement extends Model {
         this.adPets = adPets;
     }
 
-    public List<AdvertisementComment> getAdvertisementComments() {
+    public List<Comment> getAdvertisementComments() {
         return advertisementComments;
     }
 
-    public void setAdvertisementComments(List<AdvertisementComment> advertisementComments) {
+    public void setAdvertisementComments(List<Comment> advertisementComments) {
         this.advertisementComments = advertisementComments;
     }
 
@@ -132,7 +133,7 @@ public class Advertisement extends Model {
                 ", adIsVip=" + adIsVip +
                 ", adLocation='" + adLocation + '\'' +
                 ", adBasicInfo='" + adBasicInfo + '\'' +
-                ", adUser=" + adUser +
+                ", adProfile=" + adProfile +
                 ", adStatus=" + adStatus +
                 ", adCategory=" + adCategory +
                 ", adPets=" + adPets +

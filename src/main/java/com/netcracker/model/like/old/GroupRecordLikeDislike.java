@@ -1,6 +1,6 @@
-package com.netcracker.model.like;
+package com.netcracker.model.like.old;
 
-import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.old.GroupRecord;
 
 public class GroupRecordLikeDislike extends AbstractLikeDislike {
     private GroupRecord groupRecord;

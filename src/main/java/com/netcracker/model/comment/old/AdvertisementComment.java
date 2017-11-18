@@ -1,4 +1,4 @@
-package com.netcracker.model.comment;
+package com.netcracker.model.comment.old;
 
 import com.netcracker.model.advertisement.Advertisement;
 

@@ -1,4 +1,4 @@
-package com.netcracker.model.like;
+package com.netcracker.model.like.old;
 
 import com.netcracker.model.Model;
 import com.netcracker.model.user.User;

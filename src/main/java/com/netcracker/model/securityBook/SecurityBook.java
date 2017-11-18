@@ -3,12 +3,14 @@ package com.netcracker.model.securityBook;
 import com.netcracker.model.Model;
 import com.netcracker.model.user.User;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 public class SecurityBook extends Model {
 
-    private Object attribute;
+    private BigInteger attributeId;
     private SecurityType securityType;
+    //TODO SERVICE TO GET USERS
     private Set<User> users;
 
     public SecurityBook() {
@@ -22,12 +24,12 @@ public class SecurityBook extends Model {
         super(name, description);
     }
 
-    public Object getAttribute() {
-        return attribute;
+    public BigInteger getAttributeId() {
+        return attributeId;
     }
 
-    public void setAttribute(Object attribute) {
-        this.attribute = attribute;
+    public void setAttributeId(BigInteger attributeId) {
+        this.attributeId = attributeId;
     }
 
     public SecurityType getSecurityType() {
@@ -49,7 +51,7 @@ public class SecurityBook extends Model {
     @Override
     public String toString() {
         return "SecurityBook{" +
-                "attribute=" + attribute +
+                "attribute=" + attributeId +
                 ", securityType=" + securityType +
                 ", users=" + users +
                 '}';

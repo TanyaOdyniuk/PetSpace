@@ -1,6 +1,6 @@
-package com.netcracker.model.like;
+package com.netcracker.model.like.old;
 
-import com.netcracker.model.comment.PhotoComment;
+import com.netcracker.model.comment.old.PhotoComment;
 
 public class PhotoCommentLikeDislike extends AbstractLikeDislike {
     private PhotoComment photoComment;

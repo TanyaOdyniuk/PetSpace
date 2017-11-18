@@ -2,8 +2,9 @@ package com.netcracker.model.group;
 
 import com.netcracker.model.Model;
 import com.netcracker.model.Status;
-import com.netcracker.model.record.GroupRecord;
-import com.netcracker.model.user.User;
+import com.netcracker.model.record.GroupWallRecord;
+import com.netcracker.model.record.old.GroupRecord;
+import com.netcracker.model.user.Profile;
 
 import java.util.List;
 import java.util.Set;
@@ -12,10 +13,14 @@ public class Group extends Model {
 
     private String groupName;
     private String groupDescription;
-    private Set<User> groupUsers;
+    //TODO SERVICE GETGROUPUSERS
+    private Set<Profile> groupProfiles;
     private GroupType groupType;
     private Status groupStatus;
-    private List<GroupRecord> groupRecords;
+    //TODO SERVICE GETGROUPRECORDS
+    private List<GroupWallRecord> groupRecords;
+    //TODO SERVICE GETGROUPADMINS
+    private List<Profile> groupAdmins;
 
     public Group() {
     }
@@ -44,12 +49,12 @@ public class Group extends Model {
         this.groupDescription = groupDescription;
     }
 
-    public Set<User> getGroupUsers() {
-        return groupUsers;
+    public Set<Profile> getGroupProfiles() {
+        return groupProfiles;
     }
 
-    public void setGroupUsers(Set<User> groupUsers) {
-        this.groupUsers = groupUsers;
+    public void setGroupProfiles(Set<Profile> groupProfiles) {
+        this.groupProfiles = groupProfiles;
     }
 
     public GroupType getGroupType() {
@@ -68,12 +73,20 @@ public class Group extends Model {
         this.groupStatus = groupStatus;
     }
 
-    public List<GroupRecord> getGroupRecords() {
+    public List<GroupWallRecord> getGroupRecords() {
         return groupRecords;
     }
 
-    public void setGroupRecords(List<GroupRecord> groupRecords) {
+    public void setGroupRecords(List<GroupWallRecord> groupRecords) {
         this.groupRecords = groupRecords;
+    }
+
+    public List<Profile> getGroupAdmins() {
+        return groupAdmins;
+    }
+
+    public void setGroupAdmins(List<Profile> groupAdmins) {
+        this.groupAdmins = groupAdmins;
     }
 
     @Override
@@ -81,10 +94,11 @@ public class Group extends Model {
         return "Group{" +
                 "groupName='" + groupName + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
-                ", groupUsers=" + groupUsers +
+                ", groupProfiles=" + groupProfiles +
                 ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
                 ", groupRecords=" + groupRecords +
+                ", groupAdmins=" + groupAdmins +
                 '}';
     }
 }

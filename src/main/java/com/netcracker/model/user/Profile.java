@@ -2,11 +2,17 @@ package com.netcracker.model.user;
 
 import com.netcracker.model.Model;
 import com.netcracker.model.Status;
+import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.comment.Comment;
+import com.netcracker.model.group.Group;
+import com.netcracker.model.like.LikeDislike;
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.record.WallRecord;
+import com.netcracker.model.record.GroupWallRecord;
+
 
 
 import java.util.List;
+import java.util.Set;
 
 
 public class Profile extends Model {
@@ -14,14 +20,27 @@ public class Profile extends Model {
     private String profileAvatar;
     private String profileName;
     private String profileSurname;
-    private Integer age;
+    private Integer profileAge;
     private List<String> profileHobbies;
-    private List<String> favouriteBreeds;
-    private Double currencyBalance;
+    private List<String> profileFavouriteBreeds;
+    private Double profileCurrencyBalance;
     private Status profileStatus;
-    private User user;
-    private List<WallRecord> wallRecords;
-    private List<Pet> pets;
+    private User profileUser;
+    //TODO SERVICE GETPETS
+    private List<Pet> profilePets;
+    //TODO SERVICE GETWALLRECORDS
+    private List<GroupWallRecord> profileGroupWallRecords;
+    //TODO SERVICE GETPROFILEADVERTISEMENTS
+    private List<Advertisement> profileAdvertisements;
+    //TODO SERVICE GETPROFILEGROUPS
+    private Set<Group> profileGroups;
+    //TODO SERVICE GETCOMMENTS
+    private List<Comment> profileComments;
+    //TODO SERVICE GETLIKES
+    private List<LikeDislike> profileLikes;
+    //TODO SERVICE GETDISLIKES
+    private List<LikeDislike> profileDislikes;
+
 
     public Profile() {
     }
@@ -58,12 +77,12 @@ public class Profile extends Model {
         this.profileSurname = profileSurname;
     }
 
-    public int getAge() {
-        return age;
+    public Integer getProfileAge() {
+        return profileAge;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setProfileAge(Integer profileAge) {
+        this.profileAge = profileAge;
     }
 
     public List<String> getProfileHobbies() {
@@ -74,28 +93,20 @@ public class Profile extends Model {
         this.profileHobbies = profileHobbies;
     }
 
-    public List<String> getFavouriteBreeds() {
-        return favouriteBreeds;
+    public List<String> getProfileFavouriteBreeds() {
+        return profileFavouriteBreeds;
     }
 
-    public void setFavouriteBreeds(List<String> favouriteBreeds) {
-        this.favouriteBreeds = favouriteBreeds;
+    public void setProfileFavouriteBreeds(List<String> profileFavouriteBreeds) {
+        this.profileFavouriteBreeds = profileFavouriteBreeds;
     }
 
-    public double getCurrencyBalance() {
-        return currencyBalance;
+    public Double getProfileCurrencyBalance() {
+        return profileCurrencyBalance;
     }
 
-    public void setCurrencyBalance(double currencyBalance) {
-        this.currencyBalance = currencyBalance;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setProfileCurrencyBalance(Double profileCurrencyBalance) {
+        this.profileCurrencyBalance = profileCurrencyBalance;
     }
 
     public Status getProfileStatus() {
@@ -106,35 +117,89 @@ public class Profile extends Model {
         this.profileStatus = profileStatus;
     }
 
-    public List<WallRecord> getWallRecords() {
-        return wallRecords;
+    public User getProfileUser() {
+        return profileUser;
     }
 
-    public void setWallRecords(List<WallRecord> wallRecords) {
-        this.wallRecords = wallRecords;
+    public void setProfileUser(User profileUser) {
+        this.profileUser = profileUser;
     }
 
-    public List<Pet> getPets() {
-        return pets;
+    public List<Pet> getProfilePets() {
+        return profilePets;
     }
 
-    public void setPets(List<Pet> pets) {
-        this.pets = pets;
+    public void setProfilePets(List<Pet> profilePets) {
+        this.profilePets = profilePets;
+    }
+
+    public List<GroupWallRecord> getProfileGroupWallRecords() {
+        return profileGroupWallRecords;
+    }
+
+    public void setProfileGroupWallRecords(List<GroupWallRecord> profileGroupWallRecords) {
+        this.profileGroupWallRecords = profileGroupWallRecords;
+    }
+
+    public List<Advertisement> getProfileAdvertisements() {
+        return profileAdvertisements;
+    }
+
+    public void setProfileAdvertisements(List<Advertisement> profileAdvertisements) {
+        this.profileAdvertisements = profileAdvertisements;
+    }
+
+    public Set<Group> getProfileGroups() {
+        return profileGroups;
+    }
+
+    public void setProfileGroups(Set<Group> profileGroups) {
+        this.profileGroups = profileGroups;
+    }
+
+    public List<Comment> getProfileComments() {
+        return profileComments;
+    }
+
+    public void setProfileComments(List<Comment> profileComments) {
+        this.profileComments = profileComments;
+    }
+
+    public List<LikeDislike> getProfileLikes() {
+        return profileLikes;
+    }
+
+    public void setProfileLikes(List<LikeDislike> profileLikes) {
+        this.profileLikes = profileLikes;
+    }
+
+    public List<LikeDislike> getProfileDislikes() {
+        return profileDislikes;
+    }
+
+    public void setProfileDislikes(List<LikeDislike> profileDislikes) {
+        this.profileDislikes = profileDislikes;
     }
 
     @Override
     public String toString() {
         return "Profile{" +
-                "profileAvatar=" + profileAvatar +
+                "profileAvatar='" + profileAvatar + '\'' +
                 ", profileName='" + profileName + '\'' +
                 ", profileSurname='" + profileSurname + '\'' +
-                ", age=" + age +
-                ", profileHobbies='" + profileHobbies + '\'' +
-                ", favouriteBreeds='" + favouriteBreeds + '\'' +
-                ", currencyBalance=" + currencyBalance +
-                ", user=" + user +
-                ", wallRecords=" + wallRecords +
-                ", pets=" + pets +
+                ", profileAge=" + profileAge +
+                ", profileHobbies=" + profileHobbies +
+                ", profileFavouriteBreeds=" + profileFavouriteBreeds +
+                ", profileCurrencyBalance=" + profileCurrencyBalance +
+                ", profileStatus=" + profileStatus +
+                ", profileUser=" + profileUser +
+                ", profilePets=" + profilePets +
+                ", profileGroupWallRecords=" + profileGroupWallRecords +
+                ", profileAdvertisements=" + profileAdvertisements +
+                ", profileGroups=" + profileGroups +
+                ", profileComments=" + profileComments +
+                ", profileLikes=" + profileLikes +
+                ", profileDislikes=" + profileDislikes +
                 '}';
     }
 }

@@ -1,8 +1,8 @@
 package com.netcracker.model.record;
 
 import com.netcracker.model.album.PhotoAlbum;
-import com.netcracker.model.comment.PhotoComment;
-import com.netcracker.model.like.PhotoRecordLikeDislike;
+import com.netcracker.model.comment.Comment;
+import com.netcracker.model.like.LikeDislike;
 import com.netcracker.model.pet.Pet;
 
 import java.util.List;
@@ -10,9 +10,13 @@ import java.util.List;
 public class PhotoRecord extends AbstractRecord {
 
     private String photo;
-    private List<PhotoComment> photoComments;
+    //TODO SERVICE GETPHOTOCOMMENTS
+    private List<Comment> photoComments;
     private PhotoAlbum photoAlbum;
-    private List<PhotoRecordLikeDislike> photoRecordLikeDislikes;
+    //TODO SERVICE TO GET LIKES
+    private List<LikeDislike> photoRecordLikes;
+    //TODO SERVICE TO GET DISLIKES
+    private List<LikeDislike> photoRecordDislikes;
     private Pet pet;
 
     public PhotoRecord() {
@@ -34,11 +38,11 @@ public class PhotoRecord extends AbstractRecord {
         this.photo = photo;
     }
 
-    public List<PhotoComment> getPhotoComments() {
+    public List<Comment> getPhotoComments() {
         return photoComments;
     }
 
-    public void setPhotoComments(List<PhotoComment> photoComments) {
+    public void setPhotoComments(List<Comment> photoComments) {
         this.photoComments = photoComments;
     }
 
@@ -50,12 +54,20 @@ public class PhotoRecord extends AbstractRecord {
         this.photoAlbum = photoAlbum;
     }
 
-    public List<PhotoRecordLikeDislike> getPhotoRecordLikeDislikes() {
-        return photoRecordLikeDislikes;
+    public List<LikeDislike> getPhotoRecordLikes() {
+        return photoRecordLikes;
     }
 
-    public void setPhotoRecordLikeDislikes(List<PhotoRecordLikeDislike> photoRecordLikeDislikes) {
-        this.photoRecordLikeDislikes = photoRecordLikeDislikes;
+    public void setPhotoRecordLikes(List<LikeDislike> photoRecordLikes) {
+        this.photoRecordLikes = photoRecordLikes;
+    }
+
+    public List<LikeDislike> getPhotoRecordDislikes() {
+        return photoRecordDislikes;
+    }
+
+    public void setPhotoRecordDislikes(List<LikeDislike> photoRecordDislikes) {
+        this.photoRecordDislikes = photoRecordDislikes;
     }
 
     public Pet getPet() {
@@ -69,10 +81,11 @@ public class PhotoRecord extends AbstractRecord {
     @Override
     public String toString() {
         return "PhotoRecord{" +
-                "photo=" + photo +
+                "photo='" + photo + '\'' +
                 ", photoComments=" + photoComments +
                 ", photoAlbum=" + photoAlbum +
-                ", likes=" + photoRecordLikeDislikes +
+                ", photoRecordLikes=" + photoRecordLikes +
+                ", photoRecordDislikes=" + photoRecordDislikes +
                 ", pet=" + pet +
                 '}';
     }

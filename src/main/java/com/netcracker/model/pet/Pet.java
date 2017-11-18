@@ -11,18 +11,20 @@ import java.util.Set;
 
 public class Pet extends Model {
 
-    private Object avatar;
+    private String petAvatar;
     private String petName;
-    private Integer age;
-    private PetSpecies species;
-    private String breed;
-    private Double weight;
-    private Double height;
-    private String specificParam;
+    private Integer petAge;
+    private PetSpecies petSpecies;
+    private String petBreed;
+    private Double petWeight;
+    private Double petHeight;
+    private String petSpecificParam;
     private Profile profile;
     private Status petStatus;
-    private Set<Advertisement> advertisements;
-    private List<PhotoAlbum> photoAlbums;
+    //TODO SERVICE GETADVERTISEMENTS
+    private Set<Advertisement> petAdvertisements;
+    //TODO SERVICE GETPHOTOALBUMS
+    private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {
     }
@@ -35,12 +37,12 @@ public class Pet extends Model {
         super(name, description);
     }
 
-    public Object getAvatar() {
-        return avatar;
+    public String getPetAvatar() {
+        return petAvatar;
     }
 
-    public void setAvatar(Object avatar) {
-        this.avatar = avatar;
+    public void setPetAvatar(String petAvatar) {
+        this.petAvatar = petAvatar;
     }
 
     public String getPetName() {
@@ -51,52 +53,52 @@ public class Pet extends Model {
         this.petName = petName;
     }
 
-    public int getAge() {
-        return age;
+    public int getPetAge() {
+        return petAge;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setPetAge(int petAge) {
+        this.petAge = petAge;
     }
 
-    public PetSpecies getSpecies() {
-        return species;
+    public PetSpecies getPetSpecies() {
+        return petSpecies;
     }
 
-    public void setSpecies(PetSpecies species) {
-        this.species = species;
+    public void setPetSpecies(PetSpecies petSpecies) {
+        this.petSpecies = petSpecies;
     }
 
-    public String getBreed() {
-        return breed;
+    public String getPetBreed() {
+        return petBreed;
     }
 
-    public void setBreed(String breed) {
-        this.breed = breed;
+    public void setPetBreed(String petBreed) {
+        this.petBreed = petBreed;
     }
 
-    public double getWeight() {
-        return weight;
+    public double getPetWeight() {
+        return petWeight;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setPetWeight(double petWeight) {
+        this.petWeight = petWeight;
     }
 
-    public double getHeight() {
-        return height;
+    public double getPetHeight() {
+        return petHeight;
     }
 
-    public void setHeight(double height) {
-        this.height = height;
+    public void setPetHeight(double petHeight) {
+        this.petHeight = petHeight;
     }
 
-    public String getSpecificParam() {
-        return specificParam;
+    public String getPetSpecificParam() {
+        return petSpecificParam;
     }
 
-    public void setSpecificParam(String specificParam) {
-        this.specificParam = specificParam;
+    public void setPetSpecificParam(String petSpecificParam) {
+        this.petSpecificParam = petSpecificParam;
     }
 
     public Profile getProfile() {
@@ -115,37 +117,37 @@ public class Pet extends Model {
         this.petStatus = petStatus;
     }
 
-    public Set<Advertisement> getAdvertisements() {
-        return advertisements;
+    public Set<Advertisement> getPetAdvertisements() {
+        return petAdvertisements;
     }
 
     public void setAdvertisementPets(Set<Advertisement> advertisements) {
-        this.advertisements = advertisements;
+        this.petAdvertisements = advertisements;
     }
 
-    public List<PhotoAlbum> getPhotoAlbums() {
-        return photoAlbums;
+    public List<PhotoAlbum> getPetPhotoAlbums() {
+        return petPhotoAlbums;
     }
 
-    public void setPhotoAlbums(List<PhotoAlbum> photoAlbums) {
-        this.photoAlbums = photoAlbums;
+    public void setPetPhotoAlbums(List<PhotoAlbum> petPhotoAlbums) {
+        this.petPhotoAlbums = petPhotoAlbums;
     }
 
     @Override
     public String toString() {
         return "Pet{" +
-                "avatar=" + avatar +
+                "petAvatar=" + petAvatar +
                 ", petName='" + petName + '\'' +
-                ", age=" + age +
-                ", species=" + species +
-                ", breed='" + breed + '\'' +
-                ", weight=" + weight +
-                ", height=" + height +
-                ", specificParam='" + specificParam + '\'' +
+                ", petAge=" + petAge +
+                ", petSpecies=" + petSpecies +
+                ", petBreed='" + petBreed + '\'' +
+                ", petWeight=" + petWeight +
+                ", petHeight=" + petHeight +
+                ", petSpecificParam='" + petSpecificParam + '\'' +
                 ", profile=" + profile +
                 ", petStatus=" + petStatus +
-                ", advertisementPets=" + advertisements +
-                ", photoAlbums=" + photoAlbums +
+                ", advertisementPets=" + petAdvertisements +
+                ", petPhotoAlbums=" + petPhotoAlbums +
                 '}';
     }
 }

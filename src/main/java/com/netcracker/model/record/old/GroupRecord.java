@@ -1,7 +1,8 @@
-package com.netcracker.model.record;
+package com.netcracker.model.record.old;
 
-import com.netcracker.model.comment.GroupComment;
+import com.netcracker.model.comment.old.GroupComment;
 import com.netcracker.model.group.Group;
+import com.netcracker.model.record.AbstractRecord;
 
 import java.util.List;
 

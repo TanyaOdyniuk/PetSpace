@@ -6,10 +6,11 @@ import com.netcracker.model.user.User;
 import java.util.Set;
 
 public class Service extends Model {
-    private Object servicePhoto;
+    private String servicePhoto;
     private String serviceName;
     private Double servicePrice;
     private ServiceType serviceType;
+    //TODO SERVICE GETUSERS
     private Set<User> users;
 
     public Service() {
@@ -23,11 +24,11 @@ public class Service extends Model {
         super(name, description);
     }
 
-    public Object getServicePhoto() {
+    public String getServicePhoto() {
         return servicePhoto;
     }
 
-    public void setServicePhoto(Object servicePhoto) {
+    public void setServicePhoto(String servicePhoto) {
         this.servicePhoto = servicePhoto;
     }
 

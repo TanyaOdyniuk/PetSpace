@@ -7,8 +7,8 @@ import java.util.Set;
 
 public enum UserType {
     USER("User"),
-    ADMIN("Aamin"),
-    VET("vet");
+    ADMIN("Admin"),
+    VET("Vet");
 
     private String type;
     private Set<Category> categories;

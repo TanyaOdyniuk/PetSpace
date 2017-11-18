@@ -1,18 +1,18 @@
-package com.netcracker.model.comment;
+package com.netcracker.model.like.old;
 
-import com.netcracker.model.record.WallRecord;
+import com.netcracker.model.record.old.WallRecord;
 
-public class WallComment extends AbstractComment {
+public class WallRecordLikeDislike extends AbstractLikeDislike {
     private WallRecord wallRecord;
 
-    public WallComment() {
+    public WallRecordLikeDislike() {
     }
 
-    public WallComment(String name) {
+    public WallRecordLikeDislike(String name) {
         super(name);
     }
 
-    public WallComment(String name, String description) {
+    public WallRecordLikeDislike(String name, String description) {
         super(name, description);
     }
 
@@ -26,7 +26,7 @@ public class WallComment extends AbstractComment {
 
     @Override
     public String toString() {
-        return "WallComment{" +
+        return "WallRecordLikeDislike{" +
                 "wallRecord=" + wallRecord +
                 '}';
     }
