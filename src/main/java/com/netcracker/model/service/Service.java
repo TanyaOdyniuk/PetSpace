@@ -1,7 +1,6 @@
 package com.netcracker.model.service;
 
 import com.netcracker.model.Model;
-import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 
 import java.util.Set;
@@ -12,7 +11,7 @@ public class Service extends Model {
     private Double servicePrice;
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
-    private Set<Profile> profiles;
+    private Set<User> users;
 
     public Service() {
     }
@@ -45,6 +44,10 @@ public class Service extends Model {
         return servicePrice;
     }
 
+    public void setServicePrice(double servicePrice) {
+        this.servicePrice = servicePrice;
+    }
+
     public ServiceType getServiceType() {
         return serviceType;
     }
@@ -53,16 +56,12 @@ public class Service extends Model {
         this.serviceType = serviceType;
     }
 
-    public void setServicePrice(Double servicePrice) {
-        this.servicePrice = servicePrice;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public Set<Profile> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(Set<Profile> profiles) {
-        this.profiles = profiles;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
@@ -72,7 +71,7 @@ public class Service extends Model {
                 ", serviceName='" + serviceName + '\'' +
                 ", servicePrice=" + servicePrice +
                 ", serviceType=" + serviceType +
-                ", profiles=" + profiles +
+                ", users=" + users +
                 '}';
     }
 }

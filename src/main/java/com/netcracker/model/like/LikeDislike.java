@@ -1,6 +1,6 @@
 package com.netcracker.model.like;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.comment.Comment;
 import com.netcracker.model.record.GroupWallRecord;
 import com.netcracker.model.record.PhotoRecord;
@@ -8,7 +8,7 @@ import com.netcracker.model.user.Profile;
 
 import java.util.Date;
 
-public class LikeDislike extends Model {
+public class LikeDislike extends BaseEntity {
     private Date likeDate;
     private Boolean isDislike;
     private Profile likeAuthor;

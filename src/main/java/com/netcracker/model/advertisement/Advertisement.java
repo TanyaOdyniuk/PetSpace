@@ -1,6 +1,6 @@
 package com.netcracker.model.advertisement;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.comment.Comment;
@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class Advertisement extends Model {
+public class Advertisement extends BaseEntity {
     private Date adDate;
     private String adTopic;
     private List<String> adPetSigns;

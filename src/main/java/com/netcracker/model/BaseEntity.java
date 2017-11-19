@@ -1,6 +1,6 @@
 package com.netcracker.model;
 
-public abstract class Model {
+public abstract class BaseEntity {
 
     private String name;
     private String description;
@@ -8,14 +8,14 @@ public abstract class Model {
     private Integer parentId;
     private Integer objectTypeId;
 
-    public Model() {
+    public BaseEntity() {
     }
 
-    public Model(String name) {
+    public BaseEntity(String name) {
         this.name = name;
     }
 
-    public Model(String name, String description) {
+    public BaseEntity(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -65,7 +65,7 @@ public abstract class Model {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Model model = (Model) o;
+        BaseEntity model = (BaseEntity) o;
 
         return objectId.equals(model.objectId);
     }
@@ -77,7 +77,7 @@ public abstract class Model {
 
     @Override
     public String toString() {
-        return "Model{" +
+        return "BaseEntity{" +
                 "objectId=" + objectId +
                 '}';
     }

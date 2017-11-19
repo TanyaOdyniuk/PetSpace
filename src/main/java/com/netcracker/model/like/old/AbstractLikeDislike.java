@@ -1,11 +1,11 @@
 package com.netcracker.model.like.old;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.util.Date;
 
-public class AbstractLikeDislike extends Model {
+public class AbstractLikeDislike extends BaseEntity {
     private Date likeDislikeDate;
     private Boolean isDislike;
     private User user;

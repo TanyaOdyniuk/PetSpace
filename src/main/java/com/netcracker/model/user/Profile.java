@@ -1,6 +1,6 @@
 package com.netcracker.model.user;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.comment.Comment;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class Profile extends Model {
+public class Profile extends BaseEntity {
 
     private String profileAvatar;
     private String profileName;

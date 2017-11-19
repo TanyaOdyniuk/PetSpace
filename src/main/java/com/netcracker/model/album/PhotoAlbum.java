@@ -1,12 +1,12 @@
 package com.netcracker.model.album;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.PhotoRecord;
 
 import java.util.List;
 
-public class PhotoAlbum extends Model {
+public class PhotoAlbum extends BaseEntity {
 
     private String photoAlbumName;
     private String photoAlbumDesc;

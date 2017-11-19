@@ -1,10 +1,10 @@
 package com.netcracker.model.record;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 
 import java.util.Date;
 
-public abstract class AbstractRecord extends Model {
+public abstract class AbstractRecord extends BaseEntity {
 
     private String recordText;
     private Date recordDate;

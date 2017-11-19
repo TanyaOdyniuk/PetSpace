@@ -1,10 +1,10 @@
 package com.netcracker.model.pet;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
-public class PetSpecies extends Model {
+public class PetSpecies extends BaseEntity {
 
     private String speciesName;
     //TODO SERVICE GET PET LIST BY SPECIES

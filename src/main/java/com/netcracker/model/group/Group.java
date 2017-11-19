@@ -1,6 +1,6 @@
 package com.netcracker.model.group;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.record.GroupWallRecord;
 import com.netcracker.model.user.Profile;
@@ -8,7 +8,7 @@ import com.netcracker.model.user.Profile;
 import java.util.List;
 import java.util.Set;
 
-public class Group extends Model {
+public class Group extends BaseEntity {
 
     private String groupName;
     private String groupDescription;

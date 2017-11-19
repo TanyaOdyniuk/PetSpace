@@ -1,6 +1,6 @@
 package com.netcracker.model.pet;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.album.PhotoAlbum;
@@ -9,7 +9,7 @@ import com.netcracker.model.user.Profile;
 import java.util.List;
 import java.util.Set;
 
-public class Pet extends Model {
+public class Pet extends BaseEntity {
 
     private String petAvatar;
     private String petName;

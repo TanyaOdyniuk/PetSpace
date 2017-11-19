@@ -3,7 +3,7 @@ package com.netcracker.dao.managerapi;
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.converter.Converter;
 import com.netcracker.dao.manager.EntityManager;
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +26,13 @@ public class ManagerAPI {
 
 
     @Transactional
-    public Entity create(Model model) {
-        Entity entity;
-        entity = manager.create(converter.convertToEntity(model));
+    public Entity create(BaseEntity model) {
+        Entity entity = manager.create(converter.convertToEntity(model));
         model.setObjectId(entity.getObjectId());
         return entity;
     }
 
-    public void update(Model model) {
+    public void update(BaseEntity model) {
         if (model.getObjectId() == null) {
             create(model);
         }
@@ -44,7 +43,7 @@ public class ManagerAPI {
         manager.delete(objectId);
     }
 
-    public <T extends Model> T getById(Integer objectId, Class modelClass) {
+    public <T extends BaseEntity> T getById(Integer objectId, Class modelClass) {
         Entity entity = manager.getById(objectId);
         T model = null;
         model = converter.convertToModel(entity, modelClass);
@@ -53,9 +52,9 @@ public class ManagerAPI {
 
     public List getAll(Integer objectTypeId, Class modelClass) {
         List<Entity> entities = manager.getAll(objectTypeId);
-        List<Model> models = new ArrayList<>();
+        List<BaseEntity> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
-            Model model = null;
+            BaseEntity model = null;
             model = converter.convertToModel(entities.get(i), modelClass);
             models.add(model);
         }
