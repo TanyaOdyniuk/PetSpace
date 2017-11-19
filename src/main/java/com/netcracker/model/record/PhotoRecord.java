@@ -10,14 +10,13 @@ import java.util.List;
 public class PhotoRecord extends AbstractRecord {
 
     private String photo;
-    //TODO SERVICE GETPHOTOCOMMENTS
-    private List<Comment> photoComments;
     private PhotoAlbum photoAlbum;
     //TODO SERVICE TO GET LIKES
     private List<LikeDislike> photoRecordLikes;
     //TODO SERVICE TO GET DISLIKES
     private List<LikeDislike> photoRecordDislikes;
-    private Pet pet;
+    //TODO SERVICE TO GET PHOTO COMMENTS
+    private List<Comment> photoComments;
 
     public PhotoRecord() {
     }
@@ -69,15 +68,6 @@ public class PhotoRecord extends AbstractRecord {
     public void setPhotoRecordDislikes(List<LikeDislike> photoRecordDislikes) {
         this.photoRecordDislikes = photoRecordDislikes;
     }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
     @Override
     public String toString() {
         return "PhotoRecord{" +
@@ -86,7 +76,6 @@ public class PhotoRecord extends AbstractRecord {
                 ", photoAlbum=" + photoAlbum +
                 ", photoRecordLikes=" + photoRecordLikes +
                 ", photoRecordDislikes=" + photoRecordDislikes +
-                ", pet=" + pet +
                 '}';
     }
 }

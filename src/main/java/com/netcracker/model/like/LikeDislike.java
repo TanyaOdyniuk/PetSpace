@@ -11,7 +11,7 @@ import java.util.Date;
 public class LikeDislike extends Model {
     private Date likeDate;
     private Boolean isDislike;
-    private Profile likeProfile;
+    private Profile likeAuthor;
     private GroupWallRecord likeGroupWallRecord;
     private Comment likeComment;
     private PhotoRecord likePhotoRecord;
@@ -43,12 +43,12 @@ public class LikeDislike extends Model {
         isDislike = dislike;
     }
 
-    public Profile getLikeProfile() {
-        return likeProfile;
+    public Profile getLikeAuthor() {
+        return likeAuthor;
     }
 
-    public void setLikeProfile(Profile likeProfile) {
-        this.likeProfile = likeProfile;
+    public void setLikeAuthor(Profile likeAuthor) {
+        this.likeAuthor = likeAuthor;
     }
 
     public GroupWallRecord getLikeGroupWallRecord() {
@@ -80,7 +80,7 @@ public class LikeDislike extends Model {
         return "LikeDislike{" +
                 "likeDate=" + likeDate +
                 ", isDislike=" + isDislike +
-                ", likeProfile=" + likeProfile +
+                ", likeAuthor=" + likeAuthor +
                 ", likeGroupWallRecord=" + likeGroupWallRecord +
                 ", likeComment=" + likeComment +
                 ", likePhotoRecord=" + likePhotoRecord +

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GroupWallRecord extends AbstractRecord {
     private Group recordGroup;
-    private Profile recordProfile;
+    private Profile recordAuthor;
     //TODO SERVICE TO GET LIKES
     private List<LikeDislike> recordLikes;
     //TODO SERVICE TO GET DISLIKES
@@ -36,12 +36,12 @@ public class GroupWallRecord extends AbstractRecord {
         this.recordGroup = recordGroup;
     }
 
-    public Profile getRecordProfile() {
-        return recordProfile;
+    public Profile getRecordAuthor() {
+        return recordAuthor;
     }
 
-    public void setRecordProfile(Profile recordProfile) {
-        this.recordProfile = recordProfile;
+    public void setRecordAuthor(Profile recordAuthor) {
+        this.recordAuthor = recordAuthor;
     }
 
     public List<LikeDislike> getRecordLikes() {
@@ -72,7 +72,7 @@ public class GroupWallRecord extends AbstractRecord {
     public String toString() {
         return "GroupWallRecord{" +
                 "recordGroup=" + recordGroup +
-                ", recordProfile=" + recordProfile +
+                ", recordAuthor=" + recordAuthor +
                 ", recordLikes=" + recordLikes +
                 ", recordDislikes=" + recordDislikes +
                 ", GroupWallComments=" + GroupWallComments +

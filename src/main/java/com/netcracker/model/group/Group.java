@@ -3,7 +3,6 @@ package com.netcracker.model.group;
 import com.netcracker.model.Model;
 import com.netcracker.model.Status;
 import com.netcracker.model.record.GroupWallRecord;
-import com.netcracker.model.record.old.GroupRecord;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
@@ -14,13 +13,13 @@ public class Group extends Model {
     private String groupName;
     private String groupDescription;
     //TODO SERVICE GETGROUPUSERS
-    private Set<Profile> groupProfiles;
+    private Set<Profile> groupParticipants;
     private GroupType groupType;
     private Status groupStatus;
     //TODO SERVICE GETGROUPRECORDS
     private List<GroupWallRecord> groupRecords;
     //TODO SERVICE GETGROUPADMINS
-    private List<Profile> groupAdmins;
+    private Profile groupAdmin;
 
     public Group() {
     }
@@ -49,12 +48,12 @@ public class Group extends Model {
         this.groupDescription = groupDescription;
     }
 
-    public Set<Profile> getGroupProfiles() {
-        return groupProfiles;
+    public Set<Profile> getGroupParticipants() {
+        return groupParticipants;
     }
 
-    public void setGroupProfiles(Set<Profile> groupProfiles) {
-        this.groupProfiles = groupProfiles;
+    public void setGroupParticipants(Set<Profile> groupParticipants) {
+        this.groupParticipants = groupParticipants;
     }
 
     public GroupType getGroupType() {
@@ -81,12 +80,12 @@ public class Group extends Model {
         this.groupRecords = groupRecords;
     }
 
-    public List<Profile> getGroupAdmins() {
-        return groupAdmins;
+    public Profile getGroupAdmin() {
+        return groupAdmin;
     }
 
-    public void setGroupAdmins(List<Profile> groupAdmins) {
-        this.groupAdmins = groupAdmins;
+    public void setGroupAdmin(Profile groupAdmin) {
+        this.groupAdmin = groupAdmin;
     }
 
     @Override
@@ -94,11 +93,11 @@ public class Group extends Model {
         return "Group{" +
                 "groupName='" + groupName + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
-                ", groupProfiles=" + groupProfiles +
+                ", groupParticipants=" + groupParticipants +
                 ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
                 ", groupRecords=" + groupRecords +
-                ", groupAdmins=" + groupAdmins +
+                ", groupAdmin=" + groupAdmin +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ public class Advertisement extends Model {
     private Boolean adIsVip;
     private String adLocation;
     private String adBasicInfo;
-    private Profile adProfile;
+    private Profile adAuthor;
     private Status adStatus;
     private Category adCategory;
     private Set<Pet> adPets;
@@ -84,12 +84,12 @@ public class Advertisement extends Model {
         this.adBasicInfo = adBasicInfo;
     }
 
-    public Profile getAdProfile() {
-        return adProfile;
+    public Profile getAdAuthor() {
+        return adAuthor;
     }
 
-    public void setAdProfile(Profile adProfile) {
-        this.adProfile = adProfile;
+    public void setAdAuthor(Profile adAuthor) {
+        this.adAuthor = adAuthor;
     }
 
     public Status getAdStatus() {
@@ -133,7 +133,7 @@ public class Advertisement extends Model {
                 ", adIsVip=" + adIsVip +
                 ", adLocation='" + adLocation + '\'' +
                 ", adBasicInfo='" + adBasicInfo + '\'' +
-                ", adProfile=" + adProfile +
+                ", adAuthor=" + adAuthor +
                 ", adStatus=" + adStatus +
                 ", adCategory=" + adCategory +
                 ", adPets=" + adPets +

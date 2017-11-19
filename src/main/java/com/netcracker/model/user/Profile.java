@@ -8,7 +8,7 @@ import com.netcracker.model.group.Group;
 import com.netcracker.model.like.LikeDislike;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.GroupWallRecord;
-
+import com.netcracker.model.service.Service;
 
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class Profile extends Model {
     //TODO SERVICE GETPETS
     private List<Pet> profilePets;
     //TODO SERVICE GETWALLRECORDS
-    private List<GroupWallRecord> profileGroupWallRecords;
+    private List<GroupWallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
     private List<Advertisement> profileAdvertisements;
     //TODO SERVICE GETPROFILEGROUPS
@@ -40,7 +40,10 @@ public class Profile extends Model {
     private List<LikeDislike> profileLikes;
     //TODO SERVICE GETDISLIKES
     private List<LikeDislike> profileDislikes;
-
+    //TODO SERVICE GETSERVICES
+    private Set<Service> services;
+    //TODO SERVICE GETADMINISTRATEDGROUPS
+    private Set<Group> profileAdministratedGroups;
 
     public Profile() {
     }
@@ -133,12 +136,12 @@ public class Profile extends Model {
         this.profilePets = profilePets;
     }
 
-    public List<GroupWallRecord> getProfileGroupWallRecords() {
-        return profileGroupWallRecords;
+    public List<GroupWallRecord> getProfileWallRecords() {
+        return profileWallRecords;
     }
 
-    public void setProfileGroupWallRecords(List<GroupWallRecord> profileGroupWallRecords) {
-        this.profileGroupWallRecords = profileGroupWallRecords;
+    public void setProfileWallRecords(List<GroupWallRecord> profileWallRecords) {
+        this.profileWallRecords = profileWallRecords;
     }
 
     public List<Advertisement> getProfileAdvertisements() {
@@ -181,6 +184,22 @@ public class Profile extends Model {
         this.profileDislikes = profileDislikes;
     }
 
+    public Set<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(Set<Service> services) {
+        this.services = services;
+    }
+
+    public Set<Group> getProfileAdministratedGroups() {
+        return profileAdministratedGroups;
+    }
+
+    public void setProfileAdministratedGroups(Set<Group> profileAdministratedGroups) {
+        this.profileAdministratedGroups = profileAdministratedGroups;
+    }
+
     @Override
     public String toString() {
         return "Profile{" +
@@ -194,12 +213,14 @@ public class Profile extends Model {
                 ", profileStatus=" + profileStatus +
                 ", profileUser=" + profileUser +
                 ", profilePets=" + profilePets +
-                ", profileGroupWallRecords=" + profileGroupWallRecords +
+                ", profileWallRecords=" + profileWallRecords +
                 ", profileAdvertisements=" + profileAdvertisements +
                 ", profileGroups=" + profileGroups +
                 ", profileComments=" + profileComments +
                 ", profileLikes=" + profileLikes +
                 ", profileDislikes=" + profileDislikes +
+                ", services=" + services +
+                ", profileAdministratedGroups=" + profileAdministratedGroups +
                 '}';
     }
 }

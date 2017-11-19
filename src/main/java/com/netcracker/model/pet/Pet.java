@@ -19,7 +19,7 @@ public class Pet extends Model {
     private Double petWeight;
     private Double petHeight;
     private String petSpecificParam;
-    private Profile profile;
+    private Profile petOwner;
     private Status petStatus;
     //TODO SERVICE GETADVERTISEMENTS
     private Set<Advertisement> petAdvertisements;
@@ -101,12 +101,12 @@ public class Pet extends Model {
         this.petSpecificParam = petSpecificParam;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Profile getPetOwner() {
+        return petOwner;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setPetOwner(Profile petOwner) {
+        this.petOwner = petOwner;
     }
 
     public Status getPetStatus() {
@@ -144,7 +144,7 @@ public class Pet extends Model {
                 ", petWeight=" + petWeight +
                 ", petHeight=" + petHeight +
                 ", petSpecificParam='" + petSpecificParam + '\'' +
-                ", profile=" + profile +
+                ", petOwner=" + petOwner +
                 ", petStatus=" + petStatus +
                 ", advertisementPets=" + petAdvertisements +
                 ", petPhotoAlbums=" + petPhotoAlbums +

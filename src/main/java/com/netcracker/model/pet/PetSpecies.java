@@ -7,6 +7,7 @@ import java.util.List;
 public class PetSpecies extends Model {
 
     private String speciesName;
+    //TODO SERVICE GET PET LIST BY SPECIES
     private List<Pet> petList;
 
     public PetSpecies() {
