@@ -3,18 +3,13 @@ package com.netcracker.UI;
 import com.netcracker.model.StubUser;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Odyniuk on 06/11/2017.
@@ -30,11 +25,17 @@ public class StubVaadinUI extends UI {
 
     private final Button addNewBtn;
 
+    private final HorizontalLayout topPanel;
+
+    private final VerticalLayout leftPanel;
+
     @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
         this.stubUserEditor = stubUserEditor;
         this.grid = new Grid<>(StubUser.class);
         this.addNewBtn = new Button("New user", VaadinIcons.PLUS);
+        this.topPanel = new StubTopBar();
+        this.leftPanel = new StubLeftBar();
     }
 
     @Override
@@ -43,14 +44,25 @@ public class StubVaadinUI extends UI {
         VerticalLayout mainLayout = new VerticalLayout();
         HorizontalLayout primaryAreaLayout = new HorizontalLayout();
         VerticalLayout addUsersLayout = new VerticalLayout();
+
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
-        addUsersLayout.getComponent(0).setHeight("10%");
-        primaryAreaLayout.addComponentsAndExpand(initLeftPanel(), addUsersLayout);
-        mainLayout.addComponentsAndExpand(initTopPanel(), primaryAreaLayout);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0),1.0f);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1),15.0f);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(2),15.0f);
+
+        primaryAreaLayout.addComponentsAndExpand(leftPanel, addUsersLayout);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0),2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1),9.0f);
+
+        mainLayout.addComponentsAndExpand(topPanel, primaryAreaLayout);
+        mainLayout.setExpandRatio(mainLayout.getComponent(0),1.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(1),9.0f);
         setContent(mainLayout);
 
+        addNewBtn.setHeight(30, Unit.PIXELS);
         grid.setHeight(300, Unit.PIXELS);
         grid.setColumns("id", "firstName", "lastName");
+        stubUserEditor.setHeight(250, Unit.PIXELS);
         addNewBtn.addClickListener(clickEvent -> stubUserEditor.editUser(new StubUser(++StubUser.objectCount, "", "")));
 
         grid.asSingleSelect().addValueChangeListener(e -> stubUserEditor.editUser(e.getValue()));
@@ -68,60 +80,4 @@ public class StubVaadinUI extends UI {
         grid.setItems(users);
     }
 
-    private HorizontalLayout initTopPanel() {
-        HorizontalLayout topPanelLayout = new HorizontalLayout();
-        topPanelLayout.setWidth("100%");
-        topPanelLayout.setSpacing(false);
-        HashMap<String, VaadinIcons> buttonsMap = new HashMap<>(5);
-        buttonsMap.put("Main page", VaadinIcons.REFRESH);
-        buttonsMap.put("News", VaadinIcons.DOCTOR);
-        buttonsMap.put("Users", VaadinIcons.ARCHIVE);
-        buttonsMap.put("Pets", VaadinIcons.HOSPITAL);
-        buttonsMap.put("Bulletin board", VaadinIcons.YOUTUBE);
-        for (Map.Entry<String, VaadinIcons> entry : buttonsMap.entrySet()) {
-            Button button = new Button(entry.getKey(), entry.getValue());
-            button.setWidth("100%");
-            if (entry.getKey().equals("Main page")) {
-                button.addStyleName(ValoTheme.BUTTON_DANGER);
-            } else {
-                button.addStyleName(ValoTheme.BUTTON_HUGE);
-            }
-            topPanelLayout.addComponentsAndExpand(button);
-            button.addClickListener(clickEvent -> {
-                Notification notification = new Notification("No " + entry.getKey() + " yet!!!",
-                        Notification.Type.HUMANIZED_MESSAGE);
-                notification.setPosition(Position.MIDDLE_CENTER);
-                notification.show(Page.getCurrent());
-            });
-        }
-        return topPanelLayout;
-    }
-
-    private VerticalLayout initLeftPanel() {
-        VerticalLayout leftPanelLayout = new VerticalLayout();
-        leftPanelLayout.setWidth("20%");
-        leftPanelLayout.setSpacing(false);
-
-        HashMap<String, VaadinIcons> buttonsMap = new HashMap<>(6);
-        buttonsMap.put("Profile", VaadinIcons.ABACUS);
-        buttonsMap.put("Pets", VaadinIcons.BOMB);
-        buttonsMap.put("Friends", VaadinIcons.BAN);
-        buttonsMap.put("Photos", VaadinIcons.PENCIL);
-        buttonsMap.put("Adverts", VaadinIcons.SPOON);
-        buttonsMap.put("Settings", VaadinIcons.MOON);
-        for (Map.Entry<String, VaadinIcons> entry : buttonsMap.entrySet()) {
-            Button button = new Button(entry.getKey(), entry.getValue());
-            button.setWidth("100%");
-            button.addStyleName(ValoTheme.BUTTON_QUIET);
-            leftPanelLayout.addComponentsAndExpand(button);
-            button.addClickListener(clickEvent -> {
-                Notification notification = new Notification("No " + entry.getKey() + " yet!!!",
-                        Notification.Type.HUMANIZED_MESSAGE);
-                notification.setPosition(Position.MIDDLE_CENTER);
-                notification.show(Page.getCurrent());
-            });
-        }
-
-        return leftPanelLayout;
-    }
 }

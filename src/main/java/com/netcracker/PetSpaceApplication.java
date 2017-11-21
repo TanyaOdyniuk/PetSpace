@@ -4,13 +4,11 @@ import com.netcracker.model.StubUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@ImportResource("applicationContext.xml")
 public class PetSpaceApplication {
 
     @Bean(name = "users")
@@ -22,10 +20,8 @@ public class PetSpaceApplication {
         return users;
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(PetSpaceApplication.class, args);
     }
-
 
 }

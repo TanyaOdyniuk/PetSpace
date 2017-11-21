@@ -2,12 +2,12 @@ package com.netcracker.testDB;
 
 public class ObjectRow {
 
-    int id;
-    int parent_id;
-    String code;
-    String name;
+    private int id;
+    private int parent_id;
+    private String code;
+    private String name;
 
-    public ObjectRow(int id, int parent_id, String code, String name) {
+    ObjectRow(int id, int parent_id, String code, String name) {
         this.id = id;
         this.parent_id = parent_id;
         this.code = code;
@@ -48,10 +48,10 @@ public class ObjectRow {
 
     @Override
     public String toString() {
-        return "ID =" + id +
-                ",   parent_id ='" + parent_id + '\'' +
-                ",   code ='" + code + '\'' +
-                ",   name ='" + name + '\'' +
+        return "ID = " + id +
+                ",   parent_id = '" + parent_id + '\'' +
+                ",   code = '" + code + '\'' +
+                ",   name = '" + name + '\'' +
                 '}';
     }
 }
