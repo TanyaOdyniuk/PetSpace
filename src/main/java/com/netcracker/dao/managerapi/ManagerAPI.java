@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Odyniuk on 17/11/2017.
- */
-
 @Repository
 public class ManagerAPI {
 
@@ -26,38 +22,46 @@ public class ManagerAPI {
 
 
     @Transactional
-    public Entity create(BaseEntity model) {
-        Entity entity = manager.create(converter.convertToEntity(model));
-        model.setObjectId(entity.getObjectId());
+    public Entity create(BaseEntity baseEntity) {
+        Entity entity = manager.create(converter.convertToEntity(baseEntity));
+        baseEntity.setObjectId(entity.getObjectId());
         return entity;
     }
 
-    public void update(BaseEntity model) {
-        if (model.getObjectId() == null) {
-            create(model);
+    public void update(BaseEntity baseEntity) {
+        if (baseEntity.getObjectId() == null) {
+            create(baseEntity);
         }
-        manager.update(converter.convertToEntity(model));
+        manager.update(converter.convertToEntity(baseEntity));
     }
 
-    public void delete(Integer objectId) {
-        manager.delete(objectId);
+    public void delete(Integer objectId, int forceDelete) {
+        manager.delete(objectId, forceDelete);
     }
 
-    public <T extends BaseEntity> T getById(Integer objectId, Class modelClass) {
+    public <T extends BaseEntity> T getById(Integer objectId, Class baseEntityClass) {
         Entity entity = manager.getById(objectId);
-        T model = null;
-        model = converter.convertToModel(entity, modelClass);
-        return model;
+        return (T)converter.convertToBaseEntity(entity, baseEntityClass);
+
     }
 
-    public List getAll(Integer objectTypeId, Class modelClass) {
+    public List<BaseEntity> getAll(Integer objectTypeId, Class baseEntityClass) {
         List<Entity> entities = manager.getAll(objectTypeId);
-        List<BaseEntity> models = new ArrayList<>();
-        for (int i = 0; i < entities.size(); i++) {
-            BaseEntity model = null;
-            model = converter.convertToModel(entities.get(i), modelClass);
-            models.add(model);
+        List<BaseEntity> baseEntities = new ArrayList<>();
+        for (Entity entity : entities) {
+            BaseEntity baseEntity = converter.convertToBaseEntity(entity, baseEntityClass);
+            baseEntities.add(baseEntity);
         }
-        return models;
+        return baseEntities;
+    }
+
+    public List<BaseEntity> getObjectsBySQL(String sqlQuery, Class baseEntityClass) {
+        List<Entity> entities = manager.getBySQL(sqlQuery);
+        List<BaseEntity> baseEntities = new ArrayList<>();
+        for (Entity entity : entities) {
+            BaseEntity baseEntity = converter.convertToBaseEntity(entity, baseEntityClass);
+            baseEntities.add(baseEntity);
+        }
+        return baseEntities;
     }
 }

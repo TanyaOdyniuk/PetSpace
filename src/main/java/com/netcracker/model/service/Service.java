@@ -1,11 +1,11 @@
 package com.netcracker.model.service;
 
-import com.netcracker.model.Model;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.util.Set;
 
-public class Service extends Model {
+public class Service extends BaseEntity {
     private String servicePhoto;
     private String serviceName;
     private Double servicePrice;
