@@ -20,8 +20,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 
-@Component
-public class Converter {
+//@Component
+public class Converter {/*
     @Autowired
     private ManagerAPI manager;
 
@@ -302,5 +302,5 @@ public class Converter {
             }
         }
         return max;
-    }
+    }*/
 }

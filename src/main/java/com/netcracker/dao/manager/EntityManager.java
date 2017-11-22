@@ -3,41 +3,48 @@ package com.netcracker.dao.manager;
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.manager.query.Query;
 import javafx.util.Pair;
+//import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.*;
 
-@Component
+//@Repository
 public class EntityManager {
 
     private SimpleJdbcCall jdbcCall;
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    //@Autowired
     public EntityManager(DataSource dataSource) {
-        this.jdbcCall = new SimpleJdbcCall(dataSource);
+        try {
+            Connection c =  dataSource.getConnection("ODESSA_17", "ODESSA_17");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.setResultsMapCaseInsensitive(true);
+        this.jdbcCall = new SimpleJdbcCall(jdbcTemplate);
     }
 
     @Transactional
     public Entity create(Entity entity) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        entity.setObjectId(keyHolder.getKey().intValue());
-        executeObjectJdbcCall(entity, jdbcCall, 0, null);
+        //KeyHolder keyHolder = new GeneratedKeyHolder();
+        //entity.setObjectId(keyHolder.getKey().intValue());
+        Map<String, Object> result = executeObjectJdbcCall(entity, jdbcCall, 0, null);
+        entity.setObjectId((Integer) result.get("p_OBJECT_ID"));
         for (Map.Entry entry : entity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
                 executeObjRefJdbcCall(entity, entry, jdbcCall, 0);
@@ -143,22 +150,36 @@ public class EntityManager {
     }
 
     private Map<String, Object> executeObjectJdbcCall(Entity entity, SimpleJdbcCall jdbcCall, int delete, Integer forceDel) {
-        jdbcCall.withProcedureName("UPDATE_OBJECT");
+        jdbcCall.withProcedureName("UPDATE_OBJECT").withSchemaName("ODESSA_17").declareParameters(
+                        new SqlParameter("p_OBJECT_ID", Types.NUMERIC),
+                        new SqlParameter("p_PARENT_ID", Types.NUMERIC),
+                        new SqlParameter("p_OBJECT_TYPE_ID", Types.NUMERIC),
+                        new SqlParameter("p_NAME", Types.VARCHAR),
+
+                        new SqlParameter("p_DESCRIPTION", Types.VARCHAR),
+                        new SqlParameter("p_TO_DEL", Types.NUMERIC),
+                        new SqlParameter("p_FORCE_DELETE", Types.NUMERIC)
+                );
         Map<String, Object> inParam = new HashMap<>();
-        inParam.put("p_OBJECT_ID", entity.getObjectId().toString());
+        inParam.put("p_OBJECT_ID", entity.getObjectId() != null ? entity.getObjectId().toString() : null);
         if (entity.getParentId() == null) {
             inParam.put("p_PARENT_ID", null);
         } else {
             inParam.put("p_PARENT_ID", entity.getParentId().toString());
         }
-        inParam.put("p_OBJECT_TYPE_ID", entity.getObjectTypeId().toString());
+        inParam.put("p_OBJECT_TYPE_ID", entity.getObjectTypeId() != null ? entity.getObjectTypeId().toString() : null);
         inParam.put("p_NAME", entity.getName());
         inParam.put("p_DESCRIPTION", entity.getDescription());
         inParam.put("p_TO_DEL", delete);
         inParam.put("p_FORCE_DELETE", forceDel);
         SqlParameterSource in = new MapSqlParameterSource(inParam);
+        Connection connection;
+        try {
+            connection = jdbcTemplate.getDataSource().getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return jdbcCall.execute(in);
-
     }
 
     private Map<String, Object> executeAttributeJdbcCall(Entity entity, Map.Entry entry, SimpleJdbcCall jdbcCall, int delete) {
