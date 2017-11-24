@@ -1,17 +1,26 @@
 package com.netcracker.model.user;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.securityBook.SecurityBook;
 
 import java.util.Set;
 
+@ObjectType(value = 1)
 public class User extends BaseEntity {
 
+    @Attribute(value = 1)
     private String login;
+    @Attribute(value = 2)
     private String password;
+    @Attribute(value = 3)
     private Profile profile;
+    @Attribute(value = 4)
     private UserType userType;
     //TODO SERVICE GETSECURITYBOOKS
+    @Attribute(value = 5)
     private Set<SecurityBook> securityBooks;
 
     public User() {

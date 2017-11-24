@@ -1,7 +1,8 @@
-package com.netcracker.controller;
+package com.netcracker.errorHandling;
 
 
-import com.netcracker.model.ApiError;
+import com.netcracker.errorHandling.ApiError;
+import com.netcracker.errorHandling.exceptions.UserNotValidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,17 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    //Occurs, when user's first\last name has wrong format
+    @ExceptionHandler({UserNotValidException.class})
+    public ResponseEntity<Object> handleUserNotValid(
+            UserNotValidException ex, WebRequest request) {
+        String error = ex.getCurrentName() + " has wrong format! Example: John Cena";
+
+        ApiError apiError =
+                new ApiError(HttpStatus.BAD_REQUEST, ex.toString(), error);
+        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
 
     //Exception is thrown when argument annotated with @Valid failed validation
     @Override

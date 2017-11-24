@@ -1,5 +1,8 @@
 package com.netcracker.model.record;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.Comment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.like.LikeDislike;
@@ -7,14 +10,21 @@ import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
+@ObjectType(value = 402)
 public class GroupWallRecord extends AbstractRecord {
+
+    @Reference(value = 428)
     private Group recordGroup;
+    @Attribute(value = 411)
     private Profile recordAuthor;
     //TODO SERVICE TO GET LIKES
+    @Attribute(value = 409)
     private List<LikeDislike> recordLikes;
     //TODO SERVICE TO GET DISLIKES
+    @Attribute(value = 409)
     private List<LikeDislike> recordDislikes;
     //TODO SERVICE TO GET COMMENTS
+    @Reference(value = 410)
     private List<Comment> GroupWallComments;
 
     public GroupWallRecord() {

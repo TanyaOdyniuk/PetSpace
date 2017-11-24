@@ -1,16 +1,23 @@
 package com.netcracker.model.securityBook;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.math.BigInteger;
 import java.util.Set;
 
+@ObjectType(value = 204)
 public class SecurityBook extends BaseEntity {
 
+    @Attribute(value = 306)
     private BigInteger attributeId;
+    @Reference(value = 211)
     private SecurityType securityType;
     //TODO SERVICE TO GET USERS
+    @Reference(value = 5)
     private Set<User> users;
 
     public SecurityBook() {
