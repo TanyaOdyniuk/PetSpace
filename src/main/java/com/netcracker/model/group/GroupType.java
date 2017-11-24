@@ -2,7 +2,7 @@ package com.netcracker.model.group;
 
 import java.util.List;
 
-enum GroupType {
+public enum GroupType {
     OPEN("Open Group"),
     CLOSED("Closed Group");
 
