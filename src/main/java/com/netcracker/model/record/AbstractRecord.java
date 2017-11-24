@@ -1,12 +1,17 @@
 package com.netcracker.model.record;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 
 import java.util.Date;
 
+@ObjectType(value = 402)
 public abstract class AbstractRecord extends BaseEntity {
 
+    @Attribute(value = 407)
     private String recordText;
+    @Attribute(value = 408)
     private Date recordDate;
 
     public AbstractRecord() {

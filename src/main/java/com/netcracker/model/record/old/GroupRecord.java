@@ -1,11 +1,13 @@
 package com.netcracker.model.record.old;
 
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.comment.old.GroupComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.record.AbstractRecord;
 
 import java.util.List;
 
+@ObjectType(value = 402)
 public class GroupRecord extends AbstractRecord {
 
     private Group group;

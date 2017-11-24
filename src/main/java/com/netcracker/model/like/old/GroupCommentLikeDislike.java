@@ -1,8 +1,12 @@
 package com.netcracker.model.like.old;
 
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.old.GroupComment;
 
+@ObjectType(value = 400)
 public class GroupCommentLikeDislike extends AbstractLikeDislike {
+    @Reference(value = 405)
     private GroupComment groupComment;
 
     public GroupCommentLikeDislike() {

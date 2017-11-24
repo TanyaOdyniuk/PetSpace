@@ -1,5 +1,7 @@
 package com.netcracker.model.comment;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.like.LikeDislike;
@@ -9,8 +11,11 @@ import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
+@ObjectType(value = 401)
 public class Comment extends BaseEntity {
+    @Attribute(value = 407)
     private String commentText;
+    @Attribute(value = 408)
     private String commentDate;
     private Profile commentProfile;
     private Advertisement commentAdvertisement;

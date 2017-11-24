@@ -1,5 +1,8 @@
 package com.netcracker.model;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.pet.Pet;
@@ -7,14 +10,20 @@ import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
+@ObjectType(value = 3)
 public enum Status {
     ACTIVE("Active"),
     INACTIVE("Inactive");
 
+    @Attribute(value = 3)
     private String status;
+    @Reference(value = 427)
     private List<Group> groups;
+    @Reference(value = 419)
     private List<Profile> profiles;
+    @Reference(value = 13)
     private List<Advertisement> advertisements;
+    @Reference(value = 301)
     private List<Pet> pets;
 
     Status(String status) {

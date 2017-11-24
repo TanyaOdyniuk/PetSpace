@@ -1,5 +1,8 @@
 package com.netcracker.model.record;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.comment.Comment;
 import com.netcracker.model.like.LikeDislike;
@@ -7,15 +10,21 @@ import com.netcracker.model.pet.Pet;
 
 import java.util.List;
 
+@ObjectType(value = 203)
 public class PhotoRecord extends AbstractRecord {
 
+    @Attribute(value = 209)
     private String photo;
+    @Reference(value = 303)
     private PhotoAlbum photoAlbum;
     //TODO SERVICE TO GET LIKES
+    @Attribute(value = 305)
     private List<LikeDislike> photoRecordLikes;
     //TODO SERVICE TO GET DISLIKES
+    @Attribute(value = 305)
     private List<LikeDislike> photoRecordDislikes;
     //TODO SERVICE TO GET PHOTO COMMENTS
+    @Attribute(value = 304)
     private List<Comment> photoComments;
 
     public PhotoRecord() {

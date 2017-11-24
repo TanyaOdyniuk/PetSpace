@@ -1,16 +1,25 @@
 package com.netcracker.model.service;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.util.Set;
 
+@ObjectType(value = 6)
 public class Service extends BaseEntity {
+    @Attribute(value = 21)
     private String servicePhoto;
+    @Attribute(value = 22)
     private String serviceName;
+    @Attribute(value = 23)
     private Double servicePrice;
+    @Attribute(value = 24)
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
+    @Reference(value = 1) // нет в user поля сервиса
     private Set<User> users;
 
     public Service() {

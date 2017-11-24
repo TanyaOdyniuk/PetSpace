@@ -1,8 +1,12 @@
 package com.netcracker.model.comment.old;
 
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.advertisement.Advertisement;
 
+@ObjectType(value = 401)
 public class AdvertisementComment extends AbstractComment {
+    //@Reference(value = ) в advertisements нет связи с комментариями
     private Advertisement advertisement;
 
     public AdvertisementComment() {

@@ -1,9 +1,13 @@
 package com.netcracker.model.comment.old;
 
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.record.old.GroupRecord;
 
+@ObjectType(value = 401)
 public class GroupComment extends AbstractComment {
 
+    @Reference(value = 428)
     private GroupRecord groupRecord;
 
     public GroupComment() {
