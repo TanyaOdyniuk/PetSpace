@@ -59,6 +59,13 @@
             <artifactId>tomcat-jdbc</artifactId>
             <version>8.5.23</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client</artifactId>
+            <version>8.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
