@@ -1,15 +1,16 @@
 package com.netcracker.UI;
 
 
+import com.netcracker.errorHandling.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
@@ -81,11 +82,9 @@ public class StubVaadinUI extends UI {
         UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                Notification notification = new Notification("Error", "Error in UI", Notification.Type.ERROR_MESSAGE);
-                notification.show(Page.getCurrent());
+                ClientExceptionHandler.handle(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
             }
         });
-
     }
 
     private void listCustomers() {

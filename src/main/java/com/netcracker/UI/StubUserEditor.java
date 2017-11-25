@@ -1,19 +1,16 @@
 package com.netcracker.UI;
 
+import com.netcracker.errorHandling.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
@@ -53,23 +50,13 @@ public class StubUserEditor extends VerticalLayout {
                 StubConstants.REST_TEMPLATE
                         .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
             } catch (HttpClientErrorException ex) {
-                String description = "HTTP status: " + ex.getStatusCode() + "\nMessage: " + ex.getLocalizedMessage();
-                Notification notification = new Notification("Error", description, Notification.Type.ERROR_MESSAGE);
-                notification.show(Page.getCurrent());
+                ClientExceptionHandler.handle(ex);
             }
         });
 
         delete.addClickListener(e -> StubConstants.REST_TEMPLATE
                 .delete(StubConstants.RESOURCE_URL + '/' + stubUser.getId()));
         setVisible(false);
-
-        /*this.setErrorHandler(new DefaultErrorHandler() {
-            @Override
-            public void error(com.vaadin.server.ErrorEvent event) {
-                Notification notification = new Notification("Error", event.getThrowable().getLocalizedMessage(), Notification.Type.ERROR_MESSAGE);
-                notification.show(Page.getCurrent());
-            }
-        });*/
     }
 
     public interface ChangeHandler {

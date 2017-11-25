@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class ServerExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Occurs, when user's first\last name has wrong format
     @ExceptionHandler({UserNotValidException.class})
