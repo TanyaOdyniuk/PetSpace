@@ -5,9 +5,11 @@ import com.netcracker.dao.testDAO.testEntity.TestCity;
 import com.netcracker.dao.testDAO.testEntity.TestConfig;
 import com.netcracker.dao.testDAO.testEntity.TestPet;
 import com.netcracker.dao.testDAO.testEntity.TestUser;
+import com.netcracker.model.BaseEntity;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,21 +19,36 @@ public class DAOTEST {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class);
         ManagerAPI managerAPI = context.getBean(ManagerAPI.class);
-        Integer forUpdate = new DAOTEST().testCreateUser(managerAPI);
+        TestUser testUser1 = (TestUser) new DAOTEST().testCreateUser(managerAPI);
+        BigInteger forUpdate = testUser1.getObjectId();
         new DAOTEST().testUpdateUser(managerAPI, forUpdate);
-        new DAOTEST().testGetUser(managerAPI, forUpdate);
-        Integer getWithCities = new DAOTEST().testCreateWithCities(managerAPI);
-        new DAOTEST().testGetUserWithCities(managerAPI, getWithCities);
+        TestUser gotTestUser1 = new DAOTEST().testGetUser(managerAPI, forUpdate);
+        TestUser testUser2 = (TestUser) new DAOTEST().testCreateWithCities(managerAPI);
+        BigInteger getWithCities = testUser2.getObjectId();
+        TestUser gotTestUser2 = new DAOTEST().testGetUserWithCities(managerAPI, getWithCities);
+        List<BaseEntity> res = new DAOTEST().getAllTest(managerAPI);
+        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
+        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("4"), 0);
+        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
+        List<BaseEntity> res1 = new DAOTEST().getAllTest(managerAPI);
     }
 
-    public Integer testCreateUser(ManagerAPI managerAPI) {
+    public void deleteForceTest(ManagerAPI managerAPI, BigInteger id, Integer type){
+        managerAPI.delete(id, type);
+    }
+
+    public List<BaseEntity> getAllTest(ManagerAPI managerAPI){
+        return managerAPI.getAll(new BigInteger("1"), TestUser.class);
+    }
+
+    public BaseEntity testCreateUser(ManagerAPI managerAPI) {
         TestUser testUser = new TestUser();
         testUser.setSurname("Pupkin");
         testUser.setUsername("Vasya");
-        return managerAPI.create(testUser).getObjectId();
+        return managerAPI.create(testUser);
     }
 
-    public void testUpdateUser(ManagerAPI managerAPI, Integer forUpdate) {
+    public void testUpdateUser(ManagerAPI managerAPI, BigInteger forUpdate) {
         TestUser testUser = new TestUser();
         testUser.setObjectId(forUpdate);
         testUser.setSurname("Ololoev");
@@ -53,13 +70,12 @@ public class DAOTEST {
         managerAPI.update(testUser);
     }
 
-    public TestUser testGetUser(ManagerAPI managerAPI, Integer forGet) {
-        TestUser testUser = managerAPI.getById(forGet, TestUser.class);
-        return testUser;
+    public TestUser testGetUser(ManagerAPI managerAPI, BigInteger forGet) {
+        return managerAPI.getById(forGet, TestUser.class);
     }
 
 
-    public Integer testCreateWithCities(ManagerAPI managerAPI) {
+    public BaseEntity testCreateWithCities(ManagerAPI managerAPI) {
         TestUser testUser = new TestUser();
         testUser.setSurname("Ivanov");
         testUser.setUsername("Ivan");
@@ -73,11 +89,10 @@ public class DAOTEST {
         city2.setObjectId(managerAPI.create(city2).getObjectId());
         myCities.add(city2);
         testUser.setMycities(myCities);
-        return managerAPI.create(testUser).getObjectId();
+        return managerAPI.create(testUser);
     }
 
-    public TestUser testGetUserWithCities(ManagerAPI managerAPI, Integer forGet) {
-        TestUser testUser = managerAPI.getById(forGet, TestUser.class);
-        return testUser;
+    public TestUser testGetUserWithCities(ManagerAPI managerAPI, BigInteger forGet) {
+        return managerAPI.getById(forGet, TestUser.class);
     }
 }

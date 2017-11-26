@@ -1,12 +1,14 @@
 package com.netcracker.model;
 
+import java.math.BigInteger;
+
 public abstract class BaseEntity {
 
-    private String name;
-    private String description;
-    private Integer objectId;
-    private Integer parentId;
-    private Integer objectTypeId;
+    protected String name;
+    protected String description;
+    protected BigInteger objectId;
+    protected BigInteger parentId;
+    protected BigInteger objectTypeId;
 
     public BaseEntity() {
     }
@@ -36,27 +38,27 @@ public abstract class BaseEntity {
         this.description = description;
     }
 
-    public Integer getObjectId() {
+    public BigInteger getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(Integer objectId) {
+    public void setObjectId(BigInteger objectId) {
         this.objectId = objectId;
     }
 
-    public Integer getParentId() {
+    public BigInteger getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
     }
 
-    public Integer getObjectTypeId() {
+    public BigInteger getObjectTypeId() {
         return objectTypeId;
     }
 
-    public void setObjectTypeId(Integer objectTypeId) {
+    public void setObjectTypeId(BigInteger objectTypeId) {
         this.objectTypeId = objectTypeId;
     }
 
@@ -78,7 +80,11 @@ public abstract class BaseEntity {
     @Override
     public String toString() {
         return "BaseEntity{" +
-                "objectId=" + objectId +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", objectId=" + objectId +
+                ", parentId=" + parentId +
+                ", objectTypeId=" + objectTypeId +
                 '}';
     }
 }
