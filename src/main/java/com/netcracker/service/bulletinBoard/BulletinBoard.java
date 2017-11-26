@@ -9,18 +9,18 @@ public interface BulletinBoard {
 
 //    отображать список объявлений других пользователей постранично с возможностью
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
-    List<Advertisement> getAds();
+    List<Advertisement> getProfileAds();
 
 //    отображать список объявлений текущего пользователя постранично с возможностью
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
-    List<Advertisement> getMyAds(Profile profile);
+    List<Advertisement> getMyProfileAds(Profile profile);
 
 //    Система должна позволять отсортировать список объявлений по следующим правилам:
 //            1. Объявления в статусе VIP всегда находятся выше остальных.
     List<Advertisement> sortAd(List<Advertisement> listAds);
 
 //    Система должна позволять пользователю возможность добавить новое объявление с одной категорией
-    void newAd(Advertisement ad, Category categoryAd);
+    void newAd(Advertisement ad);
 
 //    Система должна вывести на экран полную информацию об объявлении, скрыв пустые поля
     List<String> getAd(Advertisement ad);
@@ -35,7 +35,7 @@ public interface BulletinBoard {
     void deleteAd(Advertisement ad);
 
 //    Система должна позволять пользователю выбрать одну категорию для своего объявления
-    void chooseCategory(List<Advertisement> listAds, Category categoryAd);
+    void chooseCategory(Advertisement listAds, Category categoryAd);
 
 //    После получения списка всех объявлений (FR: PetSpace.BulletinBoard.GetAds) или объявлений текущего пользователя
 //    (FR: PetSpace.BulletinBoard.GetMyAds) cистема должна позволять фильтровать список
