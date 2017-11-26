@@ -1,4 +1,4 @@
-package com.netcracker.model;
+package com.netcracker.errorHandling;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
@@ -50,5 +50,15 @@ public class ApiError {
 
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiError{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", errors=" + errors +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

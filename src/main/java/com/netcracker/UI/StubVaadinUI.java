@@ -1,12 +1,17 @@
 package com.netcracker.UI;
 
+
+import com.netcracker.errorHandling.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,23 +45,22 @@ public class StubVaadinUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-
         VerticalLayout mainLayout = new VerticalLayout();
         HorizontalLayout primaryAreaLayout = new HorizontalLayout();
         VerticalLayout addUsersLayout = new VerticalLayout();
 
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
-        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0),1.0f);
-        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1),15.0f);
-        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(2),15.0f);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0), 1.0f);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1), 15.0f);
+        addUsersLayout.setExpandRatio(addUsersLayout.getComponent(2), 15.0f);
 
         primaryAreaLayout.addComponentsAndExpand(leftPanel, addUsersLayout);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0),2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1),9.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
 
         mainLayout.addComponentsAndExpand(topPanel, primaryAreaLayout);
-        mainLayout.setExpandRatio(mainLayout.getComponent(0),1.0f);
-        mainLayout.setExpandRatio(mainLayout.getComponent(1),9.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(0), 1.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(1), 9.0f);
         setContent(mainLayout);
 
         addNewBtn.setHeight(30, Unit.PIXELS);
@@ -73,6 +77,14 @@ public class StubVaadinUI extends UI {
         });
 
         listCustomers();
+
+
+        UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
+            @Override
+            public void error(com.vaadin.server.ErrorEvent event) {
+                ClientExceptionHandler.handle(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+            }
+        });
     }
 
     private void listCustomers() {

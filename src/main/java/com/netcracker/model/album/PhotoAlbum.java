@@ -1,17 +1,25 @@
 package com.netcracker.model.album;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.PhotoRecord;
 
 import java.util.List;
 
+@ObjectType(value = 202)
 public class PhotoAlbum extends BaseEntity {
 
+    @Attribute(value = 207)
     private String photoAlbumName;
+    @Attribute(value = 208)
     private String photoAlbumDesc;
+    @Reference(value = 302)
     private Pet pet;
     //TODO SERVICE TO GET PHOTORECORDS
+    @Attribute(value = 303)
     private List<PhotoRecord> photoRecords;
 
     public PhotoAlbum() {

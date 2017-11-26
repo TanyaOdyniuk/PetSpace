@@ -1,5 +1,9 @@
 package com.netcracker.model.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
@@ -14,35 +18,53 @@ import com.netcracker.model.service.Service;
 import java.util.List;
 import java.util.Set;
 
-
+@ObjectType(value = 403)
 public class Profile extends BaseEntity {
 
+    @Attribute(value = 412)
     private String profileAvatar;
+    @Attribute(value = 413)
     private String profileName;
+    @Attribute(value = 414)
     private String profileSurname;
+    @Attribute(value = 415)
     private Integer profileAge;
+    @Attribute(value = 416)
     private List<String> profileHobbies;
+    @Attribute(value = 417)
     private List<String> profileFavouriteBreeds;
+    @Attribute(value = 418)
     private Double profileCurrencyBalance;
+    @Reference(value = 419)
     private Status profileStatus;
+    @Reference(value = 3)
     private User profileUser;
     //TODO SERVICE GETPETS
-    private List<Pet> profilePets;
+    @Reference(value = 201)
+    private List<Pet> profilePets; //нет аттрибута
     //TODO SERVICE GETWALLRECORDS
+    @Attribute(value = 421)
     private List<GroupWallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
+    @Reference(value = 14)
     private List<Advertisement> profileAdvertisements;
     //TODO SERVICE GETPROFILEGROUPS
+    @Reference(value = 425)
     private Set<Group> profileGroups;
     //TODO SERVICE GETCOMMENTS
+    @Reference(value = 406)
     private List<Comment> profileComments;
     //TODO SERVICE GETLIKES
+    @Reference(value = 401)
     private List<LikeDislike> profileLikes;
     //TODO SERVICE GETDISLIKES
+    @Reference(value = 401)
     private List<LikeDislike> profileDislikes;
     //TODO SERVICE GETSERVICES
+    @Attribute(value = 420)
     private Set<Service> services;
     //TODO SERVICE GETADMINISTRATEDGROUPS
+    @Reference(value = 424)
     private Set<Group> profileAdministratedGroups;
 
     public Profile() {

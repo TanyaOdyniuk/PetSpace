@@ -1,5 +1,9 @@
 package com.netcracker.model.like;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.Boolean;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.comment.Comment;
 import com.netcracker.model.record.GroupWallRecord;
@@ -8,12 +12,19 @@ import com.netcracker.model.user.Profile;
 
 import java.util.Date;
 
+@ObjectType(value = 400)
 public class LikeDislike extends BaseEntity {
+    @Attribute(value = 400)
     private Date likeDate;
-    private Boolean isDislike;
+    @Boolean(value = 401, yesno = "yes")
+    private boolean isDislike;
+    @Attribute(value = 402)
     private Profile likeAuthor;
+    @Reference(value = 409)
     private GroupWallRecord likeGroupWallRecord;
+    @Reference(value = 405)
     private Comment likeComment;
+    @Reference(value = 305)
     private PhotoRecord likePhotoRecord;
 
     public LikeDislike() {
@@ -35,11 +46,11 @@ public class LikeDislike extends BaseEntity {
         this.likeDate = likeDate;
     }
 
-    public Boolean getDislike() {
+    public boolean getDislike() {
         return isDislike;
     }
 
-    public void setDislike(Boolean dislike) {
+    public void setDislike(boolean dislike) {
         isDislike = dislike;
     }
 

@@ -1,13 +1,20 @@
 package com.netcracker.model.like.old;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.Boolean;
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
 
 import java.util.Date;
 
+@ObjectType(value = 400)
 public class AbstractLikeDislike extends BaseEntity {
+    @Attribute(value = 400)
     private Date likeDislikeDate;
-    private Boolean isDislike;
+    @Boolean(value = 401, yesno = "yes")
+    private boolean isDislike;
+    @Attribute(value = 402)
     private User user;
 
     public AbstractLikeDislike() {
@@ -33,9 +40,7 @@ public class AbstractLikeDislike extends BaseEntity {
         return isDislike;
     }
 
-    public void setDislike(boolean dislike) {
-        isDislike = dislike;
-    }
+    public void setDislike(boolean dislike) { isDislike = dislike; }
 
     public User getUser() {
         return user;

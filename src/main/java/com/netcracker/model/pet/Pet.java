@@ -1,5 +1,8 @@
 package com.netcracker.model.pet;
 
+import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
@@ -9,21 +12,34 @@ import com.netcracker.model.user.Profile;
 import java.util.List;
 import java.util.Set;
 
+@ObjectType(value = 201)
 public class Pet extends BaseEntity {
 
+    //@Attribute(value = ) нет в базе айдишника
     private String petAvatar;
+    @Attribute(value = 201)
     private String petName;
+    @Attribute(value = 202)
     private Integer petAge;
+    @Attribute(value = 300)
     private PetSpecies petSpecies;
+    @Attribute(value = 203)
     private String petBreed;
+    @Attribute(value = 204)
     private Double petWeight;
+    @Attribute(value = 205)
     private Double petHeight;
+    @Attribute(value = 206)
     private String petSpecificParam;
+    //@Reference(value = ) в профиле нет указания на питомца
     private Profile petOwner;
+    @Attribute(value = 301)
     private Status petStatus;
     //TODO SERVICE GETADVERTISEMENTS
+    @Reference(value = 15)
     private Set<Advertisement> petAdvertisements;
     //TODO SERVICE GETPHOTOALBUMS
+    @Attribute(value = 302)
     private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {

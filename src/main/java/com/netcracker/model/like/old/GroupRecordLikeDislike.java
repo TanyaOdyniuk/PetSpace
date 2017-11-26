@@ -1,8 +1,14 @@
 package com.netcracker.model.like.old;
 
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.record.old.GroupRecord;
 
+import javax.persistence.FieldResult;
+
+@ObjectType(value = 400)
 public class GroupRecordLikeDislike extends AbstractLikeDislike {
+    @Reference(value = 428)
     private GroupRecord groupRecord;
 
     public GroupRecordLikeDislike() {

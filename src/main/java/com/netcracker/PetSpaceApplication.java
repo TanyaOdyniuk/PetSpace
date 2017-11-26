@@ -10,7 +10,6 @@ import java.util.List;
 
 @SpringBootApplication
 public class PetSpaceApplication {
-
     @Bean(name = "users")
     public List<StubUser> getUsers() {
         List<StubUser> users = new ArrayList<>();
