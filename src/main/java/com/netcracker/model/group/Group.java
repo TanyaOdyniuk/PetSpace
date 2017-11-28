@@ -4,7 +4,7 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
-import com.netcracker.model.record.GroupWallRecord;
+import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class Group extends BaseEntity {
     private Status groupStatus;
     //TODO SERVICE GETGROUPRECORDS
     @Attribute(value = 428)
-    private List<GroupWallRecord> groupRecords;
+    private List<GroupRecord> groupRecords;
     //TODO SERVICE GETGROUPADMINS
     @Attribute(value = 424)
     private Profile groupAdmin;
@@ -82,11 +82,11 @@ public class Group extends BaseEntity {
         this.groupStatus = groupStatus;
     }
 
-    public List<GroupWallRecord> getGroupRecords() {
+    public List<GroupRecord> getGroupRecords() {
         return groupRecords;
     }
 
-    public void setGroupRecords(List<GroupWallRecord> groupRecords) {
+    public void setGroupRecords(List<GroupRecord> groupRecords) {
         this.groupRecords = groupRecords;
     }
 

@@ -1,19 +1,17 @@
 package com.netcracker.model.user;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
-import com.netcracker.model.comment.Comment;
+import com.netcracker.model.comment.AbstractComment;
 import com.netcracker.model.group.Group;
-import com.netcracker.model.like.LikeDislike;
+import com.netcracker.model.like.AbstractLikeDislike;
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.record.GroupWallRecord;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.service.Service;
-
 
 import java.util.List;
 import java.util.Set;
@@ -44,7 +42,7 @@ public class Profile extends BaseEntity {
     private List<Pet> profilePets; //нет аттрибута
     //TODO SERVICE GETWALLRECORDS
     @Attribute(value = 421)
-    private List<GroupWallRecord> profileWallRecords;
+    private List<WallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
     @Reference(value = 14)
     private List<Advertisement> profileAdvertisements;
@@ -53,19 +51,19 @@ public class Profile extends BaseEntity {
     private Set<Group> profileGroups;
     //TODO SERVICE GETCOMMENTS
     @Reference(value = 406)
-    private List<Comment> profileComments;
+    private List<AbstractComment> profileComments;
     //TODO SERVICE GETLIKES
     @Reference(value = 401)
-    private List<LikeDislike> profileLikes;
+    private List<AbstractLikeDislike> profileLikes;
     //TODO SERVICE GETDISLIKES
     @Reference(value = 401)
-    private List<LikeDislike> profileDislikes;
+    private List<AbstractLikeDislike> profileDislikes;
     //TODO SERVICE GETSERVICES
     @Attribute(value = 420)
     private Set<Service> services;
     //TODO SERVICE GETADMINISTRATEDGROUPS
     @Reference(value = 424)
-    private Set<Group> profileAdministratedGroups;
+    private List<Group> profileAdministratedGroups;
 
     public Profile() {
     }
@@ -158,11 +156,11 @@ public class Profile extends BaseEntity {
         this.profilePets = profilePets;
     }
 
-    public List<GroupWallRecord> getProfileWallRecords() {
+    public List<WallRecord> getProfileWallRecords() {
         return profileWallRecords;
     }
 
-    public void setProfileWallRecords(List<GroupWallRecord> profileWallRecords) {
+    public void setProfileWallRecords(List<WallRecord> profileWallRecords) {
         this.profileWallRecords = profileWallRecords;
     }
 
@@ -182,27 +180,27 @@ public class Profile extends BaseEntity {
         this.profileGroups = profileGroups;
     }
 
-    public List<Comment> getProfileComments() {
+    public List<AbstractComment> getProfileComments() {
         return profileComments;
     }
 
-    public void setProfileComments(List<Comment> profileComments) {
+    public void setProfileComments(List<AbstractComment> profileComments) {
         this.profileComments = profileComments;
     }
 
-    public List<LikeDislike> getProfileLikes() {
+    public List<AbstractLikeDislike> getProfileLikes() {
         return profileLikes;
     }
 
-    public void setProfileLikes(List<LikeDislike> profileLikes) {
+    public void setProfileLikes(List<AbstractLikeDislike> profileLikes) {
         this.profileLikes = profileLikes;
     }
 
-    public List<LikeDislike> getProfileDislikes() {
+    public List<AbstractLikeDislike> getProfileDislikes() {
         return profileDislikes;
     }
 
-    public void setProfileDislikes(List<LikeDislike> profileDislikes) {
+    public void setProfileDislikes(List<AbstractLikeDislike> profileDislikes) {
         this.profileDislikes = profileDislikes;
     }
 
@@ -214,11 +212,11 @@ public class Profile extends BaseEntity {
         this.services = services;
     }
 
-    public Set<Group> getProfileAdministratedGroups() {
+    public List<Group> getProfileAdministratedGroups() {
         return profileAdministratedGroups;
     }
 
-    public void setProfileAdministratedGroups(Set<Group> profileAdministratedGroups) {
+    public void setProfileAdministratedGroups(List<Group> profileAdministratedGroups) {
         this.profileAdministratedGroups = profileAdministratedGroups;
     }
 

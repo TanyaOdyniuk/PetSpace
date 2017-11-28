@@ -22,5 +22,4 @@ public class PetSpaceApplication {
     public static void main(String[] args) {
         SpringApplication.run(PetSpaceApplication.class, args);
     }
-
 }

@@ -7,7 +7,7 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.category.Category;
-import com.netcracker.model.comment.Comment;
+import com.netcracker.model.comment.AdvertisementComment;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 
@@ -39,7 +39,7 @@ public class Advertisement extends BaseEntity {
     private Set<Pet> adPets;
     //TODO SERVICE GET ADCOMMENTS
     @Reference(value = 401)// нет ничего более конкретного
-    private List<Comment> advertisementComments;
+    private List<AdvertisementComment> advertisementComments;
 
     public Advertisement() {
     }
@@ -132,11 +132,11 @@ public class Advertisement extends BaseEntity {
         this.adPets = adPets;
     }
 
-    public List<Comment> getAdvertisementComments() {
+    public List<AdvertisementComment> getAdvertisementComments() {
         return advertisementComments;
     }
 
-    public void setAdvertisementComments(List<Comment> advertisementComments) {
+    public void setAdvertisementComments(List<AdvertisementComment> advertisementComments) {
         this.advertisementComments = advertisementComments;
     }
 

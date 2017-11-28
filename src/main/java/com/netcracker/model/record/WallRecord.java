@@ -1,20 +1,14 @@
-package com.netcracker.model.record.old;
+package com.netcracker.model.record;
 
 import com.netcracker.dao.annotation.Attribute;
-import com.netcracker.dao.annotation.ObjectType;
-import com.netcracker.dao.annotation.Reference;
-import com.netcracker.model.comment.old.WallComment;
-import com.netcracker.model.record.AbstractRecord;
+import com.netcracker.model.comment.WallComment;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
-@ObjectType(value = 402)
 public class WallRecord extends AbstractRecord {
-
-    @Reference(value = 421)
-    private Profile profile;
-    @Attribute(value = 410)
+    @Attribute(value = 411)
+    private Profile recordAuthor;
     private List<WallComment> wallComments;
 
     public WallRecord() {
@@ -28,12 +22,12 @@ public class WallRecord extends AbstractRecord {
         super(name, description);
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Profile getRecordAuthor() {
+        return recordAuthor;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setRecordAuthor(Profile recordAuthor) {
+        this.recordAuthor = recordAuthor;
     }
 
     public List<WallComment> getWallComments() {
@@ -47,7 +41,7 @@ public class WallRecord extends AbstractRecord {
     @Override
     public String toString() {
         return "WallRecord{" +
-                "profile=" + profile +
+                "recordAuthor=" + recordAuthor +
                 ", wallComments=" + wallComments +
                 '}';
     }
