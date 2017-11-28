@@ -1,21 +1,21 @@
-package com.netcracker.model.like.old;
+package com.netcracker.model.like;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.Boolean;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.user.User;
+import com.netcracker.model.user.Profile;
 
 import java.util.Date;
 
 @ObjectType(value = 400)
-public class AbstractLikeDislike extends BaseEntity {
+public abstract class AbstractLikeDislike extends BaseEntity {
     @Attribute(value = 400)
-    private Date likeDislikeDate;
+    private Date likeDate;
     @Boolean(value = 401, yesno = "yes")
     private boolean isDislike;
     @Attribute(value = 402)
-    private User user;
+    private Profile likeAuthor;
 
     public AbstractLikeDislike() {
     }
@@ -28,34 +28,36 @@ public class AbstractLikeDislike extends BaseEntity {
         super(name, description);
     }
 
-    public Date getLikeDislikeDate() {
-        return likeDislikeDate;
+    public Date getLikeDate() {
+        return likeDate;
     }
 
-    public void setLikeDislikeDate(Date likeDislikeDate) {
-        this.likeDislikeDate = likeDislikeDate;
+    public void setLikeDate(Date likeDate) {
+        this.likeDate = likeDate;
     }
 
-    public boolean isDislike() {
+    public boolean getDislike() {
         return isDislike;
     }
 
-    public void setDislike(boolean dislike) { isDislike = dislike; }
-
-    public User getUser() {
-        return user;
+    public void setDislike(boolean dislike) {
+        isDislike = dislike;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public Profile getLikeAuthor() {
+        return likeAuthor;
+    }
+
+    public void setLikeAuthor(Profile likeAuthor) {
+        this.likeAuthor = likeAuthor;
     }
 
     @Override
     public String toString() {
         return "AbstractLikeDislike{" +
-                "likeDislikeDate=" + likeDislikeDate +
+                "likeDate=" + likeDate +
                 ", isDislike=" + isDislike +
-                ", user=" + user +
+                ", likeAuthor=" + likeAuthor +
                 '}';
     }
 }

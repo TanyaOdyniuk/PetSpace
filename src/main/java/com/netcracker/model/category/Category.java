@@ -3,6 +3,7 @@ package com.netcracker.model.category;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.user.UserType;
 
@@ -10,39 +11,56 @@ import java.util.List;
 import java.util.Set;
 
 @ObjectType(value = 4)
-public enum Category {
-    CATEGORY_ONE("Category 1"),
-    CATEGORY_TWO("Category 2"),
-    CATEGORY_THREE("Category 3");
+public class Category extends BaseEntity {
 
     @Attribute(value = 17)
-    private String type;
+    private String categoryName;
     @Attribute(value = 18)
-    private Set<UserType> userTypes;
+    private Set<UserType> categoryUserTypes;
     @Reference(value = 12)
-    private List<Advertisement> advertisements;
+    private List<Advertisement> categoryAds;
 
-    Category(String type) {
-        this.type = type;
+    public Category() {
     }
 
-    public String getType() {
-        return type;
+    public Category(String name) {
+        super(name);
     }
 
-    public Set<UserType> getUserTypes() {
-        return userTypes;
+    public Category(String name, String description) {
+        super(name, description);
     }
 
-    public void setUserTypes(Set<UserType> userTypes) {
-        this.userTypes = userTypes;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public List<Advertisement> getAdvertisements() {
-        return advertisements;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public void setAdvertisements(List<Advertisement> advertisements) {
-        this.advertisements = advertisements;
+    public Set<UserType> getCategoryUserTypes() {
+        return categoryUserTypes;
+    }
+
+    public void setCategoryUserTypes(Set<UserType> categoryUserTypes) {
+        this.categoryUserTypes = categoryUserTypes;
+    }
+
+    public List<Advertisement> getCategoryAds() {
+        return categoryAds;
+    }
+
+    public void setCategoryAds(List<Advertisement> categoryAds) {
+        this.categoryAds = categoryAds;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryName='" + categoryName + '\'' +
+                ", categoryUserTypes=" + categoryUserTypes +
+                ", categoryAds=" + categoryAds +
+                '}';
     }
 }

@@ -3,25 +3,35 @@ package com.netcracker.model.service;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
+import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
 @ObjectType(value = 7)
-public enum ServiceType {
-    SERVICE_TYPE_ONE("Service type one"),
-    SERVICE_TYPE_TWO("Service type two");
+public class ServiceType extends BaseEntity {
 
     @Attribute(value = 25)
-    private String type;
+    private String serviceType;
     @Reference(value = 24)
     private List<Service> services;
 
-    ServiceType(String type) {
-        this.type = type;
+    public ServiceType() {
     }
 
-    public String getType() {
-        return type;
+    public ServiceType(String name) {
+        super(name);
+    }
+
+    public ServiceType(String name, String description) {
+        super(name, description);
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 
     public List<Service> getServices() {
@@ -30,5 +40,13 @@ public enum ServiceType {
 
     public void setServices(List<Service> services) {
         this.services = services;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceType{" +
+                "serviceType='" + serviceType + '\'' +
+                ", services=" + services +
+                '}';
     }
 }

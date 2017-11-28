@@ -1,17 +1,17 @@
 package com.netcracker.service.media;
 
 import com.netcracker.model.record.AbstractRecord;
-import com.netcracker.model.record.GroupWallRecord;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import java.util.List;
 
 public interface MediaService {
     //поддерживать функцию просмотра следующего/предыдущего изображения при клике на кнопки “<”, ”>”
-    GroupWallRecord imageRotation(Profile profile);
+    WallRecord imageRotation(Profile profile);
 
     //открывать страничку с миниатюрами изображений после нажатия на кнопку просмотра
     // фотогалереи в профиле пользователя или питомца
-    List<GroupWallRecord> imagesGalary(Profile profile);
+    List<WallRecord> imagesGalary(Profile profile);
 
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев
     void petAlbul(Profile profile);

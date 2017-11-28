@@ -1,87 +1,52 @@
 package com.netcracker.dao;
 
+import com.netcracker.model.BaseEntity;
 import javafx.util.Pair;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Entity {
-    private Integer objectId;
-    private Integer objectTypeId;
-    private Integer parentId;
+public class Entity extends BaseEntity {
 
-    private String name;
-    private String description;
+    private Map<Pair<BigInteger, Integer>, Object> attributes;
 
-    private Map<Pair<Integer, Integer>, Object> attributes;
-
-    private Map<Pair<Integer, Integer>, Integer> references;
+    private Map<Pair<BigInteger, Integer>, BigInteger> references;
 
     public Entity(){
+        this(null, null);
+    }
+
+    public Entity(String name) {
+        this(name, null);
+    }
+
+    public Entity(String name, String description) {
+        super(name, description);
         attributes = new HashMap<>();
         references = new HashMap<>();
     }
 
-    public Integer getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
-    }
-
-    public Integer getObjectTypeId() {
-        return objectTypeId;
-    }
-
-    public void setObjectTypeId(Integer objectTypeId) {
-        this.objectTypeId = objectTypeId;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Map<Pair<Integer, Integer>, Object> getAttributes() {
+    public Map<Pair<BigInteger, Integer>, Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<Pair<Integer, Integer>, Object> entity) {
+    public void setAttributes(Map<Pair<BigInteger, Integer>, Object> entity) {
         this.attributes = entity;
     }
 
-    public Map<Pair<Integer, Integer>, Integer> getReferences() {
+    public Map<Pair<BigInteger, Integer>, BigInteger> getReferences() {
         return references;
     }
 
-    public void setReferences(Map<Pair<Integer, Integer>, Integer> references) {
+    public void setReferences(Map<Pair<BigInteger, Integer>, BigInteger> references) {
         this.references = references;
     }
 
     @Override
     public java.lang.String toString() {
         return "Entity{" +
-                "objectId=" + objectId +
+                "objectId=" + this.getObjectId() +
                 ", objectTypeId=" + objectTypeId +
                 ", parentId=" + parentId +
                 ", name=" + name +

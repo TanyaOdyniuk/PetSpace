@@ -11,9 +11,7 @@ import com.netcracker.model.user.Profile;
 import java.util.List;
 
 @ObjectType(value = 3)
-public enum Status {
-    ACTIVE("Active"),
-    INACTIVE("Inactive");
+public class Status extends BaseEntity {
 
     @Attribute(value = 3)
     private String status;
@@ -26,12 +24,23 @@ public enum Status {
     @Reference(value = 301)
     private List<Pet> pets;
 
-    Status(String status) {
-        this.status = status;
+    public Status() {
     }
 
-    public String getType() {
+    public Status(String name) {
+        super(name);
+    }
+
+    public Status(String name, String description) {
+        super(name, description);
+    }
+
+    public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<Group> getGroups() {
@@ -64,5 +73,16 @@ public enum Status {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "status='" + status + '\'' +
+                ", groups=" + groups +
+                ", profiles=" + profiles +
+                ", advertisements=" + advertisements +
+                ", pets=" + pets +
+                '}';
     }
 }
