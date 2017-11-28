@@ -6,7 +6,6 @@ import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.record.GroupWallRecord;
 import com.netcracker.model.user.Profile;
-
 import java.util.List;
 import java.util.Set;
 

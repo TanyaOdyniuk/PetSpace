@@ -1,19 +1,12 @@
 package com.netcracker.model.group;
 
-        import com.netcracker.dao.annotation.Attribute;
-        import com.netcracker.dao.annotation.ObjectType;
-        import com.netcracker.dao.annotation.Reference;
+import java.util.List;
 
-        import java.util.List;
-
-@ObjectType(value = 405)
-public enum GroupType {
+enum GroupType {
     OPEN("Open Group"),
     CLOSED("Closed Group");
 
-    @Attribute(value = 429)
     private String type;
-    @Reference(value = 426)
     private List<Group> groups;
 
     GroupType(String type) {

@@ -7,7 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(PetSpaceApplication.class);
+		return application.sources(com.netcracker.PetSpaceApplication.class);
 	}
 
 }
