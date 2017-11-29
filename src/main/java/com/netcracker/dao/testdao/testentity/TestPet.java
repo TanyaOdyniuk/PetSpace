@@ -1,4 +1,4 @@
-package com.netcracker.dao.testDAO.testEntity;
+package com.netcracker.dao.testdao.testentity;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.Boolean;

@@ -1,4 +1,4 @@
-package com.netcracker.UI.bulletinboard;
+package com.netcracker.ui.bulletinboard;
 
 import java.util.Date;
 

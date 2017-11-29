@@ -3,6 +3,7 @@ package com.netcracker.service.petprofile;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 import java.util.Date;
+import java.util.List;
 
 public interface PetProfileService {
 //    Система должна позволять зарегистрированному пользователю создавать страницу питомца
@@ -21,5 +22,8 @@ public interface PetProfileService {
     void changePetOwner(Profile owner, Profile newOwner);
 
     Date ageCalculation(Pet pet);
+
+    //Получить список животных переданного профиля
+    List<Pet> getAllProfilePets(Integer profileId);
 
 }

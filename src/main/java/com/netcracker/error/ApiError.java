@@ -7,10 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by V.Drabynka on 16.11.2017.
- */
-
 public class ApiError {
     private HttpStatus status;
     private String message;

@@ -1,4 +1,4 @@
-package com.netcracker.testDB;
+package com.netcracker.testdb;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;

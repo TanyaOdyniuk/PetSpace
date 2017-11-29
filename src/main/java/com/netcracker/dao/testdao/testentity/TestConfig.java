@@ -1,4 +1,4 @@
-package com.netcracker.dao.testDAO.testEntity;
+package com.netcracker.dao.testdao.testentity;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
