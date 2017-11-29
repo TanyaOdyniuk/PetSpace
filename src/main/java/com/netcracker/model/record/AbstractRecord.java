@@ -3,7 +3,6 @@ package com.netcracker.model.record;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.like.AbstractLikeDislike;
 import com.netcracker.model.like.RecordLikeDislike;
 
 import java.util.Date;

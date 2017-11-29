@@ -1,4 +1,4 @@
-package com.netcracker.model.securityBook;
+package com.netcracker.model.securitybook;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;

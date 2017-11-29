@@ -2,9 +2,8 @@ package com.netcracker.model.user;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
-import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.securityBook.SecurityBook;
+import com.netcracker.model.securitybook.SecurityBook;
 
 import java.util.Set;
 

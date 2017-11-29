@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by Odyniuk on 06/11/2017.
- */
 @RestController
 @RequestMapping("/restcontroller")
 public class StubRestController {

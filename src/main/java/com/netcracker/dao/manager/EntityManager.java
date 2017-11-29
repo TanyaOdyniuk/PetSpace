@@ -1,6 +1,5 @@
 package com.netcracker.dao.manager;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.manager.query.Query;
 import javafx.util.Pair;

@@ -1,7 +1,7 @@
-package com.netcracker.controller.bulletinBoard;
+package com.netcracker.controller.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
-import com.netcracker.service.bulletinBoard.BulletinBoardService;
+import com.netcracker.service.bulletinboard.BulletinBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,4 +1,4 @@
-package com.netcracker.UI;
+package com.netcracker.ui;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;

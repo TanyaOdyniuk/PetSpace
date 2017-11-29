@@ -1,4 +1,4 @@
-package com.netcracker.service.manageFriends;
+package com.netcracker.service.managefriends;
 
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;

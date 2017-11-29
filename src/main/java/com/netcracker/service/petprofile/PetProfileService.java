@@ -1,4 +1,4 @@
-package com.netcracker.service.petProfile;
+package com.netcracker.service.petprofile;
 
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;

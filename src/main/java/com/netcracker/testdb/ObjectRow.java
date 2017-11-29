@@ -1,4 +1,4 @@
-package com.netcracker.testDB;
+package com.netcracker.testdb;
 
 public class ObjectRow {
 

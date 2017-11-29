@@ -1,4 +1,4 @@
-package com.netcracker.UI;
+package com.netcracker.ui;
 
 
 import com.netcracker.error.ErrorMessage;

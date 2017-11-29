@@ -1,8 +1,7 @@
-package com.netcracker.service.bulletinBoard;
+package com.netcracker.service.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
-import com.netcracker.model.user.Profile;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;

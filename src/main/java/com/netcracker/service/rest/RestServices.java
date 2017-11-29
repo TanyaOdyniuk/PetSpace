@@ -1,6 +1,6 @@
 package com.netcracker.service.rest;
 
-import com.netcracker.UI.StubConstants;
+import com.netcracker.ui.StubConstants;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

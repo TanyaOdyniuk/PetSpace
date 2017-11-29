@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -305,6 +306,8 @@ public class ManagerAPI {
                     Object attribute = attrMap.get(pair);
                     if (Date.class.isAssignableFrom(attribute.getClass())) {
                         values[pair.getValue() - 1] = attribute != null ? new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime()) : null;
+                    }else if(BigDecimal.class.isAssignableFrom(fieldType)){
+                        values[pair.getValue() - 1] = new BigDecimal((String) attribute);
                     } else {
                         values[pair.getValue() - 1] = attribute;
                     }
@@ -317,6 +320,8 @@ public class ManagerAPI {
                         value = attribute != null ? new Date(((Timestamp) attribute).getTime()) : null;
                     } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
+                    } else if(BigDecimal.class.isAssignableFrom(fieldType)){
+                        value = new BigDecimal((String) attribute);
                     } else {
                         try {
                             Method m = fieldType.getMethod("valueOf", String.class);

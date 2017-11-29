@@ -1,6 +1,6 @@
-package com.netcracker.UI.bulletinboard;
+package com.netcracker.ui.bulletinboard;
 
-import com.netcracker.UI.StubConstants;
+import com.netcracker.ui.StubConstants;
 import com.netcracker.model.advertisement.Advertisement;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;

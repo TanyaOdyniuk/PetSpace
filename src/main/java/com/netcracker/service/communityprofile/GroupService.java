@@ -1,4 +1,4 @@
-package com.netcracker.service.communityProfile;
+package com.netcracker.service.communityprofile;
 
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupType;

@@ -1,4 +1,4 @@
-package com.netcracker.service.newsFeed;
+package com.netcracker.service.newsfeed;
 
 import com.netcracker.model.pet.Pet;
 

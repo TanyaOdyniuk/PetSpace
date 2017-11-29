@@ -1,4 +1,4 @@
-package com.netcracker.service.bulletinBoard.impl;
+package com.netcracker.service.bulletinboard.impl;
 
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.Status;
@@ -6,7 +6,7 @@ import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.user.Profile;
-import com.netcracker.service.bulletinBoard.BulletinBoardService;
+import com.netcracker.service.bulletinboard.BulletinBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

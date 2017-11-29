@@ -1,4 +1,4 @@
-package com.netcracker.UI;
+package com.netcracker.ui;
 
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
@@ -67,7 +67,7 @@ public class StubUserEditor extends VerticalLayout {
         }
         final boolean persisted = u.getId() < StubUser.objectCount;
         if (persisted) {
-            stubUser = StubConstants.REST_TEMPLATE
+            stubUser = com.netcracker.ui.StubConstants.REST_TEMPLATE
                     .getForObject(StubConstants.RESOURCE_URL + '/' + u.getId(), StubUser.class);
         } else {
             stubUser = u;
