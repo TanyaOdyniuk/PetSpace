@@ -1,7 +1,8 @@
 package com.netcracker.UI;
 
 
-import com.netcracker.errorHandling.ClientExceptionHandler;
+import com.netcracker.error.ErrorMessage;
+import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
@@ -21,15 +22,17 @@ import java.util.List;
 @Theme("valo")
 public class StubVaadinUI extends UI {
 
-    private final StubUserEditor stubUserEditor;
-
-    private final Grid<StubUser> grid;
-
-    private final Button addNewBtn;
-
+    //"STATIC" PARTS OF UI
     private final HorizontalLayout topPanel;
 
     private final VerticalLayout leftPanel;
+
+    private StubUserEditor stubUserEditor;
+
+    private Grid<StubUser> grid;
+
+    private Button addNewBtn;
+
 
     @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
@@ -75,11 +78,10 @@ public class StubVaadinUI extends UI {
 
         listCustomers();
 
-
         UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                ClientExceptionHandler.handle(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+                ClientExceptionHandler.handle(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR), ErrorMessage.ERROR_500);
             }
         });
     }

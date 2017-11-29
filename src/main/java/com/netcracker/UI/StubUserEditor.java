@@ -1,7 +1,9 @@
 package com.netcracker.UI;
 
-import com.netcracker.errorHandling.ClientExceptionHandler;
+import com.netcracker.error.ErrorMessage;
+import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
+import com.netcracker.service.rest.RestServices;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
@@ -41,17 +43,12 @@ public class StubUserEditor extends VerticalLayout {
 
         save.addClickListener(e ->
         {
-            try {
-                stubUser.setFirstName(firstName.getValue());
-                stubUser.setLastName(lastName.getValue());
-                HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                StubConstants.REST_TEMPLATE
-                        .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
-            } catch (HttpClientErrorException ex) {
-                ClientExceptionHandler.handle(ex);
-            }
+            stubUser.setFirstName(firstName.getValue());
+            stubUser.setLastName(lastName.getValue());
+            HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            RestServices.restExchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class, ErrorMessage.VALIDATION_NAME);
         });
 
         delete.addClickListener(e -> StubConstants.REST_TEMPLATE

@@ -1,10 +1,5 @@
-package com.netcracker.errorHandling.exceptions;
+package com.netcracker.error.exceptions;
 
-import javax.validation.ValidationException;
-
-/**
- * Created by V.Drabynka on 19.11.2017.
- */
 public class UserNotValidException extends RuntimeException {
 
     private String currentName;

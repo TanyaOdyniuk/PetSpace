@@ -1,4 +1,4 @@
-package com.netcracker.errorHandling;
+package com.netcracker.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;

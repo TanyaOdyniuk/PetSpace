@@ -1,6 +1,6 @@
 package com.netcracker.controller;
 
-import com.netcracker.errorHandling.exceptions.UserNotValidException;
+import com.netcracker.error.exceptions.UserNotValidException;
 import com.netcracker.model.StubUser;
 import com.netcracker.service.validation.ValidationService;
 import com.netcracker.service.StubService;

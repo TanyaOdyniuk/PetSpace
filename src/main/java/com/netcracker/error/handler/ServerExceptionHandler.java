@@ -1,8 +1,8 @@
-package com.netcracker.errorHandling;
+package com.netcracker.error.handler;
 
 
-import com.netcracker.errorHandling.ApiError;
-import com.netcracker.errorHandling.exceptions.UserNotValidException;
+import com.netcracker.error.ApiError;
+import com.netcracker.error.exceptions.UserNotValidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-/**
- * Created by V.Drabynka on 16.11.2017.
- */
 
 @ControllerAdvice
 public class ServerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -115,7 +110,7 @@ public class ServerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    //Default handler
+    //Default error
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
         ApiError apiError = new ApiError(

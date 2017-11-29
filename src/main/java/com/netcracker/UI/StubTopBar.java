@@ -1,6 +1,7 @@
 package com.netcracker.UI;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -8,6 +9,7 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,8 +26,14 @@ class StubTopBar extends HorizontalLayout {
         Button button2 = getNewButton("Top", VaadinIcons.TROPHY, ValoTheme.BUTTON_FRIENDLY, Notification.Type.ERROR_MESSAGE, "News aren`t implemented yet!");
         Button button3 = getNewButton("Users", VaadinIcons.USER, ValoTheme.BUTTON_FRIENDLY, Notification.Type.WARNING_MESSAGE, "No users!");
         Button button4 = getNewButton("Pets", VaadinIcons.MEDAL, ValoTheme.BUTTON_FRIENDLY, Notification.Type.WARNING_MESSAGE, "No pets!");
+        //Button petsButton = getNewButton("Pets", VaadinIcons.MEDAL, ValoTheme.BUTTON_FRIENDLY, Notification.Type.WARNING_MESSAGE, "No pets!");
         Button button5 = getNewButton("Bulletin board", VaadinIcons.CALENDAR_USER, ValoTheme.BUTTON_FRIENDLY, Notification.Type.WARNING_MESSAGE, "No adverts!");
         addComponentsAndExpand(button1, button2, button3, button4, button5);
+
+        /*petsButton.addClickListener(clickEvent -> {
+            //UI.getCurrent().getPage().open("https://vaadin.com/", "Window"); //open url in new tab (IF windowName is not "")
+            ((StubVaadinUI)UI.getCurrent()).setPetListUI();
+        });*/
     }
 
     private Button getNewButton(String caption, VaadinIcons icon, String style, Notification.Type type, String listenerMessage) {
