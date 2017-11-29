@@ -15,27 +15,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 2)
+@ObjectType(value = AdvertisementConstant.AD_TYPE)
 public class Advertisement extends BaseEntity {
-    @Attribute(value = 6)
+    @Attribute(value = AdvertisementConstant.AD_DATE)
     private Date adDate;
-    @Attribute(value = 7)
+    @Attribute(value = AdvertisementConstant.AD_TOPIC)
     private String adTopic;
-    @Attribute(value = 8)
+    @Attribute(value = AdvertisementConstant.AD_PET_SIGNS)
     private List<String> adPetSigns;
-    @Boolean(value = 9, yesno = "yes")
-    private boolean adIsVip;
-    @Attribute(value = 10)
+    @Boolean(value = AdvertisementConstant.AD_IS_VIP, yesno = AdvertisementConstant.AD_IS_VIP_STRING)
+    private java.lang.Boolean adIsVip;
+    @Attribute(value = AdvertisementConstant.AD_LOCATION)
     private String adLocation;
-    @Attribute(value = 11)
+    @Attribute(value = AdvertisementConstant.AD_BASIC_INFO)
     private String adBasicInfo;
-    @Attribute(value = 14)
+    @Reference(value = AdvertisementConstant.AD_AUTHOR)
     private Profile adAuthor;
-    @Attribute(value = 13)
+    @Reference(value = AdvertisementConstant.AD_STATUS)
     private Status adStatus;
-    @Attribute(value = 12)
+    @Reference(value = AdvertisementConstant.AD_CATEGORY)
     private Category adCategory;
-    @Attribute(value = 15)
+    @Reference(value = AdvertisementConstant.AD_PETS)
     private Set<Pet> adPets;
     //TODO SERVICE GET ADCOMMENTS
     @Reference(value = 401)// нет ничего более конкретного
