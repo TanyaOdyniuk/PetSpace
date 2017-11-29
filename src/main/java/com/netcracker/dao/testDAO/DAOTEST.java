@@ -5,7 +5,6 @@ import com.netcracker.dao.testDAO.testEntity.TestCity;
 import com.netcracker.dao.testDAO.testEntity.TestConfig;
 import com.netcracker.dao.testDAO.testEntity.TestPet;
 import com.netcracker.dao.testDAO.testEntity.TestUser;
-import com.netcracker.model.BaseEntity;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -19,29 +18,30 @@ public class DAOTEST {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class);
         ManagerAPI managerAPI = context.getBean(ManagerAPI.class);
-        TestUser testUser1 = (TestUser) new DAOTEST().testCreateUser(managerAPI);
+        TestUser testUser1 = new DAOTEST().testCreateUser(managerAPI);
         BigInteger forUpdate = testUser1.getObjectId();
         new DAOTEST().testUpdateUser(managerAPI, forUpdate);
         TestUser gotTestUser1 = new DAOTEST().testGetUser(managerAPI, forUpdate);
-        TestUser testUser2 = (TestUser) new DAOTEST().testCreateWithCities(managerAPI);
+        TestUser testUser2 = new DAOTEST().testCreateWithCities(managerAPI);
         BigInteger getWithCities = testUser2.getObjectId();
         TestUser gotTestUser2 = new DAOTEST().testGetUserWithCities(managerAPI, getWithCities);
-        List<BaseEntity> res = new DAOTEST().getAllTest(managerAPI);
+        List<TestUser> res = new DAOTEST().getAllTest(managerAPI);
         new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
         new DAOTEST().deleteForceTest(managerAPI,new BigInteger("4"), 0);
         new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
-        List<BaseEntity> res1 = new DAOTEST().getAllTest(managerAPI);
+        List<TestUser> res1 = new DAOTEST().getAllTest(managerAPI);
+        System.out.printf("");
     }
 
     public void deleteForceTest(ManagerAPI managerAPI, BigInteger id, Integer type){
         managerAPI.delete(id, type);
     }
 
-    public List<BaseEntity> getAllTest(ManagerAPI managerAPI){
+    public List<TestUser> getAllTest(ManagerAPI managerAPI){
         return managerAPI.getAll(new BigInteger("1"), TestUser.class);
     }
 
-    public BaseEntity testCreateUser(ManagerAPI managerAPI) {
+    public TestUser testCreateUser(ManagerAPI managerAPI) {
         TestUser testUser = new TestUser();
         testUser.setSurname("Pupkin");
         testUser.setUsername("Vasya");
@@ -75,7 +75,7 @@ public class DAOTEST {
     }
 
 
-    public BaseEntity testCreateWithCities(ManagerAPI managerAPI) {
+    public TestUser testCreateWithCities(ManagerAPI managerAPI) {
         TestUser testUser = new TestUser();
         testUser.setSurname("Ivanov");
         testUser.setUsername("Ivan");

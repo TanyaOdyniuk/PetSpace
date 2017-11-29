@@ -16,9 +16,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Odyniuk on 06/11/2017.
- */
 
 @SpringUI
 @Theme("valo")

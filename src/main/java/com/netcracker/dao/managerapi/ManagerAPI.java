@@ -30,14 +30,15 @@ public class ManagerAPI {
     public ManagerAPI(EntityManager manager) {
         this.manager = manager;
     }
+
     @Transactional
-    public BaseEntity create(BaseEntity baseEntity) {
+    public <T extends BaseEntity> T create(T baseEntity) {
         Entity entity = manager.create(new Converter().convertToEntity(baseEntity));
         baseEntity.setObjectId(entity.getObjectId());
         return baseEntity;
     }
 
-    public void update(BaseEntity baseEntity) {
+    public <T extends BaseEntity> void update(T baseEntity) {
         if (baseEntity.getObjectId() == null) {
             create(baseEntity);
         }
@@ -54,26 +55,27 @@ public class ManagerAPI {
 
     }
 
-    private  <T extends BaseEntity> T getByIdRef(BigInteger objectId, Class baseEntityClass) {
+    private <T extends BaseEntity> T getByIdRef(BigInteger objectId, Class baseEntityClass) {
         Entity entity = manager.getByIdRef(objectId);
         return (T) new Converter().convertToBaseEntity(entity, baseEntityClass);
 
     }
-    public List<BaseEntity> getAll(BigInteger objectTypeId, Class baseEntityClass) {
+
+    public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass) {
         List<Entity> entities = manager.getAll(objectTypeId);
-        List<BaseEntity> baseEntities = new ArrayList<>();
+        List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
-            BaseEntity baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
+            T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
             baseEntities.add(baseEntity);
         }
         return baseEntities;
     }
 
-    public List<BaseEntity> getObjectsBySQL(String sqlQuery, Class baseEntityClass) {
+    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass) {
         List<Entity> entities = manager.getBySQL(sqlQuery);
-        List<BaseEntity> baseEntities = new ArrayList<>();
+        List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
-            BaseEntity baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
+            T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
             baseEntities.add(baseEntity);
         }
         return baseEntities;
@@ -164,7 +166,8 @@ public class ManagerAPI {
                 if (Set.class.isAssignableFrom(fieldValue.getClass())) {
                     Set temp = (Set) fieldValue;
                     fieldValue = Arrays.asList(temp.toArray());
-                } else if (List.class.isAssignableFrom(fieldValue.getClass())) {
+                }
+                if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List tempAttributes = (List) fieldValue;
                     if (tempAttributes != null) {
                         for (int i = 0; i < tempAttributes.size(); i++) {
@@ -194,13 +197,12 @@ public class ManagerAPI {
                 if (Set.class.isAssignableFrom(fieldValue.getClass())) {
                     Set temp = (Set) fieldValue;
                     fieldValue = Arrays.asList(temp.toArray());
-                } if (List.class.isAssignableFrom(fieldValue.getClass())) {
+                }
+                if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List<BaseEntity> tempReferences = (List<BaseEntity>) fieldValue;
-                    if (tempReferences != null) {
-                        for (int i = 0; i < tempReferences.size(); i++) {
-                            BaseEntity reference = tempReferences.get(i);
-                            references.put(new Pair<>(attrId, i + 1), reference != null ? reference.getObjectId() : EMPTY_INTEGER);
-                        }
+                    for (int i = 0; i < tempReferences.size(); i++) {
+                        BaseEntity reference = tempReferences.get(i);
+                        references.put(new Pair<>(attrId, i + 1), reference != null ? reference.getObjectId() : EMPTY_INTEGER);
                     }
                 } else {
                     references.put(new Pair<>(attrId, 0), ((BaseEntity) fieldValue).getObjectId());
@@ -281,11 +283,11 @@ public class ManagerAPI {
                     values[pair.getValue() - 1] = attribute != null ? getByIdRef(attribute, listClass) : null;
                 }
                 value = Arrays.asList(values);
-                if(Set.class.isAssignableFrom(fieldType)){
-                    value  = new HashSet<>(Arrays.asList(values));
+                if (Set.class.isAssignableFrom(fieldType)) {
+                    value = new HashSet<>(Arrays.asList(values));
                 }
             } else {
-                if(!pairs.isEmpty()){
+                if (!pairs.isEmpty()) {
                     BigInteger attribute = refMap.get(pairs.get(0));
                     value = attribute != null ? getById(attribute, fieldType) : null;
                 }
@@ -309,11 +311,11 @@ public class ManagerAPI {
                 }
                 value = Arrays.asList(values);
             } else {
-                if(!pairs.isEmpty()){
+                if (!pairs.isEmpty()) {
                     Object attribute = attrMap.get(pairs.get(0));
                     if (Timestamp.class.isAssignableFrom(attribute.getClass())) {
-                        value = attribute != null ? new Date(((Timestamp)attribute).getTime()) : null;
-                    } else if(String.class.isAssignableFrom(fieldType)){
+                        value = attribute != null ? new Date(((Timestamp) attribute).getTime()) : null;
+                    } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
                     } else {
                         try {
@@ -344,7 +346,7 @@ public class ManagerAPI {
                 }
                 value = Arrays.asList(values);
             } else {
-                if(!pairs.isEmpty()){
+                if (!pairs.isEmpty()) {
                     String attribute = (String) attrMap.get(pairs.get(0));
                     value = yesno.equals(attribute);
                 }

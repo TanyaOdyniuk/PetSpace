@@ -99,9 +99,6 @@ public class EntityManager {
         return entity;
     }
 
-
-
-
     private Map<Pair<BigInteger, Integer>, Object> getAttributes(List<Map<String, Object>> rowss) {
         Map<Pair<BigInteger, Integer>, Object> attributes = new HashMap<>();
         for (Map row : rowss) {
