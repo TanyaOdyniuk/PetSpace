@@ -38,7 +38,7 @@ public class Profile extends BaseEntity {
     @Reference(value = 3)
     private User profileUser;
     //TODO SERVICE GETPETS
-    @Reference(value = 201)
+    @Reference(value = 201) //303
     private List<Pet> profilePets; //нет аттрибута
     //TODO SERVICE GETWALLRECORDS
     @Attribute(value = 421)

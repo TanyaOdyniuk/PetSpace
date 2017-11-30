@@ -11,7 +11,7 @@ import com.netcracker.model.comment.AdvertisementComment;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -76,11 +76,11 @@ public class Advertisement extends BaseEntity {
         this.adPetSigns = adPetSigns;
     }
 
-    public boolean isAdIsVip() {
+    public java.lang.Boolean isAdIsVip() {
         return adIsVip;
     }
 
-    public void setAdIsVip(boolean adIsVip) {
+    public void setAdIsVip(java.lang.Boolean adIsVip) {
         this.adIsVip = adIsVip;
     }
 

@@ -6,7 +6,8 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.Profile;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 @ObjectType(value = 400)
 public abstract class AbstractLikeDislike extends BaseEntity {

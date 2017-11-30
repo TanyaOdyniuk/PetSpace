@@ -19,8 +19,8 @@ public class Service extends BaseEntity {
     @Attribute(value = 24)
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
-    @Reference(value = 1) // нет в user поля сервиса
-    private Set<User> users;
+    @Reference(value = 1) // нет в user поля сервиса(id = 420)
+    private Set<User> users;// ссылка на Profile, а не User
 
     public Service() {
     }
