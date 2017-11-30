@@ -1,6 +1,6 @@
 package com.netcracker.controller;
 
-import com.netcracker.errorHandling.exceptions.UserNotValidException;
+import com.netcracker.error.exceptions.UserNotValidException;
 import com.netcracker.model.StubUser;
 import com.netcracker.service.validation.ValidationService;
 import com.netcracker.service.StubService;
@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by Odyniuk on 06/11/2017.
- */
 @RestController
 @RequestMapping("/restcontroller")
 public class StubRestController {

@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Created by Odyniuk on 10/11/2017.
- */
 @Service
 public class StubService {
     @Autowired

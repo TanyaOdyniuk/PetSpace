@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -245,7 +246,7 @@ public class ManagerAPI {
 
             Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
             Map<Pair<BigInteger, Integer>, BigInteger> refMap = entity.getReferences();
-            if(!attrMap.isEmpty() && !refMap.isEmpty()){
+            if (!attrMap.isEmpty() && !refMap.isEmpty()) {
                 Field[] fields = clazz.getDeclaredFields();
                 BigInteger attrId;
                 for (Field field : fields) {
@@ -283,9 +284,9 @@ public class ManagerAPI {
                     BigInteger attribute = refMap.get(pair);
                     ParameterizedType listType = (ParameterizedType) field.getGenericType();
                     Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-                    if(pair.getValue() != 0){
+                    if (pair.getValue() != 0) {
                         values[pair.getValue() - 1] = attribute != null ? getByIdRef(attribute, listClass) : null;
-                    } else{
+                    } else {
                         values[0] = attribute != null ? getByIdRef(attribute, listClass) : null;
                     }
                 }
@@ -311,14 +312,20 @@ public class ManagerAPI {
                 for (Pair<BigInteger, Integer> pair : pairs) {
                     Object attribute = attrMap.get(pair);
                     if (attribute != null) {
-
                         if (Timestamp.class.isAssignableFrom(attribute.getClass()) || Date.class.isAssignableFrom(attribute.getClass())) {
                             values[pair.getValue() - 1] = new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime());
                         } else {
                             values[pair.getValue() - 1] = attribute;
                         }
+                        if (Date.class.isAssignableFrom(attribute.getClass())) {
+                            values[pair.getValue() - 1] = attribute != null ? new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime()) : null;
+                        } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
+                            values[pair.getValue() - 1] = new BigDecimal((String) attribute);
+                        } else {
+                            values[pair.getValue() - 1] = attribute;
+                        }
+                        value = Arrays.asList(values);
                     }
-                    value = Arrays.asList(values);
                 }
             } else {
                 if (!pairs.isEmpty()) {
@@ -327,8 +334,10 @@ public class ManagerAPI {
                         value = attribute != null ? new Date(((Timestamp) attribute).getTime()) : null;
                     } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
+                    } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
+                        value = new BigDecimal((String) attribute);
                     } else {
-                        if(attribute != null){
+                        if (attribute != null) {
                             try {
                                 Method m = fieldType.getMethod("valueOf", String.class);
                                 value = m.invoke(fieldType, attribute);
