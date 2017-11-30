@@ -245,27 +245,30 @@ public class ManagerAPI {
 
             Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
             Map<Pair<BigInteger, Integer>, BigInteger> refMap = entity.getReferences();
-            Field[] fields = clazz.getDeclaredFields();
-            BigInteger attrId;
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Attribute.class)) {
-                    Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
-                    attrId = BigInteger.valueOf(attributeAnnotation.value());
-                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
-                    setValue(field, baseEntity, pairs, attrMap);
-                } else if (field.isAnnotationPresent(Boolean.class)) {
-                    Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
-                    attrId = BigInteger.valueOf(booleanAnnotation.value());
-                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
-                    String yesno = String.valueOf(booleanAnnotation.yesno());
-                    setBoolean(field, baseEntity, pairs, attrMap, yesno);
-                } else if (field.isAnnotationPresent(Reference.class)) {
-                    Reference referenceAnnotation = field.getAnnotation(Reference.class);
-                    attrId = BigInteger.valueOf(referenceAnnotation.value());
-                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, refMap.keySet());
-                    setRef(field, baseEntity, pairs, refMap, baseEntity.getObjectId());
+            if(!attrMap.isEmpty() && !refMap.isEmpty()){
+                Field[] fields = clazz.getDeclaredFields();
+                BigInteger attrId;
+                for (Field field : fields) {
+                    if (field.isAnnotationPresent(Attribute.class)) {
+                        Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
+                        attrId = BigInteger.valueOf(attributeAnnotation.value());
+                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
+                        setValue(field, baseEntity, pairs, attrMap);
+                    } else if (field.isAnnotationPresent(Boolean.class)) {
+                        Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
+                        attrId = BigInteger.valueOf(booleanAnnotation.value());
+                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
+                        String yesno = String.valueOf(booleanAnnotation.yesno());
+                        setBoolean(field, baseEntity, pairs, attrMap, yesno);
+                    } else if (field.isAnnotationPresent(Reference.class)) {
+                        Reference referenceAnnotation = field.getAnnotation(Reference.class);
+                        attrId = BigInteger.valueOf(referenceAnnotation.value());
+                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, refMap.keySet());
+                        setRef(field, baseEntity, pairs, refMap, baseEntity.getObjectId());
+                    }
                 }
             }
+
             return baseEntity;
 
         }
@@ -280,7 +283,11 @@ public class ManagerAPI {
                     BigInteger attribute = refMap.get(pair);
                     ParameterizedType listType = (ParameterizedType) field.getGenericType();
                     Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-                    values[pair.getValue() - 1] = attribute != null ? getByIdRef(attribute, listClass) : null;
+                    if(pair.getValue() != 0){
+                        values[pair.getValue() - 1] = attribute != null ? getByIdRef(attribute, listClass) : null;
+                    } else{
+                        values[0] = attribute != null ? getByIdRef(attribute, listClass) : null;
+                    }
                 }
                 value = Arrays.asList(values);
                 if (Set.class.isAssignableFrom(fieldType)) {
@@ -289,7 +296,7 @@ public class ManagerAPI {
             } else {
                 if (!pairs.isEmpty()) {
                     BigInteger attribute = refMap.get(pairs.get(0));
-                    value = attribute != null ? getById(attribute, fieldType) : null;
+                    value = attribute != null ? getByIdRef(attribute, fieldType) : null;
                 }
             }
             setValueIntoField(field, baseEntity, value);
@@ -303,30 +310,35 @@ public class ManagerAPI {
                 Object[] values = new Object[getMaxSeqNo(pairs)];
                 for (Pair<BigInteger, Integer> pair : pairs) {
                     Object attribute = attrMap.get(pair);
-                    if (Date.class.isAssignableFrom(attribute.getClass())) {
-                        values[pair.getValue() - 1] = attribute != null ? new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime()) : null;
-                    } else {
-                        values[pair.getValue() - 1] = attribute;
+                    if (attribute != null) {
+
+                        if (Timestamp.class.isAssignableFrom(attribute.getClass()) || Date.class.isAssignableFrom(attribute.getClass())) {
+                            values[pair.getValue() - 1] = new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime());
+                        } else {
+                            values[pair.getValue() - 1] = attribute;
+                        }
                     }
+                    value = Arrays.asList(values);
                 }
-                value = Arrays.asList(values);
             } else {
                 if (!pairs.isEmpty()) {
                     Object attribute = attrMap.get(pairs.get(0));
-                    if (Timestamp.class.isAssignableFrom(attribute.getClass())) {
+                    if (Timestamp.class.isAssignableFrom(fieldType) || Date.class.isAssignableFrom(fieldType)) {
                         value = attribute != null ? new Date(((Timestamp) attribute).getTime()) : null;
                     } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
                     } else {
-                        try {
-                            Method m = fieldType.getMethod("valueOf", String.class);
-                            value = m.invoke(fieldType, attribute);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchMethodException e) {
-                            e.printStackTrace();
+                        if(attribute != null){
+                            try {
+                                Method m = fieldType.getMethod("valueOf", String.class);
+                                value = m.invoke(fieldType, attribute);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchMethodException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -381,7 +393,7 @@ public class ManagerAPI {
         }
 
         private Integer getMaxSeqNo(List<Pair<BigInteger, Integer>> pairs) {
-            Integer max = 0;
+            Integer max = 1;
             for (Pair<BigInteger, Integer> pair : pairs) {
                 if (pair.getValue() > max) {
                     max = pair.getValue();

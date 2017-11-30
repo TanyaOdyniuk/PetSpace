@@ -7,7 +7,7 @@ import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.comment.PhotoRecordComment;
 import com.netcracker.model.like.AbstractLikeDislike;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @ObjectType(value = 203)

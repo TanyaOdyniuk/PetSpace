@@ -1,8 +1,5 @@
 package com.netcracker.model;
 
-/**
- * Created by Odyniuk on 06/11/2017.
- */
 public class StubUser {
     public static int objectCount;
     private Integer id;

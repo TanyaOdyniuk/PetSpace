@@ -6,7 +6,7 @@ import com.netcracker.model.BaseEntity;
 import com.netcracker.model.like.AbstractLikeDislike;
 import com.netcracker.model.like.RecordLikeDislike;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @ObjectType(value = 402)

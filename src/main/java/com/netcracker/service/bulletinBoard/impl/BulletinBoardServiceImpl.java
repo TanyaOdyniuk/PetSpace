@@ -22,8 +22,14 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
         List<Advertisement> advertisements = managerAPI.getAll(attrTypeId, Advertisement.class);
         for (Advertisement ad : advertisements) {
-            ad.setAdAuthor(managerAPI.getById(ad.getAdAuthor().getObjectId(), Profile.class));
-            ad.setAdStatus(managerAPI.getById(ad.getAdStatus().getObjectId(), Status.class));
+            Profile author = ad.getAdAuthor();
+            Category category = ad.getAdCategory();
+            if(author != null){
+                ad.setAdAuthor(managerAPI.getById(author.getObjectId(), Profile.class));
+            }
+            if(category != null){
+                ad.setAdCategory(managerAPI.getById(category.getObjectId(), Category.class));
+            }
         }
         return advertisements;
     }

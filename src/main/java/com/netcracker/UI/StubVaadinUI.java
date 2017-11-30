@@ -1,6 +1,7 @@
 package com.netcracker.UI;
 
 
+import com.netcracker.UI.bulletinboard.BulletinBoardListContent;
 import com.netcracker.errorHandling.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.vaadin.annotations.Theme;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @SpringUI
 @Theme("valo")
-public class StubVaadinUI extends UI {
+public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private final StubUserEditor stubUserEditor;
 
@@ -31,21 +32,25 @@ public class StubVaadinUI extends UI {
 
     private final VerticalLayout leftPanel;
 
+    private final VerticalLayout mainLayout;
+
+    private final HorizontalLayout primaryAreaLayout;
+
+    private final VerticalLayout addUsersLayout;
     @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
         this.stubUserEditor = stubUserEditor;
-        this.grid = new Grid<>(StubUser.class);
-        this.addNewBtn = new Button("New user", VaadinIcons.PLUS);
-        this.topPanel = new StubTopBar();
-        this.leftPanel = new StubLeftBar();
+        grid = new Grid<>(StubUser.class);
+        addNewBtn = new Button("New user", VaadinIcons.PLUS);
+        topPanel = new StubTopBar(this);
+        leftPanel = new StubLeftBar(this);
+        mainLayout = new VerticalLayout();
+        primaryAreaLayout = new HorizontalLayout();
+        addUsersLayout = new VerticalLayout();
     }
 
     @Override
     protected void init(VaadinRequest request) {
-        VerticalLayout mainLayout = new VerticalLayout();
-        HorizontalLayout primaryAreaLayout = new HorizontalLayout();
-        VerticalLayout addUsersLayout = new VerticalLayout();
-
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0), 1.0f);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1), 15.0f);
@@ -89,4 +94,14 @@ public class StubVaadinUI extends UI {
         grid.setItems(users);
     }
 
+    @Override
+    public void buttonClick(Button.ClickEvent clickEvent) {
+        String clikedButtonCaption = clickEvent.getButton().getCaption();
+        if("My adverts".equals(clikedButtonCaption) || "Bulletin board".equals(clikedButtonCaption)){
+            primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+            primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
+            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        }
+    }
 }
