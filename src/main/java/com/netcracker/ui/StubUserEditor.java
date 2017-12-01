@@ -41,14 +41,29 @@ public class StubUserEditor extends VerticalLayout {
         save.setStyleName(ValoTheme.BUTTON_PRIMARY);
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-        save.addClickListener(e ->
+        /*save.addClickListener(e ->
         {
             stubUser.setFirstName(firstName.getValue());
             stubUser.setLastName(lastName.getValue());
             HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            RestServices.restExchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class, ErrorMessage.VALIDATION_NAME);
+            StubConstants.REST_TEMPLATE
+                    .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
+        });*/
+
+        save.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                setErrorMessage(ErrorMessage.VALIDATION_NAME);
+                stubUser.setFirstName(firstName.getValue());
+                stubUser.setLastName(lastName.getValue());
+                HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+                StubConstants.REST_TEMPLATE
+                        .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
+            }
         });
 
         delete.addClickListener(e -> StubConstants.REST_TEMPLATE
