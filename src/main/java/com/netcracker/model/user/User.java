@@ -2,26 +2,35 @@ package com.netcracker.model.user;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
-import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.securitybook.SecurityBook;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
-@ObjectType(UsersProfileConstant.USER_TYPE)
-public class User extends BaseEntity {
+@ObjectType(value = 1)
+public class User extends BaseEntity implements UserDetails {
 
-    @Attribute(UsersProfileConstant.USER_LOGIN)
+    @Attribute(value = 1)
     private String login;
-    @Attribute(UsersProfileConstant.USER_PASSWORD)
+    @Attribute(value = 2)
     private String password;
-    @Reference(UsersProfileConstant.USER_PROFILE)
+    @Attribute(value = 3)
     private Profile profile;
-    @Attribute(UsersProfileConstant.USER_UTYPE)
-    private UserType userType;
+    @Attribute(value = 4)
+    private List<UserAuthority> userAuthorities;
     //TODO SERVICE GETSECURITYBOOKS
-    @Attribute(UsersProfileConstant.USER_SECBOOK)
+    @Attribute(value = 5)
     private Set<SecurityBook> securityBooks;
+
+    //SECURITY VARIABLES
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
 
     public User() {
     }
@@ -42,8 +51,38 @@ public class User extends BaseEntity {
         this.login = login;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return userAuthorities;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void setPassword(String password) {
@@ -58,12 +97,12 @@ public class User extends BaseEntity {
         this.profile = profile;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public List<UserAuthority> getUserAuthorities() {
+        return userAuthorities;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setUserAuthorities(List<UserAuthority> userAuthorities) {
+        this.userAuthorities = userAuthorities;
     }
 
     public Set<SecurityBook> getSecurityBooks() {
@@ -74,13 +113,29 @@ public class User extends BaseEntity {
         this.securityBooks = securityBooks;
     }
 
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "login='" + login + '\'' +
+                "authorization='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", profile=" + profile +
-                ", userType=" + userType +
+                ", userAuthorities=" + userAuthorities +
                 ", securityBooks=" + securityBooks +
                 '}';
     }

@@ -4,6 +4,7 @@ import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
+import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
@@ -39,6 +40,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     private final HorizontalLayout primaryAreaLayout;
 
     private final VerticalLayout addUsersLayout;
+
     @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
         this.stubUserEditor = stubUserEditor;
@@ -98,11 +100,19 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         String clikedButtonCaption = clickEvent.getButton().getCaption();
-        if("My adverts".equals(clikedButtonCaption) || "Bulletin board".equals(clikedButtonCaption)){
-            primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-            primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
-            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        switch (clikedButtonCaption) {
+            case "My adverts":
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(1));
+                break;
+            case "Bulletin board":
+                primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
+                break;
+            default:
+                primaryAreaLayout.addComponentsAndExpand(addUsersLayout);
+                break;
         }
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
 }

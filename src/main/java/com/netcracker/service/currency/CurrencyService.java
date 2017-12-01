@@ -1,17 +1,19 @@
 package com.netcracker.service.currency;
 
+import java.math.BigDecimal;
+
 public interface CurrencyService {
-    String increaseBalance(double money);
+    String increaseBalance(BigDecimal money);
 
-    String currencySpend(double money);
+    String currencySpend(BigDecimal money);
 
-    boolean CheckBalance(double money);
+    boolean checkBalance(BigDecimal money);
 
-    String increaseBalanceMoney(double money);
+    String increaseBalanceMoney(BigDecimal money);
 
     int checkAmount();
 
     String checkCard();
 
-    double changeRate(double rate);
+    BigDecimal changeRate(BigDecimal rate);
 }

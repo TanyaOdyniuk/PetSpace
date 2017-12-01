@@ -36,12 +36,21 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
 
     @Override
     public List<Advertisement> getMyProfileAds(BigInteger profileId) {
-        String getAdsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_AUTHOR + " and REFERENCE = "
-                + profileId;
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and REFERENCE = "
+                + profileId +
+                "UNION select REFERENCE as object_id FROM " +
+                "OBJREFERENCE WHERE ATTRTYPE_ID =" +
+                + AdvertisementConstant.AD_AUTHOR +
+                " and OBJECT_ID = " + profileId;
         List<Advertisement> advertisements = managerAPI.getObjectsBySQL(getAdsQuery, Advertisement.class);
         for (Advertisement ad : advertisements) {
-            ad.setAdStatus(managerAPI.getById(ad.getAdStatus().getObjectId(), Status.class));
+            Category category = ad.getAdCategory();
+            if(category != null){
+                ad.setAdCategory(managerAPI.getById(category.getObjectId(), Category.class));
+            }
         }
         return advertisements;
     }
