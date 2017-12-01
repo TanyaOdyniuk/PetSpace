@@ -1,8 +1,5 @@
 package com.netcracker.model.user;
 
-/**
- * Created by Valentin on 01.12.2017.
- */
 public interface UsersProfileConstant {
     int USER_TYPE = 1;
     int USER_LOGIN = 1;

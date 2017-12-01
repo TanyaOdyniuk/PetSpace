@@ -1,8 +1,6 @@
 package com.netcracker.model.record;
 
-/**
- * Created by Valentin on 01.12.2017.
- */
+
 public interface RecordConstant {
     int REC_TYPE = 402;
     int REC_INFO = 407;

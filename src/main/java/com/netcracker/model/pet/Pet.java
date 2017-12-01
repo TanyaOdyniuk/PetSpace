@@ -40,7 +40,7 @@ public class Pet extends BaseEntity {
     @Reference(AdvertisementConstant.AD_PETS)
     private Set<Advertisement> petAdvertisements;
     //TODO SERVICE GETPHOTOALBUMS
-    @Attribute(PetConstant.PET_PHOTOALBUM)
+    @Reference(PetConstant.PET_PHOTOALBUM)
     private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {

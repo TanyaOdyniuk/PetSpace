@@ -1,8 +1,6 @@
 package com.netcracker.model.service;
 
-/**
- * Created by Valentin on 01.12.2017.
- */
+
 public interface ServiceConstant {
     int SERV_TYPE = 6;
     int SERV_PHOTO = 21;

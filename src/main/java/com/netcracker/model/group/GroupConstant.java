@@ -1,8 +1,6 @@
 package com.netcracker.model.group;
 
-/**
- * Created by Valentin on 01.12.2017.
- */
+
 public interface GroupConstant {
     int GR_TYPE = 404;
     int GR_NAME = 422;
