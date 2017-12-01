@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 5)
+@ObjectType(UsersProfileConstant.USER_TYPE)
 public class UserAuthority extends BaseEntity implements GrantedAuthority {
 
     @Attribute(value = 19)
