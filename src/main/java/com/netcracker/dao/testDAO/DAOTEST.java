@@ -1,10 +1,10 @@
-package com.netcracker.dao.testDAO;
+package com.netcracker.dao.testdao;
 
 import com.netcracker.dao.managerapi.ManagerAPI;
-import com.netcracker.dao.testDAO.testEntity.TestCity;
-import com.netcracker.dao.testDAO.testEntity.TestConfig;
-import com.netcracker.dao.testDAO.testEntity.TestPet;
-import com.netcracker.dao.testDAO.testEntity.TestUser;
+import com.netcracker.dao.testdao.testentity.TestCity;
+import com.netcracker.dao.testdao.testentity.TestConfig;
+import com.netcracker.dao.testdao.testentity.TestPet;
+import com.netcracker.dao.testdao.testentity.TestUser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -14,22 +14,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DAOTEST {
+public class DaoTest {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class);
         ManagerAPI managerAPI = context.getBean(ManagerAPI.class);
-        TestUser testUser1 = new DAOTEST().testCreateUser(managerAPI);
+        TestUser testUser1 = new DaoTest().testCreateUser(managerAPI);
         BigInteger forUpdate = testUser1.getObjectId();
-        new DAOTEST().testUpdateUser(managerAPI, forUpdate);
-        TestUser gotTestUser1 = new DAOTEST().testGetUser(managerAPI, forUpdate);
-        TestUser testUser2 = new DAOTEST().testCreateWithCities(managerAPI);
+        new DaoTest().testUpdateUser(managerAPI, forUpdate);
+        TestUser gotTestUser1 = new DaoTest().testGetUser(managerAPI, forUpdate);
+        TestUser testUser2 = new DaoTest().testCreateWithCities(managerAPI);
         BigInteger getWithCities = testUser2.getObjectId();
-        TestUser gotTestUser2 = new DAOTEST().testGetUserWithCities(managerAPI, getWithCities);
-        List<TestUser> res = new DAOTEST().getAllTest(managerAPI);
-        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
-        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("4"), 0);
-        new DAOTEST().deleteForceTest(managerAPI,new BigInteger("1"), 0);
-        List<TestUser> res1 = new DAOTEST().getAllTest(managerAPI);
+        TestUser gotTestUser2 = new DaoTest().testGetUserWithCities(managerAPI, getWithCities);
+        List<TestUser> res = new DaoTest().getAllTest(managerAPI);
+        new DaoTest().deleteForceTest(managerAPI,new BigInteger("1"), 0);
+        new DaoTest().deleteForceTest(managerAPI,new BigInteger("4"), 0);
+        new DaoTest().deleteForceTest(managerAPI,new BigInteger("1"), 0);
+        List<TestUser> res1 = new DaoTest().getAllTest(managerAPI);
         System.out.printf("");
     }
 

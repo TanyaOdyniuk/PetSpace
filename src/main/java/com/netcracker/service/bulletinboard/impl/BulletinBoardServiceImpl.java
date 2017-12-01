@@ -56,7 +56,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
 
     @Override
-    public List<Advertisement> sortAd(List<Advertisement> listAds) {
+    public List<Advertisement> sortAds(List<Advertisement> listAds) {
         return null;
     }
 
@@ -80,12 +80,12 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
 
     @Override
-    public void chooseCategory(Advertisement listAds, Category categoryAd) {
+    public void chooseCategoryForAd(Advertisement listAds, Category categoryAd) {
 
     }
 
     @Override
-    public void filterByCategory(List<Advertisement> listAds, List<Category> categoryAds) {
+    public void filterAdsByCategory(List<Advertisement> listAds, List<Category> categoryAds) {
 
     }
 }

@@ -4,7 +4,7 @@ import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
-import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
+import com.netcracker.ui.gallery.GalleryListContent;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
@@ -70,7 +70,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         setContent(mainLayout);
 
         addNewBtn.setHeight(30, Unit.PIXELS);
-        grid.setHeight(300, Unit.PIXELS);
+        grid.setHeight(200, Unit.PIXELS);
         grid.setColumns("id", "firstName", "lastName");
         stubUserEditor.setHeight(250, Unit.PIXELS);
         addNewBtn.addClickListener(clickEvent -> stubUserEditor.editUser(new StubUser(++StubUser.objectCount, "", "")));
@@ -100,19 +100,16 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         String clikedButtonCaption = clickEvent.getButton().getCaption();
-        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-        switch (clikedButtonCaption) {
-            case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(1));
-                break;
-            case "Bulletin board":
-                primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
-                break;
-            default:
-                primaryAreaLayout.addComponentsAndExpand(addUsersLayout);
-                break;
+        if("My adverts".equals(clikedButtonCaption) || "Bulletin board".equals(clikedButtonCaption)){
+            primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+            primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
+            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        } else if("My albums".equals(clikedButtonCaption)){
+//            primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+            primaryAreaLayout.addComponentsAndExpand(new GalleryListContent());
+            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(2), 2.0f);
+//            primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
         }
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
 }

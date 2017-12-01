@@ -19,7 +19,7 @@ public interface BulletinBoardService {
 
 //    Система должна позволять отсортировать список объявлений по следующим правилам:
 //            1. Объявления в статусе VIP всегда находятся выше остальных.
-    List<Advertisement> sortAd(List<Advertisement> listAds);
+    List<Advertisement> sortAds(List<Advertisement> listAds);
 
 //    Система должна позволять пользователю возможность добавить новое объявление с одной категорией
     void newAd(Advertisement ad);
@@ -27,7 +27,6 @@ public interface BulletinBoardService {
 //    Система должна вывести на экран полную информацию об объявлении, скрыв пустые поля
     List<String> getAd(Advertisement ad);
 
-//    После получения всех объявлений пользователя (FR: PetSpace.BulletinBoardService.GetMyAds) и просмотра полной информации о конкретном объявлении(FR: PetSpace.BulletinBoardService.GetAd)
 //    система должна предоставить пользователю возможность редактировать текущее объявление.
     void updateAd(Advertisement ad);
 
@@ -37,11 +36,9 @@ public interface BulletinBoardService {
     void deleteAd(Advertisement ad);
 
 //    Система должна позволять пользователю выбрать одну категорию для своего объявления
-    void chooseCategory(Advertisement listAds, Category categoryAd);
+    void chooseCategoryForAd(Advertisement listAds, Category categoryAd);
 
-//    После получения списка всех объявлений (FR: PetSpace.BulletinBoardService.GetAds) или объявлений текущего пользователя
-//    (FR: PetSpace.BulletinBoardService.GetMyAds) cистема должна позволять фильтровать список
-//    объявлений по выбранной категории/категориям
-    void filterByCategory(List<Advertisement> listAds, List<Category> categoryAds);
+//    cистема должна позволять фильтровать список объявлений по выбранной категории/категориям
+    void filterAdsByCategory(List<Advertisement> listAds, List<Category> categoryAds);
 
 }

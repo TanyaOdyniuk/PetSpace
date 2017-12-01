@@ -12,7 +12,7 @@ public interface GroupService {
     Group createNewGroup(Profile pfofile, Group newGroup);
 
 //    Система должна проверять входящие данные при создании новой страницы группы
-    void validation (Object dataForValidate); //??
+    void validationOfDataForNewGroup (Object dataForValidate); //??
 
 //    Система должна позволять админу вносить изменения в группу
     void editGroup(Group groupForChangeOnlyAdmin);
@@ -21,16 +21,16 @@ public interface GroupService {
     void deleteGroup(Group group);
 
     //Система должна позволять администратору наделять определенных участников группы вносить изменения в группу.
-    void empower(Group group, Integer userId);
+    void empowerForGroup(Group group, Integer userId);
 
 //    Уровни публичности  группы: открыта, закрыта
-    void setAccessLevel(Group group, GroupType groupType); //то же что и обычный setter группы
+    void setAccessLevelOfGroup(Group group, GroupType groupType); //то же что и обычный setter группы
 
-    void inviteUser(Profile invited, Group linkToGroup);
+    void inviteUserToGroup(Profile invited, Group linkToGroup);
 
-    void removeParticipant(Group group, Integer userID);
+    void removeParticipantFromGroup(Group group, Integer userID);
 
 //    Приглашенный пользователь должен подтвердить свое участие в группе
-    boolean confirmInvitation(Profile invited);   //?
+    boolean confirmInvitationToGroup(Profile invited);   //?
 
 }
