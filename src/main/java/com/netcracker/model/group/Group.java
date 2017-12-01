@@ -2,6 +2,7 @@ package com.netcracker.model.group;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.record.GroupRecord;
@@ -18,17 +19,17 @@ public class Group extends BaseEntity {
     @Attribute(GroupConstant.GR_DESCR)
     private String groupDescription;
     //TODO SERVICE GETGROUPUSERS
-    @Attribute(GroupConstant.GR_PROFILE)
+    @Reference(GroupConstant.GR_PROFILE)
     private Set<Profile> groupParticipants;
-    @Attribute(GroupConstant.GR_GROUPTYPE)
+    @Reference(GroupConstant.GR_GROUPTYPE)
     private GroupType groupType;
-    @Attribute(GroupConstant.GR_STATUS)
+    @Reference(GroupConstant.GR_STATUS)
     private Status groupStatus;
     //TODO SERVICE GETGROUPRECORDS
-    @Attribute(GroupConstant.GR_RECORDS)
+    @Reference(GroupConstant.GR_RECORDS)
     private List<GroupRecord> groupRecords;
     //TODO SERVICE GETGROUPADMINS
-    @Attribute(GroupConstant.GR_ADMIN)
+    @Reference(GroupConstant.GR_ADMIN)
     private Profile groupAdmin;
 
     public Group() {

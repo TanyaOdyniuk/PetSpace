@@ -2,6 +2,7 @@ package com.netcracker.model.record;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.like.RecordLikeDislike;
 
@@ -16,10 +17,10 @@ public abstract class AbstractRecord extends BaseEntity {
     @Attribute(RecordConstant.REC_DATE)
     private Date recordDate;
     //TODO SERVICE TO GET LIKES
-    @Attribute(RecordConstant.REC_LDLREF)
+    @Reference(RecordConstant.REC_LDLREF)
     private List<RecordLikeDislike> recordLikes;
     //TODO SERVICE TO GET DISLIKES
-    @Attribute(RecordConstant.REC_LDLREF)
+    @Reference(RecordConstant.REC_LDLREF)
     private List<RecordLikeDislike> recordDislikes;
 
     public AbstractRecord() {

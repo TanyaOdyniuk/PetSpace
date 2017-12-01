@@ -31,11 +31,11 @@ public class Advertisement extends BaseEntity {
     private String adLocation;
     @Attribute(AdvertisementConstant.AD_BASIC_INFO)
     private String adBasicInfo;
-    @Attribute(AdvertisementConstant.AD_AUTHOR)
+    @Reference(AdvertisementConstant.AD_AUTHOR)
     private Profile adAuthor;
-    @Attribute(AdvertisementConstant.AD_STATUS)
+    @Reference(AdvertisementConstant.AD_STATUS)
     private Status adStatus;
-    @Attribute(AdvertisementConstant.AD_CATEGORY)
+    @Reference(AdvertisementConstant.AD_CATEGORY)
     private Category adCategory;
     @Attribute(AdvertisementConstant.AD_PETS)
     private Set<Pet> adPets;

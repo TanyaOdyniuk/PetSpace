@@ -21,10 +21,10 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     @Reference(UsersProfileConstant.USER_PROFILE)
     private Profile profile;
-    @Attribute(UsersProfileConstant.USER_UTYPE)
+    @Reference(UsersProfileConstant.USER_UTYPE)
     private List<UserAuthority> userAuthorities;
     //TODO SERVICE GETSECURITYBOOKS
-    @Attribute(UsersProfileConstant.USER_SECBOOK)
+    @Reference(UsersProfileConstant.USER_SECBOOK)
     private Set<SecurityBook> securityBooks;
 
     //SECURITY VARIABLES

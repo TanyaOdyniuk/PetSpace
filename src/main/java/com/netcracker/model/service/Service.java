@@ -17,7 +17,7 @@ public class Service extends BaseEntity {
     private String serviceName;
     @Attribute(ServiceConstant.SERV_PRICE)
     private Double servicePrice;
-    @Attribute(ServiceConstant.SERV_STYPE)
+    @Reference(ServiceConstant.SERV_STYPE)
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
     @Reference(UsersProfileConstant.PROFILE_SERVICES)

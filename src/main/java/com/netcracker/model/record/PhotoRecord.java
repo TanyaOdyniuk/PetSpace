@@ -21,13 +21,13 @@ public class PhotoRecord extends AbstractRecord {
     @Attribute(RecordConstant.PR_UPLDATE)
     private Date photoUploadDate;
     //TODO SERVICE TO GET LIKES
-    @Attribute(RecordConstant.PR_LIKE)
+    @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordLikes;
     //TODO SERVICE TO GET DISLIKES
-    @Attribute(RecordConstant.PR_LIKE)
+    @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordDislikes;
     //TODO SERVICE TO GET PHOTO COMMENTS
-    @Attribute(RecordConstant.REC_COMREF)
+    @Reference(RecordConstant.REC_COMREF)
     private List<PhotoRecordComment> photoComments;
 
     public PhotoRecord() {

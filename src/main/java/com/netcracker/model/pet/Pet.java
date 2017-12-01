@@ -22,7 +22,7 @@ public class Pet extends BaseEntity {
     private String petName;
     @Attribute(PetConstant.PET_AGE)
     private Integer petAge;
-    @Attribute(PetConstant.PET_SPECOFPET)
+    @Reference(PetConstant.PET_SPECOFPET)
     private PetSpecies petSpecies;
     @Attribute(PetConstant.PET_BREED)
     private String petBreed;
@@ -32,15 +32,15 @@ public class Pet extends BaseEntity {
     private Double petHeight;
     @Attribute(PetConstant.PET_SPECPARAM)
     private String petSpecificParam;
-    @Attribute(PetConstant.PET_OWNER)
+    @Reference(PetConstant.PET_OWNER)
     private Profile petOwner;
-    @Attribute(PetConstant.PET_STATE)
+    @Reference(PetConstant.PET_STATE)
     private Status petStatus;
     //TODO SERVICE GETADVERTISEMENTS
     @Reference(AdvertisementConstant.AD_PETS)
     private Set<Advertisement> petAdvertisements;
     //TODO SERVICE GETPHOTOALBUMS
-    @Attribute(PetConstant.PET_PHOTOALNUM)
+    @Attribute(PetConstant.PET_PHOTOALBUM)
     private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {

@@ -46,7 +46,7 @@ public class Profile extends BaseEntity {
     @Reference(PetConstant.PET_OWNER) //303
     private List<Pet> profilePets; //нет аттрибута
     //TODO SERVICE GETWALLRECORDS
-    @Attribute(UsersProfileConstant.PROFILE_WALLREC)
+    @Reference(UsersProfileConstant.PROFILE_WALLREC)
     private List<WallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
     @Reference(AdvertisementConstant.AD_AUTHOR)
@@ -64,7 +64,7 @@ public class Profile extends BaseEntity {
     @Reference(LikeConstant.LDL_AUTOR)
     private List<AbstractLikeDislike> profileDislikes;
     //TODO SERVICE GETSERVICES
-    @Attribute(UsersProfileConstant.PROFILE_SERVICES)
+    @Reference(UsersProfileConstant.PROFILE_SERVICES)
     private Set<Service> services;
     //TODO SERVICE GETADMINISTRATEDGROUPS
     @Reference(GroupConstant.GR_ADMIN)

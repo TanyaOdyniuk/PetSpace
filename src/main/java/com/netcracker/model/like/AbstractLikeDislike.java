@@ -3,6 +3,7 @@ package com.netcracker.model.like;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.Boolean;
 import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.Profile;
 
@@ -15,7 +16,7 @@ public abstract class AbstractLikeDislike extends BaseEntity {
     private Date likeDate;
     @Boolean(value = LikeConstant.LDL_ISDISLIKE, yesno = LikeConstant.LDL_IS_DISLIKE_STRING)
     private boolean isDislike;
-    @Attribute(LikeConstant.LDL_AUTOR)
+    @Reference(LikeConstant.LDL_AUTOR)
     private Profile likeAuthor;
 
     public AbstractLikeDislike() {

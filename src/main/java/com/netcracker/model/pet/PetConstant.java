@@ -14,7 +14,7 @@ public interface PetConstant {
     int PET_AVATAR = 207;
     int PET_SPECOFPET = 300;
     int PET_STATE = 301;
-    int PET_PHOTOALNUM = 302;
+    int PET_PHOTOALBUM = 302;
     int PET_OWNER = 303;
 
     int PETSPEC_TYPE = 200;

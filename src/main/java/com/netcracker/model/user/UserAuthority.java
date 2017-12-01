@@ -13,11 +13,11 @@ import java.util.Set;
 @ObjectType(UsersProfileConstant.USER_TYPE)
 public class UserAuthority extends BaseEntity implements GrantedAuthority {
 
-    @Attribute(value = 19)
+    @Attribute(UsersProfileConstant.USERTYPE_NAME)
     private String authority;
-    @Attribute(value = 20)
+    @Attribute(UsersProfileConstant.USERTYPE_TYPECAT)
     private Set<Category> categories;
-    @Reference(value = 4)
+    @Reference(UsersProfileConstant.USER_UTYPE)
     private List<User> users;
 
     public UserAuthority() {

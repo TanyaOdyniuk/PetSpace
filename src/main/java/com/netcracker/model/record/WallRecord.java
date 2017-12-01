@@ -11,7 +11,7 @@ import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)
 public class WallRecord extends AbstractRecord {
-    @Attribute(RecordConstant.REC_AUTOR)
+    @Reference(RecordConstant.REC_AUTOR)
     private Profile recordAuthor;
     @Reference(UsersProfileConstant.PROFILE_WALLREC)
     private List<WallComment> wallComments;
