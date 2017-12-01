@@ -5,37 +5,39 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.category.Category;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 import java.util.Set;
 
 @ObjectType(value = 5)
-public class UserType extends BaseEntity {
+public class UserAuthority extends BaseEntity implements GrantedAuthority {
 
     @Attribute(value = 19)
-    private String type;
+    private String authority;
     @Attribute(value = 20)
     private Set<Category> categories;
     @Reference(value = 4)
     private List<User> users;
 
-    public UserType() {
+    public UserAuthority() {
     }
 
-    public UserType(String name) {
+    public UserAuthority(String name) {
         super(name);
     }
 
-    public UserType(String name, String description) {
+    public UserAuthority(String name, String description) {
         super(name, description);
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public Set<Category> getCategories() {
@@ -56,10 +58,12 @@ public class UserType extends BaseEntity {
 
     @Override
     public String toString() {
-        return "UserType{" +
-                "type='" + type + '\'' +
+        return "UserAuthority{" +
+                "authority='" + authority + '\'' +
                 ", categories=" + categories +
                 ", users=" + users +
                 '}';
     }
+
+
 }
