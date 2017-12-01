@@ -13,7 +13,7 @@ import java.util.Set;
 @ObjectType(SecurityBookConstant.SECB_TYPE)
 public class SecurityBook extends BaseEntity {
 
-    @Reference(SecurityBookConstant.SECB_USERSECB)
+    @Attribute(SecurityBookConstant.SECB_USERSECB)
     private BigInteger attributeId;
     @Reference(SecurityBookConstant.SECT_TYPE)
     private SecurityType securityType;

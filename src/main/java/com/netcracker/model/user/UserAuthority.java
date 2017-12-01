@@ -15,7 +15,7 @@ public class UserAuthority extends BaseEntity implements GrantedAuthority {
 
     @Attribute(UsersProfileConstant.USERTYPE_NAME)
     private String authority;
-    @Attribute(UsersProfileConstant.USERTYPE_TYPECAT)
+    @Reference(UsersProfileConstant.USERTYPE_TYPECAT)
     private Set<Category> categories;
     @Reference(UsersProfileConstant.USER_UTYPE)
     private List<User> users;

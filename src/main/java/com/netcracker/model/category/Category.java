@@ -16,7 +16,7 @@ public class Category extends BaseEntity {
 
     @Attribute(CategoryConstant.CAT_NAME)
     private String categoryName;
-    @Attribute(CategoryConstant.CAT_USERTYPE)
+    @Reference(CategoryConstant.CAT_USERTYPE)
     private Set<UserAuthority> categoryUserTypes;
     @Reference(AdvertisementConstant.AD_CATEGORY)
     private List<Advertisement> categoryAds;

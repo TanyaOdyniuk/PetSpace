@@ -1,8 +1,6 @@
 package com.netcracker.model.pet;
 
-/**
- * Created by Valentin on 01.12.2017.
- */
+
 public interface PetConstant {
     int PET_TYPE = 201;
     int PET_NAME = 201;
