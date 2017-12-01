@@ -4,28 +4,30 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.album.PhotoAlbumConstant;
 import com.netcracker.model.comment.PhotoRecordComment;
 import com.netcracker.model.like.AbstractLikeDislike;
 
 import java.sql.Date;
 import java.util.List;
 
-@ObjectType(value = 203)
+@ObjectType(RecordConstant.PR_TYPE)
 public class PhotoRecord extends AbstractRecord {
 
-    @Attribute(value = 209)
+    @Attribute(RecordConstant.PR_PHOTO)
     private String photo;
-    @Reference(value = 303)
+    @Reference(PhotoAlbumConstant.PET_PHOTOALBUM)
     private PhotoAlbum photoAlbum;
+    @Attribute(RecordConstant.PR_UPLDATE)
     private Date photoUploadDate;
     //TODO SERVICE TO GET LIKES
-    @Attribute(value = 305)
+    @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordLikes;
     //TODO SERVICE TO GET DISLIKES
-    @Attribute(value = 305)
+    @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordDislikes;
     //TODO SERVICE TO GET PHOTO COMMENTS
-    @Attribute(value = 304)
+    @Reference(RecordConstant.REC_COMREF)
     private List<PhotoRecordComment> photoComments;
 
     public PhotoRecord() {

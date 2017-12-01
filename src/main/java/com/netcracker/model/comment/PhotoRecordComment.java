@@ -1,8 +1,13 @@
 package com.netcracker.model.comment;
 
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.record.PhotoRecord;
+import com.netcracker.model.record.RecordConstant;
 
+@ObjectType(CommentConstant.COM_TYPE)
 public class PhotoRecordComment extends AbstractComment {
+    @Reference(RecordConstant.PR_COMMENTS)
     private PhotoRecord commentPhotoRecord;
 
     public PhotoRecordComment() {

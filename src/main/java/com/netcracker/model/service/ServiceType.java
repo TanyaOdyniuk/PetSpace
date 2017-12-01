@@ -7,12 +7,12 @@ import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
-@ObjectType(value = 7)
+@ObjectType(ServiceConstant.SERVT_TYPE)
 public class ServiceType extends BaseEntity {
 
-    @Attribute(value = 25)
+    @Attribute(ServiceConstant.SERVT_TNAME)
     private String serviceType;
-    @Reference(value = 24)
+    @Reference(ServiceConstant.SERV_STYPE)
     private List<Service> services;
 
     public ServiceType() {

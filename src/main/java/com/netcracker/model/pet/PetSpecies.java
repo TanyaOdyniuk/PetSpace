@@ -7,13 +7,13 @@ import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
-@ObjectType(value = 200)
+@ObjectType(PetConstant.PETSPEC_TYPE)
 public class PetSpecies extends BaseEntity {
 
-    @Attribute(value = 200)
+    @Attribute(PetConstant.PETSPEC_NAME)
     private String speciesName;
     //TODO SERVICE GET PET LIST BY SPECIES
-    @Reference(value = 300)
+    @Reference(PetConstant.PET_SPECOFPET)
     private List<Pet> petList;
 
     public PetSpecies() {

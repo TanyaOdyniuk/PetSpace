@@ -5,19 +5,20 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.user.UserAuthority;
 
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 4)
+@ObjectType(CategoryConstant.CAT_TYPE)
 public class Category extends BaseEntity {
 
-    @Attribute(value = 17)
+    @Attribute(CategoryConstant.CAT_NAME)
     private String categoryName;
-    @Attribute(value = 18)
-    private Set<UserAuthority> categoryUserAuthorities;
-    @Reference(value = 12)
+    @Attribute(CategoryConstant.CAT_USERTYPE)
+    private Set<UserAuthority> categoryUserTypes;
+    @Reference(AdvertisementConstant.AD_CATEGORY)
     private List<Advertisement> categoryAds;
 
     public Category() {
@@ -39,12 +40,12 @@ public class Category extends BaseEntity {
         this.categoryName = categoryName;
     }
 
-    public Set<UserAuthority> getCategoryUserAuthorities() {
-        return categoryUserAuthorities;
+    public Set<UserAuthority> getCategoryUserTypes() {
+        return categoryUserTypes;
     }
 
-    public void setCategoryUserAuthorities(Set<UserAuthority> categoryUserAuthorities) {
-        this.categoryUserAuthorities = categoryUserAuthorities;
+    public void setCategoryUserTypes(Set<UserAuthority> categoryUserTypes) {
+        this.categoryUserTypes = categoryUserTypes;
     }
 
     public List<Advertisement> getCategoryAds() {
@@ -59,7 +60,7 @@ public class Category extends BaseEntity {
     public String toString() {
         return "Category{" +
                 "categoryName='" + categoryName + '\'' +
-                ", categoryUserAuthorities=" + categoryUserAuthorities +
+                ", categoryUserTypes=" + categoryUserTypes +
                 ", categoryAds=" + categoryAds +
                 '}';
     }

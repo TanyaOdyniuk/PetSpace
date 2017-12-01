@@ -7,12 +7,12 @@ import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
-@ObjectType(value = 405)
+@ObjectType(GroupConstant.GRT_TYPE)
 public class GroupType extends BaseEntity {
 
-    @Attribute(value = 429)
+    @Attribute(GroupConstant.GRT_NAME)
     private String groupType;
-    @Reference(value = 426)
+    @Reference(GroupConstant.GR_GROUPTYPE)
     private List<Group> groups;
 
     public GroupType() {

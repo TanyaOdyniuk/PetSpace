@@ -10,7 +10,7 @@ public interface ManageFriendService {
 
     Pet checkFriendsPets(Profile profile);
 
-    void SortFriendList(SortListFriendMod sortMod);
+    void sortFriendList(SortListFriendMod sortMod);
 
     interface SortListFriendMod {
         String UPLOAD_DATE = "UPLOAD_DATE";

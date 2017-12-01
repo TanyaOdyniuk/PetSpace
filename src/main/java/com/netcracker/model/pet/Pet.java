@@ -6,40 +6,41 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 201)
+@ObjectType(PetConstant.PET_TYPE)
 public class Pet extends BaseEntity {
 
-    //@Attribute(value = ) нет в базе айдишника
+    @Attribute(PetConstant.PET_AVATAR)
     private String petAvatar;
-    @Attribute(value = 201)
+    @Attribute(PetConstant.PET_NAME)
     private String petName;
-    @Attribute(value = 202)
+    @Attribute(PetConstant.PET_AGE)
     private Integer petAge;
-    @Attribute(value = 300)
+    @Reference(PetConstant.PET_SPECOFPET)
     private PetSpecies petSpecies;
-    @Attribute(value = 203)
+    @Attribute(PetConstant.PET_BREED)
     private String petBreed;
-    @Attribute(value = 204)
+    @Attribute(PetConstant.PET_WEIGHT)
     private Double petWeight;
-    @Attribute(value = 205)
+    @Attribute(PetConstant.PET_HEIGHT)
     private Double petHeight;
-    @Attribute(value = 206)
+    @Attribute(PetConstant.PET_SPECPARAM)
     private String petSpecificParam;
-    //@Reference(value = ) в профиле нет указания на питомца
+    @Reference(PetConstant.PET_OWNER)
     private Profile petOwner;
-    @Attribute(value = 301)
+    @Reference(PetConstant.PET_STATE)
     private Status petStatus;
     //TODO SERVICE GETADVERTISEMENTS
-    @Reference(value = 15)
+    @Reference(AdvertisementConstant.AD_PETS)
     private Set<Advertisement> petAdvertisements;
     //TODO SERVICE GETPHOTOALBUMS
-    @Attribute(value = 302)
+    @Attribute(PetConstant.PET_PHOTOALBUM)
     private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {

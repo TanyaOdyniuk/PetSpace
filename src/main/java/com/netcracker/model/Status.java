@@ -4,24 +4,28 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.group.Group;
+import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.UsersProfileConstant;
 
 import java.util.List;
 
-@ObjectType(value = 3)
+@ObjectType(StatusConstant.ST_TYPE)
 public class Status extends BaseEntity {
 
-    @Attribute(value = 3)
+    @Attribute(StatusConstant.ST_STATE)
     private String status;
-    @Reference(value = 427)
+    @Reference(GroupConstant.GR_STATUS)
     private List<Group> groups;
-    @Reference(value = 419)
+    @Reference(UsersProfileConstant.PROFILE_STATUS)
     private List<Profile> profiles;
-    @Reference(value = 13)
+    @Reference(AdvertisementConstant.AD_STATUS)
     private List<Advertisement> advertisements;
-    @Reference(value = 301)
+    @Reference(PetConstant.PET_STATE)
     private List<Pet> pets;
 
     public Status() {

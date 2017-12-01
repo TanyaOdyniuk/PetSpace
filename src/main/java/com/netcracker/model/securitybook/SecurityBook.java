@@ -5,19 +5,20 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
+import com.netcracker.model.user.UsersProfileConstant;
 
 import java.math.BigInteger;
 import java.util.Set;
 
-@ObjectType(value = 204)
+@ObjectType(SecurityBookConstant.SECB_TYPE)
 public class SecurityBook extends BaseEntity {
 
-    @Attribute(value = 306)
+    @Reference(SecurityBookConstant.SECB_USERSECB)
     private BigInteger attributeId;
-    @Reference(value = 211)
+    @Reference(SecurityBookConstant.SECT_TYPE)
     private SecurityType securityType;
     //TODO SERVICE TO GET USERS
-    @Reference(value = 5)
+    @Reference(UsersProfileConstant.USER_SECBOOK)
     private Set<User> users;
 
     public SecurityBook() {
