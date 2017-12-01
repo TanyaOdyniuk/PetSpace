@@ -6,7 +6,7 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;
-import com.netcracker.model.user.UserType;
+import com.netcracker.model.user.UserAuthority;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class Category extends BaseEntity {
     @Attribute(CategoryConstant.CAT_NAME)
     private String categoryName;
     @Attribute(CategoryConstant.CAT_USERTYPE)
-    private Set<UserType> categoryUserTypes;
+    private Set<UserAuthority> categoryUserTypes;
     @Reference(AdvertisementConstant.AD_CATEGORY)
     private List<Advertisement> categoryAds;
 
@@ -40,11 +40,11 @@ public class Category extends BaseEntity {
         this.categoryName = categoryName;
     }
 
-    public Set<UserType> getCategoryUserTypes() {
+    public Set<UserAuthority> getCategoryUserTypes() {
         return categoryUserTypes;
     }
 
-    public void setCategoryUserTypes(Set<UserType> categoryUserTypes) {
+    public void setCategoryUserTypes(Set<UserAuthority> categoryUserTypes) {
         this.categoryUserTypes = categoryUserTypes;
     }
 

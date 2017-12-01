@@ -37,7 +37,7 @@ public class Advertisement extends BaseEntity {
     private Status adStatus;
     @Reference(AdvertisementConstant.AD_CATEGORY)
     private Category adCategory;
-    @Attribute(AdvertisementConstant.AD_PETS)
+    @Reference(AdvertisementConstant.AD_PETS)
     private Set<Pet> adPets;
     //TODO SERVICE GET ADCOMMENTS
     @Reference(CommentConstant.COM_TYPE)// нет ничего более конкретного
