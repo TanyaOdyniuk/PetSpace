@@ -9,13 +9,13 @@ import com.netcracker.model.user.Profile;
 import java.sql.Date;
 
 
-@ObjectType(value = 400)
+@ObjectType(LikeConstant.LDL_TYPE)
 public abstract class AbstractLikeDislike extends BaseEntity {
-    @Attribute(value = 400)
+    @Attribute(LikeConstant.LDL_DATE)
     private Date likeDate;
-    @Boolean(value = 401, yesno = "yes")
+    @Boolean(value = LikeConstant.LDL_ISDISLIKE, yesno = LikeConstant.LDL_IS_DISLIKE_STRING)
     private boolean isDislike;
-    @Attribute(value = 402)
+    @Attribute(LikeConstant.LDL_AUTOR)
     private Profile likeAuthor;
 
     public AbstractLikeDislike() {

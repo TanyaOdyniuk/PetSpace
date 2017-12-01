@@ -1,14 +1,18 @@
 package com.netcracker.model.record;
 
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.GroupComment;
 import com.netcracker.model.group.Group;
+import com.netcracker.model.group.GroupConstant;
 
 import java.util.List;
 
+@ObjectType(RecordConstant.REC_TYPE)
 public class GroupRecord extends AbstractRecord {
-    @Reference(value = 428)
+    @Reference(GroupConstant.GR_RECORDS)
     private Group recordGroup;
+    @Reference(RecordConstant.REC_COMREF)
     private List<GroupComment> recordGroupComments;
 
     public GroupRecord() {

@@ -8,18 +8,18 @@ import com.netcracker.model.like.RecordLikeDislike;
 import java.sql.Date;
 import java.util.List;
 
-@ObjectType(value = 402)
+@ObjectType(RecordConstant.REC_TYPE)
 public abstract class AbstractRecord extends BaseEntity {
 
-    @Attribute(value = 407)
+    @Attribute(RecordConstant.REC_INFO)
     private String recordText;
-    @Attribute(value = 408)
+    @Attribute(RecordConstant.REC_DATE)
     private Date recordDate;
     //TODO SERVICE TO GET LIKES
-    @Attribute(value = 409)
+    @Attribute(RecordConstant.REC_LDLREF)
     private List<RecordLikeDislike> recordLikes;
     //TODO SERVICE TO GET DISLIKES
-    @Attribute(value = 409)
+    @Attribute(RecordConstant.REC_LDLREF)
     private List<RecordLikeDislike> recordDislikes;
 
     public AbstractRecord() {

@@ -1,8 +1,11 @@
 package com.netcracker.model.comment;
 
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.advertisement.Advertisement;
 
+@ObjectType(CommentConstant.COM_TYPE)
 public class AdvertisementComment extends AbstractComment {
+    //нет списка комментов
     private Advertisement commentAdvertisement;
 
     public AdvertisementComment() {

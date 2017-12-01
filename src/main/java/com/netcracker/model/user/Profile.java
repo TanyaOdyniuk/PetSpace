@@ -6,63 +6,68 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.comment.AbstractComment;
+import com.netcracker.model.comment.CommentConstant;
 import com.netcracker.model.group.Group;
+import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.like.AbstractLikeDislike;
+import com.netcracker.model.like.LikeConstant;
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.service.Service;
 
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 403)
+@ObjectType(UsersProfileConstant.PROFILE_TYPE)
 public class Profile extends BaseEntity {
 
-    @Attribute(value = 412)
+    @Attribute(UsersProfileConstant.PROFILE_AVATAR)
     private String profileAvatar;
-    @Attribute(value = 413)
+    @Attribute(UsersProfileConstant.PROFILE_NAME)
     private String profileName;
-    @Attribute(value = 414)
+    @Attribute(UsersProfileConstant.PROFILE_SURNAME)
     private String profileSurname;
-    @Attribute(value = 415)
+    @Attribute(UsersProfileConstant.PROFILE_AGE)
     private Integer profileAge;
-    @Attribute(value = 416)
+    @Attribute(UsersProfileConstant.PROFILE_HOBBIE)
     private List<String> profileHobbies;
-    @Attribute(value = 417)
+    @Attribute(UsersProfileConstant.PROFILE_FAVBREEDS)
     private List<String> profileFavouriteBreeds;
-    @Attribute(value = 418)
+    @Attribute(UsersProfileConstant.PROFILE_CURRBALANCE)
     private Double profileCurrencyBalance;
-    @Reference(value = 419)
+    @Reference(UsersProfileConstant.PROFILE_STATUS)
     private Status profileStatus;
-    @Reference(value = 3)
+    @Reference(UsersProfileConstant.USER_PROFILE)
     private User profileUser;
     //TODO SERVICE GETPETS
-    @Reference(value = 201) //303
+    @Reference(PetConstant.PET_OWNER) //303
     private List<Pet> profilePets; //нет аттрибута
     //TODO SERVICE GETWALLRECORDS
-    @Attribute(value = 421)
+    @Attribute(UsersProfileConstant.PROFILE_WALLREC)
     private List<WallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
-    @Reference(value = 14)
+    @Reference(AdvertisementConstant.AD_AUTHOR)
     private List<Advertisement> profileAdvertisements;
     //TODO SERVICE GETPROFILEGROUPS
-    @Reference(value = 425)
+    @Reference(GroupConstant.GR_PROFILE)
     private Set<Group> profileGroups;
     //TODO SERVICE GETCOMMENTS
-    @Reference(value = 406)
+    @Reference(CommentConstant.COM_AUTOR)
     private List<AbstractComment> profileComments;
     //TODO SERVICE GETLIKES
-    @Reference(value = 401)
+    @Reference(LikeConstant.LDL_AUTOR)
     private List<AbstractLikeDislike> profileLikes;
     //TODO SERVICE GETDISLIKES
-    @Reference(value = 401)
+    @Reference(LikeConstant.LDL_AUTOR)
     private List<AbstractLikeDislike> profileDislikes;
     //TODO SERVICE GETSERVICES
-    @Attribute(value = 420)
+    @Attribute(UsersProfileConstant.PROFILE_SERVICES)
     private Set<Service> services;
     //TODO SERVICE GETADMINISTRATEDGROUPS
-    @Reference(value = 424)
+    @Reference(GroupConstant.GR_ADMIN)
     private List<Group> profileAdministratedGroups;
 
     public Profile() {

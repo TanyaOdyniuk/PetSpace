@@ -1,14 +1,19 @@
 package com.netcracker.model.record;
 
 import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
+import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.WallComment;
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.UsersProfileConstant;
 
 import java.util.List;
 
+@ObjectType(RecordConstant.REC_TYPE)
 public class WallRecord extends AbstractRecord {
-    @Attribute(value = 411)
+    @Attribute(RecordConstant.REC_AUTOR)
     private Profile recordAuthor;
+    @Reference(UsersProfileConstant.PROFILE_WALLREC)
     private List<WallComment> wallComments;
 
     public WallRecord() {

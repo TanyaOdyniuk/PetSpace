@@ -1,21 +1,26 @@
 package com.netcracker.model.comment;
 
 import com.netcracker.dao.annotation.Attribute;
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.like.AbstractLikeDislike;
 import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
+@ObjectType(CommentConstant.COM_TYPE)
 public abstract class AbstractComment extends BaseEntity {
-    @Attribute(value = 407)
+    @Attribute(CommentConstant.COM_INFO)
     private String commentText;
-    @Attribute(value = 408)
+    @Attribute(CommentConstant.COM_DATE)
     private String commentDate;
+    @Attribute(CommentConstant.COM_AUTOR)
     private Profile commentProfile;
     //TODO SERVICE GET LIKES
+    @Attribute(CommentConstant.COM_LIKEDISLIKE)
     private List<AbstractLikeDislike> commentLikes;
     //TODO SERVICE GET DISLIKES
+    @Attribute(CommentConstant.COM_LIKEDISLIKE)
     private List<AbstractLikeDislike> commentDislikes;
 
     public AbstractComment() {

@@ -7,12 +7,12 @@ import com.netcracker.model.BaseEntity;
 
 import java.util.List;
 
-@ObjectType(value = 205)
+@ObjectType(SecurityBookConstant.SECT_TYPE)
 public  class SecurityType extends BaseEntity {
 
-    @Attribute(value = 211)
+    @Attribute(SecurityBookConstant.SECT_NAME)
     private String securityType;
-    @Reference(value = 306)
+    @Reference(SecurityBookConstant.SECB_TYPE)
     private List<SecurityBook> securityBooks;
 
     public SecurityType() {

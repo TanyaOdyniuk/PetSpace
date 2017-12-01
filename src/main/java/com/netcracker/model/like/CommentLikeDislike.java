@@ -1,10 +1,13 @@
 package com.netcracker.model.like;
 
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.AbstractComment;
+import com.netcracker.model.comment.CommentConstant;
 
+@ObjectType(LikeConstant.LDL_TYPE)
 public class CommentLikeDislike extends AbstractLikeDislike {
-    @Reference(value = 405)
+    @Reference(CommentConstant.COM_LIKEDISLIKE)
     private AbstractComment likeDislikeComment;
 
     public CommentLikeDislike() {

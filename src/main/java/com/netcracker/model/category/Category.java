@@ -5,19 +5,20 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.user.UserType;
 
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = 4)
+@ObjectType(CategoryConstant.CAT_TYPE)
 public class Category extends BaseEntity {
 
-    @Attribute(value = 17)
+    @Attribute(CategoryConstant.CAT_NAME)
     private String categoryName;
-    @Attribute(value = 18)
+    @Attribute(CategoryConstant.CAT_USERTYPE)
     private Set<UserType> categoryUserTypes;
-    @Reference(value = 12)
+    @Reference(AdvertisementConstant.AD_CATEGORY)
     private List<Advertisement> categoryAds;
 
     public Category() {

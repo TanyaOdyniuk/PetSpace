@@ -9,17 +9,17 @@ import com.netcracker.model.record.PhotoRecord;
 
 import java.util.List;
 
-@ObjectType(value = 202)
+@ObjectType(PhotoAlbumConstant.PA_TYPE)
 public class PhotoAlbum extends BaseEntity {
 
-    @Attribute(value = 207)
+    @Attribute(PhotoAlbumConstant.PA_NAME)
     private String photoAlbumName;
-    @Attribute(value = 208)
+    @Attribute(PhotoAlbumConstant.PA_DESCR)
     private String photoAlbumDesc;
-    @Reference(value = 302)
+    @Reference(PhotoAlbumConstant.PET_PHOTOALBUM)
     private Pet pet;
     //TODO SERVICE TO GET PHOTORECORDS
-    @Attribute(value = 303)
+    @Attribute(PhotoAlbumConstant.PA_CONTPHOTO)
     private List<PhotoRecord> photoRecords;
 
     public PhotoAlbum() {

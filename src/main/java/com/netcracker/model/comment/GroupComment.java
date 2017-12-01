@@ -1,8 +1,11 @@
 package com.netcracker.model.comment;
 
+import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.model.record.GroupRecord;
 
+@ObjectType(CommentConstant.COM_TYPE)
 public class GroupComment extends AbstractComment {
+    //нет списка комментов
     private GroupRecord commentGroupRecord;
 
     public GroupComment() {

@@ -8,37 +8,39 @@ import com.netcracker.model.BaseEntity;
 import com.netcracker.model.Status;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.comment.AdvertisementComment;
+import com.netcracker.model.comment.CommentConstant;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 
+import javax.xml.ws.soap.Addressing;
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
-@ObjectType(value = AdvertisementConstant.AD_TYPE)
+@ObjectType(AdvertisementConstant.AD_TYPE)
 public class Advertisement extends BaseEntity {
-    @Attribute(value = AdvertisementConstant.AD_DATE)
+    @Attribute(AdvertisementConstant.AD_DATE)
     private Date adDate;
-    @Attribute(value = AdvertisementConstant.AD_TOPIC)
+    @Attribute(AdvertisementConstant.AD_TOPIC)
     private String adTopic;
-    @Attribute(value = AdvertisementConstant.AD_PET_SIGNS)
+    @Attribute(AdvertisementConstant.AD_PET_SIGNS)
     private List<String> adPetSigns;
     @Boolean(value = AdvertisementConstant.AD_IS_VIP, yesno = AdvertisementConstant.AD_IS_VIP_STRING)
     private java.lang.Boolean adIsVip;
-    @Attribute(value = AdvertisementConstant.AD_LOCATION)
+    @Attribute(AdvertisementConstant.AD_LOCATION)
     private String adLocation;
-    @Attribute(value = AdvertisementConstant.AD_BASIC_INFO)
+    @Attribute(AdvertisementConstant.AD_BASIC_INFO)
     private String adBasicInfo;
-    @Reference(value = AdvertisementConstant.AD_AUTHOR)
+    @Attribute(AdvertisementConstant.AD_AUTHOR)
     private Profile adAuthor;
-    @Reference(value = AdvertisementConstant.AD_STATUS)
+    @Attribute(AdvertisementConstant.AD_STATUS)
     private Status adStatus;
-    @Reference(value = AdvertisementConstant.AD_CATEGORY)
+    @Attribute(AdvertisementConstant.AD_CATEGORY)
     private Category adCategory;
-    @Reference(value = AdvertisementConstant.AD_PETS)
+    @Attribute(AdvertisementConstant.AD_PETS)
     private Set<Pet> adPets;
     //TODO SERVICE GET ADCOMMENTS
-    @Reference(value = 401)// нет ничего более конкретного
+    @Reference(CommentConstant.COM_TYPE)// нет ничего более конкретного
     private List<AdvertisementComment> advertisementComments;
 
     public Advertisement() {

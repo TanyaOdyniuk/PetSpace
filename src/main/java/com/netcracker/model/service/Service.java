@@ -5,22 +5,23 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.User;
+import com.netcracker.model.user.UsersProfileConstant;
 
 import java.util.Set;
 
-@ObjectType(value = 6)
+@ObjectType(ServiceConstant.SERV_TYPE)
 public class Service extends BaseEntity {
-    @Attribute(value = 21)
+    @Attribute(ServiceConstant.SERV_PHOTO)
     private String servicePhoto;
-    @Attribute(value = 22)
+    @Attribute(ServiceConstant.SERV_NAME)
     private String serviceName;
-    @Attribute(value = 23)
+    @Attribute(ServiceConstant.SERV_PRICE)
     private Double servicePrice;
-    @Attribute(value = 24)
+    @Attribute(ServiceConstant.SERV_STYPE)
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
-    @Reference(value = 1) // нет в user поля сервиса(id = 420)
-    private Set<User> users;// ссылка на Profile, а не User
+    @Reference(UsersProfileConstant.PROFILE_SERVICES)
+    private Set<User> users;
 
     public Service() {
     }
