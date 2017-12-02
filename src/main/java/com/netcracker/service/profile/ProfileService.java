@@ -4,8 +4,12 @@ import com.netcracker.model.service.Service;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 
-public interface OwnerProfileService {
-    Profile mainPageLoad(User login);
+import java.math.BigInteger;
+import java.util.List;
+
+@org.springframework.stereotype.Service
+public interface ProfileService {
+    List<Profile> viewProfile(BigInteger profileID);
 
     void deleteProfile(User user);
 

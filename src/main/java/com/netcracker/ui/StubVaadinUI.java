@@ -5,6 +5,7 @@ import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
+import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
@@ -100,9 +101,12 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        String clikedButtonCaption = clickEvent.getButton().getCaption();
+        String clickedButtonCaption = clickEvent.getButton().getCaption();
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-        switch (clikedButtonCaption) {
+        switch (clickedButtonCaption) {
+            case "My profile":
+                primaryAreaLayout.addComponentsAndExpand(new ProfileView(BigInteger.valueOf(1)));
+                break;
             case "My adverts":
                 primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(1));
                 break;
@@ -115,8 +119,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
             case "Pets":
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
-            case "My albums":
-                break;
+/*            case "My albums":
+                break;*/
             default:
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);
                 break;
