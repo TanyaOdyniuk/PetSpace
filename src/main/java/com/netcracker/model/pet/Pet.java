@@ -70,11 +70,11 @@ public class Pet extends BaseEntity {
         this.petName = petName;
     }
 
-    public int getPetAge() {
+    public Integer getPetAge() {
         return petAge;
     }
 
-    public void setPetAge(int petAge) {
+    public void setPetAge(Integer petAge) {
         this.petAge = petAge;
     }
 
@@ -94,19 +94,19 @@ public class Pet extends BaseEntity {
         this.petBreed = petBreed;
     }
 
-    public double getPetWeight() {
+    public Double getPetWeight() {
         return petWeight;
     }
 
-    public void setPetWeight(double petWeight) {
+    public void setPetWeight(Double petWeight) {
         this.petWeight = petWeight;
     }
 
-    public double getPetHeight() {
+    public Double getPetHeight() {
         return petHeight;
     }
 
-    public void setPetHeight(double petHeight) {
+    public void setPetHeight(Double petHeight) {
         this.petHeight = petHeight;
     }
 
@@ -138,8 +138,8 @@ public class Pet extends BaseEntity {
         return petAdvertisements;
     }
 
-    public void setAdvertisementPets(Set<Advertisement> advertisements) {
-        this.petAdvertisements = advertisements;
+    public void setPetAdvertisements(Set<Advertisement> petAdvertisements) {
+        this.petAdvertisements = petAdvertisements;
     }
 
     public List<PhotoAlbum> getPetPhotoAlbums() {

@@ -73,7 +73,8 @@ public class EntityManager {
             Entity entity = new Entity();
             entity.setObjectId(BigInteger.valueOf(resultSet.getLong("object_id")));
             entity.setObjectTypeId(BigInteger.valueOf(resultSet.getLong("object_type_id")));
-            entity.setParentId((BigInteger)resultSet.getObject("parent_id"));
+            Long parentId = resultSet.getLong("parent_id");
+            entity.setParentId(parentId != 0 ? BigInteger.valueOf(parentId) : null);
             entity.setName(resultSet.getString("name"));
             entity.setDescription(resultSet.getString("description"));
             return entity;
@@ -91,7 +92,7 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity getByIdRef(BigInteger objectId){
+    public Entity getByIdRef(BigInteger objectId) {
         Entity entity = jdbcTemplate.queryForObject(Query.SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         entity.setAttributes(new HashMap<>());
         entity.setReferences(new HashMap<>());
