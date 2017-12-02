@@ -7,6 +7,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ class StubLeftBar extends VerticalLayout {
         super();
         setSpacing(false);
         setWidth("100%");
-
+        Panel panel = new Panel();
+        panel.setSizeUndefined();
         //Button button1 = getNewButton("My profile", VaadinIcons.HOME_O, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.ASSISTIVE_NOTIFICATION, "Profile not implemented yet!");
         Button button1 = getNewButton("My profile", VaadinIcons.HOME_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         //Button button2 = getNewButton("My friends", VaadinIcons.USERS, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.ERROR_MESSAGE, "You have no friends ;(");
@@ -32,7 +34,11 @@ class StubLeftBar extends VerticalLayout {
         Button button5 = getNewButton("My adverts", VaadinIcons.USER_CARD, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         //Button button6 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.HUMANIZED_MESSAGE, "To be done...");
         Button button6 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
-        addComponentsAndExpand(button1, button2, button3, button4, button5, button6);
+        VerticalLayout layout = new VerticalLayout();
+        layout.addComponentsAndExpand(button1, button2, button3, button4, button5, button6);
+        panel.setContent(layout);
+        panel.setWidth("100%");
+        addComponentsAndExpand(panel);
     }
 
     private Button getNewButton(String caption, VaadinIcons icon, String style, Button.ClickListener listener) {

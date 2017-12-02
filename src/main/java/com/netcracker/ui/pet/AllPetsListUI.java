@@ -21,52 +21,43 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class AllPetsListUI extends VerticalLayout {
+public class AllPetsListUI extends Panel {
 
     @Autowired
     public AllPetsListUI(){
         super();
         setWidth("100%");
+        setHeight("100%");
         VerticalLayout petRecordsLayout = new VerticalLayout();
-        petRecordsLayout.setSpacing(true);
         List<Pet> petList = getAllPets();
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
-            //TextField petAvatar = new TextField("This is image " + i);
             Image petAvatar = new Image();
-            petAvatar.setHeight(150, Unit.POINTS);
-            petAvatar.setWidth(150, Unit.POINTS);
+            petAvatar.setHeight(250, Unit.PIXELS);
+            petAvatar.setWidth(250, Unit.PIXELS);
             petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
             petAvatar.setDescription("Pet avatar");
 
-            petAvatar.setHeight("60%");
-
-            Label petName = new Label(pet.getPetName());
+            Link petName = new Link(pet.getPetName(), new ExternalResource("https://vaadin.com/"));
+            petName.setDescription("Здесь должна быть ссылка на питомца :)");
             Label petInfo = new Label(pet.getPetSpecificParam());
 
             //PET INFO
-            petInfoLayout.setSpacing(true);
-            petInfoLayout.addComponentsAndExpand(petName, petInfo);
+            petInfoLayout.addComponents(petName, petInfo);
 
             //INFO + AVATAR
-            petRecord.setSpacing(true);
+            petRecord.addComponents(petAvatar, petInfoLayout);
 
-            petRecord.addComponentsAndExpand(petAvatar, petInfoLayout);
-            petRecordsLayout.addComponentsAndExpand(petRecord);
+            petRecordsLayout.addComponents(petRecord);
         }
-        addComponents(petRecordsLayout);
+        setContent(petRecordsLayout);
     }
 
     private List<Pet> getAllPets(){
         List<Pet> petList = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/pets", Pet[].class));
+                        "/pets/", Pet[].class));
         return petList;
-    }
-
-
-    public void setListVisible(){
-        setVisible(true);
     }
 }

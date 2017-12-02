@@ -8,59 +8,51 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
 @SpringComponent
 @UIScope
-public class MyPetsListUI extends VerticalLayout {
+public class MyPetsListUI extends Panel {
+
+    private BigInteger profileId;
 
     @Autowired
-    public MyPetsListUI(){
+    public MyPetsListUI(BigInteger profileId){
         super();
         setWidth("100%");
+        setHeight("100%");
         VerticalLayout petRecordsLayout = new VerticalLayout();
-        petRecordsLayout.setSizeUndefined();
-        petRecordsLayout.setSpacing(true);
-        List<Pet> petList = getMyPets();
+        List<Pet> petList = getProfilePets(profileId);
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
-            //TextField petAvatar = new TextField("This is image " + i);
             Image petAvatar = new Image();
-            petAvatar.setHeight(150, Unit.PIXELS);
-            petAvatar.setWidth(150, Unit.PIXELS);
+            petAvatar.setHeight(250, Unit.PIXELS);
+            petAvatar.setWidth(250, Unit.PIXELS);
             petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
             petAvatar.setDescription("Pet avatar");
 
-            petAvatar.setHeight("60%");
-
-            /*Label petName = new Label(pet.getPetName());*/
-            Link petName = new Link(pet.getPetName(),
-                    new ExternalResource("http://vaadin.com/"));
+            Link petName = new Link(pet.getPetName(), new ExternalResource("https://vaadin.com/"));
+            petName.setDescription("Здесь должна быть ссылка на питомца :)");
             Label petInfo = new Label(pet.getPetSpecificParam());
 
             //PET INFO
-            petInfoLayout.setSpacing(true);
-            //petInfoLayout.addComponentsAndExpand(petName, petInfo);
             petInfoLayout.addComponents(petName, petInfo);
 
             //INFO + AVATAR
-            petRecord.setSpacing(true);
-
-            /*petRecord.addComponentsAndExpand(petAvatar, petInfoLayout);
-            petRecordsLayout.addComponentsAndExpand(petRecord);*/
             petRecord.addComponents(petAvatar, petInfoLayout);
+
             petRecordsLayout.addComponents(petRecord);
         }
-        addComponents(petRecordsLayout);
+        setContent(petRecordsLayout);
     }
 
-    private List<Pet> getMyPets(){
+    private List<Pet> getProfilePets(BigInteger profileId){
         List<Pet> petList = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/pets", Pet[].class));
+                        "/pets/" + profileId, Pet[].class));
         return petList;
     }
-
 }

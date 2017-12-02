@@ -13,6 +13,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -109,6 +110,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
                 break;
             case "My pets":
+                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(BigInteger.valueOf(1)));
+                break;
             case "Pets":
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
