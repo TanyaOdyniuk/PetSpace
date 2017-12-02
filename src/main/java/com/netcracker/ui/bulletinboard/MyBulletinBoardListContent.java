@@ -1,8 +1,7 @@
 package com.netcracker.ui.bulletinboard;
 
-import com.netcracker.ui.StubConstants;
 import com.netcracker.model.advertisement.Advertisement;
-import com.netcracker.ui.util.ServerPropertiesGetter;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -53,9 +52,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
 
     private void myAdvertisementList() {
         List<Advertisement> ads = Arrays.asList(
-                StubConstants.REST_TEMPLATE.getForObject(
-                        new ServerPropertiesGetter().getURL()
-                                + "/bulletinboard/"+ profileId, Advertisement[].class));
+                                    CustomRestTemplate.getInstance()
+                                    .customGetForObject("/bulletinboard/"+ profileId,
+                                                        Advertisement[].class));
         grid.setItems(ads);
     }
 }

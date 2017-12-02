@@ -4,6 +4,7 @@ import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.netcracker.service.rest.RestServices;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
@@ -61,13 +62,12 @@ public class StubUserEditor extends VerticalLayout {
                 HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
                 HttpHeaders headers = new HttpHeaders();
                 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                StubConstants.REST_TEMPLATE
-                        .exchange(StubConstants.RESOURCE_URL + '/' + stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
-            }
+                CustomRestTemplate.getInstance()
+                        .customExchange("/restcontroller/"+ stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
+                }
         });
 
-        delete.addClickListener(e -> StubConstants.REST_TEMPLATE
-                .delete(StubConstants.RESOURCE_URL + '/' + stubUser.getId()));
+        delete.addClickListener(e -> CustomRestTemplate.getInstance().customDelete("/restcontroller/" + stubUser.getId()));
         setVisible(false);
     }
 
@@ -82,8 +82,7 @@ public class StubUserEditor extends VerticalLayout {
         }
         final boolean persisted = u.getId() < StubUser.objectCount;
         if (persisted) {
-            stubUser = com.netcracker.ui.StubConstants.REST_TEMPLATE
-                    .getForObject(StubConstants.RESOURCE_URL + '/' + u.getId(), StubUser.class);
+            stubUser = CustomRestTemplate.getInstance().customGetForObject("/restcontroller/" + u.getId(), StubUser.class);
         } else {
             stubUser = u;
         }

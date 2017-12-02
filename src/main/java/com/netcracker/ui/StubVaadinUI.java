@@ -6,6 +6,7 @@ import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.pet.PetListUI;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
@@ -94,7 +95,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     }
 
     private void listCustomers() {
-        List<StubUser> users = Arrays.asList(StubConstants.REST_TEMPLATE.getForObject(StubConstants.RESOURCE_URL, StubUser[].class));
+        List<StubUser> users = Arrays.asList(
+                CustomRestTemplate.getInstance().customGetForObject(
+                        "/restcontroller", StubUser[].class));
         grid.setItems(users);
     }
 
