@@ -12,14 +12,19 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("{id}/mypets")
+@RequestMapping("/pets")
 public class PetsListPageController {
 
     @Autowired
-    PetProfileService profileService;
+    PetProfileService petProfileService;
+
+    @GetMapping("/{id}")
+    public List<Pet> getMyPets(@PathVariable("id") BigInteger id) {
+        return petProfileService.getAllProfilePets(id);
+    }
 
     @GetMapping
-    public List<Pet> getMyPets(@PathVariable("id") BigInteger id) {
-        return profileService.getAllProfilePets(id);
+    public List<Pet> getAllPets() {
+        return petProfileService.getAllPets();
     }
 }

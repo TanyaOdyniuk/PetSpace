@@ -9,6 +9,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 public class ClientExceptionHandler {
 
+    public static void handleAssert(String message){
+        showNotification(message, Notification.Type.WARNING_MESSAGE);
+    }
+
     public static void handle(ResponseEntity entity, String messageToShow) {
         if (entity == null)
             return;

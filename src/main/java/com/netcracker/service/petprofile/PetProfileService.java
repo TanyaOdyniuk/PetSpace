@@ -25,6 +25,12 @@ public interface PetProfileService {
 
     Date ageCalculation(Pet pet);
 
+    //Получить питомца с конкретным ID
+    Pet getPetById(BigInteger petId);
+
+    //Получить список всех животных
+    List<Pet> getAllPets();
+
     //Получить список животных переданного профиля
     List<Pet> getAllProfilePets(BigInteger profileId);
 

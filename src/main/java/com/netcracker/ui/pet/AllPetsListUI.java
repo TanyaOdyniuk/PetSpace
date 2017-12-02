@@ -1,8 +1,10 @@
 package com.netcracker.ui.pet;
 
+import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.service.petprofile.PetProfileService;
 import com.netcracker.service.petprofile.impl.PetProfileServiceImpl;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.ThemeResource;
@@ -14,24 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringComponent
 @UIScope
-public class PetListUI extends VerticalLayout {
+public class AllPetsListUI extends VerticalLayout {
 
     @Autowired
-    PetProfileService petProfileService;
-
-    @Autowired
-    public PetListUI(){
+    public AllPetsListUI(){
         super();
         setWidth("100%");
-        petProfileService = new PetProfileServiceImpl();
         VerticalLayout petRecordsLayout = new VerticalLayout();
         petRecordsLayout.setSpacing(true);
-        List<Pet> petList = getProfilePets(BigInteger.valueOf(100));
-        /*for (int i = 0; i < 3; i++) {*/
+        List<Pet> petList = getAllPets();
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
@@ -60,9 +58,13 @@ public class PetListUI extends VerticalLayout {
         addComponents(petRecordsLayout);
     }
 
-    private List<Pet> getProfilePets(BigInteger id){
-        return petProfileService.getAllProfilePets(id);
+    private List<Pet> getAllPets(){
+        List<Pet> petList = Arrays.asList(
+                CustomRestTemplate.getInstance().customGetForObject(
+                        "/pets", Pet[].class));
+        return petList;
     }
+
 
     public void setListVisible(){
         setVisible(true);

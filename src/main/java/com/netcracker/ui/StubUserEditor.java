@@ -3,7 +3,6 @@ package com.netcracker.ui;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
-import com.netcracker.service.rest.RestServices;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;

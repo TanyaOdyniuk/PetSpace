@@ -13,6 +13,7 @@ public interface ErrorMessage {
     //VALIDATION
     String VALIDATION_NAME = "Ошибка валидации!\nПроверьте правильность введенного имени.";
     String VALIDATION_AGE = "Ошибка валидации!\nПроверьте правильность введенного возраста.";
+    String VALIDATION_WRONG = "Ошибка валидации!\nПроверьте правильность введенных данных.";
 
 
     //PRIVILIGIES

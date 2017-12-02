@@ -1,21 +1,17 @@
 package com.netcracker.ui;
 
-import com.netcracker.error.ErrorMessage;
-import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
-import com.netcracker.ui.pet.PetListUI;
+import com.netcracker.ui.pet.AllPetsListUI;
+import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -114,7 +110,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 break;
             case "My pets":
             case "Pets":
-                primaryAreaLayout.addComponentsAndExpand(new PetListUI());
+                primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
                 break;
