@@ -1,10 +1,8 @@
 package com.netcracker.ui.authorization;
 
-import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
-import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
+import com.netcracker.ui.AbstractClickListener;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -14,17 +12,12 @@ import com.vaadin.ui.*;
 @Theme("valo")
 @SpringUI(path = "authorization")
 @Title("PetSpace AUTH")
-public class AuthorizationPage extends UI implements Button.ClickListener {
-
+public class AuthorizationPage extends UI{
 
     private Window regWindow;
-    private VerticalLayout verticalLayout;
-
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        verticalLayout = genLayoutContent();
-        setContent(verticalLayout);
         regWindow = new Window();
         regWindow.setContent(getStartWindow());
         regWindow.center();
@@ -81,9 +74,23 @@ public class AuthorizationPage extends UI implements Button.ClickListener {
         Button login = new Button("Log in");
         horizontalLayout.addComponent(login);
         horizontalLayout.setComponentAlignment(login, Alignment.BOTTOM_CENTER);
+        login.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                setErrorMessage("");
+                getPage().setLocation("/login");
+            }
+        });
 
         Button signup = new Button("Sign up");
         horizontalLayout.addComponent(signup);
+        signup.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                setErrorMessage("");
+                getPage().setLocation("/registration");
+            }
+        });
         horizontalLayout.setComponentAlignment(signup, Alignment.BOTTOM_CENTER);
 
         return horizontalLayout;
@@ -101,17 +108,5 @@ public class AuthorizationPage extends UI implements Button.ClickListener {
         horizontalLayout.setExpandRatio(label, 0.55f);
 
         return horizontalLayout;
-    }
-
-
-    @Override
-    public void buttonClick(Button.ClickEvent clickEvent) {
-        String clikedButtonCaption = clickEvent.getButton().getCaption();
-        verticalLayout.removeComponent(verticalLayout.getComponent(1));
-        switch (clikedButtonCaption) {
-            case "Log in":
-                getPage().setLocation("/login");
-                break;
-        }
     }
 }

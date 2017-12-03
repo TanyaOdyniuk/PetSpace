@@ -18,6 +18,7 @@ import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.service.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class Profile extends BaseEntity {
     @Attribute(UsersProfileConstant.PROFILE_FAVBREEDS)
     private List<String> profileFavouriteBreeds;
     @Attribute(UsersProfileConstant.PROFILE_CURRBALANCE)
-    private Double profileCurrencyBalance;
+    private BigDecimal profileCurrencyBalance;
     @Reference(UsersProfileConstant.PROFILE_STATUS)
     private Status profileStatus;
     @Reference(UsersProfileConstant.USER_PROFILE)
@@ -129,11 +130,11 @@ public class Profile extends BaseEntity {
         this.profileFavouriteBreeds = profileFavouriteBreeds;
     }
 
-    public Double getProfileCurrencyBalance() {
+    public BigDecimal getProfileCurrencyBalance() {
         return profileCurrencyBalance;
     }
 
-    public void setProfileCurrencyBalance(Double profileCurrencyBalance) {
+    public void setProfileCurrencyBalance(BigDecimal profileCurrencyBalance) {
         this.profileCurrencyBalance = profileCurrencyBalance;
     }
 

@@ -16,7 +16,7 @@ public class PhotoRecord extends AbstractRecord {
 
     @Attribute(RecordConstant.PR_PHOTO)
     private String photo;
-    @Reference(PhotoAlbumConstant.PET_PHOTOALBUM)
+    @Reference(PhotoAlbumConstant.PA_CONTPHOTO) //
     private PhotoAlbum photoAlbum;
     @Attribute(RecordConstant.PR_UPLDATE)
     private Date photoUploadDate;

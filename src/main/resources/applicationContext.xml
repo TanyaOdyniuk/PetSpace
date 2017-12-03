@@ -9,8 +9,8 @@
         <property name="username" value="ODESSA_19"/>
         <property name="password" value="ODESSA_19"/>
         <!--
-        <property name="username" value="ODESSA_19"/>
-        <property name="password" value="ODESSA_19"/>
+        <property name="username" value="ODESSA_18"/>
+        <property name="password" value=""/>
         -->
         <property name="initialSize" value="3"/>
         <property name="maxActive" value="14"/>

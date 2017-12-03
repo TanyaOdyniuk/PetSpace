@@ -23,7 +23,6 @@ import java.util.List;
 @Theme("valo")
 public class StubVaadinUI extends UI implements Button.ClickListener {
 
-    //"STATIC" PARTS OF ui
     private final HorizontalLayout topPanel;
 
     private final VerticalLayout leftPanel;
