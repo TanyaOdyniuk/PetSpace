@@ -9,7 +9,7 @@ import java.util.List;
 
 @org.springframework.stereotype.Service
 public interface ProfileService {
-    List<Profile> viewProfile(BigInteger profileID);
+    Profile viewProfile(BigInteger profileID);
 
     void deleteProfile(User user);
 

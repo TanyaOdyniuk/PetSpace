@@ -28,7 +28,7 @@ public class ProfileController {
     }*/
 
     @GetMapping("/{id}")
-    public List<Profile> getMyProfile(@PathVariable("id") BigInteger profileId) {
+    public Profile getMyProfile(@PathVariable("id") BigInteger profileId) {
         return profileService.viewProfile(profileId);
     }
 }

@@ -16,8 +16,10 @@ public class ProfileServiceImpl implements ProfileService {
     ManagerAPI managerAPI;
 
     @Override
-    public List<Profile> viewProfile(BigInteger profileID) {
-        return managerAPI.getObjectsBySQL(profileID.toString(), Profile.class);
+    public Profile viewProfile(BigInteger profileID) {
+        Profile profile = managerAPI.getById(profileID, Profile.class);
+        System.out.println(profile.toString());
+        return profile;
     }
 
     @Override
