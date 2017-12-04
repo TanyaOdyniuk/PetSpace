@@ -1,7 +1,8 @@
 package com.netcracker.controller.gallery;
 
+import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.PhotoRecord;
-import com.netcracker.service.media.impl.MediaServiceImpl;
+import com.netcracker.service.media.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,11 +15,15 @@ import java.util.List;
 @RequestMapping("/gallery")
 public class GalleryController {
     @Autowired
-    MediaServiceImpl mediaService;
+    MediaService mediaService;
 
+//    @GetMapping("/{id}")
+//    public PhotoAlbum getAlbum(@PathVariable("id") BigInteger albumId){
+//        return mediaService.getAlbum(albumId);
+//    }
 
     @GetMapping("/{id}")
     public List<PhotoRecord> getImagesGalary(@PathVariable("id") BigInteger albumId){
-        return mediaService.getImagesGalary(albumId);
+        return mediaService.getImagesGallery(albumId);
     }
 }

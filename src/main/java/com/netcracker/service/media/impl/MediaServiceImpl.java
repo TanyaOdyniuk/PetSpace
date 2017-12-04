@@ -1,6 +1,7 @@
 package com.netcracker.service.media.impl;
 
 import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
@@ -22,15 +23,23 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<PhotoRecord> getImagesGalary(BigInteger albumId) {
+    public List<PhotoRecord> getImagesGallery(BigInteger albumId) {
         String getRecordsQuery =
-                "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 303 AND REFERENCE = " + albumId;
+                "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 304 AND REFERENCE = " + albumId;
         List<PhotoRecord> albumsRecords = managerAPI.getObjectsBySQL(getRecordsQuery, PhotoRecord.class);
+        System.out.println(albumsRecords.toString());
         return albumsRecords;
     }
 
     @Override
-    public void createAndEditPetAlbul(Profile profile) {
+    public PhotoAlbum getAlbum(BigInteger albumId) {
+        PhotoAlbum photoAlbum = managerAPI.getById(albumId, PhotoAlbum.class);
+        System.out.println(photoAlbum.toString());
+        return photoAlbum;
+    }
+
+    @Override
+    public void createAndEditPetAlbum(Profile profile) {
 
     }
 

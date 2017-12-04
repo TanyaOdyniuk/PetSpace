@@ -1,5 +1,6 @@
 package com.netcracker.service.media;
 
+import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
@@ -15,10 +16,12 @@ public interface MediaService {
     //открывать страничку с миниатюрами изображений после нажатия на кнопку просмотра
     // фотогалереи в профиле пользователя или питомца
 //    List<WallRecord> imagesGalary(Profile profile);
-    List<PhotoRecord> getImagesGalary(BigInteger albumId);
+    List<PhotoRecord> getImagesGallery(BigInteger albumId);
+
+    PhotoAlbum getAlbum(BigInteger albumId);
 
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев
-    void createAndEditPetAlbul(Profile profile);
+    void createAndEditPetAlbum(Profile profile);
 
     //добавление и сохранение нового изображения в ленте, комментариях, на страничке или в группах
     void addNewMedia(AbstractRecord abstractRecord, Profile profile);
