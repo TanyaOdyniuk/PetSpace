@@ -17,8 +17,8 @@ import java.util.List;
 @ObjectType(StatusConstant.ST_TYPE)
 public class Status extends BaseEntity {
 
-    @Attribute(StatusConstant.ST_STATE)
-    private String status;
+    @Attribute(StatusConstant.ST_NAME)
+    private String statusName;
     @Reference(GroupConstant.GR_STATUS)
     private List<Group> groups;
     @Reference(UsersProfileConstant.PROFILE_STATUS)
@@ -39,12 +39,12 @@ public class Status extends BaseEntity {
         super(name, description);
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusName() {
+        return statusName;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 
     public List<Group> getGroups() {
@@ -82,7 +82,7 @@ public class Status extends BaseEntity {
     @Override
     public String toString() {
         return "Status{" +
-                "status='" + status + '\'' +
+                "statusName='" + statusName + '\'' +
                 ", groups=" + groups +
                 ", profiles=" + profiles +
                 ", advertisements=" + advertisements +
