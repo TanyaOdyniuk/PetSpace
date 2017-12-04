@@ -44,8 +44,8 @@ public class Profile extends BaseEntity {
     @Reference(UsersProfileConstant.USER_PROFILE)
     private User profileUser;
     //TODO SERVICE GETPETS
-    @Reference(PetConstant.PET_OWNER) //303
-    private List<Pet> profilePets; //нет аттрибута
+    @Reference(PetConstant.PET_OWNER)
+    private List<Pet> profilePets;
     //TODO SERVICE GETWALLRECORDS
     @Reference(UsersProfileConstant.PROFILE_WALLREC)
     private List<WallRecord> profileWallRecords;

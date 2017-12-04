@@ -82,10 +82,22 @@ public class ProfileView extends VerticalLayout {
 
         Panel simpleInfoPanel = new Panel();
         VerticalLayout simpleInfoLayout = new VerticalLayout();
+        HorizontalLayout interestsLayout = new HorizontalLayout();
+        interestsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        interestsLayout.addComponent(new Label("Interests: "));
+        for (String singleInterest : profile.getProfileHobbies()) {
+            interestsLayout.addComponent(new Button(singleInterest));
+        }
+        HorizontalLayout favBreedsLayout = new HorizontalLayout();
+        favBreedsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        favBreedsLayout.addComponent(new Label("Favourite breeds: "));
+        for (String singleFavBreed : profile.getProfileFavouriteBreeds()) {
+            favBreedsLayout.addComponent(new Button(singleFavBreed));
+        }
         simpleInfoLayout.addComponents(
                 new Label("Age: " + profile.getProfileAge()),
-                new Label("Interests: " + profile.getProfileHobbies()),
-                new Label("Favourite breeds: " + profile.getProfileFavouriteBreeds())
+                interestsLayout,
+                favBreedsLayout
         );
         simpleInfoPanel.setContent(simpleInfoLayout);
 
@@ -115,7 +127,7 @@ public class ProfileView extends VerticalLayout {
         wallLayout.addComponent(new Label("Wall records"));
         int recordsCount = 5;
         //all values simulated!
-        for(int i = 0; i < recordsCount; i++){
+        for (int i = 0; i < recordsCount; i++) {
             Panel singleWallRecordPanel = new Panel();
             VerticalLayout singleWallRecordLayout = new VerticalLayout();
 
@@ -132,9 +144,9 @@ public class ProfileView extends VerticalLayout {
 
             HorizontalLayout recordLikesLayout = new HorizontalLayout();
             Button likeRecordButton = new Button("Like", VaadinIcons.STAR);
-            Label recordLikeCount = new Label(String.valueOf((int)((Math.random() - 0.3) * 100 / 1)));
+            Label recordLikeCount = new Label(String.valueOf((int) ((Math.random() - 0.3) * 100 / 1)));
             Button commentRecordButton = new Button("Comment", VaadinIcons.COMMENT);
-            Label recordCommentCount = new Label(String.valueOf((int)(Math.random() * 10 / 1)));
+            Label recordCommentCount = new Label(String.valueOf((int) (Math.random() * 10 / 1)));
             Button showRecordCommentsButton = new Button("Show comments", VaadinIcons.COMMENT_O);
             recordLikesLayout.addComponents(likeRecordButton, recordLikeCount, commentRecordButton, recordCommentCount, showRecordCommentsButton);
 

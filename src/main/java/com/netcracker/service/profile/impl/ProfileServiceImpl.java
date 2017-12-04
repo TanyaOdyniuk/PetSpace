@@ -8,7 +8,6 @@ import com.netcracker.service.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
-import java.util.List;
 
 @org.springframework.stereotype.Service
 public class ProfileServiceImpl implements ProfileService {
@@ -17,9 +16,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile viewProfile(BigInteger profileID) {
-        Profile profile = managerAPI.getById(profileID, Profile.class);
-        System.out.println(profile.toString());
-        return profile;
+        return managerAPI.getById(profileID, Profile.class);
     }
 
     @Override
