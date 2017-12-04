@@ -1,5 +1,6 @@
 package com.netcracker.ui;
 
+import com.netcracker.error.asserts.ValidationAssert;
 import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
@@ -126,6 +127,14 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);
                 break;
         }
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+    }
+
+    public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet){
+        ValidationAssert.isNull(layoutToSet);
+        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        primaryAreaLayout.addComponentsAndExpand(layoutToSet);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
