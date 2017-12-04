@@ -4,7 +4,7 @@ import com.netcracker.error.exceptions.UserNotValidException;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.service.registration.RegistrationService;
-import com.netcracker.service.user.UserService;
+import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import com.netcracker.service.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,13 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    /*
+
     @Autowired
     private RegistrationService registrationService;
+
     @Autowired
-    private UserService userService;
+    private UserDetailsServiceImpl userService;
 
     @GetMapping
     public List<User> getUsers() {
@@ -39,4 +42,5 @@ public class UserController {
     public void editUserById(@RequestBody String login) {
         registrationService.invitedByUser(login);
     }
+    */
 }

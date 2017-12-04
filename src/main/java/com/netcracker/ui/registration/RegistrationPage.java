@@ -1,8 +1,11 @@
 package com.netcracker.ui.registration;
 
+import com.netcracker.dao.manager.EntityManager;
+import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
+import com.netcracker.model.user.UserAuthority;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
@@ -14,11 +17,13 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.netcracker.ui.validation.UiValidationConstants.*;
@@ -37,12 +42,16 @@ public class RegistrationPage extends UI {
     private PasswordField confirmPasswordField;
     private TextField userNameField;
     private TextField userSurnameField;
+    private ManagerAPI manager;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         userBinder = new Binder<>(User.class);
         profileBinder = new Binder<>(Profile.class);
         regWindow = new Window();
+        //
+        manager = new ManagerAPI(new EntityManager(new DataSource()));
+        //
         Panel panel = new Panel(VIEW_NAME);
         panel.setContent(getContentLayout());
         panel.setSizeUndefined();
@@ -59,6 +68,7 @@ public class RegistrationPage extends UI {
     private HorizontalLayout getEmailLayout() {
         HorizontalLayout emailLayout = new HorizontalLayout();
         emailField = new TextField("Email Address");
+        emailField.setPlaceholder("example@ex.com");
         emailField.setRequiredIndicatorVisible(true);
         userBinder.forField(emailField)
                 .asRequired(CHECK_FULLNESS)
@@ -96,6 +106,7 @@ public class RegistrationPage extends UI {
     private HorizontalLayout getUserNameLayout() {
         HorizontalLayout userNameLayout = new HorizontalLayout();
         userNameField = new TextField("Your name");
+        userNameField.setPlaceholder("John");
         userNameField.setRequiredIndicatorVisible(true);
         profileBinder.forField(userNameField)
                 .asRequired(CHECK_FULLNESS)
@@ -104,6 +115,7 @@ public class RegistrationPage extends UI {
                         CHECK_LENGTH)
                 .bind(Profile::getProfileName, Profile::setProfileName);
         userSurnameField = new TextField("Your surname");
+        userSurnameField.setPlaceholder("Doe");
         userSurnameField.setRequiredIndicatorVisible(true);
         profileBinder.forField(userSurnameField)
                 .asRequired(CHECK_FULLNESS)
@@ -126,13 +138,22 @@ public class RegistrationPage extends UI {
             public void buttonClickListener() {
                 if (userBinder.validate().isOk() && profileBinder.validate().isOk()) {
                     setErrorMessage("User with that email is already exist");
+
                     Profile profile = new Profile();
                     profile.setProfileName(userNameField.getValue());
                     profile.setProfileSurname(userSurnameField.getValue());
+
                     User newUser = new User();
                     newUser.setLogin(emailField.getValue());
                     newUser.setPassword(passwordField.getValue());
                     newUser.setProfile(profile);
+
+                    ArrayList<UserAuthority> userAuthorities = new ArrayList<>();
+                    userAuthorities.add(new UserAuthority("ROLE_USER"));
+                    newUser.setUserAuthorities(userAuthorities);
+                    newUser.setEnabled(true);
+                    manager.create(newUser);
+
                     String invitedBy = friendField.getValue();
                     if (!invitedBy.isEmpty()) {
                         HttpEntity<String> increaseBalanceRequest = new HttpEntity<>(invitedBy);
