@@ -1,16 +1,15 @@
 package com.netcracker;
 
+import com.netcracker.configuration.AppConfig;
 import com.netcracker.model.StubUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@ImportResource( { "applicationContext.xml"} )
 public class PetSpaceApplication {
     @Bean(name = "users")
     public List<StubUser> getUsers() {
@@ -22,6 +21,7 @@ public class PetSpaceApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(PetSpaceApplication.class, args);
+        SpringApplication.run(new Object[]{PetSpaceApplication.class, AppConfig.class}, args);
+
     }
 }
