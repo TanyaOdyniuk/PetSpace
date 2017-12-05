@@ -4,7 +4,10 @@ import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.service.petprofile.PetProfileService;
 import com.netcracker.service.petprofile.impl.PetProfileServiceImpl;
+import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.ThemeResource;
@@ -38,13 +41,15 @@ public class AllPetsListUI extends Panel {
             petAvatar.setWidth(250, Unit.PIXELS);
             petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
             petAvatar.setDescription("Pet avatar");
+            petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
-            Link petName = new Link(pet.getPetName(), new ExternalResource("https://vaadin.com/"));
-            petName.setDescription("Здесь должна быть ссылка на питомца :)");
-            Label petInfo = new Label(pet.getPetSpecificParam());
+            Label petNameSign = PageElements.createLabel(3, "gray", "Кличка питомца");
+            Label petName = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetName());
+            Label petInfoSign = PageElements.createLabel(3, "gray", "Информация о питомце");
+            Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
 
             //PET INFO
-            petInfoLayout.addComponents(petName, petInfo);
+            petInfoLayout.addComponents(petNameSign, petName, petInfoSign, petInfo);
 
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);

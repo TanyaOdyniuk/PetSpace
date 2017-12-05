@@ -1,8 +1,13 @@
 package com.netcracker.ui.pet;
 
 import com.netcracker.model.pet.Pet;
+import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -21,6 +26,7 @@ public class MyPetsListUI extends Panel {
     @Autowired
     public MyPetsListUI(BigInteger profileId){
         super();
+        this.profileId = profileId;
         setWidth("100%");
         setHeight("100%");
         VerticalLayout petRecordsLayout = new VerticalLayout();
@@ -33,13 +39,15 @@ public class MyPetsListUI extends Panel {
             petAvatar.setWidth(250, Unit.PIXELS);
             petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
             petAvatar.setDescription("Pet avatar");
+            petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
-            Link petName = new Link(pet.getPetName(), new ExternalResource("https://vaadin.com/"));
-            petName.setDescription("Здесь должна быть ссылка на питомца :)");
-            Label petInfo = new Label(pet.getPetSpecificParam());
+            Label petNameSign = PageElements.createGrayLabel("Кличка питомца");
+            Label petName = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetName());
+            Label petInfoSign = PageElements.createGrayLabel("Информация о питомце");
+            Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
 
             //PET INFO
-            petInfoLayout.addComponents(petName, petInfo);
+            petInfoLayout.addComponents(petNameSign, petName, petInfoSign, petInfo);
 
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);
