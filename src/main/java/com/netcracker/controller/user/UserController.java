@@ -1,15 +1,7 @@
 package com.netcracker.controller.user;
 
-import com.netcracker.error.exceptions.UserNotValidException;
-import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
-import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
-import com.netcracker.service.validation.ValidationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController

@@ -11,15 +11,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    ManagerAPI managerAPI;
+    private ManagerAPI managerAPI;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

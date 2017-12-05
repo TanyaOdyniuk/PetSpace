@@ -1,6 +1,7 @@
 package com.netcracker.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +13,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+/*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -20,6 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("admin").password("admin").roles("ADMIN")
                 .and()
                 .withUser("user").password("user").roles("USER");
+    }
+    */
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(new MyDaoAuthenticationProvider());
     }
 
     @Override

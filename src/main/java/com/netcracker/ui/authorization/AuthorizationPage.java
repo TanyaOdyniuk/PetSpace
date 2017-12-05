@@ -78,7 +78,7 @@ public class AuthorizationPage extends UI{
             @Override
             public void buttonClickListener() {
                 setErrorMessage("");
-                getPage().setLocation("/login");
+                getPage().setLocation("/loginform");
             }
         });
 

@@ -1,12 +1,12 @@
 package com.netcracker.ui.login;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.error.ErrorMessage;
-import com.netcracker.model.user.User;
-import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import com.netcracker.service.autorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
@@ -14,27 +14,19 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Theme("valo")
-@SpringUI(path = "login")
+@SpringUI(path = "loginform")
 @Title("PetSpace LOGIN")
 public class LoginPage extends UI {
 
     @Autowired
-    DaoAuthenticationProvider daoAuthenticationProvider;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    AuthorizationService authorizationService;
 
     private static final String VIEW_NAME = "Login Form";
     private Window loginWindow;
     private TextField emailField;
     private PasswordField passwordField;
-    private ManagerAPI manager;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -76,7 +68,13 @@ public class LoginPage extends UI {
         submitButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                authenticate();
+                try {
+                    authorizationService.authenticate(emailField.getValue(), passwordField.getValue());
+                } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
+                    Notification.show("Wrong email or password!");
+                    emailField.clear();
+                    passwordField.clear();
+                }
             }
         });
 
@@ -96,31 +94,23 @@ public class LoginPage extends UI {
         HorizontalLayout buttons = getButtonLayout();
         contentLayout.addComponents(getEmailLayout(),
                 getPasswordLayout(),
+                genForgetPasswordLink(),
                 buttons);
         contentLayout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
         return contentLayout;
     }
 
-    private void authenticate() {
-        Authentication auth = new UsernamePasswordAuthenticationToken(emailField.getValue(), passwordField.getValue());
-        try {
-            Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
-            SecurityContextHolder.getContext().setAuthentication(authenticated);
-            User user = userDetailsService.findUserByUsername(emailField.getValue());
-            if (user == null) {
-                Notification.show("Wrong email or password!");
-            } else {
-                if (userDetailsService.hasRole("ROLE_USER")) {
-                    getPage().setLocation("/user");
-                } else if (userDetailsService.hasRole("ROLE_ADMIN")) {
-                    getPage().setLocation("/admin");
-                }
-            }
+    private VerticalLayout genForgetPasswordLink(){
+        VerticalLayout layoutContent = new VerticalLayout();
+        layoutContent.setMargin(false);
+        layoutContent.setSpacing(false);
+        layoutContent.setSizeFull();
+        Link logoLink = new Link("Forgot your password?", new ExternalResource("/passwordRecovery"));
+        logoLink.setIcon(VaadinIcons.COGS);
+        logoLink.setCaptionAsHtml(true);
 
-        } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
-            Notification.show("Wrong email or password!");
-            emailField.clear();
-            passwordField.clear();
-        }
+        layoutContent.addComponent(logoLink);
+        layoutContent.setComponentAlignment(logoLink, Alignment.BOTTOM_CENTER);
+        return layoutContent;
     }
 }

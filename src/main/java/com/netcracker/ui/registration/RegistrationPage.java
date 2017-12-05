@@ -1,11 +1,11 @@
 package com.netcracker.ui.registration;
 
-import com.netcracker.dao.manager.EntityManager;
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
+import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
@@ -17,7 +17,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import org.apache.tomcat.jdbc.pool.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,6 +32,10 @@ import static com.netcracker.ui.validation.UiValidationConstants.*;
 @SpringUI(path = "registration")
 @Title("PetSpace REGISTRATION")
 public class RegistrationPage extends UI {
+
+    @Autowired
+    RegistrationService registrationService;
+
     private static final String VIEW_NAME = "Registration Form";
     private Window regWindow;
     private Binder<User> userBinder;
@@ -42,16 +46,13 @@ public class RegistrationPage extends UI {
     private PasswordField confirmPasswordField;
     private TextField userNameField;
     private TextField userSurnameField;
-    private ManagerAPI manager;
+
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         userBinder = new Binder<>(User.class);
         profileBinder = new Binder<>(Profile.class);
         regWindow = new Window();
-        //
-        manager = new ManagerAPI(new EntityManager(new DataSource()));
-        //
         Panel panel = new Panel(VIEW_NAME);
         panel.setContent(getContentLayout());
         panel.setSizeUndefined();
@@ -152,7 +153,7 @@ public class RegistrationPage extends UI {
                     userAuthorities.add(new UserAuthority("ROLE_USER"));
                     newUser.setUserAuthorities(userAuthorities);
                     newUser.setEnabled(true);
-                    manager.create(newUser);
+                    registrationService.registrateUser(newUser);
 
                     String invitedBy = friendField.getValue();
                     if (!invitedBy.isEmpty()) {
@@ -164,7 +165,7 @@ public class RegistrationPage extends UI {
                     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
                     CustomRestTemplate.getInstance()
                             .customExchange("/user", HttpMethod.POST, createRequest, String.class);
-                    getPage().setLocation("/login");
+                    getPage().setLocation("/loginform");
                 }
 
             }
