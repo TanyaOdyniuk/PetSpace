@@ -4,38 +4,18 @@ import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UsersProfileConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl {
 
     @Autowired
     private ManagerAPI managerAPI;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String query = "" +
-                "SELECT obj.object_id " +
-                "FROM Objects obj " +
-                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
-                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
-                "AND attr.attrtype_id = " + UsersProfileConstant.USER_LOGIN + " " +
-                "AND attr.value = '" + username + "'";
-        List<User> userList = managerAPI.getObjectsBySQL(query, User.class);
-        if (userList.isEmpty()) {
-            return null;
-        }
-        User user = userList.get(0);
-        return user;
-    }
-
-    public User findUserByUsername(String username, String password) {
+    public User findUserByUsernameAndPassword(String username, String password) {
         String query = "" +
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
@@ -58,7 +38,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return user;
     }
 
-    public List<User> getUsers(){
+    public User loadUserByUsername(String username) {
+        String query = "" +
+                "SELECT obj.object_id\n " +
+                "FROM Objects obj, ATTRIBUTES atr\n" +
+                "where obj.OBJECT_ID = atr.OBJECT_ID\n" +
+                "and obj.object_type_id = 1\n" +
+                "and atr.attrtype_id = 1\n" +
+                "AND atr.value = '" + username + "'";
+        List<User> userList = managerAPI.getObjectsBySQL(query, User.class);
+        if (userList.isEmpty()) {
+            return null;
+        }
+        User user = userList.get(0);
+        return user;
+    }
+
+    public List<User> getUsers() {
         return managerAPI.getAll(BigInteger.valueOf(1), User.class);
     }
 }

@@ -8,7 +8,6 @@ import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import com.netcracker.service.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +18,8 @@ import java.util.List;
 public class UserController {
 
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private RegistrationService registrationService;
@@ -27,10 +28,9 @@ public class UserController {
     private UserDetailsServiceImpl userService;
 
     @GetMapping
-    public Object getCurrentUser()
-    {
-        Object object =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return  object;
+    public Profile getCurrentProfile() {
+        String login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetailsService.loadUserByUsername(login).getProfile();
     }
     /*public List<User> getUsers() {
         return userService.getUsers();

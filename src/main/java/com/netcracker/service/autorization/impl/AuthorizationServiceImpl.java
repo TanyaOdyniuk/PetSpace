@@ -17,11 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-
-    @Autowired
-    DaoAuthenticationProvider daoAuthenticationProvider;
-
-
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -40,7 +35,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public void authenticate(String emailField, String passwordField) {
         Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        User user = userDetailsService.findUserByUsername(emailField, passwordField);
+        User user = userDetailsService.findUserByUsernameAndPassword(emailField, passwordField);
         if (user == null) {
             Notification.show("Wrong email or password!");
         } else {
