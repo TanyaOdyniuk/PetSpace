@@ -44,9 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").authenticated()
                 .antMatchers("/admin*").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/user*").access("hasRole('ROLE_USER')")
                 .and()
-                .formLogin()//.loginPage("/login")
+                .formLogin()
                 .and()
                 .logout().permitAll();
     }
@@ -54,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider createDaoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder());
         return provider;

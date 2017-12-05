@@ -75,8 +75,6 @@ public class LoginPage extends UI {
                     emailField.clear();
                     passwordField.clear();
                 }
-//                setErrorMessage(ErrorMessage.VALIDATION_NAME);
-//                getPage().setLocation("/testpage");
             }
         });
 

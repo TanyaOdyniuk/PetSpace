@@ -39,20 +39,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public void authenticate(String emailField, String passwordField) {
         Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField);
-//        Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = userDetailsService.findUserByUsername(emailField, passwordField);
         if (user == null) {
             Notification.show("Wrong email or password!");
         } else {
             LoginPage.getCurrent().getPage().setLocation("/testpage");
-            /*
-            if (userDetailsService.hasRole("ROLE_USER")) {
-                LoginPage.getCurrent().getPage().setLocation("/user");
-            } else if (userDetailsService.hasRole("ROLE_ADMIN")) {
-                LoginPage.getCurrent().getPage().setLocation("/admin");
-            }
-            */
         }
     }
 
