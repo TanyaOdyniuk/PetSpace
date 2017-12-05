@@ -148,13 +148,6 @@ public class RegistrationPage extends UI {
                     newUser.setLogin(emailField.getValue());
                     newUser.setPassword(passwordField.getValue());
                     newUser.setProfile(profile);
-
-                    ArrayList<UserAuthority> userAuthorities = new ArrayList<>();
-                    userAuthorities.add(new UserAuthority("ROLE_USER"));
-                    newUser.setUserAuthorities(userAuthorities);
-                    newUser.setEnabled(true);
-                    registrationService.registrateUser(newUser);
-
                     String invitedBy = friendField.getValue();
                     if (!invitedBy.isEmpty()) {
                         HttpEntity<String> increaseBalanceRequest = new HttpEntity<>(invitedBy);
