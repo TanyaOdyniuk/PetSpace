@@ -15,6 +15,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -56,6 +59,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     protected void init(VaadinRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Notification.show(auth.getName());
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0), 1.0f);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1), 15.0f);

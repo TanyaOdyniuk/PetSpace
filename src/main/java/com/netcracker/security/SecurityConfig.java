@@ -1,5 +1,8 @@
 package com.netcracker.security;
 
+import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -7,12 +10,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 /*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -24,9 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     */
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new MyDaoAuthenticationProvider());
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(createDaoAuthenticationProvider());
     }
 
     @Override
@@ -39,9 +46,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin*").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/user*").access("hasRole('ROLE_USER')")
                 .and()
-                .formLogin().loginPage("/login")
+                .formLogin()//.loginPage("/login")
                 .and()
                 .logout().permitAll();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider createDaoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return provider;
     }
 
 }

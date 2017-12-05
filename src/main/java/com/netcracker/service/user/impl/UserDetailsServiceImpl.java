@@ -41,8 +41,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return hasRole;
     }
 
-    public User findUserByUsername(String username) {
-        User user = new User();
+    public User findUserByUsername(String username, String password) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
+                "AND attr.attrtype_id = " + UsersProfileConstant.USER_LOGIN + " " +
+                "AND attr.value = '" + username + "'" +
+                "INTERSECT " +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
+                "AND attr.attrtype_id = " + UsersProfileConstant.USER_PASSWORD + " " +
+                "AND attr.value = '" + password + "'";
+        List<User> userList = managerAPI.getObjectsBySQL(query, User.class);
+        if (userList.isEmpty()) {
+            return null;
+        }
+        User user = userList.get(0);
+
+//       User user = managerAPI.getById(BigInteger.valueOf(48), User.class);
         return user;
     }
 
@@ -60,9 +80,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User getUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user;
-    }
-
-    public List<User> getUsers() {
-        return managerAPI.getAll(BigInteger.valueOf(UsersProfileConstant.USER_TYPE), User.class);
     }
 }
