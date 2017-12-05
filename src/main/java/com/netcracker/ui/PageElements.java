@@ -2,6 +2,7 @@ package com.netcracker.ui;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 
 public class PageElements {
 
@@ -15,6 +16,10 @@ public class PageElements {
 
     public static Label createLabel(Integer fontSize, String textColor, String text){
         return new Label("<font size = \"" + fontSize + "\" color=\"" + textColor + "\"> " + text, ContentMode.HTML);
+    }
+
+    public static Panel getSeparator(){
+        return new Panel();
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

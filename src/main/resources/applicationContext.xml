@@ -1,36 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<beans>
-
-    <bean id="myDS" class="org.apache.tomcat.jdbc.pool.DataSource">
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@sql.edu-netcracker.com:1251:XE"/>
-        <property name="username" value="ODESSA_19"/>
-        <property name="password" value="ODESSA_19"/>
-        <!--
-        <property name="username" value="ODESSA_18"/>
-        <property name="password" value=""/>
-        -->
-        <property name="initialSize" value="3"/>
-        <property name="maxActive" value="14"/>
-        <property name="maxIdle" value="12"/>
-        <!--Other properties, full list on
-        https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html#Common_Attributes
-
-        <property name="minIdle" value="7" />
-        <property name="maxWait" value="50000" />
-        <property name="testOnBorrow" value="true" />
-        <property name="validationQuery" value="select 1 from dual" />
-        <property name="maxAge" value="7000000" />
-        <property name="rollbackOnReturn" value="true" />
-        <property name="commitOnReturn" value="true" />
-        -->
-    </bean>
-    <bean id="myEM" class="com.netcracker.dao.manager.EntityManager">
-        <constructor-arg ref="myDS"/>
-    </bean>
-    <bean id="myMA" class="com.netcracker.dao.managerapi.ManagerAPI">
-        <constructor-arg ref="myEM"/>
-    </bean>
-</beans>
+<beans></beans>
