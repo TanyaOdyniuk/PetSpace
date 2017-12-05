@@ -68,13 +68,15 @@ public class LoginPage extends UI {
         submitButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                try {
+               /* try {
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue());
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
                     Notification.show("Wrong email or password!");
                     emailField.clear();
                     passwordField.clear();
-                }
+                }*/
+                setErrorMessage(ErrorMessage.VALIDATION_NAME);
+                getPage().setLocation("/testpage");
             }
         });
 

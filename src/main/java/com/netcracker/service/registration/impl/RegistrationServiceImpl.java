@@ -1,8 +1,9 @@
-package com.netcracker.service.registration;
+package com.netcracker.service.registration.impl;
 
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
+import com.netcracker.service.registration.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

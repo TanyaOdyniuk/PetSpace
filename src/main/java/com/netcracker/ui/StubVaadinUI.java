@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@SpringUI
+@SpringUI(path = "testpage")
 @Theme("valo")
 public class StubVaadinUI extends UI implements Button.ClickListener {
 

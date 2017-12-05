@@ -1,18 +1,27 @@
 package com.netcracker.service.autorization.impl;
 
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
+import com.netcracker.security.MyDaoAuthenticationProvider;
 import com.netcracker.service.autorization.AuthorizationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import com.netcracker.ui.login.LoginPage;
+import com.vaadin.ui.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-
-//    @Autowired
-//    MyDaoAuthenticationProvider daoAuthenticationProvider;
+/*
+    @Autowired
+    DaoAuthenticationProvider daoAuthenticationProvider;
+    */
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -30,7 +39,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public void authenticate(String emailField, String passwordField) {
-        /*
+/*
         Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField);
         Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
         SecurityContextHolder.getContext().setAuthentication(authenticated);
@@ -43,7 +52,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             } else if (userDetailsService.hasRole("ROLE_ADMIN")) {
                 LoginPage.getCurrent().getPage().setLocation("/admin");
             }
-        }
-        */
+        }    }*/
+
+
     }
+
+
 }
