@@ -5,7 +5,9 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
 import com.netcracker.model.user.UsersProfileConstant;
+import com.netcracker.service.profile.ProfileService;
 import com.netcracker.service.registration.RegistrationService;
+import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     ManagerAPI managerAPI;
-
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    ProfileService profileService;
     @Override
     public User registerUser(User user) {
         increaseBalanceAtStart(user);
@@ -42,9 +47,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public void invitedByUser(String userLogin) {
         BigDecimal invitedByBonus = new BigDecimal(invitedByBonusProp);
-        //find user
-        //increase user balance
-        //update user
+        User invitingUser = userDetailsService.loadUserByUsername(userLogin);
+        Profile invitingProfile = profileService.viewProfile(invitingUser.getProfile().getObjectId());
+        invitingProfile.setProfileCurrencyBalance(invitingProfile.getProfileCurrencyBalance().add(invitedByBonus));
+        managerAPI.update(invitingProfile);
     }
 
     @Override
