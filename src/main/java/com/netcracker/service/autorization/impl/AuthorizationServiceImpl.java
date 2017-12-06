@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -32,8 +35,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
 
     @Override
-    public void authenticate(String emailField, String passwordField) {
-        Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField);
+    public void authenticate(String emailField, String passwordField, Collection<? extends GrantedAuthority> authorities) {
+        Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField, authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = userDetailsService.findUserByUsernameAndPassword(emailField, passwordField);
         if (user == null) {
@@ -42,6 +45,4 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             LoginPage.getCurrent().getPage().setLocation("/testpage");
         }
     }
-
-
 }

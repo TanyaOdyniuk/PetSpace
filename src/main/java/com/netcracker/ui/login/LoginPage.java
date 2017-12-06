@@ -1,6 +1,7 @@
 package com.netcracker.ui.login;
 
 import com.netcracker.error.ErrorMessage;
+import com.netcracker.model.user.UserAuthority;
 import com.netcracker.service.autorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.vaadin.annotations.Theme;
@@ -14,6 +15,10 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Theme("valo")
 @SpringUI(path = "loginform")
@@ -69,7 +74,11 @@ public class LoginPage extends UI {
             @Override
             public void buttonClickListener() {
                 try {
-                    authorizationService.authenticate(emailField.getValue(), passwordField.getValue());
+                    Collection<GrantedAuthority> authorities = new ArrayList<>();
+                    UserAuthority role = new UserAuthority();
+                    role.setAuthority("ROLE_USER");
+                    authorities.add(role);
+                    authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
                     Notification.show("Wrong email or password!");
                     emailField.clear();

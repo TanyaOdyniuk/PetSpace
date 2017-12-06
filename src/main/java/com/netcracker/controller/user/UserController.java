@@ -28,9 +28,9 @@ public class UserController {
     private UserDetailsServiceImpl userService;
 
     @GetMapping
-    public Profile getCurrentProfile() {
+    public User getCurrentProfile() {
         String login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetailsService.loadUserByUsername(login).getProfile();
+        return userDetailsService.loadUserByUsername(login);
     }
     /*public List<User> getUsers() {
         return userService.getUsers();
