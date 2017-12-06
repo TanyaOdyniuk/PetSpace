@@ -6,11 +6,13 @@ import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.media.MediaService;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -23,10 +25,10 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<PhotoRecord> getImagesGallery(BigInteger albumId) {
+    public List<PhotoRecord> getImagesGallery(BigInteger albumId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
         String getRecordsQuery =
                 "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 304 AND REFERENCE = " + albumId;
-        List<PhotoRecord> albumsRecords = managerAPI.getObjectsBySQL(getRecordsQuery, PhotoRecord.class);
+        List<PhotoRecord> albumsRecords = managerAPI.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, isPaging, pagingDesc, sortingDesc);
         System.out.println(albumsRecords.toString());
         return albumsRecords;
     }

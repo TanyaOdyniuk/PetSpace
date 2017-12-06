@@ -24,6 +24,6 @@ public class GalleryController {
 
     @GetMapping("/{id}")
     public List<PhotoRecord> getImagesGalary(@PathVariable("id") BigInteger albumId){
-        return mediaService.getImagesGallery(albumId);
+        return mediaService.getImagesGallery(albumId, false, null, null); //temp values
     }
 }

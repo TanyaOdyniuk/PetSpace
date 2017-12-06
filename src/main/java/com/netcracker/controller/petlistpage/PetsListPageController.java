@@ -20,11 +20,11 @@ public class PetsListPageController {
 
     @GetMapping("/{id}")
     public List<Pet> getMyPets(@PathVariable("id") BigInteger id) {
-        return petProfileService.getAllProfilePets(id);
+        return petProfileService.getAllProfilePets(id, false, null, null); //temp values
     }
 
     @GetMapping
     public List<Pet> getAllPets() {
-        return petProfileService.getAllPets();
+        return petProfileService.getAllPets(false, null, null);//temp values
     }
 }

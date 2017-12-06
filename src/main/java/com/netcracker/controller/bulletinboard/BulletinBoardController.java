@@ -18,11 +18,11 @@ public class BulletinBoardController {
 
     @GetMapping
     public List<Advertisement> getProfileAds() {
-        return bulletinBoardService.getProfileAds();
+        return bulletinBoardService.getProfileAds(false, null, null); //temp values
     }
 
     @GetMapping("/{id}")
     public List<Advertisement> getMyProfileAds(@PathVariable("id") BigInteger profileId) {
-        return bulletinBoardService.getMyProfileAds(profileId);
+        return bulletinBoardService.getMyProfileAds(profileId, false, null, null); // temp values
     }
 }

@@ -38,7 +38,7 @@ public class DaoTest {
     }
 
     public List<TestUser> getAllTest(ManagerAPI managerAPI){
-        return managerAPI.getAll(new BigInteger("1"), TestUser.class);
+        return managerAPI.getAll(new BigInteger("1"), TestUser.class, false, null, null);
     }
 
     public TestUser testCreateUser(ManagerAPI managerAPI) {

@@ -7,20 +7,23 @@ import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Autowired
     ManagerAPI managerAPI;
 
     @Override
-    public List<Advertisement> getProfileAds() {
+    public List<Advertisement> getProfileAds(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
         BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
-        List<Advertisement> advertisements = managerAPI.getAll(attrTypeId, Advertisement.class);
+        List<Advertisement> advertisements = managerAPI.getAll(attrTypeId, Advertisement.class, isPaging, pagingDesc, sortingDesc);
         for (Advertisement ad : advertisements) {
             Profile author = ad.getAdAuthor();
             Category category = ad.getAdCategory();
@@ -35,7 +38,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
 
     @Override
-    public List<Advertisement> getMyProfileAds(BigInteger profileId) {
+    public List<Advertisement> getMyProfileAds(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
         String getAdsQuery = "SELECT OBJECT_ID as object_id" +
                 " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_AUTHOR +
@@ -45,7 +48,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 "OBJREFERENCE WHERE ATTRTYPE_ID =" +
                 + AdvertisementConstant.AD_AUTHOR +
                 " and OBJECT_ID = " + profileId;
-        List<Advertisement> advertisements = managerAPI.getObjectsBySQL(getAdsQuery, Advertisement.class);
+        List<Advertisement> advertisements = managerAPI.getObjectsBySQL(getAdsQuery, Advertisement.class, isPaging, pagingDesc, sortingDesc);
         for (Advertisement ad : advertisements) {
             Category category = ad.getAdCategory();
             if(category != null){

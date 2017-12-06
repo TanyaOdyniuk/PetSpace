@@ -5,6 +5,7 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PetProfileServiceImpl implements PetProfileService {
@@ -60,14 +62,14 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
-    public List<Pet> getAllPets() {
-        return managerApi.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class);
+    public List<Pet> getAllPets(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+        return managerApi.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, isPaging, pagingDesc, sortingDesc);
     }
 
     @Override
-    public List<Pet> getAllProfilePets(BigInteger profileId) {
+    public List<Pet> getAllProfilePets(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE reference = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
-        return managerApi.getObjectsBySQL(sqlQuery, Pet.class);
+        return managerApi.getObjectsBySQL(sqlQuery, Pet.class, isPaging, pagingDesc, sortingDesc);
     }
 }

@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl {
                 "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
                 "AND attr.attrtype_id = " + UsersProfileConstant.USER_PASSWORD + " " +
                 "AND attr.value = '" + password + "'";
-        List<User> userList = managerAPI.getObjectsBySQL(query, User.class);
+        List<User> userList = managerAPI.getObjectsBySQL(query, User.class, false, null, null);
         if (userList.isEmpty()) {
             return null;
         }
@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl {
                 "and obj.object_type_id = 1\n" +
                 "and atr.attrtype_id = 1\n" +
                 "AND atr.value = '" + username + "'";
-        List<User> userList = managerAPI.getObjectsBySQL(query, User.class);
+        List<User> userList = managerAPI.getObjectsBySQL(query, User.class, false, null, null);
         if (userList.isEmpty()) {
             return null;
         }
@@ -55,6 +55,6 @@ public class UserDetailsServiceImpl {
     }
 
     public List<User> getUsers() {
-        return managerAPI.getAll(BigInteger.valueOf(1), User.class);
+        return managerAPI.getAll(BigInteger.valueOf(1), User.class, false, null, null);
     }
 }

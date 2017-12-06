@@ -8,12 +8,14 @@ import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.profile.ProfileService;
 import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -39,7 +41,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                         "where obj.OBJECT_ID = atr.OBJECT_ID " +
                         "and obj.object_type_id = " + UsersProfileConstant.USER_TYPE +
                         " and atr.attrtype_id = " + UsersProfileConstant.USERTYPE_NAME +
-                        " AND atr.value = 'ROLE_USER'", UserAuthority.class);
+                        " AND atr.value = 'ROLE_USER'", UserAuthority.class,
+                        false, null, null);
         user.setUserAuthorities(authority);
         return managerAPI.create(user);
     }

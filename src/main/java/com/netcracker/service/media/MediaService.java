@@ -4,9 +4,11 @@ import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface MediaService {
@@ -16,7 +18,7 @@ public interface MediaService {
     //открывать страничку с миниатюрами изображений после нажатия на кнопку просмотра
     // фотогалереи в профиле пользователя или питомца
 //    List<WallRecord> imagesGalary(Profile profile);
-    List<PhotoRecord> getImagesGallery(BigInteger albumId);
+    List<PhotoRecord> getImagesGallery(BigInteger albumId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
 
     PhotoAlbum getAlbum(BigInteger albumId);
 

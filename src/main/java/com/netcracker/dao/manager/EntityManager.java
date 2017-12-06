@@ -1,5 +1,6 @@
 package com.netcracker.dao.manager;
 
+import com.netcracker.dao.CustomQueryBuilder;
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.manager.query.Query;
 import javafx.util.Pair;
@@ -138,8 +139,10 @@ public class EntityManager {
         return reference;
     }
 
-    public List<Entity> getAll(BigInteger objectTypeId) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(Query.SELECT_FROM_OBJECTS, new Object[]{objectTypeId});
+    public List<Entity> getAll(BigInteger objectTypeId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                CustomQueryBuilder.build(isPaging, Query.SELECT_FROM_OBJECTS, pagingDesc, sortingDesc),
+                                                        new Object[]{objectTypeId});
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {
@@ -149,8 +152,11 @@ public class EntityManager {
         return entityList;
     }
 
-    public List<Entity> getBySQL(String sqlQuery) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )"));
+    public List<Entity> getBySQL(String sqlQuery, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                CustomQueryBuilder.build(isPaging,
+                Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )"),
+                        pagingDesc, sortingDesc));
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {
