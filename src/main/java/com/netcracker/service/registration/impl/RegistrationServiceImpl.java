@@ -3,12 +3,15 @@ package com.netcracker.service.registration.impl;
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
+import com.netcracker.model.user.UserAuthority;
+import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.registration.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -21,12 +24,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     ManagerAPI managerAPI;
 
     @Override
-    public Profile registrateUser(User user) {
+    public User registerUser(User user) {
         increaseBalanceAtStart(user);
         Profile profile = managerAPI.create(user.getProfile());
         user.setProfile(profile);
-        managerAPI.create(user);
-        return profile;
+        List<UserAuthority> authority = managerAPI.getObjectsBySQL(
+                "SELECT obj.object_id " +
+                        "FROM Objects obj, ATTRIBUTES atr " +
+                        "where obj.OBJECT_ID = atr.OBJECT_ID " +
+                        "and obj.object_type_id = " + UsersProfileConstant.USER_TYPE +
+                        " and atr.attrtype_id = " + UsersProfileConstant.USERTYPE_NAME +
+                        " AND atr.value = 'ROLE_USER'", UserAuthority.class);
+        user.setUserAuthorities(authority);
+        return managerAPI.create(user);
     }
 
     @Override

@@ -38,11 +38,11 @@ public class UserController {
 
 
     @PostMapping
-    public Profile registrateUser(@RequestBody User user) {
+    public User registrateUser(@RequestBody User user) {
         List<User> userList = userService.getUsers();
         if (!ValidationService.validateUserExistence(userList, user.getLogin()))
             throw new UserNotValidException("User with email: " + user.getLogin() + " is already exist");
-        return registrationService.registrateUser(user);
+        return registrationService.registerUser(user);
     }
 
     @PutMapping("/increasebalance")

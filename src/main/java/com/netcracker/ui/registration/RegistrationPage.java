@@ -5,6 +5,7 @@ import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
+import com.netcracker.service.autorization.AuthorizationService;
 import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
@@ -18,13 +19,14 @@ import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static com.netcracker.ui.validation.UiValidationConstants.*;
 
@@ -34,7 +36,7 @@ import static com.netcracker.ui.validation.UiValidationConstants.*;
 public class RegistrationPage extends UI {
 
     @Autowired
-    RegistrationService registrationService;
+    AuthorizationService authorizationService;
 
     private static final String VIEW_NAME = "Registration Form";
     private Window regWindow;
@@ -46,7 +48,6 @@ public class RegistrationPage extends UI {
     private PasswordField confirmPasswordField;
     private TextField userNameField;
     private TextField userSurnameField;
-
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -157,8 +158,12 @@ public class RegistrationPage extends UI {
                     HttpHeaders headers = new HttpHeaders();
                     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
                     CustomRestTemplate.getInstance()
-                            .customExchange("/user", HttpMethod.POST, createRequest, String.class);
-                    getPage().setLocation("/loginform");
+                            .customExchange("/user", HttpMethod.POST, createRequest, User.class);
+                    Collection<GrantedAuthority> authorities = new ArrayList<>();
+                    UserAuthority role = new UserAuthority();
+                    role.setAuthority("ROLE_USER");
+                    authorities.add(role);
+                    authorizationService.authenticate(newUser.getLogin(), newUser.getPassword(), authorities);
                 }
 
             }
