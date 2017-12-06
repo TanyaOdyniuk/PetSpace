@@ -42,7 +42,13 @@ public class MyPetsListUI extends Panel {
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
             Label petNameSign = PageElements.createGrayLabel("Кличка питомца");
-            Label petName = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetName());
+            Button petName = PageElements.createClickedLabel(pet.getPetName());
+            petName.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
+                }
+            });
             Label petInfoSign = PageElements.createGrayLabel("Информация о питомце");
             Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
 
@@ -52,7 +58,7 @@ public class MyPetsListUI extends Panel {
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);
 
-            petRecordsLayout.addComponents(petRecord);
+            petRecordsLayout.addComponents(petRecord, PageElements.getSeparator());
         }
         setContent(petRecordsLayout);
     }

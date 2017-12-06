@@ -25,6 +25,9 @@ public interface PetProfileService {
 
     Date ageCalculation(Pet pet);
 
+    //Получить владельца питомца
+    Profile getOwner(BigInteger ownerId);
+
     //Получить питомца с конкретным ID
     Pet getPetById(BigInteger petId);
 

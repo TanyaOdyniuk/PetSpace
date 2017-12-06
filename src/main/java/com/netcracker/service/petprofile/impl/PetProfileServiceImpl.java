@@ -50,6 +50,11 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
+    public Profile getOwner(BigInteger ownerId){
+        return managerApi.getById(ownerId, Profile.class);
+    }
+
+    @Override
     public Pet getPetById(BigInteger petId){
         return managerApi.getById(petId, Pet.class);
     }
