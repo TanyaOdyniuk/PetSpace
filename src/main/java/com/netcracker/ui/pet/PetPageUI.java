@@ -62,6 +62,14 @@ public class PetPageUI extends VerticalLayout {
         petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
         petAvatar.setDescription("Pet avatar");
 
+        Button deletePage = PageElements.createClickedLabel("Удалить страницу");
+        deletePage.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                Notification.show("Тут можно будет удалить\nстраницу, если ты владелец", Notification.Type.TRAY_NOTIFICATION);
+            }
+        });
+
         Button albums = PageElements.createClickedLabel("Альбомы");
         albums.addClickListener(new AbstractClickListener() {
             @Override
@@ -78,7 +86,7 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), argue, albums);
+        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), deletePage, PageElements.getSeparator(), argue, albums);
         avatarPanel.setContent(leftPageLayout);
         avatarLayout.addComponents(avatarPanel);
 

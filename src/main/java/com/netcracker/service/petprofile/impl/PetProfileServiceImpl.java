@@ -23,7 +23,7 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public Pet createPetProfile(Pet pet) {
-        return null;
+        return managerApi.create(pet);
     }
 
     @Override
@@ -33,12 +33,12 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public void editProfile(Profile profile) {
-
+        managerApi.update(profile);
     }
 
     @Override
     public void deleteProfile(BigInteger profileId) {
-
+        managerApi.delete(profileId, 0);
     }
 
     @Override
