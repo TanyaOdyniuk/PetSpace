@@ -2,7 +2,14 @@ package com.netcracker.service.managefriends;
 
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
+import javafx.util.Pair;
+import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+
+@Service
 public interface ManageFriendService {
     void addFriend(Profile profile);
 
@@ -17,4 +24,6 @@ public interface ManageFriendService {
         String POPULARITY_AMOUNT_OF_LIKES_PET = "POPULARITY_AMOUNT_OF_LIKES_PET";
         String ALPHABETICALLY = "ALPHABETICALLY";
     }
+
+    List<Profile> getFriendList(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
 }
