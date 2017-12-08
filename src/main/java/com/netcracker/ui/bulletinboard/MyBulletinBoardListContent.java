@@ -1,15 +1,15 @@
 package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,9 +20,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     private final VerticalLayout innerLayout;
     private final Grid<Advertisement> grid;
     private final Button newAdBtn;
-    private final Integer profileId;
+    private final BigInteger profileId;
     @Autowired
-    public MyBulletinBoardListContent(Integer profileId) {
+    public MyBulletinBoardListContent(BigInteger profileId) {
         super();
         setSpacing(true);
         setWidth("100%");
@@ -43,6 +43,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         Grid.Column categoryColumn = grid.addColumn(ad ->
                 (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category");
         myAdvertisementList();
+        grid.addItemClickListener(event ->((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
         innerLayout = new VerticalLayout();
         innerLayout.addComponentsAndExpand(newAdBtn, grid);
         innerLayout.setExpandRatio(innerLayout.getComponent(0), 2.0f);

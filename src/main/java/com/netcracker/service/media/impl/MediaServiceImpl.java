@@ -29,14 +29,12 @@ public class MediaServiceImpl implements MediaService {
         String getRecordsQuery =
                 "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 304 AND REFERENCE = " + albumId;
         List<PhotoRecord> albumsRecords = managerAPI.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, isPaging, pagingDesc, sortingDesc);
-        System.out.println(albumsRecords.toString());
         return albumsRecords;
     }
 
     @Override
     public PhotoAlbum getAlbum(BigInteger albumId) {
         PhotoAlbum photoAlbum = managerAPI.getById(albumId, PhotoAlbum.class);
-        System.out.println(photoAlbum.toString());
         return photoAlbum;
     }
 
