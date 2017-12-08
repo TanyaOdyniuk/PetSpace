@@ -3,6 +3,7 @@ package com.netcracker.ui.bulletinboard;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -47,6 +48,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         Grid.Column categoryColumn = grid.addColumn(ad ->
                 (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category");
         myAdvertisementList(1);
+        grid.addItemClickListener(event ->((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
         innerLayout = new VerticalLayout();
         innerLayout.addComponentsAndExpand(newAdBtn, grid);
         innerLayout.setExpandRatio(innerLayout.getComponent(0), 2.0f);
