@@ -32,6 +32,14 @@ public class ManagerAPI {
         this.manager = manager;
     }
 
+    public int getAllCount(BigInteger objectTypeId){
+        return manager.getAllCount(objectTypeId);
+    }
+
+    public int getBySqlCount(String sqlQuery){
+        return manager.getBySqlCount(sqlQuery);
+    }
+
     @Transactional
     public <T extends BaseEntity> T create(T baseEntity) {
         Entity entity = manager.create(new Converter().convertToEntity(baseEntity));
@@ -61,7 +69,7 @@ public class ManagerAPI {
         return (T) new Converter().convertToBaseEntity(entity, baseEntityClass);
 
     }
-    //public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass)
+
     public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
         List<Entity> entities = manager.getAll(objectTypeId, isPaging, pagingDesc, sortingDesc);
         List<T> baseEntities = new ArrayList<>();
@@ -72,7 +80,6 @@ public class ManagerAPI {
         return baseEntities;
     }
     public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
-//    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass) {
         List<Entity> entities = manager.getBySQL(sqlQuery, isPaging, pagingDesc, sortingDesc);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
@@ -335,7 +342,7 @@ public class ManagerAPI {
                     } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
                     } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
-                        value = new BigDecimal((String) attribute);
+                        value = attribute != null ?new BigDecimal((String) attribute) : null;
                     } else {
                         if (attribute != null) {
                             try {

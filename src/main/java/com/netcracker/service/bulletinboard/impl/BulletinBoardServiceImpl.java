@@ -7,18 +7,48 @@ import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
+import com.netcracker.service.util.PageCounterService;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class BulletinBoardServiceImpl implements BulletinBoardService {
+    @Value("${advertisement.list.pageCapasity}")
+    String adPageCapacityProp;
+    @Value("${advertisement.mylist.pageCapasity}")
+    String myAdPageCapacityProp;
+
     @Autowired
     ManagerAPI managerAPI;
+    @Autowired
+    PageCounterService pageCounterService;
+
+    public int getAllAdPageCount() {
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        return pageCounterService.getPageCount(adPageCapacity, managerAPI.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
+    }
+
+    public int getMyProfileAdPageCount(BigInteger profileId) {
+        Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and REFERENCE = "
+                + profileId +
+                "UNION select REFERENCE as object_id FROM " +
+                "OBJREFERENCE WHERE ATTRTYPE_ID =" +
+                +AdvertisementConstant.AD_AUTHOR +
+                " and OBJECT_ID = " + profileId;
+        return pageCounterService.getPageCount(myAdPageCapacity, managerAPI.getBySqlCount(getAdsQuery));
+
+    }
 
     @Override
     public List<Advertisement> getProfileAds(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
@@ -27,10 +57,10 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         for (Advertisement ad : advertisements) {
             Profile author = ad.getAdAuthor();
             Category category = ad.getAdCategory();
-            if(author != null){
+            if (author != null) {
                 ad.setAdAuthor(managerAPI.getById(author.getObjectId(), Profile.class));
             }
-            if(category != null){
+            if (category != null) {
                 ad.setAdCategory(managerAPI.getById(category.getObjectId(), Category.class));
             }
         }
@@ -46,12 +76,12 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 + profileId +
                 "UNION select REFERENCE as object_id FROM " +
                 "OBJREFERENCE WHERE ATTRTYPE_ID =" +
-                + AdvertisementConstant.AD_AUTHOR +
+                +AdvertisementConstant.AD_AUTHOR +
                 " and OBJECT_ID = " + profileId;
         List<Advertisement> advertisements = managerAPI.getObjectsBySQL(getAdsQuery, Advertisement.class, isPaging, pagingDesc, sortingDesc);
         for (Advertisement ad : advertisements) {
             Category category = ad.getAdCategory();
-            if(category != null){
+            if (category != null) {
                 ad.setAdCategory(managerAPI.getById(category.getObjectId(), Category.class));
             }
         }

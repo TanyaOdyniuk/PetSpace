@@ -11,7 +11,8 @@ import java.util.Map;
 
 @Service
 public interface BulletinBoardService {
-
+    int getAllAdPageCount();
+    int getMyProfileAdPageCount(BigInteger profileId);
     //    отображать список объявлений других пользователей постранично с возможностью
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
     List<Advertisement> getProfileAds(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);

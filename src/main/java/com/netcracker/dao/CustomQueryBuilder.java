@@ -28,13 +28,9 @@ public class CustomQueryBuilder {
         }
         return result;
     }
-/*
-    public static void main(String[] args) {
-        Map<String, String> sortParam = new HashMap<>();
-        sortParam.put("Object_id", "");
-        sortParam.put("ObjectType_id", "DESC");
-        System.out.println(CustomQueryBuilder.build(false, Query.SELECT_FROM_OBJECTS_BY_ID, null, sortParam));
-        System.out.println(CustomQueryBuilder.build(true, Query.SELECT_FROM_OBJECTS_BY_ID, new Pair<>(2, 10), sortParam));
+
+    public static String buildCountQuery(String innerQuery){
+        return "select max(ROWNUM) as c " +
+                "from (" + innerQuery + ")";
     }
-*/
 }

@@ -4,11 +4,9 @@ import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UsersProfileConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -16,6 +14,18 @@ public class UserDetailsServiceImpl {
 
     @Autowired
     private ManagerAPI managerAPI;
+
+    public boolean validateUserExistence(List<User> users, String login) {
+        boolean isInDB = true;
+        for (User user : users) {
+            String existingLogin = user.getLogin();
+            isInDB = existingLogin.equals(login);
+            if (isInDB) {
+                break;
+            }
+        }
+        return !isInDB;
+    }
 
     public User findUserByUsernameAndPassword(String username, String password) {
         String query = "" +
@@ -52,14 +62,7 @@ public class UserDetailsServiceImpl {
         if (userList.isEmpty()) {
             return null;
         }
-        User user = userList.get(0);
-        System.out.println(user.toString());
-        System.out.println();
-        Collection<? extends GrantedAuthority> typeList = user.getAuthorities();
-        for(GrantedAuthority ga : typeList){
-            System.out.println(ga.toString());
-        }
-        return user;
+        return userList.get(0);
     }
 
     public List<User> getUsers() {

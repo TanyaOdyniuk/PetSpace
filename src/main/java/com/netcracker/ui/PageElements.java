@@ -35,6 +35,12 @@ public class PageElements {
         clickedLabel.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         return clickedLabel;
     }
+    public static Button createBlueClickedLabel(String text) {
+        Button clickedLabel = new Button(text);
+        clickedLabel.addStyleName(ValoTheme.BUTTON_LINK);
+        //clickedLabel.setDisableOnClick(true);
+        return clickedLabel;
+    }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";
 }
