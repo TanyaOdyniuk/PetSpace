@@ -24,23 +24,16 @@ public class UserController {
     @Autowired
     private RegistrationService registrationService;
 
-    @Autowired
-    private UserDetailsServiceImpl userService;
 
     @GetMapping
     public User getCurrentProfile() {
         String login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetailsService.loadUserByUsername(login);
     }
-    /*public List<User> getUsers() {
-        return userService.getUsers();
-    }*/
-
-
     @PostMapping
     public User registrateUser(@RequestBody User user) {
-        List<User> userList = userService.getUsers();
-        if (!ValidationService.validateUserExistence(userList, user.getLogin()))
+        List<User> userList = userDetailsService.getUsers();
+        if (!userDetailsService.validateUserExistence(userList, user.getLogin()))
             throw new UserNotValidException("User with email: " + user.getLogin() + " is already exist");
         return registrationService.registerUser(user);
     }

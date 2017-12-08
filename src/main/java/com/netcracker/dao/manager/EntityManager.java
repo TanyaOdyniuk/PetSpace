@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
@@ -165,7 +166,17 @@ public class EntityManager {
         }
         return entityList;
     }
+    public int getAllCount(BigInteger objectTypeId){
+        return jdbcTemplate.queryForObject(CustomQueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS),
+                (resultSet, i) -> { return resultSet.getInt("c"); },
+                objectTypeId);
+    }
 
+    public int getBySqlCount(String sqlQuery){
+        return jdbcTemplate.queryForObject(CustomQueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )")),
+                (resultSet, i) -> {
+                    return resultSet.getInt("c"); });
+    }
     private Map<String, Object> executeObjectJdbcCall(Entity entity, SimpleJdbcCall jdbcCall, int delete, Integer forceDel) {
         jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(

@@ -114,7 +114,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new ProfileView(BigInteger.valueOf(1)));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(1));
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(BigInteger.valueOf(1)));
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());

@@ -1,5 +1,6 @@
 package com.netcracker.dao.testdao;
 
+import com.netcracker.configuration.AppConfig;
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.dao.testdao.testentity.TestConfig;
 import com.netcracker.model.advertisement.Advertisement;
@@ -10,20 +11,20 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class AdvertisementTest {
 
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);//TestConfig.class);
         ManagerAPI managerAPI = context.getBean(ManagerAPI.class);
         new AdvertisementTest().addAd(managerAPI);
     }
     void addAd(ManagerAPI managerAPI){
         Advertisement advertisement = new Advertisement();
-        advertisement.setAdTopic("First Topic");
+        advertisement.setAdTopic("Second Topic");
         Profile profile = new Profile();
-        profile.setProfileName("Ivan");
-        profile.setProfileSurname("Ivanov");
+        profile.setProfileName("Petr");
+        profile.setProfileSurname("Petrov");
         managerAPI.create(profile);
         advertisement.setAdAuthor(profile);
-        advertisement.setAdBasicInfo("Main INFO");
-        String date = "2000-11-01";
+        advertisement.setAdBasicInfo("InfoInfoInfo");
+        String date = "2000-12-13";
         java.sql.Date javaSqlDate = java.sql.Date.valueOf(date);
         advertisement.setAdDate(javaSqlDate);
         advertisement.setAdIsVip(true);

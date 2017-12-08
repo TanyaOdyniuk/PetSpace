@@ -15,6 +15,18 @@ public class UserDetailsServiceImpl {
     @Autowired
     private ManagerAPI managerAPI;
 
+    public boolean validateUserExistence(List<User> users, String login) {
+        boolean isInDB = true;
+        for (User user : users) {
+            String existingLogin = user.getLogin();
+            isInDB = existingLogin.equals(login);
+            if (isInDB) {
+                break;
+            }
+        }
+        return !isInDB;
+    }
+
     public User findUserByUsernameAndPassword(String username, String password) {
         String query = "" +
                 "SELECT obj.object_id " +
@@ -50,8 +62,7 @@ public class UserDetailsServiceImpl {
         if (userList.isEmpty()) {
             return null;
         }
-        User user = userList.get(0);
-        return user;
+        return userList.get(0);
     }
 
     public List<User> getUsers() {
