@@ -35,7 +35,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
 
     @Override
-    public void authenticate(String emailField, String passwordField, Collection<? extends GrantedAuthority> authorities) {
+    public User authenticate(String emailField, String passwordField, Collection<? extends GrantedAuthority> authorities) {
         Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField, authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = userDetailsService.findUserByUsernameAndPassword(emailField, passwordField);
@@ -44,5 +44,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         } else {
             LoginPage.getCurrent().getPage().setLocation("/testpage");
         }
+        return user;
     }
 }

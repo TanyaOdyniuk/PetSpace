@@ -1,6 +1,7 @@
 package com.netcracker.service.autorization;
 
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -15,6 +16,6 @@ public interface AuthorizationService {
 //    пароля с полем для заполнения “Email” и кнопкой “Reset password”
     String passwordRecovery(String email);
 
-    void authenticate(String email, String password, Collection<? extends GrantedAuthority> authorities);
+    User authenticate(String email, String password, Collection<? extends GrantedAuthority> authorities);
 }
 

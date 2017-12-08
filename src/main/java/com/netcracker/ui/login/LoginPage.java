@@ -1,9 +1,11 @@
 package com.netcracker.ui.login;
 
 import com.netcracker.error.ErrorMessage;
+import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
 import com.netcracker.service.autorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
@@ -13,11 +15,13 @@ import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 @Theme("valo")
@@ -78,6 +82,23 @@ public class LoginPage extends UI {
                     UserAuthority role = new UserAuthority();
                     role.setAuthority("ROLE_USER");
                     authorities.add(role);
+                    ArrayList<String> requestParams = new ArrayList<>();
+                    requestParams.add(emailField.getValue());
+                    requestParams.add(passwordField.getValue());
+                    for (GrantedAuthority authority : authorities) {
+                        requestParams.add(authority.getAuthority());
+                    }
+                    /*HttpEntity<ArrayList<String>> request = new HttpEntity<>(requestParams);
+                    //HttpHeaders headers = new HttpHeaders();
+                   // headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+                    User user = CustomRestTemplate.getInstance()
+                            .customExchange("/loginform", HttpMethod.POST, request, User.class).getBody();
+                    if (user == null) {
+                        Notification.show("Wrong email or password!");
+                    } else {
+                        LoginPage.getCurrent().getPage().setLocation("/testpage");
+                    }*/
+
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
                     Notification.show("Wrong email or password!");
