@@ -3,6 +3,7 @@ package com.netcracker.service.petprofile.impl;
 import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetConstant;
+import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
 import javafx.util.Pair;
@@ -71,5 +72,10 @@ public class PetProfileServiceImpl implements PetProfileService {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE reference = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
         return managerApi.getObjectsBySQL(sqlQuery, Pet.class, isPaging, pagingDesc, sortingDesc);
+    }
+
+    @Override
+    public List<PetSpecies> getAllSpecies(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+        return managerApi.getAll(BigInteger.valueOf(PetConstant.PETSPEC_TYPE), PetSpecies.class, isPaging, pagingDesc, sortingDesc);
     }
 }

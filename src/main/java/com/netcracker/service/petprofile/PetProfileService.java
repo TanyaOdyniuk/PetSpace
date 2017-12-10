@@ -1,6 +1,7 @@
 package com.netcracker.service.petprofile;
 
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import javafx.util.Pair;
 
@@ -38,5 +39,8 @@ public interface PetProfileService {
 
     //Получить список животных переданного профиля
     List<Pet> getAllProfilePets(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+
+    //Получить список видов
+    List<PetSpecies> getAllSpecies(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
 
 }

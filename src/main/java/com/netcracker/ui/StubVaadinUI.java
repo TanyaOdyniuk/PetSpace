@@ -1,6 +1,6 @@
 package com.netcracker.ui;
 
-import com.netcracker.error.asserts.ValidationAssert;
+import com.netcracker.error.asserts.ObjectAssert;
 import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
@@ -18,7 +18,6 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -141,7 +140,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     }
 
     public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet){
-        ValidationAssert.isNull(layoutToSet);
+        ObjectAssert.isNull(layoutToSet);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         primaryAreaLayout.addComponentsAndExpand(layoutToSet);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);

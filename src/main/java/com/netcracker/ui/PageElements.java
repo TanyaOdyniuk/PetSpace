@@ -1,11 +1,8 @@
 package com.netcracker.ui;
 
-import com.netcracker.ui.profile.ProfileView;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class PageElements {
@@ -40,6 +37,21 @@ public class PageElements {
         clickedLabel.addStyleName(ValoTheme.BUTTON_LINK);
         //clickedLabel.setDisableOnClick(true);
         return clickedLabel;
+    }
+
+    public static TextField createTextField(String caption, String placeHolder){
+        return createTextField(caption, placeHolder, false);
+    }
+
+    public static TextField createTextField(String caption, String placeHolder, Boolean isRequired){
+        TextField textField = new TextField(caption);
+        textField.setPlaceholder(placeHolder);
+        textField.setRequiredIndicatorVisible(isRequired);
+        return textField;
+    }
+
+    public static Image getNoImage(){
+        return new Image("", new ExternalResource("https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png"));
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

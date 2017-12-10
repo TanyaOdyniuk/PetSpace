@@ -6,6 +6,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class MyPetsListUI extends Panel {
+public class MyPetsListUI extends VerticalLayout {
 
     private BigInteger profileId;
 
@@ -27,9 +28,19 @@ public class MyPetsListUI extends Panel {
     public MyPetsListUI(BigInteger profileId){
         super();
         this.profileId = profileId;
-        setWidth("100%");
-        setHeight("100%");
+        /*setWidth("100%");
+        setHeight("100%");*/
+        Panel mainPanel = new Panel();
+        mainPanel.setWidth("100%");
+        mainPanel.setHeight(750, Unit.PIXELS);
         VerticalLayout petRecordsLayout = new VerticalLayout();
+        Button addNewPet = new Button("Добавить нового питомца", VaadinIcons.PLUS);
+        addNewPet.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetFormUI());
+            }
+        });
         List<Pet> petList = getProfilePets(profileId);
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
@@ -60,7 +71,8 @@ public class MyPetsListUI extends Panel {
 
             petRecordsLayout.addComponents(petRecord, PageElements.getSeparator());
         }
-        setContent(petRecordsLayout);
+        mainPanel.setContent(petRecordsLayout);
+        addComponents(addNewPet, mainPanel);
     }
 
     private List<Pet> getProfilePets(BigInteger profileId){
