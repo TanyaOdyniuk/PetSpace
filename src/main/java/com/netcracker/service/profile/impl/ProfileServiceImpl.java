@@ -1,6 +1,6 @@
 package com.netcracker.service.profile.impl;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.service.Service;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
@@ -12,11 +12,11 @@ import java.math.BigInteger;
 @org.springframework.stereotype.Service
 public class ProfileServiceImpl implements ProfileService {
     @Autowired
-    ManagerAPI managerAPI;
+    EntityManagerService entityManagerService;
 
     @Override
     public Profile viewProfile(BigInteger profileID) {
-        return managerAPI.getById(profileID, Profile.class);
+        return entityManagerService.getById(profileID, Profile.class);
     }
 
     @Override

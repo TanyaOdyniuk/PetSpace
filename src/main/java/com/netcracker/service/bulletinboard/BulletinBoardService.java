@@ -2,12 +2,10 @@ package com.netcracker.service.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
-import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface BulletinBoardService {
@@ -15,11 +13,11 @@ public interface BulletinBoardService {
     int getMyProfileAdPageCount(BigInteger profileId);
     //    отображать список объявлений других пользователей постранично с возможностью
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
-    List<Advertisement> getProfileAds(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+    List<Advertisement> getProfileAds(Integer pageNumber);
 
     //    отображать список объявлений текущего пользователя постранично с возможностью
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
-    List<Advertisement> getMyProfileAds(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+    List<Advertisement> getMyProfileAds(BigInteger profileId, Integer pageNumber);
 
 
     //    Система должна позволять отсортировать список объявлений по следующим правилам:
