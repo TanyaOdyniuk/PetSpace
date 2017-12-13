@@ -1,8 +1,9 @@
 package com.netcracker.dao.manager;
 
-import com.netcracker.dao.CustomQueryBuilder;
+import com.netcracker.dao.manager.query.QueryBuilder;
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.manager.query.Query;
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import javafx.util.Pair;
 import oracle.jdbc.OracleTypes;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -16,7 +17,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
@@ -24,9 +24,9 @@ import java.sql.Date;
 import java.util.*;
 
 public class EntityManager {
-
+    @Autowired
+    private QueryBuilder queryBuilder;
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcCall jdbcCall;
 
     @Autowired
     public EntityManager(DataSource dataSource) {
@@ -36,29 +36,29 @@ public class EntityManager {
 
     @Transactional
     public Entity create(Entity entity) {
-        Map<String, Object> result = executeObjectJdbcCall(entity, jdbcCall, 0, null);
+        Map<String, Object> result = executeObjectJdbcCall(entity, 0, null);
         entity.setObjectId(((BigDecimal) result.get("p_OBJECT_ID")).toBigInteger());
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                executeAttributeJdbcCall(entity, entry, jdbcCall, 0);
+                executeAttributeJdbcCall(entity, entry,0);
             }
         }
         for (Map.Entry entry : entity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                executeObjRefJdbcCall(entity, entry, jdbcCall, 0);
+                executeObjRefJdbcCall(entity, entry, 0);
             }
         }
         return entity;
     }
 
     public void update(Entity entity) {
-        executeObjectJdbcCall(entity, jdbcCall, 0, null);
+        executeObjectJdbcCall(entity,0, null);
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
-            executeAttributeJdbcCall(entity, entry, jdbcCall, 0);
+            executeAttributeJdbcCall(entity, entry,0);
         }
         for (Map.Entry entry : entity.getReferences().entrySet()) {
             if (entry.getValue() != null && !(entry.getValue().toString().equals("-1"))) {
-                executeObjRefJdbcCall(entity, entry, jdbcCall, 0);
+                executeObjRefJdbcCall(entity, entry, 0);
             }
         }
     }
@@ -66,7 +66,7 @@ public class EntityManager {
     public void delete(BigInteger objectId, Integer forceDelete) {
         Entity temp = new Entity();
         temp.setObjectId(objectId);
-        executeObjectJdbcCall(temp, jdbcCall, 1, forceDelete);
+        executeObjectJdbcCall(temp, 1, forceDelete);
     }
 
     private RowMapper<Entity> rowMapper = new RowMapper<Entity>() {
@@ -140,9 +140,10 @@ public class EntityManager {
         return reference;
     }
 
-    public List<Entity> getAll(BigInteger objectTypeId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+    public List<Entity> getAll(BigInteger objectTypeId, QueryDescriptor queryDescriptor) {
+        queryDescriptor.setInnerQuery(Query.SELECT_FROM_OBJECTS);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                CustomQueryBuilder.build(isPaging, Query.SELECT_FROM_OBJECTS, pagingDesc, sortingDesc),
+                queryBuilder.build(queryDescriptor),
                                                         new Object[]{objectTypeId});
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
@@ -153,11 +154,10 @@ public class EntityManager {
         return entityList;
     }
 
-    public List<Entity> getBySQL(String sqlQuery, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+    public List<Entity> getBySQL(String sqlQuery, QueryDescriptor queryDescriptor) {
+        queryDescriptor.setInnerQuery(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )"));
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                CustomQueryBuilder.build(isPaging,
-                Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )"),
-                        pagingDesc, sortingDesc));
+                queryBuilder.build(queryDescriptor));
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {
@@ -167,18 +167,18 @@ public class EntityManager {
         return entityList;
     }
     public int getAllCount(BigInteger objectTypeId){
-        return jdbcTemplate.queryForObject(CustomQueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS),
+        return jdbcTemplate.queryForObject(QueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS),
                 (resultSet, i) -> { return resultSet.getInt("c"); },
                 objectTypeId);
     }
 
     public int getBySqlCount(String sqlQuery){
-        return jdbcTemplate.queryForObject(CustomQueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )")),
+        return jdbcTemplate.queryForObject(QueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )")),
                 (resultSet, i) -> {
                     return resultSet.getInt("c"); });
     }
-    private Map<String, Object> executeObjectJdbcCall(Entity entity, SimpleJdbcCall jdbcCall, int delete, Integer forceDel) {
-        jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+    private Map<String, Object> executeObjectJdbcCall(Entity entity, int delete, Integer forceDel) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(
                 new SqlInOutParameter("p_OBJECT_ID", OracleTypes.NUMBER),
                 new SqlParameter("p_PARENT_ID", OracleTypes.NUMBER),
@@ -199,8 +199,8 @@ public class EntityManager {
         return jdbcCall.execute(in);
     }
 
-    private Map<String, Object> executeAttributeJdbcCall(Entity entity, Map.Entry entry, SimpleJdbcCall jdbcCall, int delete) {
-        jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+    private Map<String, Object> executeAttributeJdbcCall(Entity entity, Map.Entry entry, int delete) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         Map<String, Object> inParam = new HashMap<>();
         inParam.put("P_OBJECT_ID", entity.getObjectId());
         inParam.put("P_ATTR_ID", ((Pair) entry.getKey()).getKey());
@@ -235,8 +235,8 @@ public class EntityManager {
         return jdbcCall.execute(in);
     }
 
-    private Map<String, Object> executeObjRefJdbcCall(Entity entity, Map.Entry entry, SimpleJdbcCall jdbcCall, int delete) {
-        jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+    private Map<String, Object> executeObjRefJdbcCall(Entity entity, Map.Entry entry, int delete) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         Map<String, Object> inParam = new HashMap<>();
         inParam.put("P_OBJECT_ID", entry.getValue());
         inParam.put("P_ATTRTYPE_ID", ((Pair) entry.getKey()).getKey());

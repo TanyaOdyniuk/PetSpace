@@ -18,6 +18,6 @@ public class SpeciesDataController {
 
     @GetMapping
     public List<PetSpecies> getAllSpecies() {
-        return petProfileService.getAllSpecies(false, null, null);
+        return petProfileService.getAllSpecies();
     }
 }

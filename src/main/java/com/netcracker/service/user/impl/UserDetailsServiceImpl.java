@@ -1,6 +1,7 @@
 package com.netcracker.service.user.impl;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.dao.managerservice.EntityManagerService;
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UsersProfileConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 public class UserDetailsServiceImpl {
 
     @Autowired
-    private ManagerAPI managerAPI;
+    private EntityManagerService entityManagerService;
 
     public boolean validateUserExistence(List<User> users, String login) {
         boolean isInDB = true;
@@ -42,12 +43,11 @@ public class UserDetailsServiceImpl {
                 "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
                 "AND attr.attrtype_id = " + UsersProfileConstant.USER_PASSWORD + " " +
                 "AND attr.value = '" + password + "'";
-        List<User> userList = managerAPI.getObjectsBySQL(query, User.class, false, null, null);
+        List<User> userList = entityManagerService.getObjectsBySQL(query, User.class, new QueryDescriptor());
         if (userList.isEmpty()) {
             return null;
         }
-        User user = userList.get(0);
-        return user;
+        return userList.get(0);
     }
 
     public User loadUserByUsername(String username) {
@@ -58,7 +58,7 @@ public class UserDetailsServiceImpl {
                 "and obj.object_type_id = 1\n" +
                 "and atr.attrtype_id = 1\n" +
                 "AND atr.value = '" + username + "'";
-        List<User> userList = managerAPI.getObjectsBySQL(query, User.class, false, null, null);
+        List<User> userList = entityManagerService.getObjectsBySQL(query, User.class, new QueryDescriptor());
         if (userList.isEmpty()) {
             return null;
         }
@@ -66,6 +66,6 @@ public class UserDetailsServiceImpl {
     }
 
     public List<User> getUsers() {
-        return managerAPI.getAll(BigInteger.valueOf(1), User.class, false, null, null);
+        return entityManagerService.getAll(BigInteger.valueOf(1), User.class, new QueryDescriptor());
     }
 }

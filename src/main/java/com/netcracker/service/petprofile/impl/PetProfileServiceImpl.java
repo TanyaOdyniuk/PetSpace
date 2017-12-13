@@ -1,30 +1,28 @@
 package com.netcracker.service.petprofile.impl;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.dao.managerservice.EntityManagerService;
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PetProfileServiceImpl implements PetProfileService {
 
     @Autowired
-    ManagerAPI managerApi;
+    EntityManagerService entityManagerService;
 
     @Override
     public Pet createPetProfile(Pet pet) {
-        return managerApi.create(pet);
+        return entityManagerService.create(pet);
     }
 
     @Override
@@ -34,12 +32,12 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public void editProfile(Profile profile) {
-        managerApi.update(profile);
+        entityManagerService.update(profile);
     }
 
     @Override
     public void deleteProfile(BigInteger profileId) {
-        managerApi.delete(profileId, 0);
+        entityManagerService.delete(profileId, 0);
     }
 
     @Override
@@ -54,28 +52,28 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public Profile getOwner(BigInteger ownerId){
-        return managerApi.getById(ownerId, Profile.class);
+        return entityManagerService.getById(ownerId, Profile.class);
     }
 
     @Override
     public Pet getPetById(BigInteger petId){
-        return managerApi.getById(petId, Pet.class);
+        return entityManagerService.getById(petId, Pet.class);
     }
 
     @Override
-    public List<Pet> getAllPets(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
-        return managerApi.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, isPaging, pagingDesc, sortingDesc);
+    public List<Pet> getAllPets() {
+        return entityManagerService.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, new QueryDescriptor());
     }
 
     @Override
-    public List<Pet> getAllProfilePets(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+    public List<Pet> getAllProfilePets(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE reference = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
-        return managerApi.getObjectsBySQL(sqlQuery, Pet.class, isPaging, pagingDesc, sortingDesc);
+        return entityManagerService.getObjectsBySQL(sqlQuery, Pet.class, new QueryDescriptor());
     }
 
     @Override
-    public List<PetSpecies> getAllSpecies(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
-        return managerApi.getAll(BigInteger.valueOf(PetConstant.PETSPEC_TYPE), PetSpecies.class, isPaging, pagingDesc, sortingDesc);
+    public List<PetSpecies> getAllSpecies() {
+        return entityManagerService.getAll(BigInteger.valueOf(PetConstant.PETSPEC_TYPE), PetSpecies.class, new QueryDescriptor());
     }
 }
