@@ -1,4 +1,4 @@
-package com.netcracker.service.autorization;
+package com.netcracker.service.authorization;
 
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;

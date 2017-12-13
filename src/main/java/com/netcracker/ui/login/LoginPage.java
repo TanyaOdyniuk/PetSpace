@@ -3,7 +3,7 @@ package com.netcracker.ui.login;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
-import com.netcracker.service.autorization.AuthorizationService;
+import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;

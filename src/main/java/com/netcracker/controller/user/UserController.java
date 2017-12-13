@@ -1,7 +1,6 @@
 package com.netcracker.controller.user;
 
 import com.netcracker.error.exceptions.UserNotValidException;
-import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
@@ -26,7 +25,7 @@ public class UserController {
 
 
     @GetMapping
-    public User getCurrentProfile() {
+    public User getCurrentUser() {
         String login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetailsService.loadUserByUsername(login);
     }

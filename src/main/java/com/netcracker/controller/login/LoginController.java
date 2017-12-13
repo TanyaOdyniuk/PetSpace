@@ -1,7 +1,7 @@
 package com.netcracker.controller.login;
 
 import com.netcracker.model.user.User;
-import com.netcracker.service.autorization.AuthorizationService;
+import com.netcracker.service.authorization.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;
