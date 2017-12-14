@@ -2,6 +2,7 @@ package com.netcracker.ui.pet;
 
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
@@ -25,10 +26,12 @@ import java.util.List;
 public class PetPageUI extends VerticalLayout {
 
     private BigInteger petId;
+    private PetSpecies petSpecies;
 
     @Autowired
     public PetPageUI(BigInteger petId) {
         this.petId = petId;
+        this.petSpecies = getSpecies();
         setSizeFull();
         setSpacing(true);
         Pet pet = getPet(petId);
@@ -93,7 +96,7 @@ public class PetPageUI extends VerticalLayout {
         Label petName = PageElements.createLabel(5, pet.getPetName());
 
         Label petSpeciesSign = PageElements.createGrayLabel("Вид");
-        Label petSpecies = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecies().getSpeciesName());
+        Label petSpecies = PageElements.createStandartLabel(PageElements.htmlTabulation + this.petSpecies.getSpeciesName());
 
         Label petBreedSign = PageElements.createGrayLabel("Порода");
         Label petBreed = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetBreed());
@@ -157,6 +160,13 @@ public class PetPageUI extends VerticalLayout {
         Pet pet = CustomRestTemplate.getInstance().customGetForObject(
                 "/pet/" + petId, Pet.class);
         return pet;
+    }
+
+    private PetSpecies getSpecies(){
+        PetSpecies species =
+                CustomRestTemplate.getInstance().customGetForObject(
+                        "/pet/" + petId + "/species" , PetSpecies.class);
+        return species;
     }
 
 

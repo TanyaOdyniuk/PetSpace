@@ -46,6 +46,12 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
+    public PetSpecies getConcretePetSpecies(BigInteger petId) {
+        PetSpecies petSpecies = ((Pet)entityManagerService.getById(petId, Pet.class)).getPetSpecies();
+        return entityManagerService.getById(petSpecies.getObjectId(), PetSpecies.class);
+    }
+
+    @Override
     public Date ageCalculation(Pet pet) {
         return null;
     }
