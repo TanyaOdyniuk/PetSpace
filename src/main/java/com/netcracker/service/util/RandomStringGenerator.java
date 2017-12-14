@@ -12,7 +12,7 @@ public class RandomStringGenerator {
     private final String nums = "1234567890";
     private final String alphanum = alphaUpperCase + alphaLowerCase + nums;
     private final Random random = new Random();
-    private char buf[];
+    private char buf[] = new char[8];
     private char symbols[] = alphanum.toCharArray();
 
     public String nextString() {

@@ -11,6 +11,8 @@ import com.netcracker.ui.login.LoginPage;
 import com.vaadin.ui.Notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +32,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
     EntityManagerService entityManagerService;
 
     @Override
@@ -38,13 +41,18 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public String passwordRecovery(String email) {
+    public User passwordRecovery(String email) {
         User user = userDetailsService.loadUserByUsername(email);
-        if(user == null)
-        {
+        if (user == null) {
             return null;
+        } else {
+            user.setPassword(newPassword.nextString());
+            entityManagerService.update(user);
+            ApplicationContext context = new ClassPathXmlApplicationContext("SpringMail.xml");
+            emailService = (EmailService) context.getBean("mailMail");
+            emailService.sendMail("PetSpaceInfo@gmail.com", "levil133@gmail.com", "Your new password MATE", "Your new password is: " + user.getPassword());
+            return user;
         }
-        return user.getLogin();
     }
 
 
