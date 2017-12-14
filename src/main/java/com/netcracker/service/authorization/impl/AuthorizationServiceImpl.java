@@ -1,9 +1,12 @@
 package com.netcracker.service.authorization.impl;
 
+import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import com.netcracker.service.util.EmailService;
+import com.netcracker.service.util.RandomStringGenerator;
 import com.netcracker.ui.login.LoginPage;
 import com.vaadin.ui.Notification;
 
@@ -18,9 +21,16 @@ import java.util.Collection;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    RandomStringGenerator newPassword;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    EntityManagerService entityManagerService;
 
     @Override
     public Profile checkCredentials(String enteredPassword, String email) {
@@ -29,7 +39,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public String passwordRecovery(String email) {
-        return null;
+        User user = userDetailsService.loadUserByUsername(email);
+        if(user == null)
+        {
+            return null;
+        }
+        return user.getLogin();
     }
 
 

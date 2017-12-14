@@ -25,7 +25,9 @@ public class CustomRestTemplate extends RestTemplate {
         }
         return localInstance;
     }
-
+    public <T> T customPostForObject(String url, Object request, Class<T> responseType) throws RestClientException {
+        return postForObject(getURL() + url, request, responseType);
+    }
     public <T> T customGetForObject(String url, Class<T> responseType) throws RestClientException {
         return getForObject(getURL() + url, responseType);
     }

@@ -1,27 +1,23 @@
 package com.netcracker.ui.login;
 
 import com.netcracker.error.ErrorMessage;
-import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
 import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 @Theme("valo")
@@ -130,17 +126,52 @@ public class LoginPage extends UI {
         return contentLayout;
     }
 
-    private VerticalLayout genForgetPasswordLink(){
+    private Window genPasswordRecoveryWindow() {
+        Window passWindow = new Window("Recover your password");
+        VerticalLayout windowContent = new VerticalLayout();
+        TextField email = new TextField("Your email:");
+        Button okButton = new Button("Ok");
+
+        windowContent.addComponent(email);
+        windowContent.addComponent(okButton);
+
+        okButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                if (email.getValue().equals("")) {
+                    Notification.show("Enter your email PLZ");
+                } else {
+                    authorizationService.passwordRecovery(emailField.getValue());
+                    passWindow.close();
+                }
+            }
+        });
+        passWindow.setContent(windowContent);
+        passWindow.center();
+        passWindow.setClosable(false);
+        passWindow.setResizable(false);
+        passWindow.setResponsive(false);
+        passWindow.setDraggable(false);
+        passWindow.setWindowMode(WindowMode.NORMAL);
+        return passWindow;
+    }
+
+    private VerticalLayout genForgetPasswordLink() {
         VerticalLayout layoutContent = new VerticalLayout();
         layoutContent.setMargin(false);
         layoutContent.setSpacing(false);
         layoutContent.setSizeFull();
-        Link logoLink = new Link("Forgot your password?", new ExternalResource("/passwordRecovery"));
-        logoLink.setIcon(VaadinIcons.COGS);
-        logoLink.setCaptionAsHtml(true);
-
-        layoutContent.addComponent(logoLink);
-        layoutContent.setComponentAlignment(logoLink, Alignment.BOTTOM_CENTER);
+        Button forgetPass = new Button("I forgot my password");
+        forgetPass.setStyleName(ValoTheme.BUTTON_LINK);
+        forgetPass.setIcon(VaadinIcons.COGS);
+        layoutContent.addComponent(forgetPass);
+        layoutContent.setComponentAlignment(forgetPass, Alignment.BOTTOM_CENTER);
+        forgetPass.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                addWindow(genPasswordRecoveryWindow());
+            }
+        });
         return layoutContent;
     }
 }

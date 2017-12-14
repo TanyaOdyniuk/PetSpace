@@ -19,7 +19,7 @@ public interface BulletinBoardService {
 //    выбора количества объявлений на  странице, отсортировав их в установленном порядке
     List<Advertisement> getMyProfileAds(BigInteger profileId, Integer pageNumber);
 
-
+    List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories);
     //    Система должна позволять отсортировать список объявлений по следующим правилам:
 //            1. Объявления в статусе VIP всегда находятся выше остальных.
     List<Advertisement> sortAds(List<Advertisement> listAds);

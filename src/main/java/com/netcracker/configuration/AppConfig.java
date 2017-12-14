@@ -37,7 +37,7 @@ public class AppConfig {
     }
 
     @Bean
-    public EntityManagerService getManagerAPI(){
+    public EntityManagerService getEntityManagerService(){
         return new EntityManagerService(getEntityManager());
     }
 }
