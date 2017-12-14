@@ -3,7 +3,7 @@ package com.netcracker.model.request;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.Status;
+import com.netcracker.model.status.Status;
 import com.netcracker.model.user.Profile;
 
 @ObjectType(FriendRequestConstant.REQ_TYPE)
