@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class AdvertisementTest {
 
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);//TestConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         EntityManagerService entityManagerService = context.getBean(EntityManagerService.class);
         new AdvertisementTest().addAd(entityManagerService);
     }

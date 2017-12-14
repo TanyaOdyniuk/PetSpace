@@ -72,7 +72,7 @@ public class EntityManagerService {
     }
 
     public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, QueryDescriptor queryDescriptor/*, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
-        List<Entity> entities = manager.getAll(objectTypeId, queryDescriptor/*isPaging, pagingDesc, sortingDesc*/);
+        List<Entity> entities = manager.getAll(objectTypeId, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
             T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
@@ -81,7 +81,7 @@ public class EntityManagerService {
         return baseEntities;
     }
     public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, QueryDescriptor queryDescriptor /*boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
-        List<Entity> entities = manager.getBySQL(sqlQuery, queryDescriptor/*isPaging, pagingDesc, sortingDesc*/);
+        List<Entity> entities = manager.getBySQL(sqlQuery, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
             T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
@@ -254,7 +254,7 @@ public class EntityManagerService {
 
             Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
             Map<Pair<BigInteger, Integer>, BigInteger> refMap = entity.getReferences();
-            if (!attrMap.isEmpty() && !refMap.isEmpty()) {
+            if (!attrMap.isEmpty() || !refMap.isEmpty()) {
                 Field[] fields = clazz.getDeclaredFields();
                 BigInteger attrId;
                 for (Field field : fields) {

@@ -43,7 +43,41 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 +AdvertisementConstant.AD_AUTHOR +
                 " and OBJECT_ID = " + profileId;
         return pageCounterService.getPageCount(myAdPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+    }
 
+    public List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories){
+        String additionalParam;
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_CATEGORY +
+                " and REFERENCE ";
+        if (categories.length == 1) {
+            additionalParam = " = " + categories[0].getObjectId();
+        } else {
+            StringBuilder stringBuilder = new StringBuilder("in ( ");
+            for (Category c : categories) {
+                stringBuilder.append(c.getObjectId()).append(",");
+            }
+            stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
+            stringBuilder.append(" )");
+            additionalParam = stringBuilder.toString();
+        }
+        getAdsQuery += additionalParam;
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
+        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
+        for (Advertisement ad : advertisements) {
+            Category category = ad.getAdCategory();
+            if (category != null) {
+                ad.setAdCategory(entityManagerService.getById(category.getObjectId(), Category.class));
+            }
+            Profile author = ad.getAdAuthor();
+            if (author != null) {
+                ad.setAdAuthor(entityManagerService.getById(author.getObjectId(), Profile.class));
+            }
+        }
+        return advertisements;
     }
 
     @Override
@@ -54,8 +88,8 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
         List<Advertisement> advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
         for (Advertisement ad : advertisements) {
-            Profile author = ad.getAdAuthor();
             Category category = ad.getAdCategory();
+            Profile author = ad.getAdAuthor();
             if (author != null) {
                 ad.setAdAuthor(entityManagerService.getById(author.getObjectId(), Profile.class));
             }
