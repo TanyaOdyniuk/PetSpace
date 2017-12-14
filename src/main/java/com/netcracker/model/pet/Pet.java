@@ -50,6 +50,17 @@ public class Pet extends BaseEntity {
         super(name);
     }
 
+    public Pet(String petAvatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed, Double petWeight, Double petHeight, String petSpecificParam) {
+        this.petAvatar = petAvatar;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.petSpecies = petSpecies;
+        this.petBreed = petBreed;
+        this.petWeight = petWeight;
+        this.petHeight = petHeight;
+        this.petSpecificParam = petSpecificParam;
+    }
+
     public Pet(String name, String description) {
         super(name, description);
     }

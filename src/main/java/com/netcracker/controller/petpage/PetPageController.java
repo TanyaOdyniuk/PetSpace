@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
 
 @RestController
-@RequestMapping("/pet/{id}")
+@RequestMapping("/pet")
 public class PetPageController {
 
     @Autowired
     PetProfileService petProfileService;
 
-    @GetMapping
+    @GetMapping("/{id}")
     public Pet getPetById(@PathVariable("id") BigInteger id){
         return petProfileService.getPetById(id);
     }
