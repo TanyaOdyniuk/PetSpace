@@ -1,6 +1,7 @@
 package com.netcracker.ui;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -32,8 +33,13 @@ public class PageElements {
         clickedLabel.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         return clickedLabel;
     }
-    public static Button createBlueClickedLabel(String text) {
-        Button clickedLabel = new Button(text);
+    public static Button createBlueClickedLabel(String text, Resource icon) {
+        Button clickedLabel;
+        if(icon != null){
+            clickedLabel = new Button(text, icon);
+        }else{
+            clickedLabel = new Button(text);
+        }
         clickedLabel.addStyleName(ValoTheme.BUTTON_LINK);
         //clickedLabel.setDisableOnClick(true);
         return clickedLabel;

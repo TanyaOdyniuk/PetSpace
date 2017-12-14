@@ -1,23 +1,22 @@
 package com.netcracker.service.media.impl;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.dao.managerservice.EntityManagerService;
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.media.MediaService;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MediaServiceImpl implements MediaService {
     @Autowired
-    ManagerAPI managerAPI;
+    EntityManagerService entityManagerService;
 
     @Override
     public PhotoRecord imageRotation(Profile profile) {
@@ -25,17 +24,15 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<PhotoRecord> getImagesGallery(BigInteger albumId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+    public List<PhotoRecord> getImagesGallery(BigInteger albumId) {
         String getRecordsQuery =
                 "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 304 AND REFERENCE = " + albumId;
-        List<PhotoRecord> albumsRecords = managerAPI.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, isPaging, pagingDesc, sortingDesc);
-        return albumsRecords;
+        return entityManagerService.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, new QueryDescriptor());
     }
 
     @Override
     public PhotoAlbum getAlbum(BigInteger albumId) {
-        PhotoAlbum photoAlbum = managerAPI.getById(albumId, PhotoAlbum.class);
-        return photoAlbum;
+        return entityManagerService.getById(albumId, PhotoAlbum.class);
     }
 
     @Override

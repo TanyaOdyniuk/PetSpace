@@ -1,16 +1,13 @@
 package com.netcracker.controller.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.category.Category;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -31,11 +28,16 @@ public class BulletinBoardController {
 
     @GetMapping("/{pageNumber}")
     public List<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber) {
-        return bulletinBoardService.getProfileAds(true, new Pair<>(pageNumber, 1), null); //temp values
+        return bulletinBoardService.getProfileAds(pageNumber);
     }
 
     @GetMapping("/myAds/{id}/{pageNumber}")
     public List<Advertisement> getMyProfileAds(@PathVariable("id") BigInteger profileId, @PathVariable("pageNumber") Integer pageNumber) {
-        return bulletinBoardService.getMyProfileAds(profileId, true, new Pair<>(pageNumber, 1), null); // temp values
+        return bulletinBoardService.getMyProfileAds(profileId, pageNumber);
+    }
+
+    @PostMapping("/category/{pageNumber}")
+    public List<Advertisement> getAllAdAfterCatFilter(@PathVariable("pageNumber") Integer pageNumber, @RequestBody Category[] categories){
+        return bulletinBoardService.getAllAdAfterCatFilter(pageNumber, categories);
     }
 }

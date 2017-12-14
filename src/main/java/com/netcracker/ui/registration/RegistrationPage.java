@@ -1,12 +1,10 @@
 package com.netcracker.ui.registration;
 
-import com.netcracker.dao.managerapi.ManagerAPI;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
 import com.netcracker.service.autorization.AuthorizationService;
-import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
@@ -20,8 +18,6 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;

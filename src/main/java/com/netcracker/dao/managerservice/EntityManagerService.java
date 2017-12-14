@@ -1,4 +1,4 @@
-package com.netcracker.dao.managerapi;
+package com.netcracker.dao.managerservice;
 
 import com.netcracker.dao.Entity;
 import com.netcracker.dao.annotation.Attribute;
@@ -6,6 +6,7 @@ import com.netcracker.dao.annotation.Boolean;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.dao.manager.EntityManager;
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.BaseEntity;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class ManagerAPI {
+public class EntityManagerService {
 
     private EntityManager manager;
 
     @Autowired
-    public ManagerAPI(EntityManager manager) {
+    public EntityManagerService(EntityManager manager) {
         this.manager = manager;
     }
 
@@ -70,8 +71,8 @@ public class ManagerAPI {
 
     }
 
-    public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
-        List<Entity> entities = manager.getAll(objectTypeId, isPaging, pagingDesc, sortingDesc);
+    public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, QueryDescriptor queryDescriptor/*, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
+        List<Entity> entities = manager.getAll(objectTypeId, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
             T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
@@ -79,8 +80,8 @@ public class ManagerAPI {
         }
         return baseEntities;
     }
-    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
-        List<Entity> entities = manager.getBySQL(sqlQuery, isPaging, pagingDesc, sortingDesc);
+    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, QueryDescriptor queryDescriptor /*boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
+        List<Entity> entities = manager.getBySQL(sqlQuery, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
             T baseEntity = new Converter().convertToBaseEntity(entity, baseEntityClass);
@@ -253,7 +254,7 @@ public class ManagerAPI {
 
             Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
             Map<Pair<BigInteger, Integer>, BigInteger> refMap = entity.getReferences();
-            if (!attrMap.isEmpty() && !refMap.isEmpty()) {
+            if (!attrMap.isEmpty() || !refMap.isEmpty()) {
                 Field[] fields = clazz.getDeclaredFields();
                 BigInteger attrId;
                 for (Field field : fields) {
@@ -348,11 +349,7 @@ public class ManagerAPI {
                             try {
                                 Method m = fieldType.getMethod("valueOf", String.class);
                                 value = m.invoke(fieldType, attribute);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            } catch (NoSuchMethodException e) {
+                            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                                 e.printStackTrace();
                             }
                         }

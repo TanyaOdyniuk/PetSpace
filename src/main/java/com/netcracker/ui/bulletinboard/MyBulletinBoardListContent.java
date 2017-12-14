@@ -3,9 +3,15 @@ package com.netcracker.ui.bulletinboard;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubPagingBar;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.netcracker.ui.util.PageNumber;
+import com.vaadin.data.BinderValidationStatus;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.Resource;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -23,15 +29,12 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     private final Grid<Advertisement> grid;
     private final Button newAdBtn;
     private final BigInteger profileId;
-    private final HorizontalLayout pagingLayout;
-    private final Panel pagingPanel;
+    private StubPagingBar pagingLayout;
     @Autowired
     public MyBulletinBoardListContent(BigInteger profileId) {
         super();
         setSpacing(false);
         setWidth("100%");
-        pagingPanel = new Panel();
-        pagingLayout = new HorizontalLayout();
         grid = new Grid<>();
         grid.setSizeFull();
         this.profileId = profileId;
@@ -54,8 +57,8 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         innerLayout.setExpandRatio(innerLayout.getComponent(0), 2.0f);
         innerLayout.setExpandRatio(innerLayout.getComponent(1), 15.0f);
         addComponent(innerLayout);
-        addComponent(pagingPanel);
         getPagingLayout();
+        addComponent(pagingLayout);
     }
 
     private void myAdvertisementList(int pageNumber) {
@@ -72,24 +75,59 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     }
 
     private void getPagingLayout() {
-        pagingLayout.removeAllComponents();
         int pageCount = getPageCount();
         if (pageCount > 1) {
-            pagingLayout.setSpacing(false);
-            pagingPanel.setWidth("100%");
-            for (int i = 1; i < pageCount; i++) {
-                Button pageRef = PageElements.createBlueClickedLabel(String.valueOf(i));
-                pageRef.setData(i);
-                pageRef.addClickListener(new AbstractClickListener() {
-                    @Override
-                    public void buttonClickListener() {
-                        myAdvertisementList((Integer) pageRef.getData());
-                        getPagingLayout();
+            pagingLayout = new StubPagingBar(pageCount);
+
+            ((Button)pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    myAdvertisementList((Integer) ((Button)pagingLayout.getComponent(0)).getData());
+                    ((TextField)pagingLayout.getComponent(3)).setValue(String.valueOf(1));
+                    pagingLayout.currentPageNumber = 1;
+                }
+            });
+            ((Button)pagingLayout.getComponent(6)).addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    myAdvertisementList((Integer) ((Button)pagingLayout.getComponent(6)).getData());
+                    pagingLayout.currentPageNumber = pageCount;
+                    ((TextField)pagingLayout.getComponent(3)).setValue(String.valueOf(pageCount));
+                }
+            });
+            ((Button)pagingLayout.getComponent(1)).addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    --pagingLayout.currentPageNumber;
+                    if (pagingLayout.currentPageNumber < 1) {
+                        pagingLayout.currentPageNumber = pageCount;
                     }
-                });
-                pagingLayout.addComponent(pageRef);
-            }
-            pagingPanel.setContent(pagingLayout);
+                    myAdvertisementList(pagingLayout.currentPageNumber);
+                    ((TextField)pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
+                }
+            });
+            ((Button)pagingLayout.getComponent(5)).addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    ++pagingLayout.currentPageNumber;
+                    if (pagingLayout.currentPageNumber > pageCount) {
+                        pagingLayout.currentPageNumber = 1;
+                    }
+                    myAdvertisementList(pagingLayout.currentPageNumber);
+                    ((TextField)pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
+                }
+            });
+
+            ((TextField)pagingLayout.getComponent(3)).addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+                @Override
+                public void handleAction(Object o, Object o1) {
+                    BinderValidationStatus<PageNumber> status = pagingLayout.pageNumberFieldBinder.validate();
+                    if (!status.hasErrors()) {
+                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
+                        myAdvertisementList(pagingLayout.currentPageNumber);
+                    }
+                }
+            });
         }
     }
 }
