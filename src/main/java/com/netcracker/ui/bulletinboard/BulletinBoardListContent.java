@@ -2,7 +2,6 @@ package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
-import com.netcracker.model.user.User;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.StubPagingBar;
 import com.netcracker.ui.StubVaadinUI;
@@ -20,11 +19,10 @@ import org.springframework.http.HttpEntity;
 import java.util.Arrays;
 import java.util.List;
 
-
 @SpringComponent
 @UIScope
 public class BulletinBoardListContent extends VerticalLayout {
-    private final HorizontalLayout mailLayout;
+    private final HorizontalLayout mainLayout;
     private VerticalLayout categoryFilterLayout;
     private VerticalLayout gridPagingLayout;
     private Grid<Advertisement> grid;
@@ -35,18 +33,20 @@ public class BulletinBoardListContent extends VerticalLayout {
     @Autowired
     public BulletinBoardListContent() {
         super();
-        mailLayout = new HorizontalLayout();
+        mainLayout = new HorizontalLayout();
         gridPagingLayout = new VerticalLayout();
         getGrid();
+        selectedCategories = new Category[0];
         getPagingLayout();
         gridPagingLayout.addComponent(grid);
         gridPagingLayout.addComponent(pagingLayout);
         getCategoryFilterLayout();
 
         advertisementList(1);
-        mailLayout.addComponent(categoryFilterLayout);
-        mailLayout.addComponent(gridPagingLayout);
-        addComponent(mailLayout);
+        mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
+        mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(1), 10.0f);
+        addComponent(mainLayout);
     }
 
     private void getGrid() {
@@ -74,7 +74,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         Button filter = new Button("Filter");
         Button selectAll = new Button("Select all");
         Button deselectAll = new Button("Deselect all");
-        categoryFilter = new CheckBoxGroup<>("My Selection");
+        categoryFilter = new CheckBoxGroup<>("Categories");
         List<Category> categories = getAllCategories();
         categoryFilter.setItems(categories);
         categoryFilter.setItemCaptionGenerator(Category::getCategoryName);
@@ -86,10 +86,12 @@ public class BulletinBoardListContent extends VerticalLayout {
                 }
             }
         });
+        selectAll.click();
         deselectAll.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 categoryFilter.deselectAll();
+                selectedCategories = new Category[0];
             }
         });
         selDeselButtonsLayout.addComponent(selectAll);
@@ -100,11 +102,11 @@ public class BulletinBoardListContent extends VerticalLayout {
         filter.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                if(categoryFilter.getSelectedItems().size() > 0){
+                if (categoryFilter.getSelectedItems().size() > 0) {
                     selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
                     categoryFilter.getSelectedItems().toArray(selectedCategories);
                     advertisementListAfterCatFilter(1);
-                    getPagingLayoutAfterCatFilter();
+                    getPagingLayout();
                 }
             }
         });
@@ -129,14 +131,28 @@ public class BulletinBoardListContent extends VerticalLayout {
     }
 
     private void getPagingLayout() {
-        int pageCount = getPageCount();
+        if(pagingLayout != null){
+            gridPagingLayout.removeComponent(pagingLayout);
+        }
+        int pageCount;
+        boolean isSelectedCategories = (selectedCategories.length == 0);
+        if (isSelectedCategories) {
+            pageCount = getPageCount();
+        } else {
+            pageCount = getPageCountAfterCatFilter();
+        }
         if (pageCount > 1) {
             pagingLayout = new StubPagingBar(pageCount);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    advertisementList((Integer) ((Button) pagingLayout.getComponent(0)).getData());
+                    Integer page = (Integer) ((Button) pagingLayout.getComponent(0)).getData();
+                    if (isSelectedCategories) {
+                        advertisementList(page);
+                    } else{
+                        advertisementListAfterCatFilter(page);
+                    }
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(1));
                     pagingLayout.currentPageNumber = 1;
                 }
@@ -144,7 +160,12 @@ public class BulletinBoardListContent extends VerticalLayout {
             ((Button) pagingLayout.getComponent(6)).addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    advertisementList((Integer) ((Button) pagingLayout.getComponent(6)).getData());
+                    Integer page = (Integer) ((Button) pagingLayout.getComponent(6)).getData();
+                    if (isSelectedCategories) {
+                        advertisementList(page);
+                    } else{
+                        advertisementListAfterCatFilter(page);
+                    }
                     pagingLayout.currentPageNumber = pageCount;
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pageCount));
                 }
@@ -156,7 +177,11 @@ public class BulletinBoardListContent extends VerticalLayout {
                     if (pagingLayout.currentPageNumber < 1) {
                         pagingLayout.currentPageNumber = pageCount;
                     }
-                    advertisementList(pagingLayout.currentPageNumber);
+                    if (isSelectedCategories) {
+                        advertisementList(pagingLayout.currentPageNumber);
+                    } else{
+                        advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
+                    }
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
                 }
             });
@@ -167,7 +192,11 @@ public class BulletinBoardListContent extends VerticalLayout {
                     if (pagingLayout.currentPageNumber > pageCount) {
                         pagingLayout.currentPageNumber = 1;
                     }
-                    advertisementList(pagingLayout.currentPageNumber);
+                    if (isSelectedCategories) {
+                        advertisementList(pagingLayout.currentPageNumber);
+                    } else{
+                        advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
+                    }
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
                 }
             });
@@ -178,10 +207,15 @@ public class BulletinBoardListContent extends VerticalLayout {
                     BinderValidationStatus<PageNumber> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
-                        advertisementList(pagingLayout.currentPageNumber);
+                        if (isSelectedCategories) {
+                            advertisementList(pagingLayout.currentPageNumber);
+                        } else{
+                            advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
+                        }
                     }
                 }
             });
+            gridPagingLayout.addComponent(pagingLayout);
         }
     }
 
@@ -197,64 +231,5 @@ public class BulletinBoardListContent extends VerticalLayout {
                 CustomRestTemplate.getInstance().customPostForObject(
                         "/bulletinboard/category/" + pageNumber, createRequest, Advertisement[].class));
         grid.setItems(ads);
-    }
-
-    private void getPagingLayoutAfterCatFilter() {
-        gridPagingLayout.removeComponent(pagingLayout);
-        int pageCount = getPageCountAfterCatFilter();
-        if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount);
-
-            ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    advertisementListAfterCatFilter((Integer) ((Button) pagingLayout.getComponent(0)).getData());
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(1));
-                    pagingLayout.currentPageNumber = 1;
-                }
-            });
-            ((Button) pagingLayout.getComponent(6)).addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    advertisementListAfterCatFilter((Integer) ((Button) pagingLayout.getComponent(6)).getData());
-                    pagingLayout.currentPageNumber = pageCount;
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pageCount));
-                }
-            });
-            ((Button) pagingLayout.getComponent(1)).addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    --pagingLayout.currentPageNumber;
-                    if (pagingLayout.currentPageNumber < 1) {
-                        pagingLayout.currentPageNumber = pageCount;
-                    }
-                    advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
-                }
-            });
-            ((Button) pagingLayout.getComponent(5)).addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    ++pagingLayout.currentPageNumber;
-                    if (pagingLayout.currentPageNumber > pageCount) {
-                        pagingLayout.currentPageNumber = 1;
-                    }
-                    advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
-                }
-            });
-
-            ((TextField) pagingLayout.getComponent(3)).addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
-                @Override
-                public void handleAction(Object o, Object o1) {
-                    BinderValidationStatus<PageNumber> status = pagingLayout.pageNumberFieldBinder.validate();
-                    if (!status.hasErrors()) {
-                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
-                        advertisementListAfterCatFilter(pagingLayout.currentPageNumber);
-                    }
-                }
-            });
-            gridPagingLayout.addComponent(pagingLayout);
-        }
     }
 }

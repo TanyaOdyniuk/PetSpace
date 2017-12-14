@@ -38,7 +38,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private Button addNewBtn;
 
-
     private final VerticalLayout mainLayout;
 
     private final HorizontalLayout primaryAreaLayout;

@@ -41,24 +41,24 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         newAdBtn = new Button("Add new advertisement", VaadinIcons.PLUS);
         newAdBtn.setHeight(30, Unit.PIXELS);
         Grid.Column topicColumn = grid.addColumn(ad ->
-                ad.getAdTopic()).setCaption("Topic");
+                ad.getAdTopic()).setCaption("Topic").setSortable(false);
         Grid.Column informationColumn = grid.addColumn(ad ->
-                ad.getAdBasicInfo()).setCaption("Basic Info");
+                ad.getAdBasicInfo()).setCaption("Basic Info").setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
-                ad.getAdDate()).setCaption("Date");
+                ad.getAdDate()).setCaption("Date").setSortable(false);
         Grid.Column statusColumn = grid.addColumn(ad ->
-                (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP");
+                (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setSortable(false);
         Grid.Column categoryColumn = grid.addColumn(ad ->
-                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category");
+                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setSortable(false);
         myAdvertisementList(1);
         grid.addItemClickListener(event ->((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
         innerLayout = new VerticalLayout();
         innerLayout.addComponentsAndExpand(newAdBtn, grid);
-        innerLayout.setExpandRatio(innerLayout.getComponent(0), 2.0f);
+        innerLayout.setExpandRatio(innerLayout.getComponent(0), 1.0f);
         innerLayout.setExpandRatio(innerLayout.getComponent(1), 15.0f);
-        addComponent(innerLayout);
         getPagingLayout();
-        addComponent(pagingLayout);
+        innerLayout.addComponent(pagingLayout);
+        addComponent(innerLayout);
     }
 
     private void myAdvertisementList(int pageNumber) {
