@@ -5,14 +5,13 @@ import com.netcracker.dao.annotation.Boolean;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.Status;
+import com.netcracker.model.status.Status;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.comment.AdvertisementComment;
 import com.netcracker.model.comment.CommentConstant;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 
-import javax.xml.ws.soap.Addressing;
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
