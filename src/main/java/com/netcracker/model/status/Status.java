@@ -1,8 +1,9 @@
-package com.netcracker.model;
+package com.netcracker.model.status;
 
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
+import com.netcracker.model.BaseEntity;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.group.Group;

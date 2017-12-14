@@ -2,7 +2,7 @@ package com.netcracker.service.managefriends.impl;
 
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.dao.manager.query.QueryDescriptor;
-import com.netcracker.model.StatusConstant;
+import com.netcracker.model.status.StatusConstant;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.request.FriendRequestConstant;
 import com.netcracker.model.user.Profile;
