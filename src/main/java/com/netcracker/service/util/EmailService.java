@@ -9,6 +9,7 @@ public class EmailService {
 
     private MailSender mailSender;
 
+
     public void setMailSender(MailSender sender){
         this.mailSender = sender;
     }

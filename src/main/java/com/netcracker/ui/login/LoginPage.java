@@ -1,9 +1,11 @@
 package com.netcracker.ui.login;
 
 import com.netcracker.error.ErrorMessage;
+import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
-import com.netcracker.service.autorization.AuthorizationService;
+import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
@@ -13,12 +15,17 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "loginform")
@@ -74,26 +81,23 @@ public class LoginPage extends UI {
             @Override
             public void buttonClickListener() {
                 try {
-                    Collection<GrantedAuthority> authorities = new ArrayList<>();
+                    List<UserAuthority> authorities = new ArrayList<>();
                     UserAuthority role = new UserAuthority();
                     role.setAuthority("ROLE_USER");
                     authorities.add(role);
-                    ArrayList<String> requestParams = new ArrayList<>();
-                    requestParams.add(emailField.getValue());
-                    requestParams.add(passwordField.getValue());
-                    for (GrantedAuthority authority : authorities) {
-                        requestParams.add(authority.getAuthority());
-                    }
-                    /*HttpEntity<ArrayList<String>> request = new HttpEntity<>(requestParams);
-                    //HttpHeaders headers = new HttpHeaders();
-                   // headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                    User user = CustomRestTemplate.getInstance()
-                            .customExchange("/loginform", HttpMethod.POST, request, User.class).getBody();
-                    if (user == null) {
-                        Notification.show("Wrong email or password!");
-                    } else {
-                        LoginPage.getCurrent().getPage().setLocation("/testpage");
-                    }*/
+
+                    User requestUser = new User();
+                    requestUser.setLogin(emailField.getValue());
+                    requestUser.setPassword(passwordField.getValue());
+                    requestUser.setUserAuthorities(authorities);
+
+//                    HttpEntity<User> request = new HttpEntity<>(requestUser);
+//                    User user = CustomRestTemplate.getInstance().customPostForObject("/loginform", request, User.class);
+//                    if (user == null) {
+//                        Notification.show("Wrong email or password!");
+//                    } else {
+//                        LoginPage.getCurrent().getPage().setLocation("/testpage");
+//                    }
 
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
@@ -141,7 +145,7 @@ public class LoginPage extends UI {
                 if (email.getValue().equals("")) {
                     Notification.show("Enter your email PLZ");
                 } else {
-                    authorizationService.passwordRecovery(emailField.getValue());
+                    authorizationService.passwordRecovery(email.getValue());
                     passWindow.close();
                 }
             }
