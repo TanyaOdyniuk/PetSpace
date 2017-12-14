@@ -30,7 +30,7 @@ public class UserController {
         return userDetailsService.loadUserByUsername(login);
     }
     @PostMapping
-    public User registrateUser(@RequestBody User user) {
+    public User registerUser(@RequestBody User user) {
         List<User> userList = userDetailsService.getUsers();
         if (!userDetailsService.validateUserExistence(userList, user.getLogin()))
             throw new UserNotValidException("User with email: " + user.getLogin() + " is already exist");
