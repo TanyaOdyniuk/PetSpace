@@ -100,10 +100,12 @@ public class BulletinBoardListContent extends VerticalLayout {
         filter.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
-                categoryFilter.getSelectedItems().toArray(selectedCategories);
-                advertisementListAfterCatFilter(1);
-                getPagingLayoutAfterCatFilter();
+                if(categoryFilter.getSelectedItems().size() > 0){
+                    selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
+                    categoryFilter.getSelectedItems().toArray(selectedCategories);
+                    advertisementListAfterCatFilter(1);
+                    getPagingLayoutAfterCatFilter();
+                }
             }
         });
     }
