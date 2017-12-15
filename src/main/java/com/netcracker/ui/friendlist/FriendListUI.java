@@ -15,19 +15,18 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class FriendListUI extends Panel{
-    private BigInteger profileId;
+public class FriendListUI extends VerticalLayout{
 
     @Autowired
     public FriendListUI(BigInteger profileId){
         super();
         setWidth("100%");
         setHeight("100%");
-        VerticalLayout friendRecordsLayout = new VerticalLayout();
         List<Profile> friendList = getProfileFriends(profileId);
         for (Profile friend: friendList) {
             HorizontalLayout friendRecord = new HorizontalLayout();
             VerticalLayout friendInfoLayout = new VerticalLayout();
+
             Image friendAvatar = new Image();
             friendAvatar.setHeight(250, Sizeable.Unit.PIXELS);
             friendAvatar.setWidth(250, Sizeable.Unit.PIXELS);
@@ -44,9 +43,8 @@ public class FriendListUI extends Panel{
             //INFO + AVATAR
             friendRecord.addComponents(friendAvatar, friendInfoLayout);
 
-            friendRecordsLayout.addComponents(friendRecord);
+            addComponents(friendRecord);
         }
-        setContent(friendRecordsLayout);
     }
 
 
