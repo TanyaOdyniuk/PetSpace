@@ -4,7 +4,6 @@ import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -39,5 +38,15 @@ public class BulletinBoardController {
     @PostMapping("/category/{pageNumber}")
     public List<Advertisement> getAllAdAfterCatFilter(@PathVariable("pageNumber") Integer pageNumber, @RequestBody Category[] categories){
         return bulletinBoardService.getAllAdAfterCatFilter(pageNumber, categories);
+    }
+
+    @PostMapping("/category/{pageNumber}/{id}")
+    public List<Advertisement> getAllAdAfterCatFilterFromProfile(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("id") Integer profileId, @RequestBody Category[] categories){
+        return bulletinBoardService.getAllAdAfterCatFilterFromProfile(pageNumber, profileId, categories);
+    }
+
+    @PostMapping("/add")
+    public Advertisement addAd(@RequestBody Advertisement ad){
+        return bulletinBoardService.addAd(ad);
     }
 }

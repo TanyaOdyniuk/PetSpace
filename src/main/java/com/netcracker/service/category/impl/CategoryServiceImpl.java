@@ -51,4 +51,31 @@ public class CategoryServiceImpl implements CategoryService {
         return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
     }
 
+    @Override
+    public int getPageCountAfterCatFilterForProfile(Category[] categories, Integer profileId) {
+        String additionalParam;
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        String getAdsQuery = "SELECT o1.OBJECT_ID as object_id " +
+                "FROM OBJREFERENCE o1, OBJREFERENCE o2 " +
+                "WHERE o1.ATTRTYPE_ID = " + AdvertisementConstant.AD_AUTHOR +
+                " and o1.REFERENCE = " + profileId +
+                " and o1.object_id = o2.OBJECT_ID" +
+                " and o2.ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_CATEGORY +
+                " and o2.REFERENCE ";
+        if (categories.length == 1) {
+            additionalParam = " = " + categories[0].getObjectId();
+        } else {
+            StringBuilder stringBuilder = new StringBuilder("in ( ");
+            for (Category c : categories) {
+                stringBuilder.append(c.getObjectId()).append(",");
+            }
+            stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
+            stringBuilder.append(" )");
+            additionalParam = stringBuilder.toString();
+        }
+        getAdsQuery += additionalParam;
+        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+    }
+
 }

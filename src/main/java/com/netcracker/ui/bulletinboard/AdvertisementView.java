@@ -18,14 +18,18 @@ public class AdvertisementView extends VerticalLayout {
         addComponent(new Button(ad.getAdDate().toString()));
         addComponent(new Button(ad.getAdTopic()));
         HorizontalLayout petSignsLayout = new HorizontalLayout();
-        petSignsLayout.addComponent(new Label("Характерные признаки: "));
-        for(String petSign : ad.getAdPetSigns()){
-            petSignsLayout.addComponent(new Button(petSign));
+        if(ad.getAdPetSigns() != null){
+            petSignsLayout.addComponent(new Label("Характерные признаки: "));
+            for(String petSign : ad.getAdPetSigns()){
+                petSignsLayout.addComponent(new Button(petSign));
+            }
         }
         addComponent(petSignsLayout);
         addComponent(new Button(String.valueOf(ad.isAdIsVip())));
         addComponent(new Button(ad.getAdBasicInfo()));
-        addComponent(new Link("Click to see last known location", new ExternalResource(ad.getAdLocation())));
+        if(ad.getAdLocation() != null){
+            addComponent(new Link("Click to see last known location", new ExternalResource(ad.getAdLocation())));
+        }
 
 
     }

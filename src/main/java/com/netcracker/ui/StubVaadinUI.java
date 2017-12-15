@@ -148,4 +148,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
+
+    public VerticalLayout getLeftPanel() {
+        return leftPanel;
+    }
 }
