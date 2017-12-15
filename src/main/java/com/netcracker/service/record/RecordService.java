@@ -15,4 +15,7 @@ public interface RecordService {
 
     //Получить профиль автора из записи на стене
     Profile getWallRecordAuthor(BigInteger wallRecordID);
+
+    //Создать запись на стене
+    StubWallRecord createPetProfile(StubWallRecord wallRecord);
 }

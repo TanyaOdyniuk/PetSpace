@@ -19,6 +19,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -191,16 +192,25 @@ public class ProfileView extends VerticalLayout {
             if (event.isPopupVisible()) {
                 newWallRecordLayout.removeAllComponents();
                 HorizontalLayout addWallRecordButtonsLayout = new HorizontalLayout();
-                Button addNotNullRecord = new Button("Add record", click ->
-                        addWallRecordPopupView.setPopupVisible(false));
+                TextArea wallRecordText = new TextArea();
+                Button addNotNullRecord = new Button("Add record");
+                addNotNullRecord.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        addNotNullRecord.setComponentError(null);
+                        createWallRecord(wallRecordText.getValue(), new java.sql.Date(new Date().getTime()));
+                        addWallRecordPopupView.setPopupVisible(false);
+                        Notification.show("Запись добавлена!");
+                    }
+                });
+
                 Button cancelAddingNewRecord = new Button("Cancel", click ->
                         addWallRecordPopupView.setPopupVisible(false));
                 addWallRecordButtonsLayout.addComponentsAndExpand(addNotNullRecord, cancelAddingNewRecord);
                 newWallRecordLayout.addComponentsAndExpand(
-                        new Label("Enter record text:"), new TextArea(), addWallRecordButtonsLayout);
+                        new Label("Enter record text:"), wallRecordText, addWallRecordButtonsLayout);
             }
         });
-
         wallHeaderLayout.addComponentsAndExpand(new Label("Records on " + profile.getProfileName() + "`s wall:"), addWallRecordPopupView);
         wallHeaderLayout.setComponentAlignment(addWallRecordPopupView, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
@@ -230,7 +240,7 @@ public class ProfileView extends VerticalLayout {
             recordLikesLayout.addComponents(likeRecordButton, recordLikeCount, commentRecordButton, recordCommentCount, showRecordCommentsButton);
 
             singleWallRecordLayout.addComponents(
-                    recordInfoLayout,new Label(currentWallRecord.getRecordText(), ContentMode.PREFORMATTED), recordLikesLayout);
+                    recordInfoLayout, new Label(currentWallRecord.getRecordText(), ContentMode.PREFORMATTED), recordLikesLayout);
             singleWallRecordPanel.setContent(singleWallRecordLayout);
             wallLayout.addComponents(singleWallRecordPanel);
         }
@@ -243,5 +253,11 @@ public class ProfileView extends VerticalLayout {
         rightPartPanel.setContent(rightPartLayout);
         mainLayout.addComponents(leftPartPanel, rightPartPanel);
         addComponents(mainLayout);
+    }
+
+    private void createWallRecord(String wallRecordText, java.sql.Date date) {
+        StubWallRecord newWallRecord = new StubWallRecord(wallRecordText, date);
+        HttpEntity<StubWallRecord> wallRecord = new HttpEntity<>(newWallRecord);
+        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/add", wallRecord, StubWallRecord.class);
     }
 }

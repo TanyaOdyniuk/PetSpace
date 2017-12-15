@@ -4,6 +4,7 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
+import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.status.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;
@@ -48,7 +49,7 @@ public class Profile extends BaseEntity {
     private List<Pet> profilePets;
     //TODO SERVICE GETWALLRECORDS
     @Reference(UsersProfileConstant.PROFILE_WALLREC)
-    private List<WallRecord> profileWallRecords;
+    private List<StubWallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
     @Reference(AdvertisementConstant.AD_AUTHOR)
     private List<Advertisement> profileAdvertisements;
@@ -162,11 +163,11 @@ public class Profile extends BaseEntity {
         this.profilePets = profilePets;
     }
 
-    public List<WallRecord> getProfileWallRecords() {
+    public List<StubWallRecord> getProfileWallRecords() {
         return profileWallRecords;
     }
 
-    public void setProfileWallRecords(List<WallRecord> profileWallRecords) {
+    public void setProfileWallRecords(List<StubWallRecord> profileWallRecords) {
         this.profileWallRecords = profileWallRecords;
     }
 

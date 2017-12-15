@@ -39,6 +39,11 @@ public class StubWallRecord extends BaseEntity{
         super(name, description);
     }
 
+    public StubWallRecord(String recordText, Date date){
+        this.recordText = recordText;
+        this.recordDate = date;
+    }
+
     public String getRecordText() {
         return recordText;
     }
