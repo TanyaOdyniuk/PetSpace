@@ -1,6 +1,7 @@
 package com.netcracker.ui.profile;
 
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
@@ -30,6 +31,7 @@ public class ProfileView extends VerticalLayout {
     private final Profile profile;
     private final List<Profile> friendList;
     private final List<Pet> petList;
+    private final List<StubWallRecord> wallRecordsList;
 
     @Autowired
     public ProfileView(BigInteger profileId) {
@@ -39,6 +41,7 @@ public class ProfileView extends VerticalLayout {
         profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + profileId, Profile.class);
         friendList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/friends/" + profileId, Profile[].class));
         petList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/pets/" + profileId, Pet[].class));
+        wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/wallrecords/" + profileId, StubWallRecord[].class));
 
         //Creating matryoshka layout
         HorizontalLayout mainLayout = new HorizontalLayout();
@@ -180,22 +183,42 @@ public class ProfileView extends VerticalLayout {
         Panel wallPanel = new Panel();
         wallPanel.setWidth("100%");
         VerticalLayout wallLayout = new VerticalLayout();
-        wallLayout.addComponent(new Label("Wall records"));
-        int recordsCount = 5;
-        //all values simulated!
-        for (int i = 0; i < recordsCount; i++) {
+        HorizontalLayout wallHeaderLayout = new HorizontalLayout();
+        VerticalLayout newWallRecordLayout = new VerticalLayout();
+        newWallRecordLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        PopupView addWallRecordPopupView = new PopupView("Add record", newWallRecordLayout);
+        addWallRecordPopupView.addPopupVisibilityListener(event -> {
+            if (event.isPopupVisible()) {
+                newWallRecordLayout.removeAllComponents();
+                HorizontalLayout addWallRecordButtonsLayout = new HorizontalLayout();
+                Button addNotNullRecord = new Button("Add record", click ->
+                        addWallRecordPopupView.setPopupVisible(false));
+                Button cancelAddingNewRecord = new Button("Cancel", click ->
+                        addWallRecordPopupView.setPopupVisible(false));
+                addWallRecordButtonsLayout.addComponentsAndExpand(addNotNullRecord, cancelAddingNewRecord);
+                newWallRecordLayout.addComponentsAndExpand(
+                        new Label("Enter record text:"), new TextArea(), addWallRecordButtonsLayout);
+            }
+        });
+
+        wallHeaderLayout.addComponentsAndExpand(new Label("Records on " + profile.getProfileName() + "`s wall:"), addWallRecordPopupView);
+        wallHeaderLayout.setComponentAlignment(addWallRecordPopupView, Alignment.MIDDLE_RIGHT);
+        wallLayout.addComponent(wallHeaderLayout);
+        for (int i = 0; i < wallRecordsList.size(); i++) {
+            StubWallRecord currentWallRecord = wallRecordsList.get(i);
+            Profile currentWallRecordAuthor = CustomRestTemplate.getInstance().customGetForObject("/wallrecords/author/" + currentWallRecord.getObjectId(), Profile.class);
             Panel singleWallRecordPanel = new Panel();
             VerticalLayout singleWallRecordLayout = new VerticalLayout();
 
             HorizontalLayout recordInfoLayout = new HorizontalLayout();
             Image recordAuthorAvatar = new Image();
-            recordAuthorAvatar.setSource(new ExternalResource(profile.getProfileAvatar()));
-            recordAuthorAvatar.setDescription(profile.getProfileName() + " " + profile.getProfileSurname());
+            recordAuthorAvatar.setSource(new ExternalResource(currentWallRecordAuthor.getProfileAvatar()));
+            recordAuthorAvatar.setDescription(currentWallRecordAuthor.getProfileName() + " " + currentWallRecordAuthor.getProfileSurname());
             recordAuthorAvatar.setHeight(100, Unit.PIXELS);
             recordAuthorAvatar.setWidth(100, Unit.PIXELS);
-            Label recordName = new Label("Record from " + profile.getProfileName() + " " + profile.getProfileSurname());
+            Label recordName = new Label("Record from " + currentWallRecordAuthor.getProfileName() + " " + currentWallRecordAuthor.getProfileSurname());
             recordName.setWidth(400, Unit.PIXELS);
-            Label recordDate = new Label(new Date().toString());
+            Label recordDate = new Label(currentWallRecord.getRecordDate().toString());
             recordInfoLayout.addComponents(recordAuthorAvatar, recordName, recordDate);
 
             HorizontalLayout recordLikesLayout = new HorizontalLayout();
@@ -206,9 +229,10 @@ public class ProfileView extends VerticalLayout {
             Button showRecordCommentsButton = new Button("Show comments", VaadinIcons.COMMENT_O);
             recordLikesLayout.addComponents(likeRecordButton, recordLikeCount, commentRecordButton, recordCommentCount, showRecordCommentsButton);
 
-            singleWallRecordLayout.addComponents(recordInfoLayout, new Label("Some\n useful\n info\n here", ContentMode.PREFORMATTED), recordLikesLayout);
+            singleWallRecordLayout.addComponents(
+                    recordInfoLayout,new Label(currentWallRecord.getRecordText(), ContentMode.PREFORMATTED), recordLikesLayout);
             singleWallRecordPanel.setContent(singleWallRecordLayout);
-            wallLayout.addComponent(singleWallRecordPanel);
+            wallLayout.addComponents(singleWallRecordPanel);
         }
         wallPanel.setContent(wallLayout);
 

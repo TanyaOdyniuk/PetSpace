@@ -1,14 +1,17 @@
 package com.netcracker.service.profile;
 
-import com.netcracker.model.service.Service;
+import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@org.springframework.stereotype.Service
+@Service
 public interface ProfileService {
+
+    //Получить профиль по его id
     Profile viewProfile(BigInteger profileID);
 
     void deleteProfile(User user);

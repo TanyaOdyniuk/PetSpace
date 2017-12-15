@@ -13,7 +13,7 @@ import java.util.List;
 public class WallRecord extends AbstractRecord {
     @Reference(RecordConstant.REC_AUTOR)
     private Profile recordAuthor;
-    @Reference(UsersProfileConstant.PROFILE_WALLREC)
+    @Reference(RecordConstant.REC_COMREF)
     private List<WallComment> wallComments;
 
     public WallRecord() {
