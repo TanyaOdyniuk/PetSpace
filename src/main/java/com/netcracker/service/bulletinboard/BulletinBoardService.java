@@ -11,12 +11,15 @@ import java.util.List;
 public interface BulletinBoardService {
     int getAllAdPageCount();
     int getMyProfileAdPageCount(BigInteger profileId);
+    int getPageCountTopicSearch(String topic);
 
     List<Advertisement> getProfileAds(Integer pageNumber);
     List<Advertisement> getMyProfileAds(BigInteger profileId, Integer pageNumber);
 
     List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories);
     List<Advertisement> getAllAdAfterCatFilterFromProfile(Integer pageNumber, Integer profileId, Category[] categories);
+
+    List<Advertisement> getAdvertisementListTopicSearch(Integer pageNumber, String topic);
 
     Advertisement addAd(Advertisement ad);
 

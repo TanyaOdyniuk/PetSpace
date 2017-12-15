@@ -20,11 +20,14 @@ public class BulletinBoardController {
         return bulletinBoardService.getAllAdPageCount();
     }
 
+    @GetMapping("/pageCount/topicSearch/{topic}")
+    public Integer getPageCountTopicSearch(@PathVariable("topic") String topic){
+        return bulletinBoardService.getPageCountTopicSearch(topic);
+    }
     @GetMapping("/pageCount/{id}")
     public Integer getBulletinBoardPageCount(@PathVariable("id") BigInteger profileId) {
         return bulletinBoardService.getMyProfileAdPageCount(profileId);
     }
-
     @GetMapping("/{pageNumber}")
     public List<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber) {
         return bulletinBoardService.getProfileAds(pageNumber);
@@ -44,7 +47,10 @@ public class BulletinBoardController {
     public List<Advertisement> getAllAdAfterCatFilterFromProfile(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("id") Integer profileId, @RequestBody Category[] categories){
         return bulletinBoardService.getAllAdAfterCatFilterFromProfile(pageNumber, profileId, categories);
     }
-
+    @GetMapping("/topicSearch/{pageNumber}/{topic}")
+    public List<Advertisement> getAdvertisementListTopicSearch(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("topic") String topic){
+        return bulletinBoardService.getAdvertisementListTopicSearch(pageNumber, topic);
+    }
     @PostMapping("/add")
     public Advertisement addAd(@RequestBody Advertisement ad){
         return bulletinBoardService.addAd(ad);

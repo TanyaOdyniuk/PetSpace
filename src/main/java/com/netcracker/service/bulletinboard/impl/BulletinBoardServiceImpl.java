@@ -44,6 +44,17 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 + profileId;
         return pageCounterService.getPageCount(myAdPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
     }
+
+    @Override
+    public int getPageCountTopicSearch(String topic) {
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM Attributes WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_TOPIC +
+                " and LOWER(VALUE) LIKE LOWER('%"+topic +"%')";
+        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+    }
+
     public List<Advertisement> getAllAdAfterCatFilterFromProfile(Integer pageNumber, Integer profileId, Category[] categories){
         Integer adPageCapacity = new Integer(adPageCapacityProp);
         String getAdsQuery = "SELECT o1.OBJECT_ID as object_id " +
@@ -66,16 +77,20 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         }
         return advertisements;
     }
-    public List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories){
+
+    @Override
+    public List<Advertisement> getAdvertisementListTopicSearch(Integer pageNumber, String topic) {
         Integer adPageCapacity = new Integer(adPageCapacityProp);
         String getAdsQuery = "SELECT OBJECT_ID as object_id" +
-                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_CATEGORY +
-                " and REFERENCE ";
-        getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+                " FROM Attributes WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_TOPIC +
+                " and LOWER(VALUE) LIKE LOWER('%"+topic +"%')";
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
         List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
+        return getCategoryAndOwner(advertisements);
+    }
+    private List<Advertisement> getCategoryAndOwner(List<Advertisement> advertisements){
         for (Advertisement ad : advertisements) {
             Category category = ad.getAdCategory();
             if (category != null) {
@@ -88,6 +103,18 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         }
         return advertisements;
     }
+    public List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories){
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_CATEGORY +
+                " and REFERENCE ";
+        getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
+        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
+        return getCategoryAndOwner(advertisements);
+    }
 
     @Override
     public List<Advertisement> getProfileAds(Integer pageNumber) {
@@ -96,17 +123,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
         BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
         List<Advertisement> advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
-        for (Advertisement ad : advertisements) {
-            Category category = ad.getAdCategory();
-            Profile author = ad.getAdAuthor();
-            if (author != null) {
-                ad.setAdAuthor(entityManagerService.getById(author.getObjectId(), Profile.class));
-            }
-            if (category != null) {
-                ad.setAdCategory(entityManagerService.getById(category.getObjectId(), Category.class));
-            }
-        }
-        return advertisements;
+        return getCategoryAndOwner(advertisements);
     }
 
     @Override

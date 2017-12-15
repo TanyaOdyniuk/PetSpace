@@ -24,7 +24,6 @@ import java.util.List;
 @SpringComponent
 @UIScope
 public class MyBulletinBoardListContent extends VerticalLayout {
-    //private final VerticalLayout innerLayout;
     private Grid<Advertisement> grid;
     private final Button newAdBtn;
     private final BigInteger profileId;
@@ -57,14 +56,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
         mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
         mainLayout.setExpandRatio(mainLayout.getComponent(1), 10.0f);
-        addComponent(mainLayout);/*
-        innerLayout = new VerticalLayout();
-        innerLayout.addComponentsAndExpand(newAdBtn, grid);
-        innerLayout.setExpandRatio(innerLayout.getComponent(0), 1.0f);
-        innerLayout.setExpandRatio(innerLayout.getComponent(1), 15.0f);
-        getPagingLayout();
-        innerLayout.addComponent(pagingLayout);
-        addComponent(innerLayout);*/
+        addComponent(mainLayout);
 
         newAdBtn.addClickListener(new AbstractClickListener() {
             @Override
