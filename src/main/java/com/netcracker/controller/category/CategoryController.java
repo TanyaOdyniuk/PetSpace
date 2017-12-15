@@ -22,4 +22,9 @@ public class CategoryController {
     public int getCountAfterCatFilter(@RequestBody Category[] categories){
         return categoryService.getPageCountAfterCatFilter(categories);
     }
+    @PostMapping("/getPageCountAfterCatFilter/{id}")
+    public int getCountAfterCatFilterForProfile(@PathVariable("id") Integer id, @RequestBody Category[] categories){
+        return categoryService.getPageCountAfterCatFilterForProfile(categories, id);
+    }
+
 }

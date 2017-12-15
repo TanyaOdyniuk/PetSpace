@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
-class StubLeftBar extends VerticalLayout {
+public class StubLeftBar extends VerticalLayout {
 
     @Autowired
-    StubLeftBar(Button.ClickListener clickListener) {
+    public StubLeftBar(Button.ClickListener clickListener) {
         super();
         setSpacing(false);
         setWidth("100%");

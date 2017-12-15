@@ -9,4 +9,5 @@ import java.util.List;
 public interface CategoryService {
     List<Category> getCategories();
     int getPageCountAfterCatFilter(Category[] categories);
+    int getPageCountAfterCatFilterForProfile(Category[] categories, Integer profileId);
 }

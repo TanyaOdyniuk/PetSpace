@@ -4,7 +4,6 @@ import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -21,11 +20,14 @@ public class BulletinBoardController {
         return bulletinBoardService.getAllAdPageCount();
     }
 
+    @GetMapping("/pageCount/topicSearch/{topic}")
+    public Integer getPageCountTopicSearch(@PathVariable("topic") String topic){
+        return bulletinBoardService.getPageCountTopicSearch(topic);
+    }
     @GetMapping("/pageCount/{id}")
     public Integer getBulletinBoardPageCount(@PathVariable("id") BigInteger profileId) {
         return bulletinBoardService.getMyProfileAdPageCount(profileId);
     }
-
     @GetMapping("/{pageNumber}")
     public List<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber) {
         return bulletinBoardService.getProfileAds(pageNumber);
@@ -39,5 +41,18 @@ public class BulletinBoardController {
     @PostMapping("/category/{pageNumber}")
     public List<Advertisement> getAllAdAfterCatFilter(@PathVariable("pageNumber") Integer pageNumber, @RequestBody Category[] categories){
         return bulletinBoardService.getAllAdAfterCatFilter(pageNumber, categories);
+    }
+
+    @PostMapping("/category/{pageNumber}/{id}")
+    public List<Advertisement> getAllAdAfterCatFilterFromProfile(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("id") Integer profileId, @RequestBody Category[] categories){
+        return bulletinBoardService.getAllAdAfterCatFilterFromProfile(pageNumber, profileId, categories);
+    }
+    @GetMapping("/topicSearch/{pageNumber}/{topic}")
+    public List<Advertisement> getAdvertisementListTopicSearch(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("topic") String topic){
+        return bulletinBoardService.getAdvertisementListTopicSearch(pageNumber, topic);
+    }
+    @PostMapping("/add")
+    public Advertisement addAd(@RequestBody Advertisement ad){
+        return bulletinBoardService.addAd(ad);
     }
 }
