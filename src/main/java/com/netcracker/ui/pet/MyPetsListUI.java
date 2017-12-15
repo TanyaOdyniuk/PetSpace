@@ -28,9 +28,13 @@ public class MyPetsListUI extends VerticalLayout {
     public MyPetsListUI(BigInteger profileId){
         super();
         this.profileId = profileId;
+
+        this.addStyleName("v-scrollable");
+        this.setHeight("100%");
+
         Panel mainPanel = new Panel();
-        mainPanel.setWidth("100%");
-        mainPanel.setHeight(750, Unit.PIXELS);
+        /*mainPanel.setWidth("100%");
+        mainPanel.setHeight(750, Unit.PIXELS);*/
         VerticalLayout petRecordsLayout = new VerticalLayout();
         Button addNewPet = new Button("Добавить нового питомца", VaadinIcons.PLUS);
         addNewPet.addClickListener(new AbstractClickListener() {

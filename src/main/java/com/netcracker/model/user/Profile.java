@@ -49,7 +49,7 @@ public class Profile extends BaseEntity {
     private List<Pet> profilePets;
     //TODO SERVICE GETWALLRECORDS
     @Reference(UsersProfileConstant.PROFILE_WALLREC)
-    private List<StubWallRecord> profileWallRecords;
+    private List<WallRecord> profileWallRecords;
     //TODO SERVICE GETPROFILEADVERTISEMENTS
     @Reference(AdvertisementConstant.AD_AUTHOR)
     private List<Advertisement> profileAdvertisements;
@@ -163,11 +163,11 @@ public class Profile extends BaseEntity {
         this.profilePets = profilePets;
     }
 
-    public List<StubWallRecord> getProfileWallRecords() {
+    public List<WallRecord> getProfileWallRecords() {
         return profileWallRecords;
     }
 
-    public void setProfileWallRecords(List<StubWallRecord> profileWallRecords) {
+    public void setProfileWallRecords(List<WallRecord> profileWallRecords) {
         this.profileWallRecords = profileWallRecords;
     }
 

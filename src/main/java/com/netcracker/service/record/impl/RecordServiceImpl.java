@@ -45,7 +45,7 @@ public class RecordServiceImpl implements RecordService {
         List<StubWallRecord> wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/wallrecords/" + receiver.getObjectId(), StubWallRecord[].class));
         wallRecordsList.add(newWallRecord);
-        receiver.setProfileWallRecords(wallRecordsList);
+        //receiver.setProfileWallRecords(wallRecordsList);
         entityManagerService.update(receiver);
         return newWallRecord;
     }

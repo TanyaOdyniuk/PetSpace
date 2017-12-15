@@ -17,7 +17,7 @@ public class AppConfig {
         dataSource.setPassword("ODESSA_19");
         //dataSource.setUsername("ODESSA_18");
         //dataSource.setPassword("testpass");
-        dataSource.setInitialSize(3);
+        dataSource.setInitialSize(30);
         dataSource.setMaxActive(14);
         dataSource.setMaxIdle(12);
         /*
