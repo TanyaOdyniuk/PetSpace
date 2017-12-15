@@ -28,8 +28,6 @@ public class MyPetsListUI extends VerticalLayout {
     public MyPetsListUI(BigInteger profileId){
         super();
         this.profileId = profileId;
-        /*setWidth("100%");
-        setHeight("100%");*/
         Panel mainPanel = new Panel();
         mainPanel.setWidth("100%");
         mainPanel.setHeight(750, Unit.PIXELS);
@@ -42,6 +40,12 @@ public class MyPetsListUI extends VerticalLayout {
             }
         });
         List<Pet> petList = getProfilePets(profileId);
+        if(petList == null){
+            Label noPetsLabel = PageElements.createLabel(5, "У вас ещё нет питомца!");
+            mainPanel.setContent(noPetsLabel);
+            addComponents(addNewPet, mainPanel);
+            return;
+        }
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
@@ -60,11 +64,11 @@ public class MyPetsListUI extends VerticalLayout {
                     ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
                 }
             });
-            Label petInfoSign = PageElements.createGrayLabel("Информация о питомце");
-            Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
+            Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
+            petInfo.setCaption("Информация о питомце");
 
             //PET INFO
-            petInfoLayout.addComponents(petNameSign, petName, petInfoSign, petInfo);
+            petInfoLayout.addComponents(petNameSign, petName, petInfo);
 
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);

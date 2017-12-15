@@ -24,6 +24,20 @@ public class PageElements {
         return new Label("<font size = \"" + fontSize + "\" color=\"" + textColor + "\"> " + text, ContentMode.HTML);
     }
 
+    public static Label createCheckedValueLabel(String value, String additionString){
+        if(value!= null)
+            if(additionString!= null)
+                return createStandartLabel(PageElements.htmlTabulation + value + " " + additionString);
+            else
+                return createStandartLabel(PageElements.htmlTabulation + value);
+        else
+            return createStandartLabel(PageElements.htmlTabulation + "Не указано");
+    }
+
+    public static Label createCheckedValueLabel(String value){
+        return createCheckedValueLabel(value, null);
+    }
+
     public static Panel getSeparator() {
         return new Panel();
     }
@@ -33,6 +47,7 @@ public class PageElements {
         clickedLabel.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         return clickedLabel;
     }
+
     public static Button createBlueClickedLabel(String text, Resource icon) {
         Button clickedLabel;
         if(icon != null){

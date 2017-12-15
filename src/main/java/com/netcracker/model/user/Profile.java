@@ -238,7 +238,7 @@ public class Profile extends BaseEntity {
                 ", profileCurrencyBalance=" + profileCurrencyBalance +
                 ", profileStatus=" + profileStatus +
                 ", profileUser=" + profileUser +
-                ", profilePets=" + profilePets +
+                //", profilePets=" + profilePets +
                 ", profileWallRecords=" + profileWallRecords +
                 ", profileAdvertisements=" + profileAdvertisements +
                 ", profileGroups=" + profileGroups +

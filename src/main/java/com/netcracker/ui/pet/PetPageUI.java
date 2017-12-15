@@ -95,16 +95,16 @@ public class PetPageUI extends VerticalLayout {
 
         Label petName = PageElements.createLabel(5, pet.getPetName());
 
-        Label petSpeciesSign = PageElements.createGrayLabel("Вид");
-        Label petSpecies = PageElements.createStandartLabel(PageElements.htmlTabulation + this.petSpecies.getSpeciesName());
+        Label petSpecies = PageElements.createCheckedValueLabel(this.petSpecies.getSpeciesName());
+        petSpecies.setCaption("Вид");
 
-        Label petBreedSign = PageElements.createGrayLabel("Порода");
-        Label petBreed = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetBreed());
+        Label petBreed = PageElements.createCheckedValueLabel(pet.getPetBreed());
+        petBreed.setCaption("Порода");
 
-        Label petAgeSign = PageElements.createGrayLabel("Возраст");
-        Label petAge = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetAge() + " лет");
+        Label petAge = PageElements.createCheckedValueLabel(pet.getPetAge().toString(), "лет");
+        petAge.setCaption("Возраст");
 
-        Label petOwnerSign = PageElements.createGrayLabel("Владелец");
+        Label petOwnerSign = PageElements.createLabel(2, "Владелец");
 
         Button petOwner = PageElements.createClickedLabel(owner.getProfileName() + " " + owner.getProfileSurname());
         petOwner.addClickListener(new AbstractClickListener() {
@@ -117,18 +117,18 @@ public class PetPageUI extends VerticalLayout {
 
         Label additionInfo = PageElements.createGrayLabel("Дополнительная информация");
 
-        Label petWeightSign = PageElements.createGrayLabel("Вес");
-        Label petWeight = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetWeight() + " кг");
+        Label petWeight = PageElements.createCheckedValueLabel(pet.getPetWeight().toString(), "кг");
+        petWeight.setCaption("Вес");
 
-        Label petHeightSign = PageElements.createGrayLabel("Рост");
-        Label petHeight = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetHeight() + " м");
+        Label petHeight = PageElements.createCheckedValueLabel(pet.getPetHeight().toString(), "м");
+        petHeight.setCaption("Рост");
 
-        Label petSpecParamSign = PageElements.createGrayLabel("Особые данные");
-        Label petSpecParam = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
+        Label petSpecParam = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
+        petSpecParam.setCaption("Особые данные");
 
-        infoLayout.addComponentsAndExpand(petName, PageElements.getSeparator(), petSpeciesSign, petSpecies, petBreedSign, petBreed,
-                petAgeSign, petAge, petOwnerSign, petOwner, additionInfo, PageElements.getSeparator(), petWeightSign, petWeight, petHeightSign,
-                petHeight, petSpecParamSign, petSpecParam);
+        infoLayout.addComponentsAndExpand(petName, PageElements.getSeparator(), petSpecies, petBreed,
+                petAge, petOwnerSign, petOwner, additionInfo, PageElements.getSeparator(), petWeight,
+                petHeight, petSpecParam);
 
         infoPanel.setContent(infoLayout);
         infoPanel.setHeight("100%");
