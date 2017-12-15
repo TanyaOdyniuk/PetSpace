@@ -3,6 +3,9 @@ package com.netcracker.ui.pet;
 import com.netcracker.error.asserts.ObjectAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
+import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
+import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.util.CustomRestTemplate;
@@ -15,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,10 +31,9 @@ public class PetFormUI extends VerticalLayout {
 
     public PetFormUI() {
         createdPet = new Pet();
-
+        this.addStyleName("v-scrollable");
+        this.setHeight("100%");
         Panel mainPanel = new Panel();
-        mainPanel.setWidth("100%");
-        mainPanel.setHeight(750, Unit.PIXELS);
         VerticalLayout mainLayout = new VerticalLayout();
 
         //AVATAR
@@ -64,16 +67,9 @@ public class PetFormUI extends VerticalLayout {
         TextField petNameField = PageElements.createTextField("Кличка питомца", "Кличка питомца", true);
         petNameField.setWidth("100%");
 
-        /*ComboBox<PetSpecies> speciesTypeSelect = new ComboBox("Вид", getSpecies());
-        speciesTypeSelect.setItemCaptionGenerator(PetSpecies::getSpeciesName);*/
-
-        //TODO CHANGE CODE BELOW WITH COMMENTED HIGHER CODE
-        List<String> speciesList = new ArrayList<>();
-        speciesList.add("Собака");
-        speciesList.add("Кошка");
-        speciesList.add("Хомяк");
-        ComboBox<String> speciesTypeSelect = new ComboBox("Вид", speciesList);
-        //TODO TILL THIS PLACE
+        List<PetSpecies> speciesList = getSpecies();
+        ComboBox<PetSpecies> speciesTypeSelect = new ComboBox("Вид", speciesList);
+        speciesTypeSelect.setItemCaptionGenerator(PetSpecies::getSpeciesName);
 
         speciesTypeSelect.setEmptySelectionAllowed(false);
         speciesTypeSelect.setRequiredIndicatorVisible(true);
@@ -101,8 +97,10 @@ public class PetFormUI extends VerticalLayout {
         addPet.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                avatarSelect.setComponentError(null);
-                //TODO Add pet
+                addPet.setComponentError(null);
+                createPet(avatarField.getValue(), petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
+                        weightField.getValue(), heightField.getValue(), specParamField.getValue());
+                Notification.show("Питомец успешно добавлен!");
             }
         });
 
@@ -111,7 +109,7 @@ public class PetFormUI extends VerticalLayout {
 
         mainPanel.setContent(mainLayout);
 
-        addComponentsAndExpand(mainPanel);
+        addComponents(mainPanel);
     }
 
     private void updateAvatar(String imageURL, Image imageToUpdate) {
@@ -127,28 +125,25 @@ public class PetFormUI extends VerticalLayout {
         return speciesList;
     }
 
-    private void createPet(String avatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed,
-                           Double petWeight, Double petHeight, String specificParameters) {
+    private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
+                           String petWeight, String petHeight, String specificParameters) {
 
-        Pet createdPet = new Pet(avatar, petName, petAge, petSpecies, petBreed,
-                petWeight, petHeight, specificParameters);
+        ObjectAssert.isNullOrEmpty(petName);
+        ObjectAssert.isNull(petSpecies);
 
-        /*BigInteger maxId = */
+        //User currentUser = new UserService().getCurrentUser();
+        /*Profile profile = new Profile();
+        profile.setObjectId(BigInteger.valueOf(1));*/
 
-        HttpEntity<Pet> requestUpdate = new HttpEntity<>(createdPet);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        Integer age = Integer.parseInt(petAge);
+        Double weight = Double.parseDouble(petWeight);
+        Double height = Double.parseDouble(petHeight);
+        Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
+                weight, height, specificParameters/*, profile*/);
+
+        HttpEntity<Pet> pet = new HttpEntity<>(createdPet);
+
         CustomRestTemplate.getInstance()
-                .customExchange("/pets/" + createdPet.getObjectId(), HttpMethod.PUT, requestUpdate, Void.class);
-
-
-        //CustomRestTemplate.getInstance().customExchange();
-        /*
-        HttpEntity<StubUser> requestUpdate = new HttpEntity<>(stubUser);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                CustomRestTemplate.getInstance()
-                        .customExchange("/restcontroller/"+ stubUser.getId(), HttpMethod.PUT, requestUpdate, Void.class);
-        */
+                .customPostForObject("/pet/add", pet, Pet.class);
     }
 }

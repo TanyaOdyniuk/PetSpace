@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,19 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public Pet createPetProfile(Pet pet) {
-        return entityManagerService.create(pet);
+        //User currentUser = new UserService().getCurrentUser();
+        /*Profile profile = new Profile();
+        profile.setObjectId(BigInteger.valueOf(1));*/
+        Pet newPet = entityManagerService.create(pet);
+        Profile profile = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
+        List<Pet> newList = new ArrayList<>(profile.getProfilePets());
+        newList.add(newPet);
+        profile.setProfilePets(newList);
+        entityManagerService.update(profile);
+        Profile cutProfile = new Profile();
+        cutProfile.setObjectId(profile.getObjectId());
+        newPet.setPetOwner(cutProfile);
+        return newPet;
     }
 
     @Override
@@ -43,6 +56,12 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Override
     public void changePetOwner(Profile owner, Profile newOwner) {
 
+    }
+
+    @Override
+    public PetSpecies getConcretePetSpecies(BigInteger petId) {
+        PetSpecies petSpecies = ((Pet)entityManagerService.getById(petId, Pet.class)).getPetSpecies();
+        return entityManagerService.getById(petSpecies.getObjectId(), PetSpecies.class);
     }
 
     @Override
@@ -68,7 +87,7 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Override
     public List<Pet> getAllProfilePets(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE reference = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
         return entityManagerService.getObjectsBySQL(sqlQuery, Pet.class, new QueryDescriptor());
     }
 

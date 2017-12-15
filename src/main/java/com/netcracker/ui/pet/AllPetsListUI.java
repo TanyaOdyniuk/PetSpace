@@ -59,11 +59,11 @@ public class AllPetsListUI extends Panel {
                 }
             });
 
-            Label petInfoSign = PageElements.createGrayLabel("Информация о питомце");
-            Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
+            Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
+            petInfo.setCaption("Информация о питомце");
 
             //PET INFO
-            petInfoLayout.addComponents(petNameSign, petName, petOwnerSign, petOwner, petInfoSign, petInfo);
+            petInfoLayout.addComponents(petNameSign, petName, petOwnerSign, petOwner, petInfo);
 
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);

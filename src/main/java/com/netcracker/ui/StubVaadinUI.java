@@ -2,6 +2,8 @@ package com.netcracker.ui;
 
 import com.netcracker.error.asserts.ObjectAssert;
 import com.netcracker.model.StubUser;
+import com.netcracker.model.user.User;
+import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -119,6 +121,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
                 break;
             case "My pets":
+                //BigInteger profileId = new UserService().getCurrentUser().getProfile().getObjectId();
                 primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(BigInteger.valueOf(1)));
                 break;
             case "Pets":

@@ -32,6 +32,9 @@ public interface PetProfileService {
     //Получить питомца с конкретным ID
     Pet getPetById(BigInteger petId);
 
+    //Получить вид питомца
+    PetSpecies getConcretePetSpecies(BigInteger petId);
+
     //Получить список всех животных
     List<Pet> getAllPets();
 

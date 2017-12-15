@@ -50,6 +50,18 @@ public class Pet extends BaseEntity {
         super(name);
     }
 
+    public Pet(String petAvatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed, Double petWeight, Double petHeight, String petSpecificParam, Profile petOwner) {
+        this.petAvatar = petAvatar;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.petSpecies = petSpecies;
+        this.petBreed = petBreed;
+        this.petWeight = petWeight;
+        this.petHeight = petHeight;
+        this.petSpecificParam = petSpecificParam;
+        this.petOwner = petOwner;
+    }
+
     public Pet(String petAvatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed, Double petWeight, Double petHeight, String petSpecificParam) {
         this.petAvatar = petAvatar;
         this.petName = petName;
@@ -172,7 +184,7 @@ public class Pet extends BaseEntity {
                 ", petWeight=" + petWeight +
                 ", petHeight=" + petHeight +
                 ", petSpecificParam='" + petSpecificParam + '\'' +
-                ", petOwner=" + petOwner +
+                //", petOwner=" + petOwner +
                 ", petStatus=" + petStatus +
                 ", advertisementPets=" + petAdvertisements +
                 ", petPhotoAlbums=" + petPhotoAlbums +
