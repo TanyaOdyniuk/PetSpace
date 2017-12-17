@@ -3,19 +3,21 @@ package com.netcracker.ui.login;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
-import com.netcracker.service.autorization.AuthorizationService;
+import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "loginform")
@@ -78,26 +81,23 @@ public class LoginPage extends UI {
             @Override
             public void buttonClickListener() {
                 try {
-                    Collection<GrantedAuthority> authorities = new ArrayList<>();
+                    List<UserAuthority> authorities = new ArrayList<>();
                     UserAuthority role = new UserAuthority();
                     role.setAuthority("ROLE_USER");
                     authorities.add(role);
-                    ArrayList<String> requestParams = new ArrayList<>();
-                    requestParams.add(emailField.getValue());
-                    requestParams.add(passwordField.getValue());
-                    for (GrantedAuthority authority : authorities) {
-                        requestParams.add(authority.getAuthority());
-                    }
-                    /*HttpEntity<ArrayList<String>> request = new HttpEntity<>(requestParams);
-                    //HttpHeaders headers = new HttpHeaders();
-                   // headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                    User user = CustomRestTemplate.getInstance()
-                            .customExchange("/loginform", HttpMethod.POST, request, User.class).getBody();
-                    if (user == null) {
-                        Notification.show("Wrong email or password!");
-                    } else {
-                        LoginPage.getCurrent().getPage().setLocation("/testpage");
-                    }*/
+
+                    User requestUser = new User();
+                    requestUser.setLogin(emailField.getValue());
+                    requestUser.setPassword(passwordField.getValue());
+                    requestUser.setUserAuthorities(authorities);
+
+//                    HttpEntity<User> request = new HttpEntity<>(requestUser);
+//                    User user = CustomRestTemplate.getInstance().customPostForObject("/loginform", request, User.class);
+//                    if (user == null) {
+//                        Notification.show("Wrong email or password!");
+//                    } else {
+//                        LoginPage.getCurrent().getPage().setLocation("/testpage");
+//                    }
 
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
@@ -130,17 +130,52 @@ public class LoginPage extends UI {
         return contentLayout;
     }
 
-    private VerticalLayout genForgetPasswordLink(){
+    private Window genPasswordRecoveryWindow() {
+        Window passWindow = new Window("Recover your password");
+        VerticalLayout windowContent = new VerticalLayout();
+        TextField email = new TextField("Your email:");
+        Button okButton = new Button("Ok");
+
+        windowContent.addComponent(email);
+        windowContent.addComponent(okButton);
+
+        okButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                if (email.getValue().equals("")) {
+                    Notification.show("Enter your email PLZ");
+                } else {
+                    authorizationService.passwordRecovery(email.getValue());
+                    passWindow.close();
+                }
+            }
+        });
+        passWindow.setContent(windowContent);
+        passWindow.center();
+        passWindow.setClosable(false);
+        passWindow.setResizable(false);
+        passWindow.setResponsive(false);
+        passWindow.setDraggable(false);
+        passWindow.setWindowMode(WindowMode.NORMAL);
+        return passWindow;
+    }
+
+    private VerticalLayout genForgetPasswordLink() {
         VerticalLayout layoutContent = new VerticalLayout();
         layoutContent.setMargin(false);
         layoutContent.setSpacing(false);
         layoutContent.setSizeFull();
-        Link logoLink = new Link("Forgot your password?", new ExternalResource("/passwordRecovery"));
-        logoLink.setIcon(VaadinIcons.COGS);
-        logoLink.setCaptionAsHtml(true);
-
-        layoutContent.addComponent(logoLink);
-        layoutContent.setComponentAlignment(logoLink, Alignment.BOTTOM_CENTER);
+        Button forgetPass = new Button("I forgot my password");
+        forgetPass.setStyleName(ValoTheme.BUTTON_LINK);
+        forgetPass.setIcon(VaadinIcons.COGS);
+        layoutContent.addComponent(forgetPass);
+        layoutContent.setComponentAlignment(forgetPass, Alignment.BOTTOM_CENTER);
+        forgetPass.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                addWindow(genPasswordRecoveryWindow());
+            }
+        });
         return layoutContent;
     }
 }

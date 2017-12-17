@@ -5,7 +5,7 @@ import com.netcracker.error.handler.ClientExceptionHandler;
 
 import java.util.Collection;
 
-public class ValidationAssert {
+public class ObjectAssert {
 
     public static void isNull(Object obj){
         isNull(obj, ErrorMessage.VALIDATION_WRONG);
@@ -23,6 +23,16 @@ public class ValidationAssert {
 
     public static void isTrue(Boolean fact, String messageToShow){
         if(!fact){
+            handle(messageToShow);
+        }
+    }
+
+    public static void isNullOrEmpty(String obj){
+        isNullOrEmpty(obj, ErrorMessage.VALIDATION_WRONG);
+    }
+
+    public static void isNullOrEmpty(String obj, String messageToShow){
+        if(obj == null || obj.isEmpty()){
             handle(messageToShow);
         }
     }

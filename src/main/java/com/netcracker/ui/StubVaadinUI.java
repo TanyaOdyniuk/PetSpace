@@ -1,7 +1,9 @@
 package com.netcracker.ui;
 
-import com.netcracker.error.asserts.ValidationAssert;
+import com.netcracker.error.asserts.ObjectAssert;
 import com.netcracker.model.StubUser;
+import com.netcracker.model.user.User;
+import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -18,7 +20,6 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -38,7 +39,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     private Grid<StubUser> grid;
 
     private Button addNewBtn;
-
 
     private final VerticalLayout mainLayout;
 
@@ -121,6 +121,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
                 break;
             case "My pets":
+                //BigInteger profileId = new UserService().getCurrentUser().getProfile().getObjectId();
                 primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(BigInteger.valueOf(1)));
                 break;
             case "Pets":
@@ -142,10 +143,14 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     }
 
     public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet){
-        ValidationAssert.isNull(layoutToSet);
+        ObjectAssert.isNull(layoutToSet);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         primaryAreaLayout.addComponentsAndExpand(layoutToSet);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+    }
+
+    public VerticalLayout getLeftPanel() {
+        return leftPanel;
     }
 }

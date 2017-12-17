@@ -1,11 +1,9 @@
 package com.netcracker.ui;
 
-import com.netcracker.ui.profile.ProfileView;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class PageElements {
@@ -26,6 +24,20 @@ public class PageElements {
         return new Label("<font size = \"" + fontSize + "\" color=\"" + textColor + "\"> " + text, ContentMode.HTML);
     }
 
+    public static Label createCheckedValueLabel(String value, String additionString){
+        if(value!= null)
+            if(additionString!= null)
+                return createStandartLabel(PageElements.htmlTabulation + value + " " + additionString);
+            else
+                return createStandartLabel(PageElements.htmlTabulation + value);
+        else
+            return createStandartLabel(PageElements.htmlTabulation + "Не указано");
+    }
+
+    public static Label createCheckedValueLabel(String value){
+        return createCheckedValueLabel(value, null);
+    }
+
     public static Panel getSeparator() {
         return new Panel();
     }
@@ -35,11 +47,32 @@ public class PageElements {
         clickedLabel.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         return clickedLabel;
     }
-    public static Button createBlueClickedLabel(String text) {
-        Button clickedLabel = new Button(text);
+
+    public static Button createBlueClickedLabel(String text, Resource icon) {
+        Button clickedLabel;
+        if(icon != null){
+            clickedLabel = new Button(text, icon);
+        }else{
+            clickedLabel = new Button(text);
+        }
         clickedLabel.addStyleName(ValoTheme.BUTTON_LINK);
         //clickedLabel.setDisableOnClick(true);
         return clickedLabel;
+    }
+
+    public static TextField createTextField(String caption, String placeHolder){
+        return createTextField(caption, placeHolder, false);
+    }
+
+    public static TextField createTextField(String caption, String placeHolder, Boolean isRequired){
+        TextField textField = new TextField(caption);
+        textField.setPlaceholder(placeHolder);
+        textField.setRequiredIndicatorVisible(isRequired);
+        return textField;
+    }
+
+    public static Image getNoImage(){
+        return new Image("", new ExternalResource("https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png"));
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

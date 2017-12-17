@@ -4,7 +4,7 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.Status;
+import com.netcracker.model.status.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.album.PhotoAlbum;
@@ -48,6 +48,29 @@ public class Pet extends BaseEntity {
 
     public Pet(String name) {
         super(name);
+    }
+
+    public Pet(String petAvatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed, Double petWeight, Double petHeight, String petSpecificParam, Profile petOwner) {
+        this.petAvatar = petAvatar;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.petSpecies = petSpecies;
+        this.petBreed = petBreed;
+        this.petWeight = petWeight;
+        this.petHeight = petHeight;
+        this.petSpecificParam = petSpecificParam;
+        this.petOwner = petOwner;
+    }
+
+    public Pet(String petAvatar, String petName, Integer petAge, PetSpecies petSpecies, String petBreed, Double petWeight, Double petHeight, String petSpecificParam) {
+        this.petAvatar = petAvatar;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.petSpecies = petSpecies;
+        this.petBreed = petBreed;
+        this.petWeight = petWeight;
+        this.petHeight = petHeight;
+        this.petSpecificParam = petSpecificParam;
     }
 
     public Pet(String name, String description) {
@@ -161,7 +184,7 @@ public class Pet extends BaseEntity {
                 ", petWeight=" + petWeight +
                 ", petHeight=" + petHeight +
                 ", petSpecificParam='" + petSpecificParam + '\'' +
-                ", petOwner=" + petOwner +
+                //", petOwner=" + petOwner +
                 ", petStatus=" + petStatus +
                 ", advertisementPets=" + petAdvertisements +
                 ", petPhotoAlbums=" + petPhotoAlbums +

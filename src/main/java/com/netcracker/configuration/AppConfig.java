@@ -1,7 +1,7 @@
 package com.netcracker.configuration;
 
 import com.netcracker.dao.manager.EntityManager;
-import com.netcracker.dao.managerapi.ManagerAPI;
+import com.netcracker.dao.managerservice.EntityManagerService;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class AppConfig {
         dataSource.setPassword("ODESSA_19");
         //dataSource.setUsername("ODESSA_18");
         //dataSource.setPassword("testpass");
-        dataSource.setInitialSize(3);
+        dataSource.setInitialSize(30);
         dataSource.setMaxActive(14);
         dataSource.setMaxIdle(12);
         /*
@@ -37,7 +37,7 @@ public class AppConfig {
     }
 
     @Bean
-    public ManagerAPI getManagerAPI(){
-        return new ManagerAPI(getEntityManager());
+    public EntityManagerService getEntityManagerService(){
+        return new EntityManagerService(getEntityManager());
     }
 }

@@ -1,8 +1,8 @@
 package com.netcracker.controller.friendlist;
 
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.managefriends.ManageFriendService;
-import com.netcracker.service.petprofile.PetProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +18,11 @@ import java.util.List;
 public class FriendListController {
 
     @Autowired
-    ManageFriendService friendProfileService;
+    ManageFriendService manageFriendService;
 
     @GetMapping("/{id}")
     public List<Profile> getMyFriends(@PathVariable("id") BigInteger id) {
-        return friendProfileService.getFriendList(id, false, null, null);// temp values
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        return manageFriendService.getFriendList(id);
     }
 }

@@ -1,13 +1,12 @@
 package com.netcracker.service.petprofile;
 
 import com.netcracker.model.pet.Pet;
+import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
-import javafx.util.Pair;
 
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface PetProfileService {
 //    Система должна позволять зарегистрированному пользователю создавать страницу питомца
@@ -33,10 +32,16 @@ public interface PetProfileService {
     //Получить питомца с конкретным ID
     Pet getPetById(BigInteger petId);
 
+    //Получить вид питомца
+    PetSpecies getConcretePetSpecies(BigInteger petId);
+
     //Получить список всех животных
-    List<Pet> getAllPets(boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+    List<Pet> getAllPets();
 
     //Получить список животных переданного профиля
-    List<Pet> getAllProfilePets(BigInteger profileId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+    List<Pet> getAllProfilePets(BigInteger profileId);
+
+    //Получить список видов
+    List<PetSpecies> getAllSpecies();
 
 }

@@ -1,5 +1,6 @@
 package com.netcracker.controller.gallery;
 
+import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.service.media.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import java.util.List;
 public class GalleryController {
     @Autowired
     MediaService mediaService;
-
 //    @GetMapping("/{id}")
 //    public PhotoAlbum getAlbum(@PathVariable("id") BigInteger albumId){
 //        return mediaService.getAlbum(albumId);
@@ -23,6 +23,7 @@ public class GalleryController {
 
     @GetMapping("/{id}")
     public List<PhotoRecord> getImagesGalary(@PathVariable("id") BigInteger albumId){
-        return mediaService.getImagesGallery(albumId, false, null, null); //temp values
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        return mediaService.getImagesGallery(albumId);
     }
 }

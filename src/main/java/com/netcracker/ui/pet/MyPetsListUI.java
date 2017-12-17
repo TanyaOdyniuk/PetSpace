@@ -6,6 +6,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class MyPetsListUI extends Panel {
+public class MyPetsListUI extends VerticalLayout {
 
     private BigInteger profileId;
 
@@ -27,10 +28,28 @@ public class MyPetsListUI extends Panel {
     public MyPetsListUI(BigInteger profileId){
         super();
         this.profileId = profileId;
-        setWidth("100%");
-        setHeight("100%");
+
+        this.addStyleName("v-scrollable");
+        this.setHeight("100%");
+
+        Panel mainPanel = new Panel();
+        /*mainPanel.setWidth("100%");
+        mainPanel.setHeight(750, Unit.PIXELS);*/
         VerticalLayout petRecordsLayout = new VerticalLayout();
+        Button addNewPet = new Button("Добавить нового питомца", VaadinIcons.PLUS);
+        addNewPet.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetFormUI());
+            }
+        });
         List<Pet> petList = getProfilePets(profileId);
+        if(petList == null){
+            Label noPetsLabel = PageElements.createLabel(5, "У вас ещё нет питомца!");
+            mainPanel.setContent(noPetsLabel);
+            addComponents(addNewPet, mainPanel);
+            return;
+        }
         for (Pet pet: petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
@@ -49,18 +68,19 @@ public class MyPetsListUI extends Panel {
                     ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
                 }
             });
-            Label petInfoSign = PageElements.createGrayLabel("Информация о питомце");
-            Label petInfo = PageElements.createStandartLabel(PageElements.htmlTabulation + pet.getPetSpecificParam());
+            Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
+            petInfo.setCaption("Информация о питомце");
 
             //PET INFO
-            petInfoLayout.addComponents(petNameSign, petName, petInfoSign, petInfo);
+            petInfoLayout.addComponents(petNameSign, petName, petInfo);
 
             //INFO + AVATAR
             petRecord.addComponents(petAvatar, petInfoLayout);
 
             petRecordsLayout.addComponents(petRecord, PageElements.getSeparator());
         }
-        setContent(petRecordsLayout);
+        mainPanel.setContent(petRecordsLayout);
+        addComponents(addNewPet, mainPanel);
     }
 
     private List<Pet> getProfilePets(BigInteger profileId){
