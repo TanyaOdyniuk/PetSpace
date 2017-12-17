@@ -20,6 +20,8 @@ public interface MediaService {
 //    List<WallRecord> imagesGalary(Profile profile);
     List<PhotoRecord> getImagesGallery(BigInteger albumId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
 
+    List<PhotoAlbum> getMyAlbums(BigInteger petId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
+
     PhotoAlbum getAlbum(BigInteger albumId);
 
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев

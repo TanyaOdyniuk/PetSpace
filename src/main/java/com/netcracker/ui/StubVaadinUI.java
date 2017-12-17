@@ -5,7 +5,7 @@ import com.netcracker.model.StubUser;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
-import com.netcracker.ui.gallery.GalleryUI;
+import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -127,7 +127,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new GalleryUI(BigInteger.valueOf(26)));
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(203)));
+//                primaryAreaLayout.addComponentsAndExpand(new GalleryUI(BigInteger.valueOf(26)));
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));

@@ -33,6 +33,14 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
+    public List<PhotoAlbum> getMyAlbums(BigInteger petId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc) {
+        String getAlbumsQuery =
+                "SELECT OBJECT_ID FROM OBJREFERENCE WHERE ATTRTYPE_ID = 302 AND REFERENCE = " + petId;
+        List<PhotoAlbum> albumsList = managerAPI.getObjectsBySQL(getAlbumsQuery, PhotoAlbum.class, isPaging, pagingDesc, sortingDesc);
+        return albumsList;
+    }
+
+    @Override
     public PhotoAlbum getAlbum(BigInteger albumId) {
         PhotoAlbum photoAlbum = managerAPI.getById(albumId, PhotoAlbum.class);
         return photoAlbum;
