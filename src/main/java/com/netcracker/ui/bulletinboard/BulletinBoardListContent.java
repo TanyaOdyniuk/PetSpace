@@ -7,7 +7,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubPagingBar;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.netcracker.ui.util.PageNumber;
+import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
@@ -244,7 +244,7 @@ public class BulletinBoardListContent extends VerticalLayout {
             ((TextField) pagingLayout.getComponent(3)).addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
                 @Override
                 public void handleAction(Object o, Object o1) {
-                    BinderValidationStatus<PageNumber> status = pagingLayout.pageNumberFieldBinder.validate();
+                    BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
                         getData(isNotSelectedCategories, isTopicFilter, pagingLayout.currentPageNumber);

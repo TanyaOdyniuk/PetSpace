@@ -8,6 +8,9 @@ import com.netcracker.ui.AbstractClickListener;
 
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.netcracker.ui.util.VaadinValidationBinder;
+import com.vaadin.data.BeanValidationBinder;
+import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
@@ -23,6 +26,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.netcracker.ui.validation.UiValidationConstants.CHECK_FULLNESS;
+
 public class NewAdvertisementForm extends Window {
     private HorizontalLayout authorTopicDateLayout;
     private HorizontalLayout categoryPetStatusLayout;
@@ -34,6 +39,7 @@ public class NewAdvertisementForm extends Window {
     private TwinColSelect<Pet> selectedPets;
     private CheckBox selectedStatus;
     private TextArea mainInfo;
+    Binder<VaadinValidationBinder> mainInfoBinder;
     public NewAdvertisementForm() {
         super();
         Window subWindow = new Window("Sub-window");
@@ -51,14 +57,18 @@ public class NewAdvertisementForm extends Window {
         submit.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                addNewAdvertisement();
+                if(mainInfoBinder.validate().isOk()){
+                    addNewAdvertisement();
+                }
             }
         });
         subContent.addComponent(submit);
         center();
     }
     private void addNewAdvertisement(){//установить статус, карту, характерные признаки
+
         Advertisement newAd = new Advertisement(topicField.getValue(), "Ad for " + profile.getObjectId());
+        //newAd.setObjectId(BigInteger.valueOf(123000L));
         newAd.setAdCategory(selectedCategory.getSelectedItem().get());
         newAd.setAdAuthor(profile);
         newAd.setAdBasicInfo(mainInfo.getValue());
@@ -74,12 +84,8 @@ public class NewAdvertisementForm extends Window {
             Notification.show("Advertisement was added!");
         }
         this.close();
-        StubVaadinUI n = (StubVaadinUI) UI.getCurrent();
-        VerticalLayout panel = n.getLeftPanel();
-        Panel p = (Panel)panel.getComponent(0);
-        VerticalLayout v =(VerticalLayout)p.getContent();
-        Button b = (Button)v.getComponent(4);
-        b.click();
+        StubVaadinUI currentUI = (StubVaadinUI) UI.getCurrent();
+        currentUI.changePrimaryAreaLayout(new AdvertisementView(newAd));
     }
     private void getAuthorTopicDateLayout() {
         authorTopicDateLayout = new HorizontalLayout();
@@ -98,6 +104,7 @@ public class NewAdvertisementForm extends Window {
         authorField.setValue(authorInfo);
         authorField.setReadOnly(true);
         selectedCategory = new ComboBox<>("Category");
+        selectedCategory.setEmptySelectionAllowed(false);
         selectedCategory.setIcon(VaadinIcons.FILTER);
         selectedCategory.setRequiredIndicatorVisible(true);
         selectedCategory.setPlaceholder("Type category");
@@ -106,6 +113,7 @@ public class NewAdvertisementForm extends Window {
                         "/category", Category[].class));
         selectedCategory.setItems(categories);
         selectedCategory.setItemCaptionGenerator(Category::getCategoryName);
+        selectedCategory.setSelectedItem(categories.get(0));
         authorTopicDateLayout.addComponent(topicField);
         authorTopicDateLayout.addComponent(selectedCategory);
         authorTopicDateLayout.addComponent(dateTimeField);
@@ -130,11 +138,15 @@ public class NewAdvertisementForm extends Window {
         categoryPetStatusLayout.addComponent(selectedPets);
     }
     private void getMainInfoLayout(){
+        mainInfoBinder = new Binder<>();
         mainInfoLayout = new HorizontalLayout();
         mainInfo = new TextArea("Main info");
         mainInfo.setRows(5);
         mainInfo.setRequiredIndicatorVisible(true);
         mainInfo.setWidth("100%");
+        mainInfoBinder.forField(mainInfo)
+                .asRequired(CHECK_FULLNESS)
+                .bind(VaadinValidationBinder::getMainInfo, VaadinValidationBinder::setMainInfo);
         mainInfoLayout.setWidth("100%");
         mainInfoLayout.addComponent(mainInfo);
     }

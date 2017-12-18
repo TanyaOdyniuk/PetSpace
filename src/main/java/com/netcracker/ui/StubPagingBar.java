@@ -1,6 +1,6 @@
 package com.netcracker.ui;
 
-import com.netcracker.ui.util.PageNumber;
+import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -18,7 +18,7 @@ public class StubPagingBar extends HorizontalLayout {
     private final int minPageSize;
     private final int maxPageSize;
     public int currentPageNumber;
-    public Binder<PageNumber> pageNumberFieldBinder;
+    public Binder<VaadinValidationBinder> pageNumberFieldBinder;
 
     public StubPagingBar(int maxPageSize) {
         minPageSize = currentPageNumber = 1;
@@ -49,6 +49,6 @@ public class StubPagingBar extends HorizontalLayout {
         pageNumberFieldBinder.forField(pageNumberField)
                 .withConverter(new StringToIntegerConverter("Must be integer value"))
                 .withValidator(new IntegerRangeValidator("Not valid page number", minPageSize, maxPageSize))
-                .bind(PageNumber::getPageNumber, PageNumber::setPageNumber);
+                .bind(VaadinValidationBinder::getPageNumber, VaadinValidationBinder::setPageNumber);
     }
 }

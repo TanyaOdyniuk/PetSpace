@@ -4,7 +4,7 @@ import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
 import com.netcracker.ui.*;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.netcracker.ui.util.PageNumber;
+import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
@@ -246,7 +246,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
             ((TextField) pagingLayout.getComponent(3)).addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
                 @Override
                 public void handleAction(Object o, Object o1) {
-                    BinderValidationStatus<PageNumber> status = pagingLayout.pageNumberFieldBinder.validate();
+                    BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
                         getData(isNotSelectedCategories, isTopicFilter, pagingLayout.currentPageNumber);

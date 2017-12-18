@@ -13,13 +13,15 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
 @ObjectType(AdvertisementConstant.AD_TYPE)
 public class Advertisement extends BaseEntity {
     @Attribute(AdvertisementConstant.AD_DATE)
-    private Date adDate;
+    //private Date adDate;
+    private Timestamp adDate;
     @Attribute(AdvertisementConstant.AD_TOPIC)
     private String adTopic;
     @Attribute(AdvertisementConstant.AD_PET_SIGNS)
@@ -52,12 +54,20 @@ public class Advertisement extends BaseEntity {
     public Advertisement(String name, String description) {
         super(name, description);
     }
-
+/*
     public Date getAdDate() {
         return adDate;
     }
 
     public void setAdDate(Date adDate) {
+        this.adDate = adDate;
+    }*/
+
+    public Timestamp getAdDate() {
+        return adDate;
+    }
+
+    public void setAdDate(Timestamp adDate) {
         this.adDate = adDate;
     }
 
