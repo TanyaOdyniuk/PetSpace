@@ -206,7 +206,8 @@ public class EntityManager {
         inParam.put("P_ATTR_ID", ((Pair) entry.getKey()).getKey());
         Integer seq_no = (Integer) (((Pair) entry.getKey()).getValue());
         inParam.put("P_SEQ_NO", seq_no == 0 ? null : BigInteger.valueOf(seq_no));
-        if (entry.getValue().getClass().getSimpleName().equals("String")) {
+        String entryClassName = entry.getValue().getClass().getSimpleName();
+        if (entryClassName.equals("String")) {
             if (entry.getValue().equals("-1")) {
                 inParam.put("p_VALUE", null);
             } else {
@@ -214,12 +215,19 @@ public class EntityManager {
             }
             inParam.put("p_DATE_VALUE", null);
 
-        } else if (entry.getValue().getClass().getSimpleName().equals("Date")) {
+        } else if (entryClassName.equals("Date")) {
             inParam.put("p_VALUE", null);
             if (((Date) entry.getValue()).getTime() == new Date(-1).getTime()) {
                 inParam.put("p_DATE_VALUE", null);
             } else {
                 inParam.put("p_DATE_VALUE", new Timestamp(((Date) entry.getValue()).getTime()));
+            }
+        } else if ( entryClassName.equals("Timestamp")) {
+            inParam.put("p_VALUE", null);
+            if (((Timestamp) entry.getValue()).getTime() == new Date(-1).getTime()) {
+                inParam.put("p_DATE_VALUE", null);
+            } else {
+                inParam.put("p_DATE_VALUE", entry.getValue());
             }
         }
         inParam.put("p_TO_DEL", delete);

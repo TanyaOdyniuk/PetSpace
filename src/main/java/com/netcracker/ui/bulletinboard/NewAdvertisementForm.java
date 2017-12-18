@@ -9,17 +9,14 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
-import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -39,7 +36,8 @@ public class NewAdvertisementForm extends Window {
     private TwinColSelect<Pet> selectedPets;
     private CheckBox selectedStatus;
     private TextArea mainInfo;
-    Binder<VaadinValidationBinder> mainInfoBinder;
+    private Binder<VaadinValidationBinder> mainInfoBinder;
+    private Binder<VaadinValidationBinder> topicBinder;
     public NewAdvertisementForm() {
         super();
         Window subWindow = new Window("Sub-window");
@@ -57,7 +55,7 @@ public class NewAdvertisementForm extends Window {
         submit.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                if(mainInfoBinder.validate().isOk()){
+                if(topicBinder.validate().isOk() && mainInfoBinder.validate().isOk()){
                     addNewAdvertisement();
                 }
             }
@@ -66,17 +64,14 @@ public class NewAdvertisementForm extends Window {
         center();
     }
     private void addNewAdvertisement(){//установить статус, карту, характерные признаки
-
         Advertisement newAd = new Advertisement(topicField.getValue(), "Ad for " + profile.getObjectId());
-        //newAd.setObjectId(BigInteger.valueOf(123000L));
         newAd.setAdCategory(selectedCategory.getSelectedItem().get());
         newAd.setAdAuthor(profile);
         newAd.setAdBasicInfo(mainInfo.getValue());
         newAd.setAdIsVip(selectedStatus.getValue());
         newAd.setAdPets(selectedPets.getSelectedItems());
         Timestamp ts = Timestamp.valueOf(dateTimeField.getValue());
-        java.sql.Date date = new java.sql.Date(ts.getTime());
-        newAd.setAdDate(date);
+        newAd.setAdDate(ts);
         newAd.setAdTopic(topicField.getValue());
         HttpEntity<Advertisement> request = new HttpEntity<>(newAd);
         Advertisement ad = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/add", request, Advertisement.class);
@@ -90,11 +85,17 @@ public class NewAdvertisementForm extends Window {
     private void getAuthorTopicDateLayout() {
         authorTopicDateLayout = new HorizontalLayout();
         topicField = new TextField("Topic");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        topicField.setRequiredIndicatorVisible(true);
+        topicBinder = new Binder<>();
+        topicBinder.forField(topicField)
+                .asRequired(CHECK_FULLNESS)
+                .bind(VaadinValidationBinder::getString, VaadinValidationBinder::setString);
+        String dateFormatPattern = "yyyy-MM-dd HH:mm:ss";
+        DateFormat dateFormat = new SimpleDateFormat(dateFormatPattern);
         Date date = new Date();
         LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         dateTimeField = new DateTimeField("Date");
-        dateTimeField.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateTimeField.setDateFormat(dateFormatPattern);
         dateTimeField.setValue(localDateTime);
         dateTimeField.setReadOnly(true);
         TextField authorField = new TextField("Author");
@@ -146,7 +147,7 @@ public class NewAdvertisementForm extends Window {
         mainInfo.setWidth("100%");
         mainInfoBinder.forField(mainInfo)
                 .asRequired(CHECK_FULLNESS)
-                .bind(VaadinValidationBinder::getMainInfo, VaadinValidationBinder::setMainInfo);
+                .bind(VaadinValidationBinder::getString, VaadinValidationBinder::setString);
         mainInfoLayout.setWidth("100%");
         mainInfoLayout.addComponent(mainInfo);
     }

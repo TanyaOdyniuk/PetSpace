@@ -15,6 +15,7 @@ import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         Grid.Column informationColumn = grid.addColumn(ad ->
                 ad.getAdBasicInfo()).setCaption("Basic Info").setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
-                ad.getAdDate()).setCaption("Date").setSortable(false);
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setCaption("Date").setSortable(false);
         Grid.Column statusColumn = grid.addColumn(ad ->
                 (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setSortable(false);
         Grid.Column categoryColumn = grid.addColumn(ad ->

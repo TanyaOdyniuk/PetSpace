@@ -18,6 +18,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         Grid.Column informationColumn = grid.addColumn(ad ->
                 ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(200).setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
-                ad.getAdDate()).setCaption("Date");
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setCaption("Date");
         Grid.Column statusColumn = grid.addColumn(ad ->
                 (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setSortable(false);
         Grid.Column categoryColumn = grid.addColumn(ad ->

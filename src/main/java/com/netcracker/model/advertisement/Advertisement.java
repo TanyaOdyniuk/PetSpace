@@ -54,14 +54,6 @@ public class Advertisement extends BaseEntity {
     public Advertisement(String name, String description) {
         super(name, description);
     }
-/*
-    public Date getAdDate() {
-        return adDate;
-    }
-
-    public void setAdDate(Date adDate) {
-        this.adDate = adDate;
-    }*/
 
     public Timestamp getAdDate() {
         return adDate;

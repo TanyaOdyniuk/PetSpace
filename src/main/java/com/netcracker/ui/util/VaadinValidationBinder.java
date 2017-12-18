@@ -2,7 +2,7 @@ package com.netcracker.ui.util;
 
 public class VaadinValidationBinder {
     private int pageNumber;
-    private String mainInfo;
+    private String string;
     public int getPageNumber() {
         return pageNumber;
     }
@@ -11,11 +11,11 @@ public class VaadinValidationBinder {
         this.pageNumber = pageNumber;
     }
 
-    public String getMainInfo() {
-        return mainInfo;
+    public String getString() {
+        return string;
     }
 
-    public void setMainInfo(String mainInfo) {
-        this.mainInfo = mainInfo;
+    public void setString(String string) {
+        this.string = string;
     }
 }
