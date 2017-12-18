@@ -158,6 +158,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
                 CustomRestTemplate.getInstance()
                         .customGetForObject("/bulletinboard/myAds/" + profileId + "/" + pageNumber,
                                 Advertisement[].class));
+        if(ads.isEmpty()){
+            Notification.show("No ads were found");
+        }
         grid.setItems(ads);
     }
 
@@ -168,6 +171,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         HttpEntity<Category[]> createRequest = new HttpEntity<>(categories);
         List<Advertisement> ads = Arrays.asList(CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/my/categorytopic/" + profileId + '/' + topic + '/' + pageNumber,
                 createRequest, Advertisement[].class));
+        if(ads.isEmpty()){
+            Notification.show("No ads with the specified filters were found");
+        }
         grid.setItems(ads);
     }
 
