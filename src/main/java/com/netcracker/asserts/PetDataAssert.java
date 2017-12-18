@@ -1,5 +1,6 @@
 package com.netcracker.asserts;
 
+import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.exceptions.PetDataValidationException;
 
 import java.util.regex.Matcher;
@@ -8,29 +9,24 @@ import java.util.regex.Pattern;
 public class PetDataAssert {
 
     public static void assertName(String name) throws PetDataValidationException {
-        String message = "Проверьте правильность введенного\nимени питомца!";
-        commomStringValidation(name, RegexTemplate.PET_NAME, message);
+        commomStringValidation(name, RegexTemplate.PET_NAME, ErrorMessage.PET_VALIDATION_NAME);
     }
 
     public static void assertAvatarURL(String url) throws PetDataValidationException {
-        String message = "Проверьте правильность введенного\nадреса картинки аватара!";
-        commomStringValidation(url, RegexTemplate.URL_IMAGE, message);
+        commomStringValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
     }
 
     public static Double assertHeight(String height) throws PetDataValidationException {
-        String messageToThrow = "Проверьте правильность ввода\nроста питомца";
-        return commonSizeValidation(height, messageToThrow);
+        return commonSizeValidation(height, ErrorMessage.PET_VALIDATION_HEIGHT);
     }
 
     public static Double assertWeight(String weight) throws PetDataValidationException {
-        String messageToThrow = "Проверьте правильность ввода\nвеса питомца";
-        return commonSizeValidation(weight, messageToThrow);
+        return commonSizeValidation(weight, ErrorMessage.PET_VALIDATION_WEIGHT);
     }
 
     public static Integer assertAge(String age) throws PetDataValidationException {
-        String messageToThrow = "Проверьте правильность ввода\nвозраста питомца";
         try {
-            ObjectAssert.isNullOrEmpty(age, messageToThrow);
+            ObjectAssert.isNullOrEmpty(age, ErrorMessage.PET_VALIDATION_AGE);
             if (ObjectAssert.isConvertibleToInteger(age)){
                 Integer result = Integer.parseInt(age);
                 if(result > 0)
@@ -38,7 +34,7 @@ public class PetDataAssert {
             }
             throw new IllegalArgumentException();
         } catch (IllegalArgumentException ex) {
-            throw new PetDataValidationException(messageToThrow);
+            throw new PetDataValidationException(ErrorMessage.PET_VALIDATION_AGE);
         }
     }
 
