@@ -30,7 +30,8 @@ class StubTopBar extends HorizontalLayout {
         Button button3 = getNewButton("Users", VaadinIcons.USER, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button button4 = getNewButton("Pets", VaadinIcons.MEDAL, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button button5 = getNewButton("Bulletin board", VaadinIcons.CALENDAR_USER, ValoTheme.BUTTON_FRIENDLY, clickListener);
-        addComponentsAndExpand(button1, button2, button3, button4, button5);
+        Button button6 = getNewButton("Logout", VaadinIcons.EXIT, ValoTheme.BUTTON_DANGER, clickListener);
+        addComponentsAndExpand(button1, button2, button3, button4, button5, button6);
     }
 
     private Button getNewButton(String caption, VaadinIcons icon, String style, Button.ClickListener listener) {

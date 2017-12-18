@@ -4,6 +4,7 @@ import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
+import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -16,6 +17,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     private final VerticalLayout addUsersLayout;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
         this.stubUserEditor = stubUserEditor;
         grid = new Grid<>(StubUser.class);
@@ -64,6 +69,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     protected void init(VaadinRequest request) {
+        userService.getCurrentUser();
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(999999999);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Notification.show(auth.getName());
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
@@ -137,6 +144,11 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));
+                break;
+            case "Logout":
+                getPage().setLocation("/authorization");
+                SecurityContextHolder.getContext().setAuthentication(null);
+                getSession().close();
                 break;
             default:
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);

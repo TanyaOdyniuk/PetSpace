@@ -9,17 +9,17 @@ import com.netcracker.service.util.EmailService;
 import com.netcracker.service.util.RandomStringGenerator;
 import com.netcracker.ui.login.LoginPage;
 import com.vaadin.ui.Notification;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -48,9 +48,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         } else {
             user.setPassword(newPassword.nextString());
             entityManagerService.update(user);
-            ApplicationContext context = new ClassPathXmlApplicationContext("SpringMail.xml");
-            emailService = (EmailService) context.getBean("mailMail");
+            emailService = (EmailService) new ClassPathXmlApplicationContext("SpringMail.xml").getBean("mailMail");
             emailService.sendMail("PetSpaceInfo@gmail.com", "levil133@gmail.com", "Your new password MATE", "Your new password is: " + user.getPassword());
+            emailService.sendMail("PetSpaceInfo@gmail.com", "tanyaodyniuk@gmail.com", "Your new password MATE", "Your new password is: " + user.getPassword());
+            emailService.sendMail("PetSpaceInfo@gmail.com", "dok.ttv@gmail.com", "Your new password MATE", "Your new password is: " + user.getPassword());
+            emailService.sendMail("PetSpaceInfo@gmail.com", "vlad.drabynka@gmail.com", "Your new password MATE", "Your new password is: " + user.getPassword());
+            emailService.sendMail("PetSpaceInfo@gmail.com", "galaolala@gmail.coma", "Your new password MATE", "Your new password is: " + user.getPassword());
             return user;
         }
     }
