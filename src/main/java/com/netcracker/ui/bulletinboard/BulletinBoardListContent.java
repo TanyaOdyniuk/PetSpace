@@ -91,7 +91,6 @@ public class BulletinBoardListContent extends VerticalLayout {
         HorizontalLayout topicSearch = new HorizontalLayout();
         topicSearch.setCaption("Search by topic");
         HorizontalLayout selDeselButtonsLayout = new HorizontalLayout();
-        //Button filter = new Button("Filter");
         Button selectAll = new Button("Select all");
         Button deselectAll = new Button("Deselect all");
         categoryFilter = new CheckBoxGroup<>("Categories");
@@ -148,7 +147,6 @@ public class BulletinBoardListContent extends VerticalLayout {
         topicSearch.addComponent(searchTopic);
         categoryFilterLayout.addComponent(topicSearch);
     }
-
     private List<Category> getAllCategories() {
         return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(

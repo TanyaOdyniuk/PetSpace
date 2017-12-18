@@ -58,7 +58,6 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
                 + profileId;
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
         boolean checkTopic = (topic != null && !topic.isEmpty());
         boolean checkCategory = (categories != null && !(categories.length == 0));
         if (checkCategory || checkTopic) {
@@ -231,17 +230,17 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
                 + profileId;
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         List<Advertisement> advertisements;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
-        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
+        queryDescriptor.addPagingDescriptor(pageNumber, myAdPageCapacity);
         queryDescriptor.addSortingDesc(6, "DESC", true);
         boolean checkTopic = (topic != null && !topic.isEmpty());
         boolean checkCategory = (categories != null && !(categories.length == 0));
         if (checkCategory || checkTopic) {
             getAdsQuery += " INTERSECT ";
             if (checkTopic) {
-                getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
                         " FROM Attributes WHERE ATTRTYPE_ID ="
                         + AdvertisementConstant.AD_TOPIC +
                         " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
