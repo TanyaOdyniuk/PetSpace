@@ -101,7 +101,7 @@ public class PetPageUI extends VerticalLayout {
         Label petBreed = PageElements.createCheckedValueLabel(pet.getPetBreed());
         petBreed.setCaption("Порода");
 
-        Label petAge = PageElements.createCheckedValueLabel(pet.getPetAge().toString(), "лет");
+        Label petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "лет");
         petAge.setCaption("Возраст");
 
         Label petOwnerSign = PageElements.createLabel(2, "Владелец");
@@ -117,10 +117,10 @@ public class PetPageUI extends VerticalLayout {
 
         Label additionInfo = PageElements.createGrayLabel("Дополнительная информация");
 
-        Label petWeight = PageElements.createCheckedValueLabel(pet.getPetWeight().toString(), "кг");
+        Label petWeight = PageElements.createCheckedValueLabel(pet.getPetWeight(), "кг");
         petWeight.setCaption("Вес");
 
-        Label petHeight = PageElements.createCheckedValueLabel(pet.getPetHeight().toString(), "м");
+        Label petHeight = PageElements.createCheckedValueLabel(pet.getPetHeight(), "м");
         petHeight.setCaption("Рост");
 
         Label petSpecParam = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
@@ -136,18 +136,18 @@ public class PetPageUI extends VerticalLayout {
 
         PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
         HorizontalLayout photosLayout = new HorizontalLayout();
-        if (album != null) {
+        /*if (album != null) {
             List<PhotoRecord> photos = album.getPhotoRecords();
             for (PhotoRecord record : photos) {
                 Image photo = new Image(record.getPhoto());
                 photosLayout.addComponentsAndExpand(photo);
             }
-        } else {
+        } else {*/
             for (int i = 0; i < 4; i++) {
                 Image emptyPhoto = PageElements.getNoImage();
                 photosLayout.addComponentsAndExpand(emptyPhoto);
             }
-        }
+        //}
 
         galleryPanel.setContent(photosLayout);
         rightPagePart.addComponents(infoPanel, galleryPanel);

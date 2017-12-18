@@ -21,13 +21,18 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class AllPetsListUI extends Panel {
+public class AllPetsListUI extends VerticalLayout {
+
+    private int browserHeight;
 
     @Autowired
     public AllPetsListUI() {
         super();
-        setWidth("100%");
-        setHeight("100%");
+        this.browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
+
+        Panel mainPanel = new Panel();
+        mainPanel.setWidth("100%");
+        mainPanel.setHeight(browserHeight - 250, Unit.PIXELS);
         VerticalLayout petRecordsLayout = new VerticalLayout();
         List<Pet> petList = getAllPets();
         for (Pet pet : petList) {
@@ -40,7 +45,9 @@ public class AllPetsListUI extends Panel {
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
-            Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + pet.getPetOwner().getObjectId(), Profile.class);
+            Profile buff = pet.getPetOwner();
+            System.out.println(pet.getPetName());
+            Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + buff.getObjectId(), Profile.class);
 
             Label petNameSign = PageElements.createGrayLabel("Кличка питомца");
             Button petName = PageElements.createClickedLabel(pet.getPetName());
@@ -70,7 +77,8 @@ public class AllPetsListUI extends Panel {
 
             petRecordsLayout.addComponents(petRecord, PageElements.getSeparator());
         }
-        setContent(petRecordsLayout);
+        mainPanel.setContent(petRecordsLayout);
+        addComponent(mainPanel);
     }
 
     private List<Pet> getAllPets() {
