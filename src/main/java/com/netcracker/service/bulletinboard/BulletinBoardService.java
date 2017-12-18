@@ -9,20 +9,18 @@ import java.util.List;
 
 @Service
 public interface BulletinBoardService {
+    int getAllAdPageCount(String topic, Category[] categories);
     int getAllAdPageCount();
     int getMyProfileAdPageCount(BigInteger profileId);
-    int getPageCountTopicSearch(String topic);
+    int getMyProfileAdPageCount(BigInteger profileId, String topic, Category[] categories);
 
     List<Advertisement> getProfileAds(Integer pageNumber);
+    List<Advertisement> getProfileAds(Integer pageNumber, String topic, Category[] categories);
+
     List<Advertisement> getMyProfileAds(BigInteger profileId, Integer pageNumber);
-
-    List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories);
-    List<Advertisement> getAllAdAfterCatFilterFromProfile(Integer pageNumber, Integer profileId, Category[] categories);
-
-    List<Advertisement> getAdvertisementListTopicSearch(Integer pageNumber, String topic);
+    List<Advertisement> getMyProfileAds(Integer pageNumber, BigInteger profileId, String topic, Category[] categories);
 
     Advertisement addAd(Advertisement ad);
-
     /**
      *Система должна вывести на экран полную информацию об объявлении, скрыв пустые поля
      */

@@ -91,7 +91,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         HorizontalLayout topicSearch = new HorizontalLayout();
         topicSearch.setCaption("Search by topic");
         HorizontalLayout selDeselButtonsLayout = new HorizontalLayout();
-        Button filter = new Button("Filter");
+        //Button filter = new Button("Filter");
         Button selectAll = new Button("Select all");
         Button deselectAll = new Button("Deselect all");
         categoryFilter = new CheckBoxGroup<>("Categories");
@@ -119,7 +119,6 @@ public class BulletinBoardListContent extends VerticalLayout {
         categoryFilterLayout.addComponent(selDeselButtonsLayout);
         filterPanel.setContent(categoryFilter);
         categoryFilterLayout.addComponent(filterPanel);
-        categoryFilterLayout.addComponent(filter);
         categoryFilterLayout.addComponent(PageElements.getSeparator());
         topicField.setPlaceholder("Type topic here");
         Button searchTopic = new Button("", VaadinIcons.SEARCH);
@@ -128,31 +127,26 @@ public class BulletinBoardListContent extends VerticalLayout {
             public void buttonClickListener() {
                 if (!topicField.isEmpty()) {
                     topic = topicField.getValue();
-                    advertisementListTopicSearch(1);
-                    deselectAll.click();
-                    selectedCategories = new Category[0];
+                    if (categoryFilter.getSelectedItems().size() > 0) {
+                        selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
+                        categoryFilter.getSelectedItems().toArray(selectedCategories);
+                    }
+                    advertisementList(1, topic, selectedCategories);
                     getPagingLayout();
                 } else {
                     topic = "";
+                    if (categoryFilter.getSelectedItems().size() > 0) {
+                        selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
+                        categoryFilter.getSelectedItems().toArray(selectedCategories);
+                    }
+                    advertisementList(1, topic, selectedCategories);
+                    getPagingLayout();
                 }
             }
         });
         topicSearch.addComponent(topicField);
         topicSearch.addComponent(searchTopic);
         categoryFilterLayout.addComponent(topicSearch);
-        filter.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                if (categoryFilter.getSelectedItems().size() > 0) {
-                    selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
-                    categoryFilter.getSelectedItems().toArray(selectedCategories);
-                    advertisementListAfterCatFilter(1);
-                    topicField.setValue("");
-                    topic = "";
-                    getPagingLayout();
-                }
-            }
-        });
     }
 
     private List<Category> getAllCategories() {
@@ -167,21 +161,21 @@ public class BulletinBoardListContent extends VerticalLayout {
                         "/bulletinboard/" + pageNumber, Advertisement[].class));
         grid.setItems(ads);
     }
-
-    private int getPageCount() {
-        return CustomRestTemplate.getInstance().customGetForObject(
-                "/bulletinboard/pageCount", Integer.class);
+    private void advertisementList(int pageNumber, String topic, Category[] categories){
+        if(topic.isEmpty()){
+            topic = "empty";
+        }
+        HttpEntity<Category[]> createRequest = new HttpEntity<>(categories);
+        List<Advertisement> ads = Arrays.asList(CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/categorytopic/" + topic + '/' + pageNumber,
+                createRequest, Advertisement[].class));
+        grid.setItems(ads);
     }
 
     private void getData(boolean isNotSelectedCategories, boolean isTopicFilter, int page) {
         if (isNotSelectedCategories && !isTopicFilter) {
             advertisementList(page);
         } else {
-            if (isTopicFilter) {
-                advertisementListTopicSearch(page);
-            } else {
-                advertisementListAfterCatFilter(page);
-            }
+            advertisementList(page,topic, selectedCategories);
         }
         ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
     }
@@ -194,13 +188,14 @@ public class BulletinBoardListContent extends VerticalLayout {
         boolean isNotSelectedCategories = (selectedCategories.length == 0);
         boolean isTopicFilter = !topic.isEmpty();
         if (isNotSelectedCategories && !isTopicFilter) {
-            pageCount = getPageCount();
+            pageCount = CustomRestTemplate.getInstance().customGetForObject(
+                    "/bulletinboard/pageCount", Integer.class);
         } else {
-            if (isTopicFilter) {
-                pageCount = getPageCountTopicSearch(topic);
-            } else {
-                pageCount = getPageCountAfterCatFilter();
+            HttpEntity<Category[]> createRequest = new HttpEntity<>(selectedCategories);
+            if(topic.isEmpty()){
+                topic = "empty";
             }
+            pageCount = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/categorytopic/" + topic, createRequest, Integer.class);
         }
         if (pageCount > 1) {
             pagingLayout = new StubPagingBar(pageCount);
@@ -254,31 +249,5 @@ public class BulletinBoardListContent extends VerticalLayout {
             });
             gridPagingLayout.addComponent(pagingLayout);
         }
-    }
-
-    //Search
-    private int getPageCountTopicSearch(String topic) {
-        return CustomRestTemplate.getInstance().customGetForObject("/bulletinboard/pageCount/topicSearch/" + topic, Integer.class);
-    }
-
-    private void advertisementListTopicSearch(int pageNumber) {
-        List<Advertisement> ads = Arrays.asList(
-                CustomRestTemplate.getInstance().customGetForObject(
-                        "/bulletinboard/topicSearch/" + pageNumber + "/" + topic, Advertisement[].class));
-        grid.setItems(ads);
-    }
-
-    //Filters
-    private Integer getPageCountAfterCatFilter() {
-        HttpEntity<Category[]> createRequest = new HttpEntity<>(selectedCategories);
-        return CustomRestTemplate.getInstance().customPostForObject("/category/getPageCountAfterCatFilter", createRequest, Integer.class);
-    }
-
-    private void advertisementListAfterCatFilter(int pageNumber) {
-        HttpEntity<Category[]> createRequest = new HttpEntity<>(selectedCategories);
-        List<Advertisement> ads = Arrays.asList(
-                CustomRestTemplate.getInstance().customPostForObject(
-                        "/bulletinboard/category/" + pageNumber, createRequest, Advertisement[].class));
-        grid.setItems(ads);
     }
 }

@@ -16,16 +16,12 @@ public class BulletinBoardController {
     BulletinBoardService bulletinBoardService;
 
     @GetMapping("/pageCount")
-    public Integer getBulletinBoardPageCount() {
+    public Integer getAllAdPageCount() {
         return bulletinBoardService.getAllAdPageCount();
     }
 
-    @GetMapping("/pageCount/topicSearch/{topic}")
-    public Integer getPageCountTopicSearch(@PathVariable("topic") String topic){
-        return bulletinBoardService.getPageCountTopicSearch(topic);
-    }
     @GetMapping("/pageCount/{id}")
-    public Integer getBulletinBoardPageCount(@PathVariable("id") BigInteger profileId) {
+    public Integer getMyProfileAdPageCount(@PathVariable("id") BigInteger profileId) {
         return bulletinBoardService.getMyProfileAdPageCount(profileId);
     }
     @GetMapping("/{pageNumber}")
@@ -38,18 +34,37 @@ public class BulletinBoardController {
         return bulletinBoardService.getMyProfileAds(profileId, pageNumber);
     }
 
-    @PostMapping("/category/{pageNumber}")
-    public List<Advertisement> getAllAdAfterCatFilter(@PathVariable("pageNumber") Integer pageNumber, @RequestBody Category[] categories){
-        return bulletinBoardService.getAllAdAfterCatFilter(pageNumber, categories);
+    @PostMapping("/categorytopic/{topic}")
+    public Integer getPageCount(@PathVariable("topic") String topic, @RequestBody Category[] categories){
+        if(topic.equals("empty")){
+            topic = "";
+        }
+        return bulletinBoardService.getAllAdPageCount(topic, categories);
     }
 
-    @PostMapping("/category/{pageNumber}/{id}")
-    public List<Advertisement> getAllAdAfterCatFilterFromProfile(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("id") Integer profileId, @RequestBody Category[] categories){
-        return bulletinBoardService.getAllAdAfterCatFilterFromProfile(pageNumber, profileId, categories);
+    @PostMapping("/my/categorytopic/{profileId}/{topic}")
+    public Integer getMyProfileAdPageCount(@PathVariable("profileId") BigInteger profileId, @PathVariable("topic") String topic, @RequestBody Category[] categories){
+        if(topic.equals("empty")){
+            topic = "";
+        }
+        return bulletinBoardService.getMyProfileAdPageCount(profileId, topic, categories);
     }
-    @GetMapping("/topicSearch/{pageNumber}/{topic}")
-    public List<Advertisement> getAdvertisementListTopicSearch(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("topic") String topic){
-        return bulletinBoardService.getAdvertisementListTopicSearch(pageNumber, topic);
+
+    @PostMapping("/categorytopic/{topic}/{pageNumber}")
+    public List<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("topic") String topic, @RequestBody Category[] categories){
+        if(topic.equals("empty")){
+            topic = "";
+        }
+        return bulletinBoardService.getProfileAds(pageNumber, topic, categories);
+    }
+
+    @PostMapping("/my/categorytopic/{profileId}/{topic}/{pageNumber}")
+    public List<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("profileId") BigInteger profileId,
+                                             @PathVariable("topic") String topic, @RequestBody Category[] categories){
+        if(topic.equals("empty")){
+            topic = "";
+        }
+        return bulletinBoardService.getMyProfileAds(pageNumber, profileId, topic, categories);
     }
     @PostMapping("/add")
     public Advertisement addAd(@RequestBody Advertisement ad){
