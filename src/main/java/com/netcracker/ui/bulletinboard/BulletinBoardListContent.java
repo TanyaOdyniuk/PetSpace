@@ -93,8 +93,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         Panel filterPanel = new Panel();
         filterPanel.setSizeUndefined();
         categoryFilterLayout = new VerticalLayout();
-        HorizontalLayout topicSearch = new HorizontalLayout();
-        topicSearch.setCaption("Search by topic");
+        HorizontalLayout filterButtonLayout = new HorizontalLayout();
         HorizontalLayout selDeselButtonsLayout = new HorizontalLayout();
         Button selectAll = new Button("Select all");
         Button deselectAll = new Button("Deselect all");
@@ -124,9 +123,11 @@ public class BulletinBoardListContent extends VerticalLayout {
         filterPanel.setContent(categoryFilter);
         categoryFilterLayout.addComponent(filterPanel);
         categoryFilterLayout.addComponent(PageElements.getSeparator());
+        topicField.setCaption("Topic filter");
+        topicField.setWidth("100%");
         topicField.setPlaceholder("Type topic here");
-        Button searchTopic = new Button("", VaadinIcons.SEARCH);
-        searchTopic.addClickListener(new AbstractClickListener() {
+        Button filterButton = new Button("Filter", VaadinIcons.SEARCH);
+        filterButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 if (!topicField.isEmpty()) {
@@ -148,9 +149,23 @@ public class BulletinBoardListContent extends VerticalLayout {
                 }
             }
         });
-        topicSearch.addComponent(topicField);
-        topicSearch.addComponent(searchTopic);
-        categoryFilterLayout.addComponent(topicSearch);
+
+        categoryFilterLayout.addComponent(topicField);
+        categoryFilterLayout.addComponent(PageElements.getSeparator());
+        filterButtonLayout.addComponent(filterButton);
+        Button dropFiltersButton = new Button("Drop all filters", VaadinIcons.TRASH);
+        dropFiltersButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                deselectAll.click();
+                topicField.clear();
+                topic = "";
+                advertisementList(1);
+                getPagingLayout();
+            }
+        });
+        filterButtonLayout.addComponent(dropFiltersButton);
+        categoryFilterLayout.addComponent(filterButtonLayout);
     }
 
     private List<Category> getAllCategories() {
