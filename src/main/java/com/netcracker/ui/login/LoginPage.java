@@ -5,7 +5,6 @@ import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
 import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
@@ -20,15 +19,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @Theme("valo")
-@SpringUI(path = "loginform")
+@SpringUI(path = "login")
 @Title("PetSpace LOGIN")
 public class LoginPage extends UI {
 
@@ -91,13 +88,18 @@ public class LoginPage extends UI {
                     requestUser.setPassword(passwordField.getValue());
                     requestUser.setUserAuthorities(authorities);
 
-//                    HttpEntity<User> request = new HttpEntity<>(requestUser);
-//                    User user = CustomRestTemplate.getInstance().customPostForObject("/loginform", request, User.class);
-//                    if (user == null) {
-//                        Notification.show("Wrong email or password!");
-//                    } else {
-//                        LoginPage.getCurrent().getPage().setLocation("/testpage");
-//                    }
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+                    HttpEntity<User> request = new HttpEntity<>(requestUser, headers);
+
+                   //User user = CustomRestTemplate.getInstance().customPostForObject("/login", request, User.class);
+
+////                    if (user == null) {
+////                        Notification.show("Wrong email or password!");
+////                    } else {
+////                        LoginPage.getCurrent().getPage().setLocation("/testpage");
+////                    }
 
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
@@ -177,5 +179,11 @@ public class LoginPage extends UI {
             }
         });
         return layoutContent;
+    }
+
+    private static String createUserInJson(String name, String email, String password) {
+        return "{ \"name\": \"" + name + "\", " +
+                "\"emailAddress\":\"" + email + "\"," +
+                "\"password\":\"" + password + "\"}";
     }
 }

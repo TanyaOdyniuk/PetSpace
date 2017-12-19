@@ -1,5 +1,6 @@
 package com.netcracker.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 @ObjectType(UsersProfileConstant.USER_TYPE)
 public class User extends BaseEntity implements UserDetails {
 

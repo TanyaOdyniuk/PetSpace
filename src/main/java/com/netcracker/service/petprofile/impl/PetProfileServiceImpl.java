@@ -1,14 +1,14 @@
 package com.netcracker.service.petprofile.impl;
 
-import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.dao.manager.query.QueryDescriptor;
+import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
 import com.netcracker.service.petprofile.PetProfileService;
-import com.netcracker.service.user.impl.UserService;
+
+import com.netcracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
