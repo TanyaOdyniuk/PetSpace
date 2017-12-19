@@ -5,17 +5,21 @@ import com.netcracker.error.handler.ClientExceptionHandler;
 import com.vaadin.ui.Button;
 import org.springframework.web.client.HttpClientErrorException;
 
-public abstract class AbstractClickListener implements Button.ClickListener{
+public abstract class AbstractClickListener implements Button.ClickListener {
 
     private String errorMessage = ErrorMessage.ERROR_UNKNOWN;
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        try{
+        try {
             buttonClickListener();
-        } catch(HttpClientErrorException ex){
+        } catch (HttpClientErrorException ex) {
             ClientExceptionHandler.handle(ex, errorMessage);
-        }
+        } catch (IllegalArgumentException ex) {
+            ClientExceptionHandler.handleAssert(ex.getLocalizedMessage());
+        } /*catch (Exception ex) {
+            ClientExceptionHandler.handle(ex);
+        }*/
     }
 
     public void setErrorMessage(String errorMessage) {

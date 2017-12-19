@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EntityManagerService {
@@ -33,11 +34,11 @@ public class EntityManagerService {
         this.manager = manager;
     }
 
-    public int getAllCount(BigInteger objectTypeId){
+    public int getAllCount(BigInteger objectTypeId) {
         return manager.getAllCount(objectTypeId);
     }
 
-    public int getBySqlCount(String sqlQuery){
+    public int getBySqlCount(String sqlQuery) {
         return manager.getBySqlCount(sqlQuery);
     }
 
@@ -80,6 +81,7 @@ public class EntityManagerService {
         }
         return baseEntities;
     }
+
     public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, QueryDescriptor queryDescriptor /*boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
         List<Entity> entities = manager.getBySQL(sqlQuery, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
@@ -93,6 +95,7 @@ public class EntityManagerService {
     class Converter {
 
         private final Date EMPTY_DATE = new Date(-1);
+        private final Timestamp EMPTY_TIMESTAMP = new Timestamp(-1);
         private final String EMPTY_STRING = "-1";
         private final BigInteger EMPTY_INTEGER = BigInteger.valueOf(-1);
 
@@ -168,8 +171,10 @@ public class EntityManagerService {
             if (fieldValue == null) {
                 if (field.getType() == String.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
-                } else {
+                } else if (field.getType() == Date.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_DATE);
+                } else {
+                    attributes.put(new Pair<>(attrId, 0), EMPTY_TIMESTAMP);
                 }
             } else {
                 if (Set.class.isAssignableFrom(fieldValue.getClass())) {
@@ -181,15 +186,20 @@ public class EntityManagerService {
                     if (tempAttributes != null) {
                         for (int i = 0; i < tempAttributes.size(); i++) {
                             Object attribute = tempAttributes.get(i);
-                            if (Date.class.isAssignableFrom(attribute.getClass())) {
-                                attributes.put(new Pair<>(attrId, i + 1), attribute != null ? attribute.toString() : EMPTY_DATE);
+                            if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
+                                attributes.put(new Pair<>(attrId, i + 1), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(attribute));
+                            } else if (Date.class.isAssignableFrom(attribute.getClass())) {
+                                attributes.put(new Pair<>(attrId, i + 1), attribute.toString());
                             } else {
-                                attributes.put(new Pair<>(attrId, i + 1), attribute != null ? attribute.toString() : EMPTY_STRING);
+                                attributes.put(new Pair<>(attrId, i + 1), attribute.toString());
                             }
                         }
                     }
                 } else {
-                    if (Date.class.isAssignableFrom(fieldValue.getClass())) {
+                    if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
+                        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fieldValue);
+                        attributes.put(new Pair<>(attrId, 0), formattedDate);
+                    } else if (Date.class.isAssignableFrom(fieldValue.getClass())) {
                         attributes.put(new Pair<>(attrId, 0), fieldValue);
                     } else {
                         attributes.put(new Pair<>(attrId, 0), fieldValue.toString());
@@ -242,9 +252,7 @@ public class EntityManagerService {
             T baseEntity = null;
             try {
                 baseEntity = (T) clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             baseEntity.setName(entity.getName());
@@ -320,13 +328,10 @@ public class EntityManagerService {
                 for (Pair<BigInteger, Integer> pair : pairs) {
                     Object attribute = attrMap.get(pair);
                     if (attribute != null) {
-                        if (Timestamp.class.isAssignableFrom(attribute.getClass()) || Date.class.isAssignableFrom(attribute.getClass())) {
+                        if (Timestamp.class.isAssignableFrom(attribute.getClass())) {
+                            values[pair.getValue() - 1] = Timestamp.valueOf(String.valueOf(attribute)).getTime();
+                        } else if (Date.class.isAssignableFrom(attribute.getClass())) {
                             values[pair.getValue() - 1] = new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime());
-                        } else {
-                            values[pair.getValue() - 1] = attribute;
-                        }
-                        if (Date.class.isAssignableFrom(attribute.getClass())) {
-                            values[pair.getValue() - 1] = attribute != null ? new Date(Timestamp.valueOf(String.valueOf(attribute)).getTime()) : null;
                         } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
                             values[pair.getValue() - 1] = new BigDecimal((String) attribute);
                         } else {
@@ -338,12 +343,14 @@ public class EntityManagerService {
             } else {
                 if (!pairs.isEmpty()) {
                     Object attribute = attrMap.get(pairs.get(0));
-                    if (Timestamp.class.isAssignableFrom(fieldType) || Date.class.isAssignableFrom(fieldType)) {
+                    if (Timestamp.class.isAssignableFrom(fieldType)) {
+                        value = attribute != null ? Timestamp.valueOf(String.valueOf(attribute)) : null;
+                    } else if (Date.class.isAssignableFrom(fieldType)) {
                         value = attribute != null ? new Date(((Timestamp) attribute).getTime()) : null;
                     } else if (String.class.isAssignableFrom(fieldType)) {
                         value = attribute;
                     } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
-                        value = attribute != null ?new BigDecimal((String) attribute) : null;
+                        value = attribute != null ? new BigDecimal((String) attribute) : null;
                     } else {
                         if (attribute != null) {
                             try {

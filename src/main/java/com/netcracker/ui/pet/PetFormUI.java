@@ -1,25 +1,21 @@
 package com.netcracker.ui.pet;
 
-import com.netcracker.error.asserts.ObjectAssert;
+import com.netcracker.asserts.ObjectAssert;
+import com.netcracker.asserts.PetDataAssert;
+import com.netcracker.error.exceptions.PetDataValidationException;
+import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
-import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
-import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +43,7 @@ public class PetFormUI extends VerticalLayout {
         avatar.setWidth("225px");
         avatar.setHeight("150px");
 
-        TextField avatarField = PageElements.createTextField("Аватар", "Ссылка на аватар");
+        TextField avatarField = PageElements.createTextField("Аватар", "Ссылка на аватар", true);
         avatarField.setWidth("100%");
         Button avatarSelect = new Button("Загрузить");
         avatarSelect.addClickListener(new AbstractClickListener() {
@@ -77,7 +73,7 @@ public class PetFormUI extends VerticalLayout {
         speciesTypeSelect.setTextInputAllowed(false);
         speciesTypeSelect.setValue(speciesList.get(0));
 
-        TextField breedTypeField = PageElements.createTextField("Порода питомца", "Порода питомца", true);
+        TextField breedTypeField = PageElements.createTextField("Порода питомца", "Порода питомца");
         breedTypeField.setWidth("100%");
 
         TextField ageField = PageElements.createTextField("Возраст", "Возраст (полных лет)");
@@ -100,7 +96,6 @@ public class PetFormUI extends VerticalLayout {
                 addPet.setComponentError(null);
                 createPet(avatarField.getValue(), petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
                         weightField.getValue(), heightField.getValue(), specParamField.getValue());
-                Notification.show("Питомец успешно добавлен!");
             }
         });
 
@@ -110,34 +105,36 @@ public class PetFormUI extends VerticalLayout {
         mainPanel.setContent(mainLayout);
 
         addComponents(mainPanel);
+
+        //setErrorHandler(new ClientExceptionHandler());
     }
 
     private void updateAvatar(String imageURL, Image imageToUpdate) {
-        ObjectAssert.isNullOrEmpty(imageURL, "Вы должны ввести ссылку на картинку!");
+        PetDataAssert.assertAvatarURL(imageURL);
         createdPet.setPetAvatar(imageURL);
         imageToUpdate.setSource(new ExternalResource(imageURL));
     }
 
-    private List<PetSpecies> getSpecies(){
+    private List<PetSpecies> getSpecies() {
         List<PetSpecies> speciesList = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/species" , PetSpecies[].class));
+                        "/species", PetSpecies[].class));
         return speciesList;
     }
 
     private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
                            String petWeight, String petHeight, String specificParameters) {
+        PetDataAssert.assertAvatarURL(avatar);
+        PetDataAssert.assertName(petName);
 
-        ObjectAssert.isNullOrEmpty(petName);
-        ObjectAssert.isNull(petSpecies);
+        Integer age = PetDataAssert.assertAge(petAge);
+        Double weight = PetDataAssert.assertWeight(petWeight);
+        Double height = PetDataAssert.assertHeight(petHeight);
 
-        //User currentUser = new UserService().getCurrentUser();
-        /*Profile profile = new Profile();
+        /*User currentUser = new UserService().getCurrentUser();
+        Profile profile = new Profile();
         profile.setObjectId(BigInteger.valueOf(1));*/
 
-        Integer age = Integer.parseInt(petAge);
-        Double weight = Double.parseDouble(petWeight);
-        Double height = Double.parseDouble(petHeight);
         Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
                 weight, height, specificParameters/*, profile*/);
 
@@ -145,5 +142,6 @@ public class PetFormUI extends VerticalLayout {
 
         CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", pet, Pet.class);
+        Notification.show("Питомец успешно добавлен!");
     }
 }

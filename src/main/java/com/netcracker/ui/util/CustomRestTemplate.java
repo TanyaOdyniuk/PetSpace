@@ -1,5 +1,6 @@
 package com.netcracker.ui.util;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,11 @@ public class CustomRestTemplate extends RestTemplate {
         }
         return localInstance;
     }
+
     public <T> T customPostForObject(String url, Object request, Class<T> responseType) throws RestClientException {
         return postForObject(getURL() + url, request, responseType);
     }
+
     public <T> T customGetForObject(String url, Class<T> responseType) throws RestClientException {
         return getForObject(getURL() + url, responseType);
     }
@@ -35,9 +38,15 @@ public class CustomRestTemplate extends RestTemplate {
     public <T> ResponseEntity<T> customExchange(String url, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType) throws RestClientException {
         return exchange(getURL() + url, method, requestEntity, responseType);
     }
-    public void customDelete(String url) throws RestClientException{
+
+    public void customDelete(String url) throws RestClientException {
         delete(getURL() + url);
     }
+
+    public <T> ResponseEntity<T> customExchangeForParametrizedTypes(String url, HttpMethod method, HttpEntity<?> requestEntity, ParameterizedTypeReference<T> responseType) throws RestClientException {
+        return exchange(getURL() + url, method, requestEntity, responseType);
+    }
+
     private String getURL() {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties");
         Properties properties = new Properties();

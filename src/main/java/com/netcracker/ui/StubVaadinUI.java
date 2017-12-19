@@ -1,8 +1,9 @@
 package com.netcracker.ui;
 
-import com.netcracker.error.asserts.ObjectAssert;
+import com.netcracker.asserts.ObjectAssert;
+import com.netcracker.error.ErrorMessage;
+import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.model.StubUser;
-import com.netcracker.model.user.User;
 import com.netcracker.service.user.impl.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
@@ -14,12 +15,17 @@ import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -47,6 +53,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     private final VerticalLayout addUsersLayout;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     public StubVaadinUI(StubUserEditor stubUserEditor) {
         this.stubUserEditor = stubUserEditor;
         grid = new Grid<>(StubUser.class);
@@ -60,6 +69,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     protected void init(VaadinRequest request) {
+        userService.getCurrentUser();
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(999999999);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Notification.show(auth.getName());
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
@@ -94,9 +105,10 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         /*UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                ClientExceptionHandler.handle(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR), ErrorMessage.ERROR_500);
+                ClientExceptionHandler.handle(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR), ErrorMessage.ERROR_500);
             }
         });*/
+        //UI.getCurrent().setErrorHandler(new ClientExceptionHandler());
     }
 
     private void listCustomers() {
@@ -133,6 +145,11 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));
+                break;
+            case "Logout":
+                getPage().setLocation("/authorization");
+                SecurityContextHolder.getContext().setAuthentication(null);
+                getSession().close();
                 break;
             default:
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);

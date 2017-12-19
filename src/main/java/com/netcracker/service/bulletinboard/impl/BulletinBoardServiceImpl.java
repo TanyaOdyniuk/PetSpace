@@ -30,11 +30,12 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Value("${advertisement.mylist.pageCapasity}")
     String myAdPageCapacityProp;
 
+    @Override
     public int getAllAdPageCount() {
         Integer adPageCapacity = new Integer(adPageCapacityProp);
         return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
     }
-
+    @Override
     public int getMyProfileAdPageCount(BigInteger profileId) {
         Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         String getAdsQuery = "SELECT OBJECT_ID as object_id" +
@@ -44,53 +45,69 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 + profileId;
         return pageCounterService.getPageCount(myAdPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
     }
-
     @Override
-    public int getPageCountTopicSearch(String topic) {
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
+    public int getMyProfileAdPageCount(BigInteger profileId, String topic, Category[] categories){
+        Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         String getAdsQuery = "SELECT OBJECT_ID as object_id" +
-                " FROM Attributes WHERE ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_TOPIC +
-                " and LOWER(VALUE) LIKE LOWER('%"+topic +"%')";
-        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
-    }
-
-    public List<Advertisement> getAllAdAfterCatFilterFromProfile(Integer pageNumber, Integer profileId, Category[] categories){
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
-        String getAdsQuery = "SELECT o1.OBJECT_ID as object_id " +
-                "FROM OBJREFERENCE o1, OBJREFERENCE o2 " +
-                "WHERE o1.ATTRTYPE_ID = " + AdvertisementConstant.AD_AUTHOR +
-                " and o1.REFERENCE = " + profileId +
-                " and o1.object_id = o2.OBJECT_ID"+
-                " and o2.ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_CATEGORY +
-                " and o2.REFERENCE ";
-        getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
-        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
-        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
-        for (Advertisement ad : advertisements) {
-            Category category = ad.getAdCategory();
-            if (category != null) {
-                ad.setAdCategory(entityManagerService.getById(category.getObjectId(), Category.class));
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and REFERENCE = "
+                + profileId;
+        boolean checkTopic = (topic != null && !topic.isEmpty());
+        boolean checkCategory = (categories != null && !(categories.length == 0));
+        if (checkCategory || checkTopic) {
+            getAdsQuery += " INTERSECT ";
+            if (checkTopic) {
+                getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                        " FROM Attributes WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_TOPIC +
+                        " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
+            }
+            if (checkCategory && checkTopic) {
+                getAdsQuery += " INTERSECT ";
+            }
+            if (checkCategory) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_CATEGORY +
+                        " and REFERENCE ";
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
             }
         }
-        return advertisements;
+        return pageCounterService.getPageCount(myAdPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+    }
+    @Override
+    public int getAllAdPageCount(String topic, Category[] categories){
+        int count;
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        String getAdsQuery = "";
+        boolean checkTopic = (topic != null && !topic.isEmpty());
+        boolean checkCategory = (categories != null && !(categories.length == 0));
+        if (checkCategory || checkTopic) {
+            if (checkTopic) {
+                getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                        " FROM Attributes WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_TOPIC +
+                        " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
+            }
+            if (checkCategory && checkTopic) {
+                getAdsQuery += " INTERSECT ";
+            }
+            if (checkCategory) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_CATEGORY +
+                        " and REFERENCE ";
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+            }
+           count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+        } else{
+            count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
+        }
+        return count;
     }
 
-    @Override
-    public List<Advertisement> getAdvertisementListTopicSearch(Integer pageNumber, String topic) {
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
-        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
-                " FROM Attributes WHERE ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_TOPIC +
-                " and LOWER(VALUE) LIKE LOWER('%"+topic +"%')";
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
-        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
-        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
-        return getCategoryAndOwner(advertisements);
-    }
-    private List<Advertisement> getCategoryAndOwner(List<Advertisement> advertisements){
+    private List<Advertisement> getCategoryAndOwner(List<Advertisement> advertisements) {
         for (Advertisement ad : advertisements) {
             Category category = ad.getAdCategory();
             if (category != null) {
@@ -103,24 +120,13 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         }
         return advertisements;
     }
-    public List<Advertisement> getAllAdAfterCatFilter(Integer pageNumber, Category[] categories){
-        Integer adPageCapacity = new Integer(adPageCapacityProp);
-        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
-                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
-                + AdvertisementConstant.AD_CATEGORY +
-                " and REFERENCE ";
-        getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
-        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
-        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
-        return getCategoryAndOwner(advertisements);
-    }
 
     @Override
     public List<Advertisement> getProfileAds(Integer pageNumber) {
         Integer adPageCapacity = new Integer(adPageCapacityProp);
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
+        queryDescriptor.addSortingDesc(6, "DESC", true);
         BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
         List<Advertisement> advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
         return getCategoryAndOwner(advertisements);
@@ -136,6 +142,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, myAdPageCapacity);
+        queryDescriptor.addSortingDesc(6, "DESC", true);
         List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
         for (Advertisement ad : advertisements) {
             Category category = ad.getAdCategory();
@@ -181,5 +188,82 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Override
     public void deleteAd(Advertisement ad) {
 
+    }
+
+    @Override
+    public List<Advertisement> getProfileAds(Integer pageNumber, String topic, Category[] categories) {
+        Integer adPageCapacity = new Integer(adPageCapacityProp);
+        List<Advertisement> advertisements;
+        String getAdsQuery = "";
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
+        queryDescriptor.addSortingDesc(6, "DESC", true);
+        boolean checkTopic = (topic != null && !topic.isEmpty());
+        boolean checkCategory = (categories != null && !(categories.length == 0));
+        if (checkCategory || checkTopic) {
+            if (checkTopic) {
+                getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                        " FROM Attributes WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_TOPIC +
+                        " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
+            }
+            if (checkCategory && checkTopic) {
+                getAdsQuery += " INTERSECT ";
+            }
+            if (checkCategory) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_CATEGORY +
+                        " and REFERENCE ";
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+            }
+            advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
+        } else {
+            BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
+            advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
+        }
+        return getCategoryAndOwner(advertisements);
+    }
+    @Override
+    public List<Advertisement> getMyProfileAds(Integer pageNumber, BigInteger profileId, String topic, Category[] categories){
+        String getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and REFERENCE = "
+                + profileId;
+        Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
+        List<Advertisement> advertisements;
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addPagingDescriptor(pageNumber, myAdPageCapacity);
+        queryDescriptor.addSortingDesc(6, "DESC", true);
+        boolean checkTopic = (topic != null && !topic.isEmpty());
+        boolean checkCategory = (categories != null && !(categories.length == 0));
+        if (checkCategory || checkTopic) {
+            getAdsQuery += " INTERSECT ";
+            if (checkTopic) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM Attributes WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_TOPIC +
+                        " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
+            }
+            if (checkCategory && checkTopic) {
+                getAdsQuery += " INTERSECT ";
+            }
+            if (checkCategory) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_CATEGORY +
+                        " and REFERENCE ";
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+            }
+        }
+        advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
+        for (Advertisement ad : advertisements) {
+            Category category = ad.getAdCategory();
+            if (category != null) {
+                ad.setAdCategory(entityManagerService.getById(category.getObjectId(), Category.class));
+            }
+        }
+        return advertisements;
     }
 }

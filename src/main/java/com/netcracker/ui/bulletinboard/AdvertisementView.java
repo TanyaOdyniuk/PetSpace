@@ -7,6 +7,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 
+import java.text.SimpleDateFormat;
+
 @SpringComponent
 @UIScope
 public class AdvertisementView extends VerticalLayout {
@@ -21,7 +23,7 @@ public class AdvertisementView extends VerticalLayout {
 
         HorizontalLayout headerLayout = new HorizontalLayout();
         Label themeLabel = new Label("Theme: " + ad.getAdTopic());
-        Label dateLabel = new Label("Date: " + ad.getAdDate());
+        Label dateLabel = new Label("Date: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate()));
         headerLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         if (ad.isAdIsVip()) {
             Panel vipPanel = new Panel();

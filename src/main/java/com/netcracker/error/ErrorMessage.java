@@ -15,6 +15,13 @@ public interface ErrorMessage {
     String VALIDATION_AGE = "Ошибка валидации!\nПроверьте правильность введенного возраста.";
     String VALIDATION_WRONG = "Ошибка валидации!\nПроверьте правильность введенных данных.";
 
+    //PET_VALIDATION
+    String PET_VALIDATION_NAME = "Проверьте правильность введенного\nимени питомца!";
+    String PET_VALIDATION_AVATAR_URL = "Проверьте правильность введенного\nадреса картинки аватара!";
+    String PET_VALIDATION_HEIGHT = "Проверьте правильность ввода\nроста питомца";
+    String PET_VALIDATION_WEIGHT = "Проверьте правильность ввода\nвеса питомца";
+    String PET_VALIDATION_AGE = "Проверьте правильность ввода\nвозраста питомца";
+
 
     //PRIVILIGIES
     String PRIVILIGIES_GROUP = "У вас недостаточно прав\nдля просмотра данной группы.";

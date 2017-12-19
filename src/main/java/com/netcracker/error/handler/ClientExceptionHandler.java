@@ -1,13 +1,23 @@
 package com.netcracker.error.handler;
 
-import com.netcracker.error.ErrorMessage;
+import com.vaadin.server.ErrorEvent;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
-public class ClientExceptionHandler {
+public class ClientExceptionHandler implements ErrorHandler {
+
+    @Override
+    public void error(ErrorEvent event) {
+        showNotification(event.getThrowable().getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
+    }
+
+    public static void handle(Exception ex){
+        showNotification(ex.getLocalizedMessage(), Notification.Type.ERROR_MESSAGE);
+    }
 
     public static void handleAssert(String message){
         showNotification(message, Notification.Type.WARNING_MESSAGE);
@@ -19,11 +29,11 @@ public class ClientExceptionHandler {
         handleWithStatus(entity.getStatusCode(), messageToShow);
     }
 
-    public static void handle(HttpClientErrorException ex){
+    public static void handle(HttpStatusCodeException ex){
         handle(ex, ex.getLocalizedMessage());
     }
 
-    public static void handle(HttpClientErrorException ex, String messageToShow) {
+    public static void handle(HttpStatusCodeException ex, String messageToShow) {
         if (ex == null)
             return;
         handleWithStatus(ex.getStatusCode(), messageToShow);

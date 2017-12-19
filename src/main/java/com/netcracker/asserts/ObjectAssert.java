@@ -1,4 +1,4 @@
-package com.netcracker.error.asserts;
+package com.netcracker.asserts;
 
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.handler.ClientExceptionHandler;
@@ -48,14 +48,34 @@ public class ObjectAssert {
         }
     }
 
-    public void notEmpty(Collection<?> collection) {
+    public static void notEmpty(Collection<?> collection) {
         notEmpty(collection, ErrorMessage.VALIDATION_WRONG);
     }
 
-    public void notEmpty(Collection<?> collection, String messageToShow){
+    public static void notEmpty(Collection<?> collection, String messageToShow){
         if(collection.isEmpty()){
             handle(messageToShow);
         }
+    }
+
+    public static boolean isConvertibleToInteger(String toCheck) {
+        boolean parsable = true;
+        try {
+            Integer.parseInt(toCheck);
+        } catch (NumberFormatException e) {
+            parsable = false;
+        }
+        return parsable;
+    }
+
+    public static boolean isConvertibleToDouble(String toCheck) {
+        boolean parsable = true;
+        try {
+            Double.parseDouble(toCheck);
+        } catch (NumberFormatException e) {
+            parsable = false;
+        }
+        return parsable;
     }
 
     private static void handle(String messageToShow){

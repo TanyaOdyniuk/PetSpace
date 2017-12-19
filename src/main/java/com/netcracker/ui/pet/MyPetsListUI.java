@@ -12,6 +12,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import elemental.css.CSSStyleDeclaration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
@@ -23,18 +24,20 @@ import java.util.List;
 public class MyPetsListUI extends VerticalLayout {
 
     private BigInteger profileId;
+    private int browserHeight;
 
     @Autowired
     public MyPetsListUI(BigInteger profileId){
         super();
         this.profileId = profileId;
+        this.browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
 
         this.addStyleName("v-scrollable");
-        this.setHeight("100%");
+        this.setHeightUndefined();
 
         Panel mainPanel = new Panel();
-        /*mainPanel.setWidth("100%");
-        mainPanel.setHeight(750, Unit.PIXELS);*/
+        mainPanel.setWidth("100%");
+        mainPanel.setHeight(browserHeight - 300, Unit.PIXELS);
         VerticalLayout petRecordsLayout = new VerticalLayout();
         Button addNewPet = new Button("Добавить нового питомца", VaadinIcons.PLUS);
         addNewPet.addClickListener(new AbstractClickListener() {
