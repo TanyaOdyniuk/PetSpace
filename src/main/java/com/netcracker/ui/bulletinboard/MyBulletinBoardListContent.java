@@ -2,6 +2,7 @@ package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
+import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.*;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
@@ -12,7 +13,10 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -34,6 +38,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     private Category[] selectedCategories;
     private String topic = "";
     private TextField topicField;
+    private RestResponsePage<Advertisement> ads;
 
     public MyBulletinBoardListContent(BigInteger profileId) {
         super();
@@ -45,6 +50,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         getGrid();
         this.profileId = profileId;
         selectedCategories = new Category[0];
+        advertisementList(1);
         getPagingLayout();
         newAdBtn = new Button("Add new advertisement", VaadinIcons.PLUS);
         newAdBtn.setHeight(30, Unit.PIXELS);
@@ -52,7 +58,6 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         gridPagingLayout.addComponent(grid);
         gridPagingLayout.addComponent(pagingLayout);
         getCategoryFilterLayout();
-        advertisementList(1);
 
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
         mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
@@ -155,14 +160,15 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     }
 
     private void advertisementList(int pageNumber) {
-        List<Advertisement> ads = Arrays.asList(
-                CustomRestTemplate.getInstance()
-                        .customGetForObject("/bulletinboard/myAds/" + profileId + "/" + pageNumber,
-                                Advertisement[].class));
-        if(ads.isEmpty()){
+        ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/myAds/" + profileId + "/" +pageNumber, HttpMethod.GET,
+                        null, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
+        ads = pageResponseEntity.getBody();
+        List<Advertisement> advertisements = ads.getContent();
+        if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
         }
-        grid.setItems(ads);
+        grid.setItems(advertisements);
     }
 
     private void advertisementList(int pageNumber, String topic, Category[] categories) {
@@ -170,12 +176,17 @@ public class MyBulletinBoardListContent extends VerticalLayout {
             topic = "empty";
         }
         HttpEntity<Category[]> createRequest = new HttpEntity<>(categories);
-        List<Advertisement> ads = Arrays.asList(CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/my/categorytopic/" + profileId + '/' + topic + '/' + pageNumber,
-                createRequest, Advertisement[].class));
-        if(ads.isEmpty()){
+        ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/my/categorytopic/" + profileId + '/' + topic + '/' + pageNumber,
+                        HttpMethod.POST,
+                        createRequest, new ParameterizedTypeReference<RestResponsePage<Advertisement>>() {
+                        });
+        ads = pageResponseEntity.getBody();
+        List<Advertisement> advertisements = ads.getContent();
+        if (advertisements.isEmpty()) {
             Notification.show("No ads with the specified filters were found");
         }
-        grid.setItems(ads);
+        grid.setItems(advertisements);
     }
 
     private void getData(boolean isNotSelectedCategories, boolean isTopicFilter, int page) {
@@ -191,19 +202,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         if (pagingLayout != null) {
             gridPagingLayout.removeComponent(pagingLayout);
         }
-        int pageCount;
+        int pageCount = (int) ads.getTotalElements();
         boolean isNotSelectedCategories = (selectedCategories.length == 0);
         boolean isTopicFilter = !topic.isEmpty();
-        if (isNotSelectedCategories && !isTopicFilter) {
-            pageCount = CustomRestTemplate.getInstance().customGetForObject(
-                    "/bulletinboard/pageCount/" + profileId, Integer.class);
-        } else {
-            HttpEntity<Category[]> createRequest = new HttpEntity<>(selectedCategories);
-            if (topic.isEmpty()) {
-                topic = "empty";
-            }
-            pageCount = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/my/categorytopic/" + profileId + '/'+ topic, createRequest, Integer.class);
-        }
         if (pageCount > 1) {
             pagingLayout = new StubPagingBar(pageCount);
 

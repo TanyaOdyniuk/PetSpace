@@ -2,6 +2,7 @@ package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.category.Category;
+import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubPagingBar;
@@ -16,7 +17,10 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -34,7 +38,7 @@ public class BulletinBoardListContent extends VerticalLayout {
     private Category[] selectedCategories;
     private String topic = "";
     private TextField topicField;
-
+    private RestResponsePage<Advertisement> ads;
     @Autowired
     public BulletinBoardListContent() {
         super();
@@ -45,11 +49,12 @@ public class BulletinBoardListContent extends VerticalLayout {
         gridPagingLayout = new VerticalLayout();
         getGrid();
         selectedCategories = new Category[0];
+        advertisementList(1);
         getPagingLayout();
         gridPagingLayout.addComponent(grid);
         if (pagingLayout != null) {
             gridPagingLayout.addComponent(pagingLayout);
-        } else{
+        } else {
             grid.setWidth("100%");
             grid.setHeight("100%");
             gridPagingLayout.setWidth("100%");
@@ -57,7 +62,6 @@ public class BulletinBoardListContent extends VerticalLayout {
         }
         getCategoryFilterLayout();
 
-        advertisementList(1);
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
         mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
         mainLayout.setExpandRatio(mainLayout.getComponent(1), 10.0f);
@@ -148,6 +152,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         topicSearch.addComponent(searchTopic);
         categoryFilterLayout.addComponent(topicSearch);
     }
+
     private List<Category> getAllCategories() {
         return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
@@ -155,32 +160,38 @@ public class BulletinBoardListContent extends VerticalLayout {
     }
 
     private void advertisementList(int pageNumber) {
-        List<Advertisement> ads = Arrays.asList(
-                CustomRestTemplate.getInstance().customGetForObject(
-                        "/bulletinboard/" + pageNumber, Advertisement[].class));
-        if(ads.isEmpty()){
+        ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/"+ pageNumber, HttpMethod.GET,
+                        null, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
+        ads = pageResponseEntity.getBody();
+        List<Advertisement> advertisements = ads.getContent();
+        if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
         }
-        grid.setItems(ads);
+        grid.setItems(advertisements);
     }
-    private void advertisementList(int pageNumber, String topic, Category[] categories){
-        if(topic.isEmpty()){
+
+    private void advertisementList(int pageNumber, String topic, Category[] categories) {
+        if (topic.isEmpty()) {
             topic = "empty";
         }
         HttpEntity<Category[]> createRequest = new HttpEntity<>(categories);
-        List<Advertisement> ads = Arrays.asList(CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/categorytopic/" + topic + '/' + pageNumber,
-                createRequest, Advertisement[].class));
-        if(ads.isEmpty()){
+        ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/categorytopic/" + topic + '/' + pageNumber, HttpMethod.POST,
+                createRequest, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
+        ads = pageResponseEntity.getBody();
+        List<Advertisement> advertisements = ads.getContent();
+        if ( advertisements.isEmpty()) {
             Notification.show("No ads with the specified filters were found");
         }
-        grid.setItems(ads);
+        grid.setItems(advertisements);
     }
 
     private void getData(boolean isNotSelectedCategories, boolean isTopicFilter, int page) {
         if (isNotSelectedCategories && !isTopicFilter) {
             advertisementList(page);
         } else {
-            advertisementList(page,topic, selectedCategories);
+            advertisementList(page, topic, selectedCategories);
         }
         ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
     }
@@ -189,19 +200,9 @@ public class BulletinBoardListContent extends VerticalLayout {
         if (pagingLayout != null) {
             gridPagingLayout.removeComponent(pagingLayout);
         }
-        int pageCount;
+        int pageCount = (int) ads.getTotalElements();
         boolean isNotSelectedCategories = (selectedCategories.length == 0);
         boolean isTopicFilter = !topic.isEmpty();
-        if (isNotSelectedCategories && !isTopicFilter) {
-            pageCount = CustomRestTemplate.getInstance().customGetForObject(
-                    "/bulletinboard/pageCount", Integer.class);
-        } else {
-            HttpEntity<Category[]> createRequest = new HttpEntity<>(selectedCategories);
-            if(topic.isEmpty()){
-                topic = "empty";
-            }
-            pageCount = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/categorytopic/" + topic, createRequest, Integer.class);
-        }
         if (pageCount > 1) {
             pagingLayout = new StubPagingBar(pageCount);
 

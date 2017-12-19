@@ -11,15 +11,10 @@ import com.netcracker.service.util.BulletinBoardUtilService;
 import com.netcracker.service.util.PageCounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -83,27 +78,33 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
     @Override
     public int getAllAdPageCount(String topic, Category[] categories){
+        int count;
         Integer adPageCapacity = new Integer(adPageCapacityProp);
         String getAdsQuery = "";
         boolean checkTopic = (topic != null && !topic.isEmpty());
         boolean checkCategory = (categories != null && !(categories.length == 0));
-        if(checkTopic){
-            getAdsQuery = "SELECT OBJECT_ID as object_id" +
-                    " FROM Attributes WHERE ATTRTYPE_ID ="
-                    + AdvertisementConstant.AD_TOPIC +
-                    " and LOWER(VALUE) LIKE LOWER('%"+topic +"%')";
+        if (checkCategory || checkTopic) {
+            if (checkTopic) {
+                getAdsQuery = "SELECT OBJECT_ID as object_id" +
+                        " FROM Attributes WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_TOPIC +
+                        " and LOWER(VALUE) LIKE LOWER('%" + topic + "%')";
+            }
+            if (checkCategory && checkTopic) {
+                getAdsQuery += " INTERSECT ";
+            }
+            if (checkCategory) {
+                getAdsQuery += "SELECT OBJECT_ID as object_id" +
+                        " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                        + AdvertisementConstant.AD_CATEGORY +
+                        " and REFERENCE ";
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+            }
+           count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+        } else{
+            count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
         }
-        if(checkCategory && checkTopic){
-            getAdsQuery += " INTERSECT ";
-        }
-        if(checkCategory){
-            getAdsQuery += "SELECT OBJECT_ID as object_id" +
-                    " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
-                    + AdvertisementConstant.AD_CATEGORY +
-                    " and REFERENCE ";
-            getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
-        }
-        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+        return count;
     }
 
     private List<Advertisement> getCategoryAndOwner(List<Advertisement> advertisements) {
