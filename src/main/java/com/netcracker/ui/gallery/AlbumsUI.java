@@ -18,7 +18,7 @@ import java.util.List;
 @UIScope
 public class AlbumsUI extends  HorizontalLayout{
     public static GalleryUI galleryUI;
-    public static NewAlbumUI newAlbumUI;
+//    public static NewAlbumUI newAlbumUI;
     Panel panel;
     VerticalLayout albumLayout;
 

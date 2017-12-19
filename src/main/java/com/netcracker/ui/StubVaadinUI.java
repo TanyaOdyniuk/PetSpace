@@ -144,7 +144,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
             case "My albums":
                 albumsUI = new AlbumsUI(BigInteger.valueOf(203));
                 primaryAreaLayout.addComponentsAndExpand(albumsUI);
-//                primaryAreaLayout.addComponentsAndExpand(new GalleryUI(BigInteger.valueOf(26)));
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));
