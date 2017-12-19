@@ -12,10 +12,7 @@ public class HorizontalGallery extends HorizontalLayout {
     HorizontalLayout galleryLayout;
     Image image;
     HorizontalLayout imageLayout;
-    Button arrowLeft;
-    Button arrowRight;
     Integer index;
-    Button closeHG;
 
     public HorizontalGallery(List<PhotoRecord> list, Integer i){
         panel = new Panel();
@@ -30,14 +27,14 @@ public class HorizontalGallery extends HorizontalLayout {
         panel.setHeight(500,Unit.PIXELS);
 
 
-        arrowLeft = new Button();
+        Button arrowLeft = new Button();
         arrowLeft.setWidth(10,Unit.PIXELS);
         arrowLeft.setHeight(40,Unit.PIXELS);
         arrowLeft.setIcon(VaadinIcons.ARROW_LEFT);
         arrowLeft.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                 index = i-1;
+                index--;
                 if(index < 0)
                     index = list.size() - 1;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
@@ -46,14 +43,14 @@ public class HorizontalGallery extends HorizontalLayout {
         });
 
 
-         arrowRight = new Button();
+        Button arrowRight = new Button();
         arrowRight.setWidth(10,Unit.PIXELS);
         arrowRight.setHeight(40,Unit.PIXELS);
         arrowRight.setIcon(VaadinIcons.ARROW_RIGHT);
         arrowRight.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                 index = i+1;
+                index++;
                 if(index == list.size())
                     index = 0;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
@@ -61,16 +58,14 @@ public class HorizontalGallery extends HorizontalLayout {
             }
         });
 
-
-        closeHG = new Button();
+        Button closeHG = new Button();
         closeHG.setIcon(VaadinIcons.CLOSE);
-        closeHG.setWidth(10,Unit.PIXELS);
-        closeHG.setHeight(35,Unit.PIXELS);
+        closeHG.setWidth(3,Unit.PIXELS);
+        closeHG.setHeight(25,Unit.PIXELS);
         closeHG.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 AlbumsUI.galleryUI.removeComponent(GalleryUI.horizontalGallery);
-
             }
         });
 
@@ -84,49 +79,6 @@ public class HorizontalGallery extends HorizontalLayout {
         panel.setContent(galleryLayout);
         addComponentsAndExpand(panel);
     }
-
-
-//    private Button createLeftArrow(){
-//        arrowLeft = new Button();
-//        arrowLeft.setWidth(10,Unit.PIXELS);
-//        arrowLeft.setHeight(40,Unit.PIXELS);
-//        arrowLeft.setIcon(VaadinIcons.ARROW_LEFT);
-//        arrowLeft.addClickListener(new AbstractClickListener() {
-//            @Override
-//            public void buttonClickListener() {
-////                index = i-1;
-////                if(index < 0)
-////                    index = list.size() - 1;
-//                image.setSource(new ExternalResource(list.get(index-1).getPhoto()));
-//                imageLayout.addComponents(image);
-////                arrowLeft = createLeftArrow();
-////                arrowLeftLayout.addComponent(arrowLeft);
-//            }
-//        });
-//
-//        return  arrowLeft;
-//    }
-
-
-//    private Button createRightArrow(){
-//        arrowRight = new Button();
-//        arrowRight.setWidth(10,Unit.PIXELS);
-//        arrowRight.setHeight(40,Unit.PIXELS);
-//        arrowRight.setIcon(VaadinIcons.ARROW_RIGHT);
-//        arrowRight.addClickListener(new AbstractClickListener() {
-//            @Override
-//            public void buttonClickListener() {
-////                index = i-1;
-////                if(index < 0)
-////                    index = list.size() - 1;
-//                image.setSource(new ExternalResource(list.get(index+1).getPhoto()));
-//                imageLayout.addComponents(image);
-//
-//            }
-//        });
-//        return  arrowRight;
-//    }
-
 }
 
 

@@ -5,7 +5,7 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.vaadin.server.ExternalResource;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -16,21 +16,31 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
-public class AlbumsUI extends Panel{
-//    private final List<PhotoAlbum> albums;
-
+public class AlbumsUI extends  HorizontalLayout{
     public static GalleryUI galleryUI;
+    public static NewAlbumUI newAlbumUI;
+    Panel panel;
+    VerticalLayout albumLayout;
 
     @Autowired
     public AlbumsUI(BigInteger petId) {
         super();
-        setWidth("100%");
+        addStyleName("v-scrollable");
         setHeight("100%");
-//        setSizeFull();
-//        albums = Arrays.asList(CustomRestTemplate.getInstance().
-//                customGetForObject("/albums/" + albumsId, PhotoAlbum[].class));
+
         List<PhotoAlbum> albums = getAlbumList(petId);
-        VerticalLayout albumLayout = new VerticalLayout();
+        panel = new Panel();
+        albumLayout = new VerticalLayout();
+        Button addNewAlbum = new Button("Create new album", VaadinIcons.PLUS);
+        addNewAlbum.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+//                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new NewAlbumUI());
+//                 newAlbumUI = new NewAlbumUI();
+//                addComponentsAndExpand(newAlbumUI);
+            }
+        });
+        albumLayout.addComponent(addNewAlbum);
         for(PhotoAlbum album : albums){
             HorizontalLayout petRecord = new HorizontalLayout();
             Button albumName = PageElements.createClickedLabel(album.getPhotoAlbumName());
@@ -41,25 +51,11 @@ public class AlbumsUI extends Panel{
                     ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(galleryUI);
                 }
             });
-//            galleryUI = new GalleryUI(BigInteger.valueOf(26));
-
             albumLayout.addComponents(albumName);
         }
-        setContent(albumLayout);
 
-
-
-//        Panel albumsPanel = new Panel();
-//        VerticalLayout layout = new VerticalLayout();
-//        layout.addComponents(new Label("Your albums"));
-//
-//        for (PhotoAlbum album : albums) {
-//            Link link = new Link(album.getPhotoAlbumName(),new ExternalResource("http://localhost:8888/gallery"));
-////            Label label = new Label(album.getPhotoAlbumName());
-//            layout.addComponent(link);
-//        }
-//        albumsPanel.setContent(layout);
-//        addComponentsAndExpand(albumsPanel);
+        panel.setContent(albumLayout);
+        addComponent(panel);
     }
 
     private List<PhotoAlbum> getAlbumList(BigInteger petId){
@@ -68,5 +64,4 @@ public class AlbumsUI extends Panel{
                         "/albums/" + petId, PhotoAlbum[].class));
         return albumList;
     }
-
 }

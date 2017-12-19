@@ -16,10 +16,6 @@ import java.util.List;
 public class GalleryController {
     @Autowired
     MediaService mediaService;
-//    @GetMapping("/{id}")
-//    public PhotoAlbum getAlbum(@PathVariable("id") BigInteger albumId){
-//        return mediaService.getAlbum(albumId);
-//    }
 
     @GetMapping("/{id}")
     public List<PhotoRecord> getImagesGalary(@PathVariable("id") BigInteger albumId){

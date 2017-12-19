@@ -52,6 +52,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private final VerticalLayout addUsersLayout;
 
+    public static AlbumsUI albumsUI;
+
     @Autowired
     UserService userService;
 
@@ -140,7 +142,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(203)));
+                albumsUI = new AlbumsUI(BigInteger.valueOf(203));
+                primaryAreaLayout.addComponentsAndExpand(albumsUI);
 //                primaryAreaLayout.addComponentsAndExpand(new GalleryUI(BigInteger.valueOf(26)));
                 break;
             case "My friends":

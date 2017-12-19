@@ -4,9 +4,11 @@ import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface MediaService {
@@ -21,6 +23,8 @@ public interface MediaService {
     List<PhotoAlbum> getMyAlbums(BigInteger petId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
 
     PhotoAlbum getAlbum(BigInteger albumId);
+
+    PhotoAlbum createAlbum(PhotoAlbum album);
 
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев
     void createAndEditPetAlbum(Profile profile);
