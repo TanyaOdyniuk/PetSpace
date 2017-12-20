@@ -54,14 +54,15 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         getPagingLayout();
         newAdBtn = new Button("Add new advertisement", VaadinIcons.PLUS);
         newAdBtn.setHeight(30, Unit.PIXELS);
+        gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(newAdBtn);
         gridPagingLayout.addComponent(grid);
         gridPagingLayout.addComponent(pagingLayout);
         getCategoryFilterLayout();
 
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
-        mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
-        mainLayout.setExpandRatio(mainLayout.getComponent(1), 10.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(0), 4.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(1), 12.0f);
         addComponent(mainLayout);
 
         newAdBtn.addClickListener(new AbstractClickListener() {
@@ -75,11 +76,11 @@ public class MyBulletinBoardListContent extends VerticalLayout {
 
     private void getGrid() {
         grid = new Grid<>();
-        grid.setSizeFull();
+        grid.setWidth("100%");
         Grid.Column topicColumn = grid.addColumn(ad ->
-                ad.getAdTopic()).setCaption("Topic").setSortable(false);
+                ad.getAdTopic()).setCaption("Topic").setWidth(150).setSortable(false);
         Grid.Column informationColumn = grid.addColumn(ad ->
-                ad.getAdBasicInfo()).setCaption("Basic Info").setSortable(false);
+                ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(200).setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setCaption("Date").setSortable(false);
         Grid.Column statusColumn = grid.addColumn(ad ->

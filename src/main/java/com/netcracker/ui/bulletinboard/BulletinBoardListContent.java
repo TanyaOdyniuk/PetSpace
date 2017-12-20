@@ -51,6 +51,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         selectedCategories = new Category[0];
         advertisementList(1);
         getPagingLayout();
+        gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(grid);
         if (pagingLayout != null) {
             gridPagingLayout.addComponent(pagingLayout);
@@ -63,8 +64,8 @@ public class BulletinBoardListContent extends VerticalLayout {
         getCategoryFilterLayout();
 
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
-        mainLayout.setExpandRatio(mainLayout.getComponent(0), 3.0f);
-        mainLayout.setExpandRatio(mainLayout.getComponent(1), 10.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(0), 4.0f);
+        mainLayout.setExpandRatio(mainLayout.getComponent(1), 13.0f);
         addComponent(mainLayout);
     }
 
@@ -72,20 +73,20 @@ public class BulletinBoardListContent extends VerticalLayout {
         grid = new Grid<>();
         grid.setHeight("50%");
         grid.setWidth("100%");
-        grid.setStyleName("v-scrollable");
+        //grid.setStyleName("v-scrollable");
         Grid.Column topicColumn = grid.addColumn(ad ->
                 ad.getAdTopic()).setCaption("Topic").setWidth(150).setSortable(false);
         Grid.Column authorColumn = grid.addColumn(ad ->
                 ad.getAdAuthor().getProfileSurname() + " " +
-                        ad.getAdAuthor().getProfileName()).setCaption("Author").setSortable(false);
+                        ad.getAdAuthor().getProfileName()).setCaption("Author").setWidth(120).setSortable(false);
         Grid.Column informationColumn = grid.addColumn(ad ->
                 ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(200).setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setCaption("Date");
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setWidth(130).setCaption("Date");
         Grid.Column statusColumn = grid.addColumn(ad ->
-                (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setSortable(false);
+                (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setWidth(65).setSortable(false);
         Grid.Column categoryColumn = grid.addColumn(ad ->
-                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setSortable(false);
+                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setWidth(130).setSortable(false);
         grid.addItemClickListener(event -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
     }
 
