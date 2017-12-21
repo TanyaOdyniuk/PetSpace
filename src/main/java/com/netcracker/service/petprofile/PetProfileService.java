@@ -12,6 +12,8 @@ public interface PetProfileService {
 //    Система должна позволять зарегистрированному пользователю создавать страницу питомца
     Pet createPetProfile(Pet pet);
 
+    void updatePet(Pet pet);
+
 //    Система должна валидировать входящие данные на правильность ввода  при создании новой страницы
     void validation(Object dataForValidate);
 

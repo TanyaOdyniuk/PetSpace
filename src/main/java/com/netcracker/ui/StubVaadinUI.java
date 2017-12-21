@@ -116,21 +116,23 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
+        BigInteger profileId = BigInteger.valueOf(1);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         switch (clickedButtonCaption) {
             case "My profile":
-                primaryAreaLayout.addComponentsAndExpand(new ProfileView(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(profileId));
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
                 break;
             case "My pets":
                 //BigInteger profileId = new UserService().getCurrentUser().getProfile().getObjectId();
-                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(BigInteger.valueOf(1)));
+                //primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
+                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
                 break;
             case "Pets":
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
@@ -140,7 +142,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(albumsUI);
                 break;
             case "My friends":
-                primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));
                 break;
             case "Logout":
                 getPage().setLocation("/authorization");

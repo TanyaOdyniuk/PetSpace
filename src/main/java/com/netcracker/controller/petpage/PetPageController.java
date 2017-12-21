@@ -29,4 +29,9 @@ public class PetPageController {
     public Pet createNewPet(@RequestBody Pet pet){
         return petProfileService.createPetProfile(pet);
     }
+
+    @PostMapping("/update")
+    public void updatePet(@RequestBody Pet pet){
+        petProfileService.updatePet(pet);
+    }
 }

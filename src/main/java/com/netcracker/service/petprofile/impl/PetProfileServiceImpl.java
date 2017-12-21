@@ -43,6 +43,11 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
+    public void updatePet(Pet pet) {
+        entityManagerService.update(pet);
+    }
+
+    @Override
     public void validation(Object dataForValidate) {
 
     }

@@ -43,11 +43,13 @@ public class MyPetsListUI extends VerticalLayout {
         addNewPet.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetFormUI());
+                /*((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetFormUI());*/
+                PetEditFormUI sub = new PetEditFormUI(new Pet());
+                UI.getCurrent().addWindow(sub);
             }
         });
         List<Pet> petList = getProfilePets(profileId);
-        if(petList == null){
+        if(petList.size() == 0){
             Label noPetsLabel = PageElements.createLabel(5, "У вас ещё нет питомца!");
             mainPanel.setContent(noPetsLabel);
             addComponents(addNewPet, mainPanel);
