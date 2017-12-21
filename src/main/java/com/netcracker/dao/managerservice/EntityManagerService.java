@@ -110,27 +110,9 @@ public class EntityManagerService {
                 int objectTypeId = objectType.value();
                 entity.setObjectTypeId(BigInteger.valueOf(objectTypeId));
             }
+            getFieldsFromParents(baseEntity, attributes, references);
             Field[] fields = baseEntityClass.getDeclaredFields();
-            BigInteger attrId;
-
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Attribute.class)) {
-                    Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
-                    attrId = BigInteger.valueOf(attributeAnnotation.value());
-                    putAttribute(attributes, attrId, baseEntity, field);
-                }
-                if (field.isAnnotationPresent(Boolean.class)) {
-                    Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
-                    attrId = BigInteger.valueOf(booleanAnnotation.value());
-                    String yesno = String.valueOf(booleanAnnotation.yesno());
-                    putBoolean(attributes, attrId, yesno, baseEntity, field);
-                }
-                if (field.isAnnotationPresent(Reference.class)) {
-                    Reference referenceAnnotation = field.getAnnotation(Reference.class);
-                    attrId = BigInteger.valueOf(referenceAnnotation.value());
-                    putReference(references, attrId, baseEntity, field);
-                }
-            }
+            getAllFields(fields, baseEntity, baseEntityClass, attributes, references);
 
             entity.setName(baseEntity.getName());
             entity.setObjectId(baseEntity.getObjectId());
@@ -141,11 +123,34 @@ public class EntityManagerService {
             entity.setReferences(references);
             return entity;
         }
+        private void getAllFields(Field[] fields, BaseEntity baseEntity, Class<?> baseEntityClass, Map<Pair<BigInteger, Integer>, Object> attributes,
+                                  Map<Pair<BigInteger, Integer>, BigInteger> references){
+            BigInteger attrId;
 
-        private void putBoolean(Map<Pair<BigInteger, Integer>, Object> attributes, BigInteger attrId, String yesno, BaseEntity baseEntity, Field field) {
-            Object fieldValue = getValue(baseEntity, field);
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(Attribute.class)) {
+                    Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
+                    attrId = BigInteger.valueOf(attributeAnnotation.value());
+                    putAttribute(attributes, attrId, baseEntity, baseEntityClass, field);
+                }
+                if (field.isAnnotationPresent(Boolean.class)) {
+                    Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
+                    attrId = BigInteger.valueOf(booleanAnnotation.value());
+                    String yesno = String.valueOf(booleanAnnotation.yesno());
+                    putBoolean(attributes, attrId, yesno, baseEntity, baseEntityClass, field);
+                }
+                if (field.isAnnotationPresent(Reference.class)) {
+                    Reference referenceAnnotation = field.getAnnotation(Reference.class);
+                    attrId = BigInteger.valueOf(referenceAnnotation.value());
+                    putReference(references, attrId, baseEntity, baseEntityClass, field);
+                }
+            }
+        }
+        private void putBoolean(Map<Pair<BigInteger, Integer>, Object> attributes, BigInteger attrId, String yesno,
+                                BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
+            Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
             if (List.class.isAssignableFrom(fieldValue.getClass())) {
-                List<java.lang.Boolean> booleans = (List<java.lang.Boolean>) getValue(baseEntity, field);
+                List<java.lang.Boolean> booleans = (List<java.lang.Boolean>) getValueFromField(baseEntity, baseEntityClass, field);
                 if (booleans != null) {
                     for (int i = 0; i < booleans.size(); i++) {
                         java.lang.Boolean element = booleans.get(i);
@@ -166,8 +171,8 @@ public class EntityManagerService {
             }
         }
 
-        private void putAttribute(Map<Pair<BigInteger, Integer>, Object> attributes, BigInteger attrId, BaseEntity baseEntity, Field field) {
-            Object fieldValue = getValue(baseEntity, field);
+        private void putAttribute(Map<Pair<BigInteger, Integer>, Object> attributes, BigInteger attrId, BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
+            Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
             if (fieldValue == null) {
                 if (field.getType() == String.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
@@ -208,8 +213,8 @@ public class EntityManagerService {
             }
         }
 
-        private void putReference(Map<Pair<BigInteger, Integer>, BigInteger> references, BigInteger attrId, BaseEntity baseEntity, Field field) {
-            Object fieldValue = getValue(baseEntity, field);
+        private void putReference(Map<Pair<BigInteger, Integer>, BigInteger> references, BigInteger attrId, BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
+            Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
             if (fieldValue == null) {
                 references.put(new Pair<>(attrId, 0), EMPTY_INTEGER);
             } else {
@@ -229,11 +234,11 @@ public class EntityManagerService {
             }
         }
 
-        private Object getValue(BaseEntity baseEntity, Field field) {
+        private Object getValueFromField(BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
             Object value;
             PropertyDescriptor property;
             try {
-                property = new PropertyDescriptor(field.getName(), baseEntity.getClass());
+                property = new PropertyDescriptor(field.getName(), baseEntityClass);
                 Method getMethod = property.getReadMethod();
                 value = getMethod.invoke(baseEntity);
             } catch (IntrospectionException e) {
@@ -263,34 +268,37 @@ public class EntityManagerService {
             Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
             Map<Pair<BigInteger, Integer>, BigInteger> refMap = entity.getReferences();
             if (!attrMap.isEmpty() || !refMap.isEmpty()) {
+                setFieldsInParents(baseEntity, attrMap, refMap);
                 Field[] fields = clazz.getDeclaredFields();
-                BigInteger attrId;
-                for (Field field : fields) {
-                    if (field.isAnnotationPresent(Attribute.class)) {
-                        Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
-                        attrId = BigInteger.valueOf(attributeAnnotation.value());
-                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
-                        setValue(field, baseEntity, pairs, attrMap);
-                    } else if (field.isAnnotationPresent(Boolean.class)) {
-                        Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
-                        attrId = BigInteger.valueOf(booleanAnnotation.value());
-                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
-                        String yesno = String.valueOf(booleanAnnotation.yesno());
-                        setBoolean(field, baseEntity, pairs, attrMap, yesno);
-                    } else if (field.isAnnotationPresent(Reference.class)) {
-                        Reference referenceAnnotation = field.getAnnotation(Reference.class);
-                        attrId = BigInteger.valueOf(referenceAnnotation.value());
-                        List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, refMap.keySet());
-                        setRef(field, baseEntity, pairs, refMap, baseEntity.getObjectId());
-                    }
-                }
+                setAllFields(fields, baseEntity, clazz, attrMap, refMap);
             }
-
             return baseEntity;
-
         }
 
-        private void setRef(Field field, BaseEntity baseEntity,
+        private void setAllFields(Field[] fields, BaseEntity baseEntity, Class<?> baseEntityClass, Map<Pair<BigInteger, Integer>, Object> attrMap,
+                                  Map<Pair<BigInteger, Integer>, BigInteger> refMap){
+            BigInteger attrId;
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(Attribute.class)) {
+                    Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
+                    attrId = BigInteger.valueOf(attributeAnnotation.value());
+                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
+                    setValue(field, baseEntity, baseEntityClass, pairs, attrMap);
+                } else if (field.isAnnotationPresent(Boolean.class)) {
+                    Boolean booleanAnnotation = field.getAnnotation(Boolean.class);
+                    attrId = BigInteger.valueOf(booleanAnnotation.value());
+                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, attrMap.keySet());
+                    String yesno = String.valueOf(booleanAnnotation.yesno());
+                    setBoolean(field, baseEntity, baseEntityClass, pairs, attrMap, yesno);
+                } else if (field.isAnnotationPresent(Reference.class)) {
+                    Reference referenceAnnotation = field.getAnnotation(Reference.class);
+                    attrId = BigInteger.valueOf(referenceAnnotation.value());
+                    List<Pair<BigInteger, Integer>> pairs = getAllPairs(attrId, refMap.keySet());
+                    setRef(field, baseEntity, baseEntityClass, pairs, refMap, baseEntity.getObjectId());
+                }
+            }
+        }
+        private void setRef(Field field, BaseEntity baseEntity, Class<?> baseEntityClass,
                             List<Pair<BigInteger, Integer>> pairs, Map<Pair<BigInteger, Integer>, BigInteger> refMap, BigInteger outerEntityId) {
             Class fieldType = field.getType();
             Object value = null;
@@ -316,10 +324,10 @@ public class EntityManagerService {
                     value = attribute != null ? getByIdRef(attribute, fieldType) : null;
                 }
             }
-            setValueIntoField(field, baseEntity, value);
+            setValueIntoField(field, baseEntity, baseEntityClass, value);
         }
 
-        private void setValue(Field field, BaseEntity baseEntity,
+        private void setValue(Field field, BaseEntity baseEntity, Class<?> baseEntityClass,
                               List<Pair<BigInteger, Integer>> pairs, Map<Pair<BigInteger, Integer>, Object> attrMap) {
             Class fieldType = field.getType();
             Object value = null;
@@ -363,10 +371,10 @@ public class EntityManagerService {
                     }
                 }
             }
-            setValueIntoField(field, baseEntity, value);
+            setValueIntoField(field, baseEntity, baseEntityClass, value);
         }
 
-        private void setBoolean(Field field, BaseEntity baseEntity, List<Pair<BigInteger, Integer>> pairs,
+        private void setBoolean(Field field, BaseEntity baseEntity, Class<?> baseEntityClass, List<Pair<BigInteger, Integer>> pairs,
                                 Map<Pair<BigInteger, Integer>, Object> attrMap, String yesno) {
             Class fieldType = field.getType();
             Object value = null;
@@ -383,12 +391,12 @@ public class EntityManagerService {
                     value = yesno.equals(attribute);
                 }
             }
-            setValueIntoField(field, baseEntity, value);
+            setValueIntoField(field, baseEntity, baseEntityClass, value);
         }
 
-        private void setValueIntoField(Field field, BaseEntity baseEntity, Object value) {
+        private void setValueIntoField(Field field, BaseEntity baseEntity, Class<?> baseEntityClass, Object value) {
             try {
-                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), baseEntity.getClass());
+                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), baseEntityClass);
                 Method setMethod = propertyDescriptor.getWriteMethod();
                 if (setMethod != null) {
                     setMethod.invoke(baseEntity, value);
@@ -399,6 +407,46 @@ public class EntityManagerService {
                 throw new RuntimeException("The field doesn't have public set method.");
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        private List<Class<?>> getAllClassInHierarchy(Class<?> objectClass) {
+            List<Class<?>> classes1 = new ArrayList<>();
+            Class<?> superClass = objectClass.getSuperclass();
+            if (superClass.getSuperclass() != null) {
+                List<Class<?>> classes = getAllClassInHierarchy(superClass);
+                classes1.addAll(classes);
+            }
+            classes1.add(superClass);
+            return classes1;
+        }
+
+        private void getFieldsFromParents(BaseEntity baseEntity, Map<Pair<BigInteger, Integer>, Object> attrMap, Map<Pair<BigInteger, Integer>, BigInteger> refMap){
+            List<Class<?>> parents = getAllClassInHierarchy(baseEntity.getClass());
+            Collections.reverse(parents);
+            Iterator<Class<?>> iterator = parents.iterator();
+            while (iterator.hasNext()) {
+                Class<?> clazz = iterator.next();
+                if (clazz != BaseEntity.class) {
+                    Field[] fields = clazz.getDeclaredFields();
+                    getAllFields(fields, baseEntity, clazz, attrMap, refMap);
+                } else {
+                    break;
+                }
+            }
+        }
+        private void setFieldsInParents(BaseEntity baseEntity, Map<Pair<BigInteger, Integer>, Object> attrMap, Map<Pair<BigInteger, Integer>, BigInteger> refMap) {
+            List<Class<?>> parents = getAllClassInHierarchy(baseEntity.getClass());
+            Collections.reverse(parents);
+            Iterator<Class<?>> iterator = parents.iterator();
+            while (iterator.hasNext()) {
+                Class<?> clazz = iterator.next();
+                if (clazz != BaseEntity.class) {
+                    Field[] fields = clazz.getDeclaredFields();
+                    setAllFields(fields, baseEntity, clazz, attrMap, refMap);
+                } else {
+                    break;
+                }
             }
         }
 
