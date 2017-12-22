@@ -26,7 +26,6 @@ public class HorizontalGallery extends HorizontalLayout {
         panel.setWidth(400,Unit.PIXELS);
         panel.setHeight(500,Unit.PIXELS);
 
-
         Button arrowLeft = new Button();
         arrowLeft.setWidth(10,Unit.PIXELS);
         arrowLeft.setHeight(40,Unit.PIXELS);
@@ -41,7 +40,6 @@ public class HorizontalGallery extends HorizontalLayout {
                 imageLayout.addComponents(image);
             }
         });
-
 
         Button arrowRight = new Button();
         arrowRight.setWidth(10,Unit.PIXELS);
@@ -58,14 +56,14 @@ public class HorizontalGallery extends HorizontalLayout {
             }
         });
 
-        Button closeHG = new Button();
-        closeHG.setIcon(VaadinIcons.CLOSE);
+        Button closeHG = new Button(VaadinIcons.CLOSE);
         closeHG.setWidth(3,Unit.PIXELS);
         closeHG.setHeight(25,Unit.PIXELS);
         closeHG.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 AlbumsUI.galleryUI.removeComponent(GalleryUI.horizontalGallery);
+                GalleryUI.photosLayout.attach();
             }
         });
 

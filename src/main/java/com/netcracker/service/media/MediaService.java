@@ -26,6 +26,8 @@ public interface MediaService {
 
     PhotoAlbum createAlbum(PhotoAlbum album);
 
+    PhotoRecord createPhotoRecord(PhotoRecord photoRecord, BigInteger albumId);
+
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев
     void createAndEditPetAlbum(Profile profile);
 

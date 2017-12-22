@@ -1,5 +1,6 @@
 package com.netcracker.ui.gallery;
 
+import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
@@ -10,6 +11,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +21,6 @@ import java.util.List;
 @UIScope
 public class AlbumsUI extends  HorizontalLayout{
     public static GalleryUI galleryUI;
-//    public static NewAlbumUI newAlbumUI;
     Panel panel;
     VerticalLayout albumLayout;
 
@@ -31,18 +33,47 @@ public class AlbumsUI extends  HorizontalLayout{
         List<PhotoAlbum> albums = getAlbumList(petId);
         panel = new Panel();
         albumLayout = new VerticalLayout();
-        Button addNewAlbum = new Button("Create new album", VaadinIcons.PLUS);
-        addNewAlbum.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-//                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new NewAlbumUI());
-//                 newAlbumUI = new NewAlbumUI();
-//                addComponentsAndExpand(newAlbumUI);
+
+        VerticalLayout newAlbumLayout = new VerticalLayout();
+        newAlbumLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
+        PopupView addAlbumPopupView = new PopupView(null, newAlbumLayout);
+
+        addAlbumPopupView.addPopupVisibilityListener(event -> {
+            if (event.isPopupVisible()) {
+                newAlbumLayout.removeAllComponents();
+                HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
+                TextField albumName = new TextField();
+                TextArea description = new TextArea();
+                Button addNotNullAlbum = new Button("Add album");
+                addNotNullAlbum.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        addNotNullAlbum.setComponentError(null);
+                        createAlbum(albumName.getValue(),description.getValue());
+                        addAlbumPopupView.setPopupVisible(false);
+                        Notification.show("You just added a new album!");
+                    }
+                });
+
+                Button cancelAddingNewAlbum = new Button("Cancel", click ->
+                        addAlbumPopupView.setPopupVisible(false));
+                addAlbumButtonsLayout.addComponentsAndExpand(addNotNullAlbum, cancelAddingNewAlbum);
+                newAlbumLayout.addComponentsAndExpand(
+                        new Label("Enter album's name:"), albumName,new Label("Enter album's description:") ,description, addAlbumButtonsLayout);
             }
         });
-        albumLayout.addComponent(addNewAlbum);
+
+        Button addAlbumButton = new Button("Add album", click ->
+                addAlbumPopupView.setPopupVisible(true));
+        addAlbumButton.setIcon(VaadinIcons.PLUS);
+
+        albumLayout.addComponents(addAlbumButton, addAlbumPopupView);
+        albumLayout.setComponentAlignment(addAlbumButton, Alignment.MIDDLE_RIGHT);
+        albumLayout.setComponentAlignment(addAlbumPopupView, Alignment.MIDDLE_RIGHT);
+
+        //MOVE TO GALLERY
         for(PhotoAlbum album : albums){
-            HorizontalLayout petRecord = new HorizontalLayout();
             Button albumName = PageElements.createClickedLabel(album.getPhotoAlbumName());
             albumName.addClickListener(new AbstractClickListener() {
                 @Override
@@ -53,7 +84,6 @@ public class AlbumsUI extends  HorizontalLayout{
             });
             albumLayout.addComponents(albumName);
         }
-
         panel.setContent(albumLayout);
         addComponent(panel);
     }
@@ -63,5 +93,18 @@ public class AlbumsUI extends  HorizontalLayout{
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/albums/" + petId, PhotoAlbum[].class));
         return albumList;
+    }
+
+    private void createAlbum(String albumName, String description) {
+        ObjectAssert.isNullOrEmpty(albumName);
+        PhotoAlbum createdAlbum = new PhotoAlbum();
+        createdAlbum.setPhotoAlbumName(albumName);
+        createdAlbum.setPhotoAlbumDesc(description);
+        HttpEntity<PhotoAlbum> album = new HttpEntity<>(createdAlbum);
+        PhotoAlbum dbAlbum = CustomRestTemplate.getInstance()
+                .customPostForObject("/albums/add", album, PhotoAlbum.class);
+        if(dbAlbum != null){
+            Notification.show("You have just added a new album");
+        }
     }
 }
