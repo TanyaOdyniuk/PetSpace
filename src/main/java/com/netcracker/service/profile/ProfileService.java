@@ -1,6 +1,5 @@
 package com.netcracker.service.profile;
 
-import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import org.springframework.stereotype.Service;

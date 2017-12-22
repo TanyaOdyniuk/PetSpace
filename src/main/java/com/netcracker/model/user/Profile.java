@@ -4,7 +4,6 @@ import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.status.Status;
 import com.netcracker.model.advertisement.Advertisement;
 import com.netcracker.model.advertisement.AdvertisementConstant;

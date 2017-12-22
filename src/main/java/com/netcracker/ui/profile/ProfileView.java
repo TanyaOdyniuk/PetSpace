@@ -1,7 +1,7 @@
 package com.netcracker.ui.profile;
 
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.record.StubWallRecord;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,7 @@ public class ProfileView extends VerticalLayout {
     private final Profile profile;
     private final List<Profile> friendList;
     private final List<Pet> petList;
-    private final List<StubWallRecord> wallRecordsList;
+    private final List<WallRecord> wallRecordsList;
 
     @Autowired
     public ProfileView(BigInteger profileId) {
@@ -42,7 +44,7 @@ public class ProfileView extends VerticalLayout {
         profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + profileId, Profile.class);
         friendList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/friends/" + profileId, Profile[].class));
         petList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/pets/" + profileId, Pet[].class));
-        wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/wallrecords/" + profileId, StubWallRecord[].class));
+        wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/wallrecords/" + profileId, WallRecord[].class));
 
         //Creating matryoshka layout
         HorizontalLayout mainLayout = new HorizontalLayout();
@@ -197,8 +199,14 @@ public class ProfileView extends VerticalLayout {
                 addNotNullRecord.addClickListener(new AbstractClickListener() {
                     @Override
                     public void buttonClickListener() {
+                        WallRecord newWallRecord = new WallRecord();
+                        newWallRecord.setRecordDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                        newWallRecord.setRecordText(wallRecordText.getValue());
+                        //recordAuthor = getCurrentUser.getProfile(); 48 is stub
+                        newWallRecord.setRecordAuthor(CustomRestTemplate.getInstance().customGetForObject("/profile/" + 48, Profile.class));
+                        //newWallRecord.setRecordAuthor(profile);
                         addNotNullRecord.setComponentError(null);
-                        createWallRecord(wallRecordText.getValue(), new java.sql.Date(new Date().getTime()));
+                        createWallRecord(newWallRecord);
                         addWallRecordPopupView.setPopupVisible(false);
                         Notification.show("Запись добавлена!");
                     }
@@ -214,8 +222,8 @@ public class ProfileView extends VerticalLayout {
         wallHeaderLayout.addComponentsAndExpand(new Label("Records on " + profile.getProfileName() + "`s wall:"), addWallRecordPopupView);
         wallHeaderLayout.setComponentAlignment(addWallRecordPopupView, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
-        for (int i = 0; i < wallRecordsList.size(); i++) {
-            StubWallRecord currentWallRecord = wallRecordsList.get(i);
+        for (int i = wallRecordsList.size(); i > 0; i--) {
+            WallRecord currentWallRecord = wallRecordsList.get(i-1);
             Profile currentWallRecordAuthor = CustomRestTemplate.getInstance().customGetForObject("/wallrecords/author/" + currentWallRecord.getObjectId(), Profile.class);
             Panel singleWallRecordPanel = new Panel();
             VerticalLayout singleWallRecordLayout = new VerticalLayout();
@@ -228,7 +236,13 @@ public class ProfileView extends VerticalLayout {
             recordAuthorAvatar.setWidth(100, Unit.PIXELS);
             Label recordName = new Label("Record from " + currentWallRecordAuthor.getProfileName() + " " + currentWallRecordAuthor.getProfileSurname());
             recordName.setWidth(400, Unit.PIXELS);
-            Label recordDate = new Label(currentWallRecord.getRecordDate().toString());
+            String recordDateString;
+            try {
+                recordDateString = currentWallRecord.getRecordDate().toString();
+            } catch (NullPointerException e) {
+                recordDateString = "null!";
+            }
+            Label recordDate = new Label(recordDateString);
             recordInfoLayout.addComponents(recordAuthorAvatar, recordName, recordDate);
 
             HorizontalLayout recordLikesLayout = new HorizontalLayout();
@@ -255,9 +269,8 @@ public class ProfileView extends VerticalLayout {
         addComponents(mainLayout);
     }
 
-    private void createWallRecord(String wallRecordText, java.sql.Date date) {
-        StubWallRecord newWallRecord = new StubWallRecord(wallRecordText, date);
-        HttpEntity<StubWallRecord> wallRecord = new HttpEntity<>(newWallRecord);
-        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/add", wallRecord, StubWallRecord.class);
+    private void createWallRecord(WallRecord wallRecord) {
+        HttpEntity<WallRecord> request = new HttpEntity<>(wallRecord);
+        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/add", request, WallRecord.class);
     }
 }

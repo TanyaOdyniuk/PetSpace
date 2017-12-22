@@ -3,7 +3,7 @@ package com.netcracker.service.record.impl;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.record.RecordConstant;
-import com.netcracker.model.record.StubWallRecord;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.record.RecordService;
@@ -22,31 +22,34 @@ public class RecordServiceImpl implements RecordService {
     EntityManagerService entityManagerService;
 
     @Override
-    public List<StubWallRecord> getProfileWallRecords(BigInteger profileID) {
-        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + profileID + " AND ATTRTYPE_ID = " + UsersProfileConstant.PROFILE_WALLREC;
-        return entityManagerService.getObjectsBySQL(sqlQuery, StubWallRecord.class, new QueryDescriptor());
+    public List<WallRecord> getProfileWallRecords(BigInteger profileID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + UsersProfileConstant.PROFILE_WALLREC;
+        return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
     }
 
     @Override
     public Profile getWallRecordAuthor(BigInteger wallRecordID) {
-        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_AUTOR;
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_AUTOR;
         List<Profile> currentWallRecordAuthor = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
         return currentWallRecordAuthor.get(0);
     }
 
     @Override
-    public StubWallRecord createPetProfile(StubWallRecord wallRecord) {
-        StubWallRecord newWallRecord = entityManagerService.create(wallRecord);
-        Profile author = entityManagerService.getById(BigInteger.valueOf(48), Profile.class);
-        newWallRecord.setRecordAuthor(author);
+    public WallRecord createWallRecord(WallRecord wallRecord) {
+        BigInteger cutAuthorObjectID = wallRecord.getRecordAuthor().getObjectId();
+        wallRecord.setRecordAuthor(null);
+        WallRecord createdWallRecord = entityManagerService.create(wallRecord);
         Profile receiver = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
-        List<StubWallRecord> wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().
-                customGetForObject("/wallrecords/" + receiver.getObjectId(), StubWallRecord[].class));
-        wallRecordsList.add(newWallRecord);
-        //receiver.setProfileWallRecords(wallRecordsList);
+        List<WallRecord> wallRecordsList = new ArrayList<>(receiver.getProfileWallRecords());
+        wallRecordsList.add(createdWallRecord);
+        receiver.setProfileWallRecords(wallRecordsList);
         entityManagerService.update(receiver);
-        return newWallRecord;
+        Profile cutAuthor = new Profile();
+        cutAuthor.setObjectId(cutAuthorObjectID);
+        createdWallRecord.setRecordAuthor(cutAuthor);
+        //entityManagerService.update(createdWallRecord);
+        return createdWallRecord;
     }
 }

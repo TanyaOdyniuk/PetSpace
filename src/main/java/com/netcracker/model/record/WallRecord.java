@@ -7,6 +7,7 @@ import com.netcracker.model.comment.WallComment;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.UsersProfileConstant;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)

@@ -13,19 +13,19 @@ import java.text.SimpleDateFormat;
 @UIScope
 public class AdvertisementView extends VerticalLayout {
 
-    private final Advertisement ad;
+    private final Advertisement adv;
 
     public AdvertisementView(Advertisement ad) {
-        this.ad = ad;
+        this.adv = ad;
 
         Panel mainPanel = new Panel();
         VerticalLayout mainLayout = new VerticalLayout();
 
         HorizontalLayout headerLayout = new HorizontalLayout();
-        Label themeLabel = new Label("Theme: " + ad.getAdTopic());
-        Label dateLabel = new Label("Date: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate()));
+        Label themeLabel = new Label("Theme: " + adv.getAdTopic());
+        Label dateLabel = new Label("Date: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(adv.getAdDate()));
         headerLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        if (ad.isAdIsVip()) {
+        if (adv.isAdIsVip()) {
             Panel vipPanel = new Panel();
             vipPanel.setHeight(40, Unit.PIXELS);
             vipPanel.setWidth(100, Unit.PIXELS);
@@ -39,21 +39,21 @@ public class AdvertisementView extends VerticalLayout {
 
         HorizontalLayout petSignsLayout = new HorizontalLayout();
         petSignsLayout.addComponent(new Label("Характерные признаки: "));
-        if (ad.getAdPetSigns() != null) {
-            for (String petSign : ad.getAdPetSigns()) {
+        if (adv.getAdPetSigns() != null) {
+            for (String petSign : adv.getAdPetSigns()) {
                 petSignsLayout.addComponent(new Button(petSign));
             }
         }
 
         TextField mainInfo = new TextField();
-        mainInfo.setValue(ad.getAdBasicInfo());
+        mainInfo.setValue(adv.getAdBasicInfo());
         mainInfo.setHeight(200, Unit.PIXELS);
         mainInfo.setWidth("100%");
 
         HorizontalLayout mapLayout = new HorizontalLayout();
         Label mapLabel = new Label("Location info: ");
-        if (ad.getAdLocation() != null) {
-            Link mapLink = new Link("Click to see last known location", new ExternalResource(ad.getAdLocation()));
+        if (adv.getAdLocation() != null) {
+            Link mapLink = new Link("Click to see last known location", new ExternalResource(adv.getAdLocation()));
             mapLayout.addComponents(mapLabel, mapLink);
         }
 
