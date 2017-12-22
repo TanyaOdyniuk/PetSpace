@@ -24,7 +24,7 @@ public interface MediaService {
 
     PhotoAlbum getAlbum(BigInteger albumId);
 
-    PhotoAlbum createAlbum(PhotoAlbum album);
+    PhotoAlbum createAlbum(PhotoAlbum album, BigInteger petId);
 
     PhotoRecord createPhotoRecord(PhotoRecord photoRecord, BigInteger albumId);
 

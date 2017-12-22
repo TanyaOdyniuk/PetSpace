@@ -88,11 +88,9 @@ public class GalleryUI extends VerticalLayout {
         addPhotoButton.setIcon(VaadinIcons.PLUS);
 
         photosLayout.addComponents(addPhotoButton, addPhotoRecordView, photosGrid);
-//        photosLayout.setComponentAlignment(/*addNewPhoto*/button, Alignment.TOP_RIGHT);
 
         addComponentsAndExpand(photosLayout);
     }
-
 
 
     private List<PhotoRecord> getPhotosFromAlbum(BigInteger albumId){

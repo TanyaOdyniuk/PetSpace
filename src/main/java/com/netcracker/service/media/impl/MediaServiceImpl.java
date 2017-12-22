@@ -48,9 +48,9 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public PhotoAlbum createAlbum(PhotoAlbum album) {
+    public PhotoAlbum createAlbum(PhotoAlbum album, BigInteger petId) {
         PhotoAlbum newAlbum = entityManagerService.create(album);
-        Pet pet = entityManagerService.getById(BigInteger.valueOf(203), Pet.class);
+        Pet pet = entityManagerService.getById(/*BigInteger.valueOf(203)*/petId, Pet.class);
         List<PhotoAlbum> newAlbumList = new ArrayList<>(pet.getPetPhotoAlbums());
         newAlbumList.add(newAlbum);
         pet.setPetPhotoAlbums(newAlbumList);
@@ -59,9 +59,9 @@ public class MediaServiceImpl implements MediaService {
         pet.setPetAdvertisements(null);
         pet.setPetStatus(null);
         entityManagerService.update(pet);
-        Pet cutProfile = new Pet();
-        cutProfile.setObjectId(pet.getObjectId());
-        newAlbum.setPet(pet);
+        Pet cutPet = new Pet();
+        cutPet.setObjectId(pet.getObjectId());
+        newAlbum.setPet(cutPet);
         return newAlbum;
     }
 

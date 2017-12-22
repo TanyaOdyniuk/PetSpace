@@ -50,7 +50,7 @@ public class AlbumsUI extends  HorizontalLayout{
                     @Override
                     public void buttonClickListener() {
                         addNotNullAlbum.setComponentError(null);
-                        createAlbum(albumName.getValue(),description.getValue());
+                        createAlbum(albumName.getValue(),description.getValue(), petId);
                         addAlbumPopupView.setPopupVisible(false);
                         Notification.show("You just added a new album!");
                     }
@@ -72,7 +72,7 @@ public class AlbumsUI extends  HorizontalLayout{
         albumLayout.setComponentAlignment(addAlbumButton, Alignment.MIDDLE_RIGHT);
         albumLayout.setComponentAlignment(addAlbumPopupView, Alignment.MIDDLE_RIGHT);
 
-        //MOVE TO GALLERY
+        //OPEN GALLERY
         for(PhotoAlbum album : albums){
             Button albumName = PageElements.createClickedLabel(album.getPhotoAlbumName());
             albumName.addClickListener(new AbstractClickListener() {
@@ -95,16 +95,16 @@ public class AlbumsUI extends  HorizontalLayout{
         return albumList;
     }
 
-    private void createAlbum(String albumName, String description) {
+    private void createAlbum(String albumName, String description, BigInteger petId) {
         ObjectAssert.isNullOrEmpty(albumName);
         PhotoAlbum createdAlbum = new PhotoAlbum();
         createdAlbum.setPhotoAlbumName(albumName);
         createdAlbum.setPhotoAlbumDesc(description);
         HttpEntity<PhotoAlbum> album = new HttpEntity<>(createdAlbum);
         PhotoAlbum dbAlbum = CustomRestTemplate.getInstance()
-                .customPostForObject("/albums/add", album, PhotoAlbum.class);
-        if(dbAlbum != null){
-            Notification.show("You have just added a new album");
-        }
+                .customPostForObject("/albums/"+ petId +"/add", album, PhotoAlbum.class);
+//        if(dbAlbum != null){
+//            Notification.show("You have just added a new album");
+//        }
     }
 }
