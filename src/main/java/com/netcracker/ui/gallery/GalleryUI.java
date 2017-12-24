@@ -3,7 +3,7 @@ package com.netcracker.ui.gallery;
 import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
@@ -24,9 +24,12 @@ import java.util.List;
 public class GalleryUI extends VerticalLayout {
     static HorizontalGallery horizontalGallery;
     static VerticalLayout photosLayout;
+    Window newPhotoRecordWindow;
+    BigInteger albumId;
 
     @Autowired
     public GalleryUI(BigInteger albumId) {
+        this.albumId = albumId;
         addStyleName("v-scrollable");
         setHeight("100%");
         List<PhotoRecord> photos = getPhotosFromAlbum(albumId);
@@ -46,52 +49,57 @@ public class GalleryUI extends VerticalLayout {
                 @Override
                 public void click(MouseEvents.ClickEvent clickEvent) {
                     horizontalGallery = new HorizontalGallery(photos, clickPhotoIndex);
-                    addComponentsAndExpand(horizontalGallery);
+                    addComponents(horizontalGallery);
                     photosLayout.detach();
                 }
             });
             singlePhotoPanel.setContent(singlePhotoImage);
             photosGrid.addComponent(singlePhotoPanel);
         }
-
-        //POPUP NEW PHOTO
-        VerticalLayout newPhotoLayout = new VerticalLayout();
-        newPhotoLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        PopupView addPhotoRecordView = new PopupView(/*"Add album",*/null, newPhotoLayout);
-        addPhotoRecordView.addPopupVisibilityListener(event -> {
-            if (event.isPopupVisible()) {
-                newPhotoLayout.removeAllComponents();
-                HorizontalLayout addPhotoButtonsLayout = new HorizontalLayout();
-                TextField photoLink = new TextField();
-                TextArea description = new TextArea();
-                Button addNotNullPhoto = new Button("Add photo");
-                addNotNullPhoto.addClickListener(new AbstractClickListener() {
-                    @Override
-                    public void buttonClickListener() {
-                        addNotNullPhoto.setComponentError(null);
-                        createPhotoRecord(photoLink.getValue(), description.getValue() , albumId);
-                        addPhotoRecordView.setPopupVisible(false);
-                        Notification.show("You have just added a new photo!");
-                    }
-                });
-
-                Button cancelAddingNewAlbum = new Button("Cancel", click ->
-                        addPhotoRecordView.setPopupVisible(false));
-                addPhotoButtonsLayout.addComponentsAndExpand(addNotNullPhoto, cancelAddingNewAlbum);
-                newPhotoLayout.addComponentsAndExpand(
-                        new Label("Enter the link to the photo:"), photoLink, new Label("Enter photos description:") ,description, addPhotoButtonsLayout);
+        getNewPhotoRecord();
+        Button addNewPhotoRecordButton = new Button("Add photo", VaadinIcons.PLUS);
+        addNewPhotoRecordButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                UI.getCurrent().addWindow(newPhotoRecordWindow);
             }
-        });//---------------------------------POPUP NEW PHOTO
+        });
 
-        Button addPhotoButton = new Button("Add photo", click ->
-                addPhotoRecordView.setPopupVisible(true));
-        addPhotoButton.setIcon(VaadinIcons.PLUS);
-
-        photosLayout.addComponents(addPhotoButton, addPhotoRecordView, photosGrid);
-
-        addComponentsAndExpand(photosLayout);
+        photosLayout.addComponents(addNewPhotoRecordButton, photosGrid);
+        addComponents(photosLayout);
     }
 
+
+    private void getNewPhotoRecord(){
+        newPhotoRecordWindow = new Window();
+        newPhotoRecordWindow.setWidth("400px");
+        newPhotoRecordWindow.setHeight("250px");
+        newPhotoRecordWindow.setCaption("Creating new photo:");
+        VerticalLayout windowContent = new VerticalLayout();
+        HorizontalLayout addPhotoRecordButtonsLayout = new HorizontalLayout();
+
+        TextField photoLink = PageElements.createTextField("Enter photos link:", "photos link", true);
+        photoLink.setWidth("100%");
+        TextField description = PageElements.createTextField("Enter photos description:", "photos description", false);
+        description.setWidth("100%");
+
+        Button addPhotoRecordButton = new Button("Add photo");
+        addPhotoRecordButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                addPhotoRecordButton.setComponentError(null);
+                createPhotoRecord(photoLink.getValue(),description.getValue(), albumId);
+                newPhotoRecordWindow.close();
+                Notification.show("You have just added a new photo!");
+            }
+        });
+        Button cancelAddingNewPhoto = new Button("Cancel", click -> newPhotoRecordWindow.close());
+        addPhotoRecordButtonsLayout.addComponentsAndExpand(addPhotoRecordButton, cancelAddingNewPhoto);
+        windowContent.addComponents(photoLink, description, addPhotoRecordButtonsLayout);
+
+        newPhotoRecordWindow.setContent(windowContent);
+        newPhotoRecordWindow.center();
+    }
 
     private List<PhotoRecord> getPhotosFromAlbum(BigInteger albumId){
         List<PhotoRecord> photos = Arrays.asList(
@@ -109,8 +117,5 @@ public class GalleryUI extends VerticalLayout {
         HttpEntity<PhotoRecord> photo = new HttpEntity<>(createdPhoto);
         PhotoRecord dbAlbum = CustomRestTemplate.getInstance()
                 .customPostForObject("/gallery/"+ albumId +"/add", photo, PhotoRecord.class);
-//        if(dbAlbum != null){
-//            Notification.show("You just added a new photo");
-//        }
     }
 }
