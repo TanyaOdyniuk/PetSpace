@@ -7,8 +7,6 @@ import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.album.PhotoAlbumConstant;
 import com.netcracker.model.comment.PhotoRecordComment;
 import com.netcracker.model.like.AbstractLikeDislike;
-
-import java.sql.Date;
 import java.util.List;
 
 @ObjectType(RecordConstant.PR_TYPE)
@@ -16,10 +14,8 @@ public class PhotoRecord extends AbstractRecord {
 
     @Attribute(RecordConstant.PR_PHOTO)
     private String photo;
-    @Reference(PhotoAlbumConstant.PA_CONTPHOTO) //
+    @Reference(PhotoAlbumConstant.PA_CONTPHOTO)
     private PhotoAlbum photoAlbum;
-    @Attribute(RecordConstant.PR_UPLDATE)
-    private Date photoUploadDate;
     //TODO SERVICE TO GET LIKES
     @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordLikes;
@@ -81,20 +77,11 @@ public class PhotoRecord extends AbstractRecord {
         this.photoRecordDislikes = photoRecordDislikes;
     }
 
-    public Date getPhotoUploadDate() {
-        return photoUploadDate;
-    }
-
-    public void setPhotoUploadDate(Date photoUploadDate) {
-        this.photoUploadDate = photoUploadDate;
-    }
-
     @Override
     public String toString() {
         return "PhotoRecord{" +
                 "photo='" + photo + '\'' +
                 ", photoAlbum=" + photoAlbum +
-                ", photoUploadDate=" + photoUploadDate +
                 ", photoRecordLikes=" + photoRecordLikes +
                 ", photoRecordDislikes=" + photoRecordDislikes +
                 ", photoComments=" + photoComments +

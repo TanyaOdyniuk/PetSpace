@@ -30,6 +30,8 @@ public class Group extends BaseEntity {
     //TODO SERVICE GETGROUPADMINS
     @Reference(GroupConstant.GR_ADMIN)
     private Profile groupAdmin;
+    @Attribute(GroupConstant.GR_AVATAR)
+    private String groupAvatar;
 
     public Group() {
     }
@@ -98,10 +100,19 @@ public class Group extends BaseEntity {
         this.groupAdmin = groupAdmin;
     }
 
+    public String getGroupAvatar() {
+        return groupAvatar;
+    }
+
+    public void setGroupAvatar(String groupAvatar) {
+        this.groupAvatar = groupAvatar;
+    }
+
     @Override
     public String toString() {
         return "Group{" +
                 "groupName='" + groupName + '\'' +
+                ", groupAvatar='" + groupAvatar + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
                 ", groupParticipants=" + groupParticipants +
                 ", groupType=" + groupType +
