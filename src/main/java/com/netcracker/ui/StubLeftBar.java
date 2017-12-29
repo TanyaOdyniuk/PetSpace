@@ -32,10 +32,11 @@ public class StubLeftBar extends VerticalLayout {
         //Button button4 = getNewButton("My albums", VaadinIcons.CLIPBOARD_USER, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.HUMANIZED_MESSAGE, "You have no photos!");
         Button button4 = getNewButton("My albums", VaadinIcons.CLIPBOARD_USER, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button button5 = getNewButton("My adverts", VaadinIcons.USER_CARD, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
-        //Button button6 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.HUMANIZED_MESSAGE, "To be done...");
-        Button button6 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
+        Button button6 = getNewButton("My groups", VaadinIcons.GROUP, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
+        //Button button7 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, Notification.Type.HUMANIZED_MESSAGE, "To be done...");
+        Button button7 = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         VerticalLayout layout = new VerticalLayout();
-        layout.addComponentsAndExpand(button1, button2, button3, button4, button5, button6);
+        layout.addComponentsAndExpand(button1, button2, button3, button4, button5, button6, button7);
         panel.setContent(layout);
         panel.setWidth("100%");
         addComponentsAndExpand(panel);

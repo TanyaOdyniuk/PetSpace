@@ -7,6 +7,7 @@ import com.netcracker.model.BaseEntity;
 import com.netcracker.model.like.RecordLikeDislike;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)
@@ -15,7 +16,7 @@ public abstract class AbstractRecord extends BaseEntity {
     @Attribute(RecordConstant.REC_INFO)
     private String recordText;
     @Attribute(RecordConstant.REC_DATE)
-    private Date recordDate;
+    private Timestamp recordDate;
     //TODO SERVICE TO GET LIKES
     @Reference(RecordConstant.REC_LDLREF)
     private List<RecordLikeDislike> recordLikes;
@@ -42,11 +43,11 @@ public abstract class AbstractRecord extends BaseEntity {
         this.recordText = recordText;
     }
 
-    public Date getRecordDate() {
+    public Timestamp getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(Date recordDate) {
+    public void setRecordDate(Timestamp recordDate) {
         this.recordDate = recordDate;
     }
 

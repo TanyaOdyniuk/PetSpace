@@ -6,9 +6,7 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.album.PhotoAlbumConstant;
 import com.netcracker.model.comment.PhotoRecordComment;
-import com.netcracker.model.like.AbstractLikeDislike;
 
-import java.sql.Date;
 import java.util.List;
 
 @ObjectType(RecordConstant.PR_TYPE)
@@ -16,19 +14,15 @@ public class PhotoRecord extends AbstractRecord {
 
     @Attribute(RecordConstant.PR_PHOTO)
     private String photo;
-    @Reference(PhotoAlbumConstant.PA_CONTPHOTO) //
+    @Reference(PhotoAlbumConstant.PA_CONTPHOTO)
     private PhotoAlbum photoAlbum;
-    @Attribute(RecordConstant.PR_UPLDATE)
-    private Date photoUploadDate;
-    //TODO SERVICE TO GET LIKES
-    @Reference(RecordConstant.PR_LIKE)
+/*  @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordLikes;
-    //TODO SERVICE TO GET DISLIKES
     @Reference(RecordConstant.PR_LIKE)
-    private List<AbstractLikeDislike> photoRecordDislikes;
+    private List<AbstractLikeDislike> photoRecordDislikes;*/
     //TODO SERVICE TO GET PHOTO COMMENTS
-    @Reference(RecordConstant.REC_COMREF)
-    private List<PhotoRecordComment> photoComments;
+    @Reference(RecordConstant.PR_COMMENTS)
+    private List<PhotoRecordComment> photoRecordComments;
 
     public PhotoRecord() {
     }
@@ -49,12 +43,12 @@ public class PhotoRecord extends AbstractRecord {
         this.photo = photo;
     }
 
-    public List<PhotoRecordComment> getPhotoComments() {
-        return photoComments;
+    public List<PhotoRecordComment> getPhotoRecordComments() {
+        return photoRecordComments;
     }
 
-    public void setPhotoComments(List<PhotoRecordComment> photoComments) {
-        this.photoComments = photoComments;
+    public void setPhotoRecordComments(List<PhotoRecordComment> photoRecordComments) {
+        this.photoRecordComments = photoRecordComments;
     }
 
     public PhotoAlbum getPhotoAlbum() {
@@ -65,39 +59,12 @@ public class PhotoRecord extends AbstractRecord {
         this.photoAlbum = photoAlbum;
     }
 
-    public List<AbstractLikeDislike> getPhotoRecordLikes() {
-        return photoRecordLikes;
-    }
-
-    public void setPhotoRecordLikes(List<AbstractLikeDislike> photoRecordLikes) {
-        this.photoRecordLikes = photoRecordLikes;
-    }
-
-    public List<AbstractLikeDislike> getPhotoRecordDislikes() {
-        return photoRecordDislikes;
-    }
-
-    public void setPhotoRecordDislikes(List<AbstractLikeDislike> photoRecordDislikes) {
-        this.photoRecordDislikes = photoRecordDislikes;
-    }
-
-    public Date getPhotoUploadDate() {
-        return photoUploadDate;
-    }
-
-    public void setPhotoUploadDate(Date photoUploadDate) {
-        this.photoUploadDate = photoUploadDate;
-    }
-
     @Override
     public String toString() {
         return "PhotoRecord{" +
                 "photo='" + photo + '\'' +
                 ", photoAlbum=" + photoAlbum +
-                ", photoUploadDate=" + photoUploadDate +
-                ", photoRecordLikes=" + photoRecordLikes +
-                ", photoRecordDislikes=" + photoRecordDislikes +
-                ", photoComments=" + photoComments +
+                ", photoRecordComments=" + photoRecordComments +
                 '}';
     }
 }

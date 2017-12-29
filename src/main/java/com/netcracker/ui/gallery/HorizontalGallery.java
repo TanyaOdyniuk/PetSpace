@@ -7,7 +7,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 import java.util.List;
 
-public class HorizontalGallery extends HorizontalLayout {
+public class HorizontalGallery extends /*HorizontalLayout*/ Window{
     Panel panel;
     HorizontalLayout galleryLayout;
     Image image;
@@ -15,17 +15,22 @@ public class HorizontalGallery extends HorizontalLayout {
     Integer index;
 
     public HorizontalGallery(List<PhotoRecord> list, Integer i){
+        setModal(true);
+//        center();
         panel = new Panel();
         galleryLayout = new HorizontalLayout();
         imageLayout = new HorizontalLayout();
         index = i;
 
+        Panel imagePanel = new Panel();
+        imagePanel.setWidth("400px");
+        imagePanel.setHeight("400px");
+        imagePanel.setContent(imageLayout);
         image = new Image();
         image.setSource(new ExternalResource(list.get(index).getPhoto()));
         image.setDescription(list.get(index).getDescription());
-        panel.setWidth(400,Unit.PIXELS);
-        panel.setHeight(500,Unit.PIXELS);
-
+        panel.setWidth(900,Unit.PIXELS);//1100
+        panel.setHeight(630,Unit.PIXELS);//650
 
         Button arrowLeft = new Button();
         arrowLeft.setWidth(10,Unit.PIXELS);
@@ -38,10 +43,10 @@ public class HorizontalGallery extends HorizontalLayout {
                 if(index < 0)
                     index = list.size() - 1;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
+                image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }
         });
-
 
         Button arrowRight = new Button();
         arrowRight.setWidth(10,Unit.PIXELS);
@@ -54,30 +59,22 @@ public class HorizontalGallery extends HorizontalLayout {
                 if(index == list.size())
                     index = 0;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
+                image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }
         });
 
-        Button closeHG = new Button();
-        closeHG.setIcon(VaadinIcons.CLOSE);
-        closeHG.setWidth(3,Unit.PIXELS);
-        closeHG.setHeight(25,Unit.PIXELS);
-        closeHG.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                AlbumsUI.galleryUI.removeComponent(GalleryUI.horizontalGallery);
-            }
-        });
 
         imageLayout.addComponent(image);
-        galleryLayout.addComponents(arrowLeft, imageLayout, arrowRight, closeHG);
+
+        galleryLayout.addComponents(arrowLeft,imagePanel /*imageLayout*/, arrowRight);
 
         galleryLayout.setComponentAlignment(arrowLeft, Alignment.MIDDLE_LEFT);
         galleryLayout.setComponentAlignment(arrowRight, Alignment.MIDDLE_RIGHT);
-        galleryLayout.setComponentAlignment(closeHG, Alignment.TOP_RIGHT);
 
         panel.setContent(galleryLayout);
-        addComponentsAndExpand(panel);
+//        addComponentsAndExpand(panel);
+        setContent(panel);
     }
 }
 

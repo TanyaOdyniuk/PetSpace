@@ -8,6 +8,7 @@ import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
+import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -47,7 +48,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private final VerticalLayout addUsersLayout;
 
-    public static AlbumsUI albumsUI;
 
     @Autowired
     UserService userService;
@@ -114,31 +114,35 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
+        BigInteger profileId = BigInteger.valueOf(1);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         switch (clickedButtonCaption) {
             case "My profile":
-                primaryAreaLayout.addComponentsAndExpand(new ProfileView(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(profileId));
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
                 break;
             case "My pets":
                 //BigInteger profileId = new UserService().getCurrentUser().getProfile().getObjectId();
-                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(BigInteger.valueOf(1)));
+                //primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
+                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
                 break;
             case "Pets":
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                albumsUI = new AlbumsUI(BigInteger.valueOf(203));
-                primaryAreaLayout.addComponentsAndExpand(albumsUI);
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(203)));
+                break;
+            case "My groups":
+                primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));
                 break;
             case "My friends":
-                primaryAreaLayout.addComponentsAndExpand(new FriendListUI(BigInteger.valueOf(1)));
+                primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));
                 break;
             case "Logout":
                 getPage().setLocation("/authorization");

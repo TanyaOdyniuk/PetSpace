@@ -2,7 +2,7 @@ package com.netcracker.model.record;
 
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
-import com.netcracker.model.comment.GroupComment;
+import com.netcracker.model.comment.GroupRecordComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @ObjectType(RecordConstant.REC_TYPE)
 public class GroupRecord extends AbstractRecord {
     @Reference(GroupConstant.GR_RECORDS)
-    private Group recordGroup;
+    private Group parentGroup;
     @Reference(RecordConstant.REC_COMREF)
-    private List<GroupComment> recordGroupComments;
+    private List<GroupRecordComment> groupRecordComments;
 
     public GroupRecord() {
     }
@@ -26,27 +26,27 @@ public class GroupRecord extends AbstractRecord {
         super(name, description);
     }
 
-    public Group getRecordGroup() {
-        return recordGroup;
+    public Group getParentGroup() {
+        return parentGroup;
     }
 
-    public void setRecordGroup(Group recordGroup) {
-        this.recordGroup = recordGroup;
+    public void setParentGroup(Group parentGroup) {
+        this.parentGroup = parentGroup;
     }
 
-    public List<GroupComment> getRecordGroupComments() {
-        return recordGroupComments;
+    public List<GroupRecordComment> getGroupRecordComments() {
+        return groupRecordComments;
     }
 
-    public void setRecordGroupComments(List<GroupComment> recordGroupComments) {
-        this.recordGroupComments = recordGroupComments;
+    public void setGroupRecordComments(List<GroupRecordComment> groupRecordComments) {
+        this.groupRecordComments = groupRecordComments;
     }
 
     @Override
     public String toString() {
         return "GroupRecord{" +
-                "recordGroup=" + recordGroup +
-                ", recordGroupComments=" + recordGroupComments +
+                "parentGroup=" + parentGroup +
+                ", groupRecordComments=" + groupRecordComments +
                 '}';
     }
 }

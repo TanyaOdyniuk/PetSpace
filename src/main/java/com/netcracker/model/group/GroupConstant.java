@@ -13,4 +13,5 @@ public interface GroupConstant {
 
     int GRT_TYPE = 405;
     int GRT_NAME = 429;
+    int GR_AVATAR = 430;
 }

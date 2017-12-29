@@ -1,11 +1,9 @@
 package com.netcracker.model.record;
 
-import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
-import com.netcracker.model.comment.WallComment;
+import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.UsersProfileConstant;
 
 import java.util.List;
 
@@ -14,7 +12,7 @@ public class WallRecord extends AbstractRecord {
     @Reference(RecordConstant.REC_AUTOR)
     private Profile recordAuthor;
     @Reference(RecordConstant.REC_COMREF)
-    private List<WallComment> wallComments;
+    private List<WallRecordComment> wallRecordComments;
 
     public WallRecord() {
     }
@@ -35,19 +33,19 @@ public class WallRecord extends AbstractRecord {
         this.recordAuthor = recordAuthor;
     }
 
-    public List<WallComment> getWallComments() {
-        return wallComments;
+    public List<WallRecordComment> getWallRecordComments() {
+        return wallRecordComments;
     }
 
-    public void setWallComments(List<WallComment> wallComments) {
-        this.wallComments = wallComments;
+    public void setWallRecordComments(List<WallRecordComment> wallRecordComments) {
+        this.wallRecordComments = wallRecordComments;
     }
 
     @Override
     public String toString() {
         return "WallRecord{" +
                 "recordAuthor=" + recordAuthor +
-                ", wallComments=" + wallComments +
+                ", wallRecordComments=" + wallRecordComments +
                 '}';
     }
 }

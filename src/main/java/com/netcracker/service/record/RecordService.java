@@ -1,6 +1,7 @@
 package com.netcracker.service.record;
 
-import com.netcracker.model.record.StubWallRecord;
+import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +12,16 @@ import java.util.List;
 public interface RecordService {
 
     //Получить список записей на стене профиля по его ID
-    List<StubWallRecord> getProfileWallRecords(BigInteger profileID);
+    List<WallRecord> getProfileWallRecords(BigInteger profileID);
+
+    //Получить список комментариев к записи на стене по её ID
+    List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID);
 
     //Получить профиль автора из записи на стене
     Profile getWallRecordAuthor(BigInteger wallRecordID);
 
     //Создать запись на стене
-    StubWallRecord createPetProfile(StubWallRecord wallRecord);
+    WallRecord createWallRecord(WallRecord wallRecord);
+
+
 }

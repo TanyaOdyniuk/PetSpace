@@ -27,14 +27,15 @@ public class PetPageUI extends VerticalLayout {
 
     private BigInteger petId;
     private PetSpecies petSpecies;
+    private Pet pet;
 
     @Autowired
     public PetPageUI(BigInteger petId) {
         this.petId = petId;
         this.petSpecies = getSpecies();
+        this.pet = getPet(petId);
         setSizeFull();
         setSpacing(true);
-        Pet pet = getPet(petId);
         Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + pet.getPetOwner().getObjectId(), Profile.class);
 
         HorizontalLayout mainLayout = new HorizontalLayout();
@@ -65,6 +66,15 @@ public class PetPageUI extends VerticalLayout {
         petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
         petAvatar.setDescription("Pet avatar");
 
+        Button editPage = PageElements.createClickedLabel("Редактировать информацию");
+        editPage.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                PetEditFormUI sub = new PetEditFormUI(pet);
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+
         Button deletePage = PageElements.createClickedLabel("Удалить страницу");
         deletePage.addClickListener(new AbstractClickListener() {
             @Override
@@ -89,7 +99,7 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), deletePage, PageElements.getSeparator(), argue, albums);
+        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), editPage, deletePage, PageElements.getSeparator(), argue, albums);
         avatarPanel.setContent(leftPageLayout);
         avatarLayout.addComponents(avatarPanel);
 

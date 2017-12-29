@@ -1,7 +1,6 @@
 package com.netcracker.service.profile.impl;
 
 import com.netcracker.dao.managerservice.EntityManagerService;
-import com.netcracker.model.record.StubWallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.service.profile.ProfileService;

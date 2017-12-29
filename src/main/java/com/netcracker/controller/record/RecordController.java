@@ -1,6 +1,7 @@
 package com.netcracker.controller.record;
 
-import com.netcracker.model.record.StubWallRecord;
+import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.record.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,22 @@ public class RecordController {
     RecordService recordService;
 
     @GetMapping("/{id}")
-    public List<StubWallRecord> getMyWallRecords(@PathVariable("id") BigInteger profileId) {
+    public List<WallRecord> getProfileWallRecords(@PathVariable("id") BigInteger profileId) {
         return recordService.getProfileWallRecords(profileId);
     }
 
+    @GetMapping("/comments/{id}")
+    public List<WallRecordComment> getWallRecordComments(@PathVariable("id") BigInteger wallRecordID) {
+        return recordService.getWallRecordComments(wallRecordID);
+    }
+
     @GetMapping("/author/{id}")
-    public Profile getCurrentWallRecordAuthor(@PathVariable("id") BigInteger wallRecordID) {
+    public Profile getWallRecordAuthor(@PathVariable("id") BigInteger wallRecordID) {
         return recordService.getWallRecordAuthor(wallRecordID);
     }
 
     @PostMapping("/add")
-    public StubWallRecord createNewWallRecord(@RequestBody StubWallRecord wallRecord){
-        return recordService.createPetProfile(wallRecord);
+    public WallRecord createWallRecord(@RequestBody WallRecord wallRecord){
+        return recordService.createWallRecord(wallRecord);
     }
 }

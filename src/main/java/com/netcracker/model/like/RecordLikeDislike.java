@@ -8,7 +8,7 @@ import com.netcracker.model.record.RecordConstant;
 @ObjectType(LikeConstant.LDL_TYPE)
 public class RecordLikeDislike extends AbstractLikeDislike {
     @Reference(RecordConstant.REC_LDLREF)
-    private AbstractRecord likeDislikeRecord;
+    private AbstractRecord likedDislikedRecord;
 
     public RecordLikeDislike() {
     }
@@ -21,18 +21,18 @@ public class RecordLikeDislike extends AbstractLikeDislike {
         super(name, description);
     }
 
-    public AbstractRecord getLikeDislikeRecord() {
-        return likeDislikeRecord;
+    public AbstractRecord getLikedDislikedRecord() {
+        return likedDislikedRecord;
     }
 
-    public void setLikeDislikeRecord(AbstractRecord likeDislikeRecord) {
-        this.likeDislikeRecord = likeDislikeRecord;
+    public void setLikedDislikedRecord(AbstractRecord likedDislikedRecord) {
+        this.likedDislikedRecord = likedDislikedRecord;
     }
 
     @Override
     public String toString() {
         return "RecordLikeDislike{" +
-                "likeDislikeRecord=" + likeDislikeRecord +
+                "likedDislikedRecord=" + likedDislikedRecord +
                 '}';
     }
 }

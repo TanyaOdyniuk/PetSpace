@@ -18,8 +18,8 @@ public class AlbumsController {
         return mediaService.getMyAlbums(petId,false,null, null);
     }
 
-    @PostMapping("/add")
-    public PhotoAlbum createNewPet(@RequestBody PhotoAlbum album){
-        return mediaService.createAlbum(album);
+    @PostMapping("/{id}/add")
+    public PhotoAlbum createNewPet(@RequestBody PhotoAlbum album, @PathVariable("id") BigInteger petId){
+        return mediaService.createAlbum(album, petId);
     }
 }

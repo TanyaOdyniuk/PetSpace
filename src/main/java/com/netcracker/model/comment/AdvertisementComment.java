@@ -8,7 +8,7 @@ import com.netcracker.model.advertisement.AdvertisementConstant;
 @ObjectType(CommentConstant.COM_TYPE)
 public class AdvertisementComment extends AbstractComment {
     @Reference(AdvertisementConstant.AD_TYPE)//нет списка комментов
-    private Advertisement commentAdvertisement;
+    private Advertisement commentedAdvertisement;
 
     public AdvertisementComment() {
     }
@@ -21,18 +21,18 @@ public class AdvertisementComment extends AbstractComment {
         super(name, description);
     }
 
-    public Advertisement getCommentAdvertisement() {
-        return commentAdvertisement;
+    public Advertisement getCommentedAdvertisement() {
+        return commentedAdvertisement;
     }
 
-    public void setCommentAdvertisement(Advertisement commentAdvertisement) {
-        this.commentAdvertisement = commentAdvertisement;
+    public void setCommentedAdvertisement(Advertisement commentedAdvertisement) {
+        this.commentedAdvertisement = commentedAdvertisement;
     }
 
     @Override
     public String toString() {
         return "AdvertisementComment{" +
-                "commentAdvertisement=" + commentAdvertisement +
+                "commentedAdvertisement=" + commentedAdvertisement +
                 '}';
     }
 }
