@@ -14,5 +14,5 @@ public interface RecordConstant {
 //    int PR_DESCR = 211;
 //    int PR_UPLDATE = 212;
     int PR_COMMENTS = 305;
-    int PR_LIKE = 306;
+//    int PR_LIKE = 306;
 }

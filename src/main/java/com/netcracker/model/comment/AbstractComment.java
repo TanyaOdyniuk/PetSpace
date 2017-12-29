@@ -16,7 +16,7 @@ public abstract class AbstractComment extends BaseEntity {
     @Attribute(CommentConstant.COM_DATE)
     private String commentDate;
     @Reference(CommentConstant.COM_AUTOR)
-    private Profile commentProfile;
+    private Profile commentAuthor;
     //TODO SERVICE GET LIKES
     @Reference(CommentConstant.COM_LIKEDISLIKE)
     private List<AbstractLikeDislike> commentLikes;
@@ -51,12 +51,12 @@ public abstract class AbstractComment extends BaseEntity {
         this.commentDate = commentDate;
     }
 
-    public Profile getCommentProfile() {
-        return commentProfile;
+    public Profile getCommentAuthor() {
+        return commentAuthor;
     }
 
-    public void setCommentProfile(Profile commentProfile) {
-        this.commentProfile = commentProfile;
+    public void setCommentAuthor(Profile commentAuthor) {
+        this.commentAuthor = commentAuthor;
     }
 
     public List<AbstractLikeDislike> getCommentLikes() {
@@ -80,7 +80,7 @@ public abstract class AbstractComment extends BaseEntity {
         return "AbstractComment{" +
                 "commentText='" + commentText + '\'' +
                 ", commentDate='" + commentDate + '\'' +
-                ", commentProfile=" + commentProfile +
+                ", commentAuthor=" + commentAuthor +
                 ", commentLikes=" + commentLikes +
                 ", commentDislikes=" + commentDislikes +
                 '}';

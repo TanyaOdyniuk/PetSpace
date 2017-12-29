@@ -35,12 +35,13 @@ public class ProfileView extends VerticalLayout {
     private final List<Profile> friendList;
     private final List<Pet> petList;
     private final List<WallRecord> wallRecordsList;
+    private Window newWallRecordWindow;
+    private int browserHeight;
+    private int browserWidth;
 
     @Autowired
     public ProfileView(BigInteger profileId) {
         super();
-        setSpacing(true);
-        setSizeFull();
         profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + profileId, Profile.class);
         friendList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/friends/" + profileId, Profile[].class));
         petList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject("/pets/" + profileId, Pet[].class));
@@ -48,20 +49,26 @@ public class ProfileView extends VerticalLayout {
 
         //Creating matryoshka layout
         HorizontalLayout mainLayout = new HorizontalLayout();
+        browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
+        browserWidth = UI.getCurrent().getPage().getBrowserWindowWidth();
+        mainLayout.setHeight(browserHeight - 250, Unit.PIXELS);
+        mainLayout.setWidth(browserWidth - 450, Unit.PIXELS);
         Panel leftPartPanel = new Panel();
         leftPartPanel.setHeight("100%");
         leftPartPanel.setWidth(250, Unit.PIXELS);
         Panel rightPartPanel = new Panel();
-        rightPartPanel.setHeight(750, Unit.PIXELS);
-        rightPartPanel.setWidth(875, Unit.PIXELS);
+        rightPartPanel.setHeight("100%");
+        //rightPartPanel.setHeight(750, Unit.PIXELS);
+        //rightPartPanel.setWidth(100, Unit.PERCENTAGE);
         VerticalLayout leftPartLayout = new VerticalLayout();
+        leftPartLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         VerticalLayout rightPartLayout = new VerticalLayout();
         rightPartLayout.setSpacing(true);
 
         //Elements for left part
         Image avatarImage = new Image();
-        avatarImage.setHeight(240, Unit.PIXELS);
-        avatarImage.setWidth(240, Unit.PIXELS);
+        avatarImage.setHeight(250, Unit.PIXELS);
+        avatarImage.setWidth(250, Unit.PIXELS);
         avatarImage.setSource(new ExternalResource(profile.getProfileAvatar()));
         avatarImage.setDescription("Profile avatar");
         Button addToFriendsButton = new Button("Add friend", VaadinIcons.SMILEY_O);
@@ -183,13 +190,22 @@ public class ProfileView extends VerticalLayout {
         photosLayout.addComponents(new Label("Last photos"), photosGrid);
         photosPanel.setContent(photosLayout);
 
+        //Profile wall with records
         Panel wallPanel = new Panel();
         wallPanel.setWidth("100%");
         VerticalLayout wallLayout = new VerticalLayout();
         HorizontalLayout wallHeaderLayout = new HorizontalLayout();
         VerticalLayout newWallRecordLayout = new VerticalLayout();
         newWallRecordLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        PopupView addWallRecordPopupView = new PopupView("Add record", newWallRecordLayout);
+        Button addNewWallRecordButton = new Button("Add new record", VaadinIcons.PLUS);
+        addNewWallRecordButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                getNewWallRecord();
+                UI.getCurrent().addWindow(newWallRecordWindow);
+            }
+        });
+/*        PopupView addWallRecordPopupView = new PopupView("Add record", newWallRecordLayout);
         addWallRecordPopupView.addPopupVisibilityListener(event -> {
             if (event.isPopupVisible()) {
                 newWallRecordLayout.removeAllComponents();
@@ -202,8 +218,8 @@ public class ProfileView extends VerticalLayout {
                         WallRecord newWallRecord = new WallRecord();
                         newWallRecord.setRecordDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                         newWallRecord.setRecordText(wallRecordText.getValue());
-                        //recordAuthor = getCurrentUser.getProfile(); 48 is stub
-                        newWallRecord.setRecordAuthor(CustomRestTemplate.getInstance().customGetForObject("/profile/" + 48, Profile.class));
+                        //recordAuthor = getCurrentUser.getProfile(); 21 is stub
+                        newWallRecord.setRecordAuthor(CustomRestTemplate.getInstance().customGetForObject("/profile/" + 21, Profile.class));
                         //newWallRecord.setRecordAuthor(profile);
                         addNotNullRecord.setComponentError(null);
                         createWallRecord(newWallRecord);
@@ -218,10 +234,13 @@ public class ProfileView extends VerticalLayout {
                 newWallRecordLayout.addComponentsAndExpand(
                         new Label("Enter record text:"), wallRecordText, addWallRecordButtonsLayout);
             }
-        });
-        wallHeaderLayout.addComponentsAndExpand(new Label("Records on " + profile.getProfileName() + "`s wall:"), addWallRecordPopupView);
-        wallHeaderLayout.setComponentAlignment(addWallRecordPopupView, Alignment.MIDDLE_RIGHT);
+        });*/
+        wallHeaderLayout.addComponentsAndExpand(
+                new Label("Records on " + profile.getProfileName() + "`s wall:"),
+                /*addWallRecordPopupView*/ addNewWallRecordButton);
+        //wallHeaderLayout.setComponentAlignment(addWallRecordPopupView, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
+
         for (int i = wallRecordsList.size(); i > 0; i--) {
             WallRecord currentWallRecord = wallRecordsList.get(i-1);
             Profile currentWallRecordAuthor = CustomRestTemplate.getInstance().customGetForObject("/wallrecords/author/" + currentWallRecord.getObjectId(), Profile.class);
@@ -265,8 +284,46 @@ public class ProfileView extends VerticalLayout {
         rightPartLayout.addComponents(nameAndBalancePanel, simpleInfoPanel, photosPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);
-        mainLayout.addComponents(leftPartPanel, rightPartPanel);
+        mainLayout.addComponent(leftPartPanel);
+        mainLayout.addComponentsAndExpand(rightPartPanel);
         addComponents(mainLayout);
+    }
+
+    private void getNewWallRecord() {
+        newWallRecordWindow = new Window();
+        newWallRecordWindow.setWidth("400px");
+        newWallRecordWindow.setHeight("250px");
+        newWallRecordWindow.setCaption("Creating new wall record:");
+        newWallRecordWindow.setModal(true);
+        VerticalLayout windowContent = new VerticalLayout();
+        HorizontalLayout addPhotoRecordButtonsLayout = new HorizontalLayout();
+
+        TextArea wallRecordText = new TextArea();
+        wallRecordText.setWidth("100%");
+
+        Button addWallRecordButton = new Button("Add photo");
+        addWallRecordButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                addWallRecordButton.setComponentError(null);
+                WallRecord newWallRecord = new WallRecord();
+                newWallRecord.setRecordDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                newWallRecord.setRecordText(wallRecordText.getValue());
+                //recordAuthor = getCurrentUser.getProfile(); 21 is stub
+                newWallRecord.setRecordAuthor(CustomRestTemplate.getInstance().customGetForObject("/profile/" + 21, Profile.class));
+                //newWallRecord.setRecordAuthor(profile);
+                createWallRecord(newWallRecord);
+                Notification.show("Wall record added successfully!");
+                newWallRecordWindow.close();
+            }
+        });
+
+        Button cancelAddingNewWallRecord = new Button("Cancel", click -> newWallRecordWindow.close());
+        addPhotoRecordButtonsLayout.addComponentsAndExpand(addWallRecordButton, cancelAddingNewWallRecord);
+        windowContent.addComponents(wallRecordText, addPhotoRecordButtonsLayout);
+
+        newWallRecordWindow.setContent(windowContent);
+        newWallRecordWindow.center();
     }
 
     private void createWallRecord(WallRecord wallRecord) {

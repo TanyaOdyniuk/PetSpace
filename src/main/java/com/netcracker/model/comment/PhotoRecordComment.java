@@ -8,7 +8,7 @@ import com.netcracker.model.record.RecordConstant;
 @ObjectType(CommentConstant.COM_TYPE)
 public class PhotoRecordComment extends AbstractComment {
     @Reference(RecordConstant.PR_COMMENTS)
-    private PhotoRecord commentPhotoRecord;
+    private PhotoRecord commentedPhotoRecord;
 
     public PhotoRecordComment() {
     }
@@ -21,18 +21,18 @@ public class PhotoRecordComment extends AbstractComment {
         super(name, description);
     }
 
-    public PhotoRecord getCommentPhotoRecord() {
-        return commentPhotoRecord;
+    public PhotoRecord getCommentedPhotoRecord() {
+        return commentedPhotoRecord;
     }
 
-    public void setCommentPhotoRecord(PhotoRecord commentPhotoRecord) {
-        this.commentPhotoRecord = commentPhotoRecord;
+    public void setCommentedPhotoRecord(PhotoRecord commentedPhotoRecord) {
+        this.commentedPhotoRecord = commentedPhotoRecord;
     }
 
     @Override
     public String toString() {
         return "PhotoRecordComment{" +
-                "commentPhotoRecord=" + commentPhotoRecord +
+                "commentedPhotoRecord=" + commentedPhotoRecord +
                 '}';
     }
 }

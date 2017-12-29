@@ -6,7 +6,7 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.album.PhotoAlbumConstant;
 import com.netcracker.model.comment.PhotoRecordComment;
-import com.netcracker.model.like.AbstractLikeDislike;
+
 import java.util.List;
 
 @ObjectType(RecordConstant.PR_TYPE)
@@ -16,12 +16,12 @@ public class PhotoRecord extends AbstractRecord {
     private String photo;
     @Reference(PhotoAlbumConstant.PA_CONTPHOTO)
     private PhotoAlbum photoAlbum;
-    //TODO SERVICE TO GET LIKES
+/*    //TODO SERVICE TO GET LIKES
     @Reference(RecordConstant.PR_LIKE)
     private List<AbstractLikeDislike> photoRecordLikes;
     //TODO SERVICE TO GET DISLIKES
     @Reference(RecordConstant.PR_LIKE)
-    private List<AbstractLikeDislike> photoRecordDislikes;
+    private List<AbstractLikeDislike> photoRecordDislikes;*/
     //TODO SERVICE TO GET PHOTO COMMENTS
     @Reference(RecordConstant.REC_COMREF)
     private List<PhotoRecordComment> photoComments;
@@ -61,29 +61,11 @@ public class PhotoRecord extends AbstractRecord {
         this.photoAlbum = photoAlbum;
     }
 
-    public List<AbstractLikeDislike> getPhotoRecordLikes() {
-        return photoRecordLikes;
-    }
-
-    public void setPhotoRecordLikes(List<AbstractLikeDislike> photoRecordLikes) {
-        this.photoRecordLikes = photoRecordLikes;
-    }
-
-    public List<AbstractLikeDislike> getPhotoRecordDislikes() {
-        return photoRecordDislikes;
-    }
-
-    public void setPhotoRecordDislikes(List<AbstractLikeDislike> photoRecordDislikes) {
-        this.photoRecordDislikes = photoRecordDislikes;
-    }
-
     @Override
     public String toString() {
         return "PhotoRecord{" +
                 "photo='" + photo + '\'' +
                 ", photoAlbum=" + photoAlbum +
-                ", photoRecordLikes=" + photoRecordLikes +
-                ", photoRecordDislikes=" + photoRecordDislikes +
                 ", photoComments=" + photoComments +
                 '}';
     }

@@ -7,13 +7,13 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.Profile;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @ObjectType(LikeConstant.LDL_TYPE)
 public abstract class AbstractLikeDislike extends BaseEntity {
     @Attribute(LikeConstant.LDL_DATE)
-    private Date likeDate;
+    private Timestamp likeDate;
     @Boolean(value = LikeConstant.LDL_ISDISLIKE, yesno = LikeConstant.LDL_IS_DISLIKE_STRING)
     private boolean isDislike;
     @Reference(LikeConstant.LDL_AUTOR)
@@ -30,15 +30,15 @@ public abstract class AbstractLikeDislike extends BaseEntity {
         super(name, description);
     }
 
-    public Date getLikeDate() {
+    public Timestamp getLikeDate() {
         return likeDate;
     }
 
-    public void setLikeDate(Date likeDate) {
+    public void setLikeDate(Timestamp likeDate) {
         this.likeDate = likeDate;
     }
 
-    public boolean getDislike() {
+    public boolean isDislike() {
         return isDislike;
     }
 
