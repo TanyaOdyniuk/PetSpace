@@ -66,8 +66,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     protected void init(VaadinRequest request) {
-        userService.getCurrentUser();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Notification.show(userService.getCurrentUser().getLogin());
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0), 1.0f);
