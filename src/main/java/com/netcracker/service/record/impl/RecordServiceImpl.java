@@ -2,18 +2,17 @@ package com.netcracker.service.record.impl;
 
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
+import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.record.RecordConstant;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.record.RecordService;
-import com.netcracker.ui.util.CustomRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,6 +25,13 @@ public class RecordServiceImpl implements RecordService {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + UsersProfileConstant.PROFILE_WALLREC;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
+        return entityManagerService.getObjectsBySQL(sqlQuery, WallRecordComment.class, new QueryDescriptor());
     }
 
     @Override

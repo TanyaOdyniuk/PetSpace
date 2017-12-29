@@ -1,5 +1,6 @@
 package com.netcracker.controller.record;
 
+import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.record.RecordService;
@@ -18,6 +19,11 @@ public class RecordController {
     @GetMapping("/{id}")
     public List<WallRecord> getProfileWallRecords(@PathVariable("id") BigInteger profileId) {
         return recordService.getProfileWallRecords(profileId);
+    }
+
+    @GetMapping("/comments/{id}")
+    public List<WallRecordComment> getWallRecordComments(@PathVariable("id") BigInteger wallRecordID) {
+        return recordService.getWallRecordComments(wallRecordID);
     }
 
     @GetMapping("/author/{id}")
