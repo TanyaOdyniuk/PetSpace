@@ -8,6 +8,7 @@ import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
+import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -47,7 +48,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private final VerticalLayout addUsersLayout;
 
-    public static AlbumsUI albumsUI;
 
     @Autowired
     UserService userService;
@@ -138,8 +138,10 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                albumsUI = new AlbumsUI(BigInteger.valueOf(203));
-                primaryAreaLayout.addComponentsAndExpand(albumsUI);
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(203)));
+                break;
+            case "My groups":
+                primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));

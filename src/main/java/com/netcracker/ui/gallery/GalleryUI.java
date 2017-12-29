@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +26,8 @@ import java.util.List;
 @SpringComponent
 @UIScope
 public class GalleryUI extends VerticalLayout {
-    static HorizontalGallery horizontalGallery;
-    static VerticalLayout photosLayout;
+    HorizontalGallery horizontalGallery;
+    VerticalLayout photosLayout;
     Window newPhotoRecordWindow;
     BigInteger albumId;
 
@@ -35,27 +39,29 @@ public class GalleryUI extends VerticalLayout {
         List<PhotoRecord> photos = getPhotosFromAlbum(albumId);
 
         photosLayout = new VerticalLayout();
-        GridLayout photosGrid = new GridLayout(3,(photos.size()/3)+1);
+        GridLayout photosGrid = new GridLayout(3, (photos.size() / 3) + 1);
         photosGrid.setSpacing(true);
 
         for (int i = 0; i < photos.size(); i++) {
             Panel singlePhotoPanel = new Panel();
             Image singlePhotoImage = new Image();
             singlePhotoImage.setSource(new ExternalResource(photos.get(i).getPhoto()));
-            singlePhotoImage.setWidth(300,Unit.PIXELS);
-            singlePhotoImage.setHeight(320,Unit.PIXELS);
+            singlePhotoImage.setWidth(300, Unit.PIXELS);
+            singlePhotoImage.setHeight(320, Unit.PIXELS);
             Integer clickPhotoIndex = i;
             singlePhotoImage.addClickListener(new MouseEvents.ClickListener() {
                 @Override
                 public void click(MouseEvents.ClickEvent clickEvent) {
-                    horizontalGallery = new HorizontalGallery(photos, clickPhotoIndex);
-                    addComponents(horizontalGallery);
-                    photosLayout.detach();
+                     horizontalGallery = new HorizontalGallery(photos, clickPhotoIndex);
+                    horizontalGallery.setPositionX(250);
+                    horizontalGallery.setPositionY(15);
+                    UI.getCurrent().addWindow(horizontalGallery);
                 }
             });
             singlePhotoPanel.setContent(singlePhotoImage);
             photosGrid.addComponent(singlePhotoPanel);
         }
+
         getNewPhotoRecord();
         Button addNewPhotoRecordButton = new Button("Add photo", VaadinIcons.PLUS);
         addNewPhotoRecordButton.addClickListener(new AbstractClickListener() {
@@ -64,13 +70,12 @@ public class GalleryUI extends VerticalLayout {
                 UI.getCurrent().addWindow(newPhotoRecordWindow);
             }
         });
-
         photosLayout.addComponents(addNewPhotoRecordButton, photosGrid);
         addComponents(photosLayout);
     }
 
 
-    private void getNewPhotoRecord(){
+    private void getNewPhotoRecord() {
         newPhotoRecordWindow = new Window();
         newPhotoRecordWindow.setWidth("400px");
         newPhotoRecordWindow.setHeight("250px");
@@ -88,7 +93,7 @@ public class GalleryUI extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 addPhotoRecordButton.setComponentError(null);
-                createPhotoRecord(photoLink.getValue(),description.getValue(), albumId);
+                createPhotoRecord(photoLink.getValue(), description.getValue(), albumId);
                 newPhotoRecordWindow.close();
                 Notification.show("You have just added a new photo!");
             }
@@ -101,7 +106,7 @@ public class GalleryUI extends VerticalLayout {
         newPhotoRecordWindow.center();
     }
 
-    private List<PhotoRecord> getPhotosFromAlbum(BigInteger albumId){
+    private List<PhotoRecord> getPhotosFromAlbum(BigInteger albumId) {
         List<PhotoRecord> photos = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/gallery/" + albumId, PhotoRecord[].class));
@@ -112,10 +117,12 @@ public class GalleryUI extends VerticalLayout {
         ObjectAssert.isNullOrEmpty(photoLink);
         PhotoRecord createdPhoto = new PhotoRecord();
         createdPhoto.setPhoto(photoLink);
-        createdPhoto.setDescription(description);
-        createdPhoto.setPhotoUploadDate(new java.sql.Date(new Date().getTime()));
+        createdPhoto.setRecordText(description);
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Timestamp ts = Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        createdPhoto.setRecordDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
         HttpEntity<PhotoRecord> photo = new HttpEntity<>(createdPhoto);
         PhotoRecord dbAlbum = CustomRestTemplate.getInstance()
-                .customPostForObject("/gallery/"+ albumId +"/add", photo, PhotoRecord.class);
+                .customPostForObject("/gallery/" + albumId + "/add", photo, PhotoRecord.class);
     }
 }
