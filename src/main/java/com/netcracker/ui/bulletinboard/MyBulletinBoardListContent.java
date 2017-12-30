@@ -57,7 +57,9 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(newAdBtn);
         gridPagingLayout.addComponent(grid);
-        gridPagingLayout.addComponent(pagingLayout);
+        if(pagingLayout != null){
+            gridPagingLayout.addComponent(pagingLayout);
+        }
         getCategoryFilterLayout();
 
         mainLayout.addComponentsAndExpand(categoryFilterLayout, gridPagingLayout);
@@ -92,7 +94,6 @@ public class MyBulletinBoardListContent extends VerticalLayout {
 
     private void getCategoryFilterLayout() {
         Panel filterPanel = new Panel();
-        filterPanel.setSizeUndefined();
         categoryFilterLayout = new VerticalLayout();
         HorizontalLayout filterButtonLayout = new HorizontalLayout();
         HorizontalLayout selDeselButtonsLayout = new HorizontalLayout();
@@ -122,6 +123,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         selDeselButtonsLayout.addComponent(deselectAll);
         categoryFilterLayout.addComponent(selDeselButtonsLayout);
         filterPanel.setContent(categoryFilter);
+        filterPanel.setHeight("100px");
         categoryFilterLayout.addComponent(filterPanel);
         categoryFilterLayout.addComponent(PageElements.getSeparator());
         topicField.setCaption("Topic filter");
@@ -154,7 +156,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         categoryFilterLayout.addComponent(topicField);
         categoryFilterLayout.addComponent(PageElements.getSeparator());
         filterButtonLayout.addComponent(filterButton);
-        Button dropFiltersButton = new Button("Drop all filters", VaadinIcons.TRASH);
+        Button dropFiltersButton = new Button("Drop filters", VaadinIcons.TRASH);
         dropFiltersButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {

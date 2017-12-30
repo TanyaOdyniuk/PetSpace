@@ -20,7 +20,6 @@ import java.util.Set;
 @ObjectType(AdvertisementConstant.AD_TYPE)
 public class Advertisement extends BaseEntity {
     @Attribute(AdvertisementConstant.AD_DATE)
-    //private Date adDate;
     private Timestamp adDate;
     @Attribute(AdvertisementConstant.AD_TOPIC)
     private String adTopic;
@@ -40,7 +39,8 @@ public class Advertisement extends BaseEntity {
     private Category adCategory;
     @Reference(AdvertisementConstant.AD_PETS)
     private Set<Pet> adPets;
-    //TODO SERVICE GET ADCOMMENTS
+    //TODO SERVICE GET ADCOMMENTS3
+
     @Reference(CommentConstant.COM_TYPE)// нет ничего более конкретного
     private List<AdvertisementComment> advertisementComments;
 

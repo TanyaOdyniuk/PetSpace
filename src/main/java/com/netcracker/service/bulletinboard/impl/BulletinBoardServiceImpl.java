@@ -170,7 +170,9 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         category.setCategoryAds(newAdsInCat);
         entityManagerService.update(profile);
         entityManagerService.update(category);
+        cutCategory.setObjectId(category.getObjectId());
         createdAd.setAdCategory(cutCategory);
+        cutProfile.setObjectId(profile.getObjectId());
         createdAd.setAdAuthor(cutProfile);
         return createdAd;
     }

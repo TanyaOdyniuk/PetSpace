@@ -92,7 +92,7 @@ public class BulletinBoardListContent extends VerticalLayout {
 
     private void getCategoryFilterLayout() {
         Panel filterPanel = new Panel();
-        filterPanel.setSizeUndefined();
+        filterPanel.setHeight("100px");
         categoryFilterLayout = new VerticalLayout();
         HorizontalLayout filterButtonLayout = new HorizontalLayout();
         HorizontalLayout selDeselButtonsLayout = new HorizontalLayout();
@@ -154,7 +154,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         categoryFilterLayout.addComponent(topicField);
         categoryFilterLayout.addComponent(PageElements.getSeparator());
         filterButtonLayout.addComponent(filterButton);
-        Button dropFiltersButton = new Button("Drop all filters", VaadinIcons.TRASH);
+        Button dropFiltersButton = new Button("Drop filters", VaadinIcons.TRASH);
         dropFiltersButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {

@@ -39,7 +39,7 @@ public class EntityManager {
         Map<String, Object> result = executeObjectJdbcCall(entity, 0, null);
         entity.setObjectId(((BigDecimal) result.get("p_OBJECT_ID")).toBigInteger());
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
-            if (!(entry.getValue().toString().equals("-1"))) {
+            if (!(entry.getValue().toString().equals("-1")) && entry.getValue() != null) {
                 executeAttributeJdbcCall(entity, entry,0);
             }
         }
@@ -144,7 +144,7 @@ public class EntityManager {
         queryDescriptor.setInnerQuery(Query.SELECT_FROM_OBJECTS);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 queryBuilder.build(queryDescriptor),
-                                                        new Object[]{objectTypeId});
+                new Object[]{objectTypeId});
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {
@@ -207,7 +207,7 @@ public class EntityManager {
         Integer seq_no = (Integer) (((Pair) entry.getKey()).getValue());
         inParam.put("P_SEQ_NO", seq_no == 0 ? null : BigInteger.valueOf(seq_no));
         String entryClassName = entry.getValue().getClass().getSimpleName();
-        if (entryClassName.equals("String")) {
+        /*if (entryClassName.equals("String")) {
             if (entry.getValue().equals("-1")) {
                 inParam.put("p_VALUE", null);
             } else {
@@ -215,7 +215,7 @@ public class EntityManager {
             }
             inParam.put("p_DATE_VALUE", null);
 
-        } else if (entryClassName.equals("Date")) {
+        } else*/ if (entryClassName.equals("Date")) {
             inParam.put("p_VALUE", null);
             if (((Date) entry.getValue()).getTime() == new Date(-1).getTime()) {
                 inParam.put("p_DATE_VALUE", null);
@@ -229,6 +229,13 @@ public class EntityManager {
             } else {
                 inParam.put("p_DATE_VALUE", entry.getValue());
             }
+        } else{
+            if (entry.getValue().equals("-1")) {
+                inParam.put("p_VALUE", null);
+            } else {
+                inParam.put("p_VALUE", entry.getValue());
+            }
+            inParam.put("p_DATE_VALUE", null);
         }
         inParam.put("p_TO_DEL", delete);
         jdbcCall.withProcedureName("UPDATE_ATTRIBUTE").declareParameters(

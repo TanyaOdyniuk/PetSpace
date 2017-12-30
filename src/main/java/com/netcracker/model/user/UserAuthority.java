@@ -15,11 +15,11 @@ public class UserAuthority extends BaseEntity implements GrantedAuthority {
 
     @Attribute(UsersProfileConstant.USERTYPE_NAME)
     private String authority;
-    @Reference(UsersProfileConstant.USERTYPE_TYPECAT)
+    /*@Reference(UsersProfileConstant.USERTYPE_TYPECAT)
     private Set<Category> categories;
     @Reference(UsersProfileConstant.USER_UTYPE)
     private List<User> users;
-
+    */
     public UserAuthority() {
     }
 
@@ -39,7 +39,7 @@ public class UserAuthority extends BaseEntity implements GrantedAuthority {
     public void setAuthority(String authority) {
         this.authority = authority;
     }
-
+/*
     public Set<Category> getCategories() {
         return categories;
     }
@@ -55,15 +55,13 @@ public class UserAuthority extends BaseEntity implements GrantedAuthority {
     public void setUsers(List<User> users) {
         this.users = users;
     }
-
+*/
     @Override
     public String toString() {
         return "UserAuthority{" +
-                "authority='" + authority + '\'' +
+                "authority='" + authority /*+ '\'' +
                 ", categories=" + categories +
-                ", users=" + users +
+                ", users=" + users */+
                 '}';
     }
-
-
 }

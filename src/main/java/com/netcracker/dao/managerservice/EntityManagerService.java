@@ -42,7 +42,7 @@ public class EntityManagerService {
         return manager.getBySqlCount(sqlQuery);
     }
 
-    @Transactional
+    @Transactional//2326
     public <T extends BaseEntity> T create(T baseEntity) {
         Entity entity = manager.create(new Converter().convertToEntity(baseEntity));
         baseEntity.setObjectId(entity.getObjectId());
@@ -178,8 +178,10 @@ public class EntityManagerService {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
                 } else if (field.getType() == Date.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_DATE);
-                } else {
+                } else if (field.getType() == Timestamp.class){
                     attributes.put(new Pair<>(attrId, 0), EMPTY_TIMESTAMP);
+                } else{
+                    attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
                 }
             } else {
                 if (Set.class.isAssignableFrom(fieldValue.getClass())) {
@@ -192,7 +194,7 @@ public class EntityManagerService {
                         for (int i = 0; i < tempAttributes.size(); i++) {
                             Object attribute = tempAttributes.get(i);
                             if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
-                                attributes.put(new Pair<>(attrId, i + 1), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(attribute));
+                                attributes.put(new Pair<>(attrId, i + 1), attribute);
                             } else if (Date.class.isAssignableFrom(attribute.getClass())) {
                                 attributes.put(new Pair<>(attrId, i + 1), attribute.toString());
                             } else {
@@ -202,8 +204,7 @@ public class EntityManagerService {
                     }
                 } else {
                     if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
-                        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fieldValue);
-                        attributes.put(new Pair<>(attrId, 0), formattedDate);
+                        attributes.put(new Pair<>(attrId, 0), fieldValue);
                     } else if (Date.class.isAssignableFrom(fieldValue.getClass())) {
                         attributes.put(new Pair<>(attrId, 0), fieldValue);
                     } else {

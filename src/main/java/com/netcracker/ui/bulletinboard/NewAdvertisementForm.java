@@ -100,7 +100,7 @@ public class NewAdvertisementForm extends Window {
         dateTimeField.setReadOnly(true);
         TextField authorField = new TextField("Author");
         authorField.setIcon(VaadinIcons.USER);
-        profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + 1, Profile.class);
+        profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + 8, Profile.class);
         String authorInfo = profile.getProfileName() + " " + profile.getProfileSurname();
         authorField.setValue(authorInfo);
         authorField.setReadOnly(true);
@@ -126,7 +126,7 @@ public class NewAdvertisementForm extends Window {
         selectedPets.setIcon(VaadinIcons.PIGGY_BANK);
         List<Pet> pets = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/pets/" + 1, Pet[].class));
+                        "/pets/" + 23, Pet[].class));
         selectedPets.setItems(pets);
         selectedPets.setItemCaptionGenerator(Pet::getPetName);
         selectedPets.setRows(3);

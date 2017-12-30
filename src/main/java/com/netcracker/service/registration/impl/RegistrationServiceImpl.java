@@ -8,6 +8,7 @@ import com.netcracker.model.user.UserAuthority;
 import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.profile.ProfileService;
 import com.netcracker.service.registration.RegistrationService;
+import com.netcracker.service.status.StatusService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,16 +30,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     UserDetailsServiceImpl userDetailsService;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    StatusService statusService;
     @Override
     public User registerUser(User user) {
         increaseBalanceAtStart(user);
-        Profile profile = entityManagerService.create(user.getProfile());
-        user.setProfile(profile);
+        Profile toDBProfile = user.getProfile();
+        toDBProfile.setProfileStatus(statusService.getActiveStatus());
+        Profile fromDBProfile = entityManagerService.create(toDBProfile);
+        user.setProfile(fromDBProfile);
         List<UserAuthority> authority = entityManagerService.getObjectsBySQL(
                 "SELECT obj.object_id " +
                         "FROM Objects obj, ATTRIBUTES atr " +
                         "where obj.OBJECT_ID = atr.OBJECT_ID " +
-                        "and obj.object_type_id = " + UsersProfileConstant.USER_TYPE +
+                        "and obj.object_type_id = " + UsersProfileConstant.USERTYPE_TYPE +
                         " and atr.attrtype_id = " + UsersProfileConstant.USERTYPE_NAME +
                         " AND atr.value = 'ROLE_USER'", UserAuthority.class,
                         new QueryDescriptor());

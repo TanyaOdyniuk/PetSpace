@@ -114,15 +114,17 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = BigInteger.valueOf(1);
+        BigInteger profileId = BigInteger.valueOf(8);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
-        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        if(primaryAreaLayout.getComponentCount() > 1){
+            primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        }
         switch (clickedButtonCaption) {
             case "My profile":
                 primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(profileId));
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(BigInteger.valueOf(8)));
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());

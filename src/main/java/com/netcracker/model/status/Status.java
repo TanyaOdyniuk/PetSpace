@@ -22,6 +22,7 @@ public class Status extends BaseEntity {
 
     @Attribute(StatusConstant.ST_NAME)
     private String statusName;
+    /*
     @Reference(GroupConstant.GR_STATUS)
     private List<Group> groups;
     @Reference(UsersProfileConstant.PROFILE_STATUS)
@@ -32,7 +33,7 @@ public class Status extends BaseEntity {
     private List<Pet> pets;
     @Reference(FriendRequestConstant.REQ_STATUS)
     private List<FriendRequest> requests;
-
+    */
 
     public Status() {
     }
@@ -52,7 +53,7 @@ public class Status extends BaseEntity {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
-
+    /*
     public List<Group> getGroups() {
         return groups;
     }
@@ -92,16 +93,16 @@ public class Status extends BaseEntity {
     public void setRequests(List<FriendRequest> requests) {
         this.requests = requests;
     }
-
+    */
     @Override
     public String toString() {
         return "Status{" +
-                "statusName='" + statusName + '\'' +
+                "statusName='" + statusName /*+ '\'' +
                 ", groups=" + groups +
                 ", profiles=" + profiles +
                 ", advertisements=" + advertisements +
                 ", pets=" + pets +
-                ", requests=" + requests +
+                ", requests=" + requests */+
                 '}';
     }
 }

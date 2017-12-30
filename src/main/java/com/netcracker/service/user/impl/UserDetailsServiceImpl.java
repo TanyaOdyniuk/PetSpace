@@ -17,6 +17,9 @@ public class UserDetailsServiceImpl {
     private EntityManagerService entityManagerService;
 
     public boolean validateUserExistence(List<User> users, String login) {
+        if(users.isEmpty()){
+            return false;
+        }
         boolean isInDB = true;
         for (User user : users) {
             String existingLogin = user.getLogin();
@@ -25,7 +28,7 @@ public class UserDetailsServiceImpl {
                 break;
             }
         }
-        return !isInDB;
+        return isInDB;
     }
 
     public User findUserByUsernameAndPassword(String username, String password) {

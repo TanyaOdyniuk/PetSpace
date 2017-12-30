@@ -4,6 +4,7 @@ import com.netcracker.error.exceptions.UserNotValidException;
 import com.netcracker.model.user.User;
 import com.netcracker.service.registration.RegistrationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import com.netcracker.service.util.BCryptEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class UserController {
     @Autowired
     private RegistrationService registrationService;
 
+    @Autowired
+    BCryptEncoder bCryptEncoder;
 
     @GetMapping
     public User getCurrentUser() {
@@ -30,8 +33,9 @@ public class UserController {
     @PostMapping
     public User registerUser(@RequestBody User user) {
         List<User> userList = userDetailsService.getUsers();
-        if (!userDetailsService.validateUserExistence(userList, user.getLogin()))
+        if (userDetailsService.validateUserExistence(userList, user.getLogin()))
             throw new UserNotValidException("User with email: " + user.getLogin() + " is already exist");
+        user.setPassword(bCryptEncoder.encode(user.getPassword()));
         return registrationService.registerUser(user);
     }
 
