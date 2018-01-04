@@ -1,6 +1,7 @@
 package com.netcracker.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
@@ -21,13 +22,10 @@ public class User extends BaseEntity implements UserDetails {
     private String login;
     @Attribute(UsersProfileConstant.USER_PASSWORD)
     private String password;
-    @Reference(UsersProfileConstant.USER_PROFILE)
+    @Reference(value = UsersProfileConstant.USER_PROFILE, isParentChild = 1)
     private Profile profile;
-    @Reference(UsersProfileConstant.USER_UTYPE)
+    @Reference(value = UsersProfileConstant.USER_UTYPE, isParentChild = 0)
     private List<UserAuthority> userAuthorities;
-    //TODO SERVICE GETSECURITYBOOKS
-    @Reference(UsersProfileConstant.USER_SECBOOK)
-    private Set<SecurityBook> securityBooks;
 
     //SECURITY VARIABLES
     private boolean accountNonExpired;
@@ -36,6 +34,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean enabled;
 
     public User() {
+        super();
     }
 
     public User(String name) {
@@ -108,14 +107,6 @@ public class User extends BaseEntity implements UserDetails {
         this.userAuthorities = userAuthorities;
     }
 
-    public Set<SecurityBook> getSecurityBooks() {
-        return securityBooks;
-    }
-
-    public void setSecurityBooks(Set<SecurityBook> securityBooks) {
-        this.securityBooks = securityBooks;
-    }
-
     public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
@@ -139,7 +130,6 @@ public class User extends BaseEntity implements UserDetails {
                 ", password='" + password + '\'' +
                 ", profile=" + profile +
                 ", userAuthorities=" + userAuthorities +
-                ", securityBooks=" + securityBooks +
                 '}';
     }
 }

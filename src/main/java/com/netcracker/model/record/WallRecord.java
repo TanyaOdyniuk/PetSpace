@@ -9,10 +9,8 @@ import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)
 public class WallRecord extends AbstractRecord {
-    @Reference(RecordConstant.REC_AUTOR)
+    @Reference(value = RecordConstant.REC_AUTOR, isParentChild = 0)
     private Profile recordAuthor;
-    @Reference(RecordConstant.REC_COMREF)
-    private List<WallRecordComment> wallRecordComments;
 
     public WallRecord() {
     }
@@ -32,20 +30,10 @@ public class WallRecord extends AbstractRecord {
     public void setRecordAuthor(Profile recordAuthor) {
         this.recordAuthor = recordAuthor;
     }
-
-    public List<WallRecordComment> getWallRecordComments() {
-        return wallRecordComments;
-    }
-
-    public void setWallRecordComments(List<WallRecordComment> wallRecordComments) {
-        this.wallRecordComments = wallRecordComments;
-    }
-
     @Override
     public String toString() {
         return "WallRecord{" +
                 "recordAuthor=" + recordAuthor +
-                ", wallRecordComments=" + wallRecordComments +
                 '}';
     }
 }

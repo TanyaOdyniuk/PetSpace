@@ -31,18 +31,14 @@ public class Advertisement extends BaseEntity {
     private String adLocation;
     @Attribute(AdvertisementConstant.AD_BASIC_INFO)
     private String adBasicInfo;
-    @Reference(AdvertisementConstant.AD_AUTHOR)
+    @Reference(value = AdvertisementConstant.AD_AUTHOR, isParentChild = 0)
     private Profile adAuthor;
-    @Reference(AdvertisementConstant.AD_STATUS)
+    @Reference(value = AdvertisementConstant.AD_STATUS, isParentChild = 0)
     private Status adStatus;
-    @Reference(AdvertisementConstant.AD_CATEGORY)
+    @Reference(value = AdvertisementConstant.AD_CATEGORY, isParentChild = 0)
     private Category adCategory;
-    @Reference(AdvertisementConstant.AD_PETS)
+    @Reference(value = AdvertisementConstant.AD_PETS, isParentChild = 1)
     private Set<Pet> adPets;
-    //TODO SERVICE GET ADCOMMENTS3
-
-    @Reference(CommentConstant.COM_TYPE)// нет ничего более конкретного
-    private List<AdvertisementComment> advertisementComments;
 
     public Advertisement() {
     }
@@ -134,15 +130,6 @@ public class Advertisement extends BaseEntity {
     public void setAdPets(Set<Pet> adPets) {
         this.adPets = adPets;
     }
-
-    public List<AdvertisementComment> getAdvertisementComments() {
-        return advertisementComments;
-    }
-
-    public void setAdvertisementComments(List<AdvertisementComment> advertisementComments) {
-        this.advertisementComments = advertisementComments;
-    }
-
     @Override
     public String toString() {
         return "Advertisement{" +
@@ -156,7 +143,6 @@ public class Advertisement extends BaseEntity {
                 ", adStatus=" + adStatus +
                 ", adCategory=" + adCategory +
                 ", adPets=" + adPets +
-                ", advertisementComments=" + advertisementComments +
                 '}';
     }
 }

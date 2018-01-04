@@ -17,18 +17,11 @@ public class Group extends BaseEntity {
     private String groupName;
     @Attribute(GroupConstant.GR_DESCR)
     private String groupDescription;
-    //TODO SERVICE GETGROUPUSERS
-    @Reference(GroupConstant.GR_PROFILE)
-    private Set<Profile> groupParticipants;
-    @Reference(GroupConstant.GR_GROUPTYPE)
+    @Reference(value = GroupConstant.GR_GROUPTYPE, isParentChild = 0)
     private GroupType groupType;
-    @Reference(GroupConstant.GR_STATUS)
+    @Reference(value = GroupConstant.GR_STATUS, isParentChild = 0)
     private Status groupStatus;
-    //TODO SERVICE GETGROUPRECORDS
-    @Reference(GroupConstant.GR_RECORDS)
-    private List<GroupRecord> groupRecords;
-    //TODO SERVICE GETGROUPADMINS
-    @Reference(GroupConstant.GR_ADMIN)
+    @Reference(value = GroupConstant.GR_ADMIN, isParentChild = 1)
     private Profile groupAdmin;
     @Attribute(GroupConstant.GR_AVATAR)
     private String groupAvatar;
@@ -60,14 +53,6 @@ public class Group extends BaseEntity {
         this.groupDescription = groupDescription;
     }
 
-    public Set<Profile> getGroupParticipants() {
-        return groupParticipants;
-    }
-
-    public void setGroupParticipants(Set<Profile> groupParticipants) {
-        this.groupParticipants = groupParticipants;
-    }
-
     public GroupType getGroupType() {
         return groupType;
     }
@@ -82,14 +67,6 @@ public class Group extends BaseEntity {
 
     public void setGroupStatus(Status groupStatus) {
         this.groupStatus = groupStatus;
-    }
-
-    public List<GroupRecord> getGroupRecords() {
-        return groupRecords;
-    }
-
-    public void setGroupRecords(List<GroupRecord> groupRecords) {
-        this.groupRecords = groupRecords;
     }
 
     public Profile getGroupAdmin() {
@@ -114,10 +91,8 @@ public class Group extends BaseEntity {
                 "groupName='" + groupName + '\'' +
                 ", groupAvatar='" + groupAvatar + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
-                ", groupParticipants=" + groupParticipants +
                 ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
-                ", groupRecords=" + groupRecords +
                 ", groupAdmin=" + groupAdmin +
                 '}';
     }

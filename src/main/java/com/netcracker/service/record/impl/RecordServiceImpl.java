@@ -44,13 +44,16 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public WallRecord createWallRecord(WallRecord wallRecord) {
+        Profile receiver = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
+
+
         BigInteger cutAuthorObjectID = wallRecord.getRecordAuthor().getObjectId();
         wallRecord.setRecordAuthor(null);
         WallRecord createdWallRecord = entityManagerService.create(wallRecord);
-        Profile receiver = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
-        List<WallRecord> wallRecordsList = new ArrayList<>(receiver.getProfileWallRecords());
-        wallRecordsList.add(createdWallRecord);
-        receiver.setProfileWallRecords(wallRecordsList);
+        //Profile receiver = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
+        //List<WallRecord> wallRecordsList = new ArrayList<>(receiver.getProfileWallRecords());
+        //wallRecordsList.add(createdWallRecord);
+        //receiver.setProfileWallRecords(wallRecordsList);
         entityManagerService.update(receiver);
         Profile cutAuthor = new Profile();
         cutAuthor.setObjectId(cutAuthorObjectID);

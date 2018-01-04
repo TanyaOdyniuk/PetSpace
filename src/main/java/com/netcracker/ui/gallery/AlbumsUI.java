@@ -19,13 +19,12 @@ import java.util.List;
 @SpringComponent
 @UIScope
 public class AlbumsUI extends  HorizontalLayout{
-    public static GalleryUI galleryUI;
-    Panel panel;
-    VerticalLayout albumLayout;
-    Window newAlbumWindow;
-    BigInteger petId;
+    private static GalleryUI galleryUI;
+    private Panel panel;
+    private VerticalLayout albumLayout;
+    private Window newAlbumWindow;
+    private BigInteger petId;
 
-    @Autowired
     public AlbumsUI(BigInteger petId) {
         super();
         this.petId = petId;
@@ -107,6 +106,6 @@ public class AlbumsUI extends  HorizontalLayout{
         createdAlbum.setPhotoAlbumDesc(description);
         HttpEntity<PhotoAlbum> album = new HttpEntity<>(createdAlbum);
         PhotoAlbum dbAlbum = CustomRestTemplate.getInstance()
-                .customPostForObject("/albums/"+ petId +"/add", album, PhotoAlbum.class);
+                .customPostForObject("/albums/"+ /*petId*/ 22 +"/add", album, PhotoAlbum.class);
     }
 }

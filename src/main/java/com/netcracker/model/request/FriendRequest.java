@@ -9,11 +9,11 @@ import com.netcracker.model.user.Profile;
 @ObjectType(FriendRequestConstant.REQ_TYPE)
 public class FriendRequest extends BaseEntity{
 
-    @Reference(FriendRequestConstant.REQ_FROM)
+    @Reference(value = FriendRequestConstant.REQ_FROM, isParentChild = 0)
     private Profile reqFrom;
-    @Reference(FriendRequestConstant.REQ_TO)
+    @Reference(value = FriendRequestConstant.REQ_TO, isParentChild = 0)
     private Profile reqTo;
-    @Reference(FriendRequestConstant.REQ_STATUS)
+    @Reference(value = FriendRequestConstant.REQ_STATUS, isParentChild = 0)
     private Status requestStatus;
 
     public Profile getReqFrom() {

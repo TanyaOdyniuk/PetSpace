@@ -7,7 +7,7 @@ import com.netcracker.model.record.RecordConstant;
 
 @ObjectType(CommentConstant.COM_TYPE)
 public class PhotoRecordComment extends AbstractComment {
-    @Reference(RecordConstant.PR_COMMENTS)
+    @Reference(value = RecordConstant.PR_COMMENTS, isParentChild = 0)
     private PhotoRecord commentedPhotoRecord;
 
     public PhotoRecordComment() {

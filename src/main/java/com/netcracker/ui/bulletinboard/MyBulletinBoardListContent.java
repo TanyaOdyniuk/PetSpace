@@ -70,7 +70,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         newAdBtn.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                NewAdvertisementForm sub = new NewAdvertisementForm();
+                NewAdvertisementForm sub = new NewAdvertisementForm(profileId);
                 UI.getCurrent().addWindow(sub);
             }
         });

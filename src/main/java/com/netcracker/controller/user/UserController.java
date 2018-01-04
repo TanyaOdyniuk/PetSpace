@@ -41,7 +41,7 @@ public class UserController {
 
     @PutMapping("/increasebalance")
     public void editUserById(@RequestBody String login) {
-        registrationService.invitedByUser(login);
+            registrationService.invitedByUser(login);
     }
 
 }

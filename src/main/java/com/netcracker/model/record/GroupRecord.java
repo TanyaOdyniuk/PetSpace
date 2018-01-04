@@ -10,10 +10,8 @@ import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)
 public class GroupRecord extends AbstractRecord {
-    @Reference(GroupConstant.GR_RECORDS)
+    @Reference(value = GroupConstant.GR_RECORDS, isParentChild = 0)
     private Group parentGroup;
-    @Reference(RecordConstant.REC_COMREF)
-    private List<GroupRecordComment> groupRecordComments;
 
     public GroupRecord() {
     }
@@ -33,20 +31,10 @@ public class GroupRecord extends AbstractRecord {
     public void setParentGroup(Group parentGroup) {
         this.parentGroup = parentGroup;
     }
-
-    public List<GroupRecordComment> getGroupRecordComments() {
-        return groupRecordComments;
-    }
-
-    public void setGroupRecordComments(List<GroupRecordComment> groupRecordComments) {
-        this.groupRecordComments = groupRecordComments;
-    }
-
     @Override
     public String toString() {
         return "GroupRecord{" +
                 "parentGroup=" + parentGroup +
-                ", groupRecordComments=" + groupRecordComments +
                 '}';
     }
 }

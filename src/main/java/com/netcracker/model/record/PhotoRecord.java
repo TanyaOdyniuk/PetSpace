@@ -14,16 +14,8 @@ public class PhotoRecord extends AbstractRecord {
 
     @Attribute(RecordConstant.PR_PHOTO)
     private String photo;
-    @Reference(PhotoAlbumConstant.PA_CONTPHOTO)
+    @Reference(value = PhotoAlbumConstant.PA_CONTPHOTO, isParentChild = 0)
     private PhotoAlbum photoAlbum;
-/*  @Reference(RecordConstant.PR_LIKE)
-    private List<AbstractLikeDislike> photoRecordLikes;
-    @Reference(RecordConstant.PR_LIKE)
-    private List<AbstractLikeDislike> photoRecordDislikes;*/
-    //TODO SERVICE TO GET PHOTO COMMENTS
-    @Reference(RecordConstant.PR_COMMENTS)
-    private List<PhotoRecordComment> photoRecordComments;
-
     public PhotoRecord() {
     }
 
@@ -42,15 +34,6 @@ public class PhotoRecord extends AbstractRecord {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
-
-    public List<PhotoRecordComment> getPhotoRecordComments() {
-        return photoRecordComments;
-    }
-
-    public void setPhotoRecordComments(List<PhotoRecordComment> photoRecordComments) {
-        this.photoRecordComments = photoRecordComments;
-    }
-
     public PhotoAlbum getPhotoAlbum() {
         return photoAlbum;
     }
@@ -64,7 +47,6 @@ public class PhotoRecord extends AbstractRecord {
         return "PhotoRecord{" +
                 "photo='" + photo + '\'' +
                 ", photoAlbum=" + photoAlbum +
-                ", photoRecordComments=" + photoRecordComments +
                 '}';
     }
 }

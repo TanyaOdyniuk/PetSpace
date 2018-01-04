@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static com.netcracker.ui.validation.UiValidationConstants.*;
 
@@ -135,7 +136,7 @@ public class RegistrationPage extends UI {
             @Override
             public void buttonClickListener() {
                 if (userBinder.validate().isOk() && profileBinder.validate().isOk()) {
-                    setErrorMessage("User with that email is already exist");
+                    setErrorMessage("User with your email is already exist\n\nor incorrect email of person, who invited you");
 
                     Profile profile = new Profile();
                     profile.setProfileName(userNameField.getValue());

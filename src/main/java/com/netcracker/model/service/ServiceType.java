@@ -12,8 +12,6 @@ public class ServiceType extends BaseEntity {
 
     @Attribute(ServiceConstant.SERVT_TNAME)
     private String serviceType;
-    @Reference(ServiceConstant.SERV_STYPE)
-    private List<Service> services;
 
     public ServiceType() {
     }
@@ -34,19 +32,10 @@ public class ServiceType extends BaseEntity {
         this.serviceType = serviceType;
     }
 
-    public List<Service> getServices() {
-        return services;
-    }
-
-    public void setServices(List<Service> services) {
-        this.services = services;
-    }
-
     @Override
     public String toString() {
         return "ServiceType{" +
                 "serviceType='" + serviceType + '\'' +
-                ", services=" + services +
                 '}';
     }
 }

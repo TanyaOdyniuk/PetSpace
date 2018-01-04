@@ -7,7 +7,7 @@ import com.netcracker.model.user.UsersProfileConstant;
 
 @ObjectType(CommentConstant.COM_TYPE)
 public class WallRecordComment extends AbstractComment {
-    @Reference(UsersProfileConstant.PROFILE_WALLREC)
+    @Reference(value = UsersProfileConstant.PROFILE_WALLREC, isParentChild = 0)
     private WallRecord commentedWallRecord;
 
     public WallRecordComment() {

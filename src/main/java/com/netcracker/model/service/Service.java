@@ -17,10 +17,10 @@ public class Service extends BaseEntity {
     private String serviceName;
     @Attribute(ServiceConstant.SERV_PRICE)
     private Double servicePrice;
-    @Reference(ServiceConstant.SERV_STYPE)
+    @Reference(value = ServiceConstant.SERV_STYPE, isParentChild = 0)
     private ServiceType serviceType;
     //TODO SERVICE GETUSERS
-    @Reference(UsersProfileConstant.PROFILE_SERVICES)
+    @Reference(value = UsersProfileConstant.PROFILE_SERVICES, isParentChild = 1)
     private Set<User> users;
 
     public Service() {

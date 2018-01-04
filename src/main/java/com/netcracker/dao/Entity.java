@@ -11,7 +11,7 @@ public class Entity extends BaseEntity {
 
     private Map<Pair<BigInteger, Integer>, Object> attributes;
 
-    private Map<Pair<BigInteger, Integer>, BigInteger> references;
+    private Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references;
 
     public Entity(){
         this(null, null);
@@ -35,11 +35,11 @@ public class Entity extends BaseEntity {
         this.attributes = entity;
     }
 
-    public Map<Pair<BigInteger, Integer>, BigInteger> getReferences() {
+    public Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> getReferences() {
         return references;
     }
 
-    public void setReferences(Map<Pair<BigInteger, Integer>, BigInteger> references) {
+    public void setReferences(Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references) {
         this.references = references;
     }
 

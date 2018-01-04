@@ -29,7 +29,6 @@ public class PetPageUI extends VerticalLayout {
     private PetSpecies petSpecies;
     private Pet pet;
 
-    @Autowired
     public PetPageUI(BigInteger petId) {
         this.petId = petId;
         this.petSpecies = getSpecies();
@@ -144,7 +143,7 @@ public class PetPageUI extends VerticalLayout {
         infoPanel.setHeight("100%");
         infoPanel.setWidth("100%");
 
-        PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
+        //PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
         HorizontalLayout photosLayout = new HorizontalLayout();
         /*if (album != null) {
             List<PhotoRecord> photos = album.getPhotoRecords();

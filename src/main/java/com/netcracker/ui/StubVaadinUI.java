@@ -114,7 +114,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = BigInteger.valueOf(8);
+        BigInteger profileId = BigInteger.valueOf(22);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if(primaryAreaLayout.getComponentCount() > 1){
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
@@ -124,7 +124,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(BigInteger.valueOf(8)));
+                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(profileId));
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
@@ -138,7 +138,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(203)));
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(/*203*/22)));
                 break;
             case "My groups":
                 primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));

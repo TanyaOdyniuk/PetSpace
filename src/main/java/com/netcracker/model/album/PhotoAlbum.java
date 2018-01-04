@@ -17,11 +17,8 @@ public class PhotoAlbum extends BaseEntity {
     private String photoAlbumName;
     @Attribute(PhotoAlbumConstant.PA_DESCR)
     private String photoAlbumDesc;
-    @Reference(PetConstant.PET_PHOTOALBUM)
+    @Reference(value = PetConstant.PET_PHOTOALBUM, isParentChild = 0)
     private Pet pet;
-    //TODO SERVICE TO GET PHOTORECORDS
-    @Reference(PhotoAlbumConstant.PA_CONTPHOTO)
-    private List<PhotoRecord> photoRecords;
 
     public PhotoAlbum() {
     }
@@ -58,21 +55,12 @@ public class PhotoAlbum extends BaseEntity {
         this.pet = pet;
     }
 
-    public List<PhotoRecord> getPhotoRecords() {
-        return photoRecords;
-    }
-
-    public void setPhotoRecords(List<PhotoRecord> photoRecords) {
-        this.photoRecords = photoRecords;
-    }
-
     @Override
     public String toString() {
         return "PhotoAlbum{" +
                 "photoAlbumName='" + photoAlbumName + '\'' +
                 ", photoAlbumDesc='" + photoAlbumDesc + '\'' +
                 ", pet=" + pet +
-                ", photoRecords=" + photoRecords +
                 '}';
     }
 }

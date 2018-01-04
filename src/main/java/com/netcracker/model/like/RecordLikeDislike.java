@@ -7,7 +7,7 @@ import com.netcracker.model.record.RecordConstant;
 
 @ObjectType(LikeConstant.LDL_TYPE)
 public class RecordLikeDislike extends AbstractLikeDislike {
-    @Reference(RecordConstant.REC_LDLREF)
+    @Reference(value = RecordConstant.REC_LDLREF, isParentChild = 0)
     private AbstractRecord likedDislikedRecord;
 
     public RecordLikeDislike() {

@@ -33,19 +33,49 @@ public class EntityManager {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
     }
+    public Integer getNextSeqNoObjRef(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withFunctionName("get_next_seq_no_objreference");
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("p_OBJ_ID", obj_id)
+                .addValue("p_REF_ID", ref_id)
+                .addValue("p_ATTR_TYPE_ID", attr_type_id);
+        BigDecimal res = jdbcCall.executeFunction(BigDecimal.class, in);
+        return res.intValue();
+    }
+    public Integer getNextSeqNoObjAttributes(BigInteger obj_id, BigInteger attr_type_id){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withFunctionName("get_next_seq_no_attributes");
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("p_OBJ_ID", obj_id)
+                .addValue("p_ATTR_TYPE_ID", attr_type_id);
+        BigDecimal res = jdbcCall.executeFunction(BigDecimal.class, in);
+        return res.intValue();
+    }
+    public BigInteger getNextObjId(){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withFunctionName("check_id");
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("p_ID", null);
+        BigDecimal id = jdbcCall.executeFunction(BigDecimal.class, in);
+        return id.toBigInteger();
+    }
 
     @Transactional
     public Entity create(Entity entity) {
         Map<String, Object> result = executeObjectJdbcCall(entity, 0, null);
-        entity.setObjectId(((BigDecimal) result.get("p_OBJECT_ID")).toBigInteger());
+        //entity.setObjectId(((BigDecimal) result.get("p_OBJECT_ID")).toBigInteger());
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
             if (!(entry.getValue().toString().equals("-1")) && entry.getValue() != null) {
                 executeAttributeJdbcCall(entity, entry,0);
             }
         }
         for (Map.Entry entry : entity.getReferences().entrySet()) {
-            if (!(entry.getValue().toString().equals("-1"))) {
-                executeObjRefJdbcCall(entity, entry, 0);
+            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>)entry.getValue();
+            if (objIdRef.getKey() != null && objIdRef.getValue() != null
+                    && !(objIdRef.getKey().toString().equals("-1"))
+                    && !(objIdRef.getValue().toString().equals("-1"))){
+                executeObjRefJdbcCall(/*entity,*/ entry, 0);
             }
         }
         return entity;
@@ -57,8 +87,11 @@ public class EntityManager {
             executeAttributeJdbcCall(entity, entry,0);
         }
         for (Map.Entry entry : entity.getReferences().entrySet()) {
-            if (entry.getValue() != null && !(entry.getValue().toString().equals("-1"))) {
-                executeObjRefJdbcCall(entity, entry, 0);
+            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>)entry.getValue();
+            if (objIdRef.getKey() != null && objIdRef.getValue() != null
+                    && !(objIdRef.getKey().toString().equals("-1"))
+                    && !(objIdRef.getValue().toString().equals("-1"))) {
+                executeObjRefJdbcCall(/*entity,*/ entry, 0);
             }
         }
     }
@@ -88,7 +121,7 @@ public class EntityManager {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(Query.SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
         Map<Pair<BigInteger, Integer>, Object> attributes = getAttributes(rows);
         List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(Query.SELECT_FROM_OBJREFERENCE, objectId, objectId);
-        Map<Pair<BigInteger, Integer>, BigInteger> references = getReferences(rowsRef, objectId);
+        Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references = getReferences(rowsRef, objectId);
         entity.setAttributes(attributes);
         entity.setReferences(references);
         return entity;
@@ -120,22 +153,24 @@ public class EntityManager {
     }
 
 
-    private Map<Pair<BigInteger, Integer>, BigInteger> getReferences(List<Map<String, Object>> rowss, BigInteger objId) {
-        Map<Pair<BigInteger, Integer>, BigInteger> reference = new HashMap<>();
+    private Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> getReferences(List<Map<String, Object>> rowss, BigInteger curObjId) {
+        Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> reference = new HashMap<>();
         for (Map row : rowss) {
             BigInteger attrId = ((BigDecimal) row.get("attrtype_id")).toBigInteger();
             BigDecimal sId = (BigDecimal) row.get("sn");
             Integer seq_no = sId.intValueExact();
-            BigInteger value = null;
-
+            BigInteger obId = null;
+            BigInteger refId = null;
             BigInteger objectFromDB = ((BigDecimal) row.get("object_id")).toBigInteger();
             BigInteger refFromDB = ((BigDecimal) row.get("reference")).toBigInteger();
-            if (objectFromDB != null && !objId.equals(objectFromDB)) {
-                value = objectFromDB;
-            } else if (refFromDB != null && !objId.equals(refFromDB)) {
-                value = refFromDB;
+            if (objectFromDB != null && !curObjId.equals(objectFromDB)) {
+                obId = objectFromDB;
+                refId = curObjId;
+            } else if (refFromDB != null && !curObjId.equals(refFromDB)) {
+                refId = refFromDB;
+                obId = curObjId;
             }
-            reference.put(new Pair<>(attrId, seq_no), value);
+            reference.put(new Pair<>(attrId, seq_no), new Pair<>(obId, refId));
         }
         return reference;
     }
@@ -250,14 +285,15 @@ public class EntityManager {
         return jdbcCall.execute(in);
     }
 
-    private Map<String, Object> executeObjRefJdbcCall(Entity entity, Map.Entry entry, int delete) {
+    private Map<String, Object> executeObjRefJdbcCall(/*Entity entity,*/ Map.Entry entry, int delete) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         Map<String, Object> inParam = new HashMap<>();
-        inParam.put("P_OBJECT_ID", entry.getValue());
+        Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>) entry.getValue();
+        inParam.put("P_OBJECT_ID", objIdRef.getKey());
         inParam.put("P_ATTRTYPE_ID", ((Pair) entry.getKey()).getKey());
         Integer seq_no = (Integer) ((Pair) entry.getKey()).getValue();
         inParam.put("P_SEQ_NO", seq_no == 0 ? null : BigInteger.valueOf(seq_no));
-        inParam.put("P_OBJREFERENCE", entity.getObjectId());
+        inParam.put("P_OBJREFERENCE", objIdRef.getValue());
         inParam.put("p_TO_DEL", delete);
         jdbcCall.withProcedureName("UPDATE_OBJREFERENCE").declareParameters(
                 new SqlParameter("P_OBJECT_ID", OracleTypes.NUMBER),

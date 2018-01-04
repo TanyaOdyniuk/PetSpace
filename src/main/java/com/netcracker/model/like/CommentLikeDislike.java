@@ -7,7 +7,7 @@ import com.netcracker.model.comment.CommentConstant;
 
 @ObjectType(LikeConstant.LDL_TYPE)
 public class CommentLikeDislike extends AbstractLikeDislike {
-    @Reference(CommentConstant.COM_LIKEDISLIKE)
+    @Reference(value = CommentConstant.COM_LIKEDISLIKE, isParentChild = 0)
     private AbstractComment likedDislikedComment;
 
     public CommentLikeDislike() {

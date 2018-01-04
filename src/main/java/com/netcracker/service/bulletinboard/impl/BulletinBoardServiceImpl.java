@@ -7,6 +7,7 @@ import com.netcracker.model.advertisement.AdvertisementConstant;
 import com.netcracker.model.category.Category;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.bulletinboard.BulletinBoardService;
+import com.netcracker.service.status.StatusService;
 import com.netcracker.service.util.BulletinBoardUtilService;
 import com.netcracker.service.util.PageCounterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +15,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
-    PageCounterService pageCounterService;
+    private PageCounterService pageCounterService;
     @Autowired
-    BulletinBoardUtilService bulletinBoardUtilService;
+    private BulletinBoardUtilService bulletinBoardUtilService;
+    @Autowired
+    private StatusService statusService;
     @Value("${advertisement.list.pageCapasity}")
-    String adPageCapacityProp;
+    private String adPageCapacityProp;
     @Value("${advertisement.mylist.pageCapasity}")
-    String myAdPageCapacityProp;
+    private String myAdPageCapacityProp;
 
     @Override
     public int getAllAdPageCount() {
@@ -155,26 +157,8 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
 
     @Override
     public Advertisement addAd(Advertisement ad) {
-        Profile cutProfile = new Profile();
-        Category cutCategory = new Category();
-        Profile profile = ad.getAdAuthor();
-        Category category = ad.getAdCategory();
-        ad.setAdAuthor(null);
-        ad.setAdCategory(null);
-        Advertisement createdAd = entityManagerService.create(ad);
-        List<Advertisement> newAds = new ArrayList<>(profile.getProfileAdvertisements());
-        List<Advertisement> newAdsInCat = new ArrayList<>(category.getCategoryAds());
-        newAds.add(createdAd);
-        newAdsInCat.add(createdAd);
-        profile.setProfileAdvertisements(newAds);
-        category.setCategoryAds(newAdsInCat);
-        entityManagerService.update(profile);
-        entityManagerService.update(category);
-        cutCategory.setObjectId(category.getObjectId());
-        createdAd.setAdCategory(cutCategory);
-        cutProfile.setObjectId(profile.getObjectId());
-        createdAd.setAdAuthor(cutProfile);
-        return createdAd;
+        ad.setAdStatus(statusService.getActiveStatus());
+        return entityManagerService.create(ad);
     }
 
     @Override

@@ -12,9 +12,12 @@ public class AppConfig {
     public DataSource getDataSource(){
         DataSource dataSource = new DataSource();
         dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        dataSource.setUrl("jdbc:oracle:thin:@sql.edu-netcracker.com:1251:XE");
-        dataSource.setUsername("ODESSA_19");
-        dataSource.setPassword("ODESSA_19");
+        //dataSource.setUrl("jdbc:oracle:thin:@sql.edu-netcracker.com:1251:XE");
+        dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:XE");
+        //dataSource.setUsername("ODESSA_19");
+        //dataSource.setPassword("ODESSA_19");
+        dataSource.setUsername("petspace");
+        dataSource.setPassword("p1234");
         //dataSource.setUsername("ODESSA_18");
         //dataSource.setPassword("testpass");
         dataSource.setInitialSize(30);

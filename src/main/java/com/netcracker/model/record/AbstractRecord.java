@@ -10,19 +10,12 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-@ObjectType(RecordConstant.REC_TYPE)
 public abstract class AbstractRecord extends BaseEntity {
 
     @Attribute(RecordConstant.REC_INFO)
     private String recordText;
     @Attribute(RecordConstant.REC_DATE)
     private Timestamp recordDate;
-    //TODO SERVICE TO GET LIKES
-    @Reference(RecordConstant.REC_LDLREF)
-    private List<RecordLikeDislike> recordLikes;
-    //TODO SERVICE TO GET DISLIKES
-    @Reference(RecordConstant.REC_LDLREF)
-    private List<RecordLikeDislike> recordDislikes;
 
     public AbstractRecord() {
     }
@@ -51,29 +44,11 @@ public abstract class AbstractRecord extends BaseEntity {
         this.recordDate = recordDate;
     }
 
-    public List<RecordLikeDislike> getRecordLikes() {
-        return recordLikes;
-    }
-
-    public void setRecordLikes(List<RecordLikeDislike> recordLikes) {
-        this.recordLikes = recordLikes;
-    }
-
-    public List<RecordLikeDislike> getRecordDislikes() {
-        return recordDislikes;
-    }
-
-    public void setRecordDislikes(List<RecordLikeDislike> recordDislikes) {
-        this.recordDislikes = recordDislikes;
-    }
-
     @Override
     public String toString() {
         return "AbstractRecord{" +
                 "recordText='" + recordText + '\'' +
                 ", recordDate=" + recordDate +
-                ", recordLikes=" + recordLikes +
-                ", recordDislikes=" + recordDislikes +
                 '}';
     }
 }

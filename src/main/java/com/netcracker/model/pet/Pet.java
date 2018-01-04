@@ -22,7 +22,7 @@ public class Pet extends BaseEntity {
     private String petName;
     @Attribute(PetConstant.PET_AGE)
     private Integer petAge;
-    @Reference(PetConstant.PET_SPECOFPET)
+    @Reference(value = PetConstant.PET_SPECOFPET, isParentChild = 0)
     private PetSpecies petSpecies;
     @Attribute(PetConstant.PET_BREED)
     private String petBreed;
@@ -32,16 +32,10 @@ public class Pet extends BaseEntity {
     private Double petHeight;
     @Attribute(PetConstant.PET_SPECPARAM)
     private String petSpecificParam;
-    @Reference(PetConstant.PET_OWNER)
+    @Reference(value = PetConstant.PET_OWNER, isParentChild = 0)
     private Profile petOwner;
-    @Reference(PetConstant.PET_STATE)
+    @Reference(value = PetConstant.PET_STATE, isParentChild = 0)
     private Status petStatus;
-    //TODO SERVICE GETADVERTISEMENTS
-    @Reference(AdvertisementConstant.AD_PETS)
-    private Set<Advertisement> petAdvertisements;
-    //TODO SERVICE GETPHOTOALBUMS
-    @Reference(PetConstant.PET_PHOTOALBUM)
-    private List<PhotoAlbum> petPhotoAlbums;
 
     public Pet() {
     }
@@ -156,23 +150,6 @@ public class Pet extends BaseEntity {
     public void setPetStatus(Status petStatus) {
         this.petStatus = petStatus;
     }
-
-    public Set<Advertisement> getPetAdvertisements() {
-        return petAdvertisements;
-    }
-
-    public void setPetAdvertisements(Set<Advertisement> petAdvertisements) {
-        this.petAdvertisements = petAdvertisements;
-    }
-
-    public List<PhotoAlbum> getPetPhotoAlbums() {
-        return petPhotoAlbums;
-    }
-
-    public void setPetPhotoAlbums(List<PhotoAlbum> petPhotoAlbums) {
-        this.petPhotoAlbums = petPhotoAlbums;
-    }
-
     @Override
     public String toString() {
         return "Pet{" +
@@ -184,10 +161,7 @@ public class Pet extends BaseEntity {
                 ", petWeight=" + petWeight +
                 ", petHeight=" + petHeight +
                 ", petSpecificParam='" + petSpecificParam + '\'' +
-                //", petOwner=" + petOwner +
                 ", petStatus=" + petStatus +
-                ", advertisementPets=" + petAdvertisements +
-                ", petPhotoAlbums=" + petPhotoAlbums +
                 '}';
     }
 }

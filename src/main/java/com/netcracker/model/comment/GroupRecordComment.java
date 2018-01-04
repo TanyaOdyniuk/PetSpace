@@ -7,7 +7,7 @@ import com.netcracker.model.record.GroupRecord;
 
 @ObjectType(CommentConstant.COM_TYPE)
 public class GroupRecordComment extends AbstractComment {
-    @Reference(GroupConstant.GR_TYPE)//нет списка комментов
+    @Reference(value = GroupConstant.GR_TYPE, isParentChild = 0)//нет списка комментов
     private GroupRecord commentedGroupRecord;
 
     public GroupRecordComment() {

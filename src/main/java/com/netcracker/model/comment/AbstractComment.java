@@ -9,20 +9,13 @@ import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
-@ObjectType(CommentConstant.COM_TYPE)
 public abstract class AbstractComment extends BaseEntity {
     @Attribute(CommentConstant.COM_INFO)
     private String commentText;
     @Attribute(CommentConstant.COM_DATE)
     private String commentDate;
-    @Reference(CommentConstant.COM_AUTOR)
+    @Reference(value = CommentConstant.COM_AUTOR, isParentChild = 0)
     private Profile commentAuthor;
-    //TODO SERVICE GET LIKES
-    @Reference(CommentConstant.COM_LIKEDISLIKE)
-    private List<AbstractLikeDislike> commentLikes;
-    //TODO SERVICE GET DISLIKES
-    @Reference(CommentConstant.COM_LIKEDISLIKE)
-    private List<AbstractLikeDislike> commentDislikes;
 
     public AbstractComment() {
     }
@@ -58,7 +51,7 @@ public abstract class AbstractComment extends BaseEntity {
     public void setCommentAuthor(Profile commentAuthor) {
         this.commentAuthor = commentAuthor;
     }
-
+/*
     public List<AbstractLikeDislike> getCommentLikes() {
         return commentLikes;
     }
@@ -73,16 +66,16 @@ public abstract class AbstractComment extends BaseEntity {
 
     public void setCommentDislikes(List<AbstractLikeDislike> commentDislikes) {
         this.commentDislikes = commentDislikes;
-    }
+    }*/
 
     @Override
     public String toString() {
         return "AbstractComment{" +
                 "commentText='" + commentText + '\'' +
                 ", commentDate='" + commentDate + '\'' +
-                ", commentAuthor=" + commentAuthor +
+                ", commentAuthor=" + commentAuthor +/*
                 ", commentLikes=" + commentLikes +
-                ", commentDislikes=" + commentDislikes +
+                ", commentDislikes=" + commentDislikes +*/
                 '}';
     }
 }

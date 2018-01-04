@@ -2,6 +2,7 @@ package com.netcracker.service.registration.impl;
 
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.dao.manager.query.QueryDescriptor;
+import com.netcracker.error.exceptions.UserNotValidException;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import com.netcracker.model.user.UserAuthority;
@@ -37,6 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         increaseBalanceAtStart(user);
         Profile toDBProfile = user.getProfile();
         toDBProfile.setProfileStatus(statusService.getActiveStatus());
+        toDBProfile.setName("Profile " + toDBProfile.getProfileSurname());
         Profile fromDBProfile = entityManagerService.create(toDBProfile);
         user.setProfile(fromDBProfile);
         List<UserAuthority> authority = entityManagerService.getObjectsBySQL(
@@ -48,16 +50,24 @@ public class RegistrationServiceImpl implements RegistrationService {
                         " AND atr.value = 'ROLE_USER'", UserAuthority.class,
                         new QueryDescriptor());
         user.setUserAuthorities(authority);
-        return entityManagerService.create(user);
+        user.setName("User " + fromDBProfile.getProfileSurname());
+        User result = entityManagerService.create(user);
+        result.setUserAuthorities(null);
+        return result;
     }
 
     @Override
     public void invitedByUser(String userLogin) {
         BigDecimal invitedByBonus = new BigDecimal(invitedByBonusProp);
         User invitingUser = userDetailsService.loadUserByUsername(userLogin);
-        Profile invitingProfile = profileService.viewProfile(invitingUser.getProfile().getObjectId());
-        invitingProfile.setProfileCurrencyBalance(invitingProfile.getProfileCurrencyBalance().add(invitedByBonus));
-        entityManagerService.update(invitingProfile);
+        if(invitingUser != null){
+            Profile invitingProfile = profileService.viewProfile(invitingUser.getProfile().getObjectId());
+            invitingProfile.setProfileCurrencyBalance(invitingProfile.getProfileCurrencyBalance().add(invitedByBonus));
+            entityManagerService.update(invitingProfile);
+        } else{
+            throw new UserNotValidException("User with email: " + userLogin + " is not exist");
+        }
+
     }
 
     @Override

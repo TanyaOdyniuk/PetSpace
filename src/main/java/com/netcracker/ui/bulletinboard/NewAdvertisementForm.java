@@ -14,6 +14,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ import java.util.List;
 import static com.netcracker.ui.validation.UiValidationConstants.CHECK_FULLNESS;
 
 public class NewAdvertisementForm extends Window {
+    private BigInteger profileId;
     private HorizontalLayout authorTopicDateLayout;
     private HorizontalLayout categoryPetStatusLayout;
     private HorizontalLayout mainInfoLayout;
@@ -38,8 +40,9 @@ public class NewAdvertisementForm extends Window {
     private TextArea mainInfo;
     private Binder<VaadinValidationBinder> mainInfoBinder;
     private Binder<VaadinValidationBinder> topicBinder;
-    public NewAdvertisementForm() {
+    public NewAdvertisementForm(BigInteger profileId) {
         super();
+        this.profileId = profileId;
         Window subWindow = new Window("Sub-window");
         VerticalLayout subContent = new VerticalLayout();
         setContent(subContent);
@@ -100,7 +103,7 @@ public class NewAdvertisementForm extends Window {
         dateTimeField.setReadOnly(true);
         TextField authorField = new TextField("Author");
         authorField.setIcon(VaadinIcons.USER);
-        profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + 8, Profile.class);
+        profile = CustomRestTemplate.getInstance().customGetForObject("/profile/" + profileId, Profile.class);
         String authorInfo = profile.getProfileName() + " " + profile.getProfileSurname();
         authorField.setValue(authorInfo);
         authorField.setReadOnly(true);

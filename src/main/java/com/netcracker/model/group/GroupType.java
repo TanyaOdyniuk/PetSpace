@@ -12,8 +12,6 @@ public class GroupType extends BaseEntity {
 
     @Attribute(GroupConstant.GRT_NAME)
     private String groupType;
-    @Reference(GroupConstant.GR_GROUPTYPE)
-    private List<Group> groups;
 
     public GroupType() {
     }
@@ -34,19 +32,10 @@ public class GroupType extends BaseEntity {
         this.groupType = groupType;
     }
 
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
     @Override
     public String toString() {
         return "GroupType{" +
                 "groupType='" + groupType + '\'' +
-                ", groups=" + groups +
                 '}';
     }
 }

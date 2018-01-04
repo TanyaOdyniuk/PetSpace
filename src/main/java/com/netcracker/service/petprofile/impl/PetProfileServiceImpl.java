@@ -30,16 +30,9 @@ public class PetProfileServiceImpl implements PetProfileService {
     public Pet createPetProfile(Pet pet) {
         //User currentUser = userService.getCurrentUser();
         //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
-        Pet newPet = entityManagerService.create(pet);
-        Profile profile = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
-        List<Pet> newList = new ArrayList<>(profile.getProfilePets());
-        newList.add(newPet);
-        profile.setProfilePets(newList);
-        entityManagerService.update(profile);
-        Profile cutProfile = new Profile();
-        cutProfile.setObjectId(profile.getObjectId());
-        newPet.setPetOwner(cutProfile);
-        return newPet;
+        Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
+        pet.setPetOwner(profile);
+        return entityManagerService.create(pet);
     }
 
     @Override

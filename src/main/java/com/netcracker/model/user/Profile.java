@@ -39,37 +39,10 @@ public class Profile extends BaseEntity {
     private List<String> profileFavouriteBreeds;
     @Attribute(UsersProfileConstant.PROFILE_CURRBALANCE)
     private BigDecimal profileCurrencyBalance;
-    @Reference(UsersProfileConstant.PROFILE_STATUS)
+    @Reference(value = UsersProfileConstant.PROFILE_STATUS, isParentChild = 0)
     private Status profileStatus;
-    @Reference(UsersProfileConstant.USER_PROFILE)
+    @Reference(value = UsersProfileConstant.USER_PROFILE, isParentChild = 0)
     private User profileUser;
-    //TODO SERVICE GETPETS
-    @Reference(PetConstant.PET_OWNER)
-    private List<Pet> profilePets;
-    //TODO SERVICE GETWALLRECORDS
-    @Reference(UsersProfileConstant.PROFILE_WALLREC)
-    private List<WallRecord> profileWallRecords;
-    //TODO SERVICE GETPROFILEADVERTISEMENTS
-    @Reference(AdvertisementConstant.AD_AUTHOR)
-    private List<Advertisement> profileAdvertisements;
-    //TODO SERVICE GETPROFILEGROUPS
-    @Reference(GroupConstant.GR_PROFILE)
-    private Set<Group> profileGroups;
-    //TODO SERVICE GETCOMMENTS
-    @Reference(CommentConstant.COM_AUTOR)
-    private List<AbstractComment> profileComments;
-    //TODO SERVICE GETLIKES
-    @Reference(LikeConstant.LDL_AUTOR)
-    private List<AbstractLikeDislike> profileLikes;
-    //TODO SERVICE GETDISLIKES
-    @Reference(LikeConstant.LDL_AUTOR)
-    private List<AbstractLikeDislike> profileDislikes;
-    //TODO SERVICE GETSERVICES
-    @Reference(UsersProfileConstant.PROFILE_SERVICES)
-    private Set<Service> services;
-    //TODO SERVICE GETADMINISTRATEDGROUPS
-    @Reference(GroupConstant.GR_ADMIN)
-    private List<Group> profileAdministratedGroups;
 
     public Profile() {
     }
@@ -153,79 +126,6 @@ public class Profile extends BaseEntity {
     public void setProfileUser(User profileUser) {
         this.profileUser = profileUser;
     }
-
-    public List<Pet> getProfilePets() {
-        return profilePets;
-    }
-
-    public void setProfilePets(List<Pet> profilePets) {
-        this.profilePets = profilePets;
-    }
-
-    public List<WallRecord> getProfileWallRecords() {
-        return profileWallRecords;
-    }
-
-    public void setProfileWallRecords(List<WallRecord> profileWallRecords) {
-        this.profileWallRecords = profileWallRecords;
-    }
-
-    public List<Advertisement> getProfileAdvertisements() {
-        return profileAdvertisements;
-    }
-
-    public void setProfileAdvertisements(List<Advertisement> profileAdvertisements) {
-        this.profileAdvertisements = profileAdvertisements;
-    }
-
-    public Set<Group> getProfileGroups() {
-        return profileGroups;
-    }
-
-    public void setProfileGroups(Set<Group> profileGroups) {
-        this.profileGroups = profileGroups;
-    }
-
-    public List<AbstractComment> getProfileComments() {
-        return profileComments;
-    }
-
-    public void setProfileComments(List<AbstractComment> profileComments) {
-        this.profileComments = profileComments;
-    }
-
-    public List<AbstractLikeDislike> getProfileLikes() {
-        return profileLikes;
-    }
-
-    public void setProfileLikes(List<AbstractLikeDislike> profileLikes) {
-        this.profileLikes = profileLikes;
-    }
-
-    public List<AbstractLikeDislike> getProfileDislikes() {
-        return profileDislikes;
-    }
-
-    public void setProfileDislikes(List<AbstractLikeDislike> profileDislikes) {
-        this.profileDislikes = profileDislikes;
-    }
-
-    public Set<Service> getServices() {
-        return services;
-    }
-
-    public void setServices(Set<Service> services) {
-        this.services = services;
-    }
-
-    public List<Group> getProfileAdministratedGroups() {
-        return profileAdministratedGroups;
-    }
-
-    public void setProfileAdministratedGroups(List<Group> profileAdministratedGroups) {
-        this.profileAdministratedGroups = profileAdministratedGroups;
-    }
-
     @Override
     public String toString() {
         return "Profile{" +
@@ -238,15 +138,6 @@ public class Profile extends BaseEntity {
                 ", profileCurrencyBalance=" + profileCurrencyBalance +
                 ", profileStatus=" + profileStatus +
                 ", profileUser=" + profileUser +
-                //", profilePets=" + profilePets +
-                ", profileWallRecords=" + profileWallRecords +
-                ", profileAdvertisements=" + profileAdvertisements +
-                ", profileGroups=" + profileGroups +
-                ", profileComments=" + profileComments +
-                ", profileLikes=" + profileLikes +
-                ", profileDislikes=" + profileDislikes +
-                ", services=" + services +
-                ", profileAdministratedGroups=" + profileAdministratedGroups +
                 '}';
     }
 }

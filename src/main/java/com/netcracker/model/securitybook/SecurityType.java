@@ -12,8 +12,6 @@ public  class SecurityType extends BaseEntity {
 
     @Attribute(SecurityBookConstant.SECT_NAME)
     private String securityType;
-    @Reference(SecurityBookConstant.SECB_TYPE)
-    private List<SecurityBook> securityBooks;
 
     public SecurityType() {
     }
@@ -33,20 +31,10 @@ public  class SecurityType extends BaseEntity {
     public void setSecurityType(String securityType) {
         this.securityType = securityType;
     }
-
-    public List<SecurityBook> getSecurityBooks() {
-        return securityBooks;
-    }
-
-    public void setSecurityBooks(List<SecurityBook> securityBooks) {
-        this.securityBooks = securityBooks;
-    }
-
     @Override
     public String toString() {
         return "SecurityType{" +
                 "securityType='" + securityType + '\'' +
-                ", securityBooks=" + securityBooks +
                 '}';
     }
 }

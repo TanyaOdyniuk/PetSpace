@@ -22,18 +22,6 @@ public class Status extends BaseEntity {
 
     @Attribute(StatusConstant.ST_NAME)
     private String statusName;
-    /*
-    @Reference(GroupConstant.GR_STATUS)
-    private List<Group> groups;
-    @Reference(UsersProfileConstant.PROFILE_STATUS)
-    private List<Profile> profiles;
-    @Reference(AdvertisementConstant.AD_STATUS)
-    private List<Advertisement> advertisements;
-    @Reference(PetConstant.PET_STATE)
-    private List<Pet> pets;
-    @Reference(FriendRequestConstant.REQ_STATUS)
-    private List<FriendRequest> requests;
-    */
 
     public Status() {
     }
@@ -53,56 +41,11 @@ public class Status extends BaseEntity {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
-    /*
-    public List<Group> getGroups() {
-        return groups;
-    }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public List<Profile> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(List<Profile> profiles) {
-        this.profiles = profiles;
-    }
-
-    public List<Advertisement> getAdvertisements() {
-        return advertisements;
-    }
-
-    public void setAdvertisements(List<Advertisement> advertisements) {
-        this.advertisements = advertisements;
-    }
-
-    public List<Pet> getPets() {
-        return pets;
-    }
-
-    public void setPets(List<Pet> pets) {
-        this.pets = pets;
-    }
-
-    public List<FriendRequest> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(List<FriendRequest> requests) {
-        this.requests = requests;
-    }
-    */
     @Override
     public String toString() {
         return "Status{" +
-                "statusName='" + statusName /*+ '\'' +
-                ", groups=" + groups +
-                ", profiles=" + profiles +
-                ", advertisements=" + advertisements +
-                ", pets=" + pets +
-                ", requests=" + requests */+
+                "statusName='" + statusName + '\'' +
                 '}';
     }
 }

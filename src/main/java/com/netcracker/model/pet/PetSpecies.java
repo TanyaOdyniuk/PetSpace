@@ -12,9 +12,6 @@ public class PetSpecies extends BaseEntity {
 
     @Attribute(PetConstant.PETSPEC_NAME)
     private String speciesName;
-    //TODO SERVICE GET PET LIST BY SPECIES
-    @Reference(PetConstant.PET_SPECOFPET)
-    private List<Pet> petList;
 
     public PetSpecies() {
     }
@@ -34,20 +31,10 @@ public class PetSpecies extends BaseEntity {
     public void setSpeciesName(String speciesName) {
         this.speciesName = speciesName;
     }
-
-    public List<Pet> getPetList() {
-        return petList;
-    }
-
-    public void setPetList(List<Pet> petList) {
-        this.petList = petList;
-    }
-
     @Override
     public String toString() {
         return "PetSpecies{" +
                 "speciesName='" + speciesName + '\'' +
-                ", petList=" + petList +
                 '}';
     }
 }

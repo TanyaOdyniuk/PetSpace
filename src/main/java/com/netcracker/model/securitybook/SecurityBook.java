@@ -15,10 +15,10 @@ public class SecurityBook extends BaseEntity {
 
     @Attribute(SecurityBookConstant.SECB_USERSECB)
     private BigInteger attributeId;
-    @Reference(SecurityBookConstant.SECT_TYPE)
+    @Reference(value = SecurityBookConstant.SECT_TYPE, isParentChild = 0)
     private SecurityType securityType;
     //TODO SERVICE TO GET USERS
-    @Reference(UsersProfileConstant.USER_SECBOOK)
+    @Reference(value = UsersProfileConstant.USER_SECBOOK, isParentChild = 1)
     private Set<User> users;
 
     public SecurityBook() {
