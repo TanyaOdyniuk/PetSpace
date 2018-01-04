@@ -13,7 +13,8 @@ public class PetDataAssert {
     }
 
     public static void assertAvatarURL(String url) throws PetDataValidationException {
-        commomStringValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
+        if(!(url == null || "".equals(url)))
+            commomURLValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
     }
 
     public static Double assertHeight(String height) throws PetDataValidationException {
@@ -47,6 +48,16 @@ public class PetDataAssert {
             throw new PetDataValidationException(messageToThrow);
         }
     }
+
+    private static void commomURLValidation(String toCheck, String regex, String messageToThrow) throws PetDataValidationException {
+        try {
+            if (!isMatchingRegex(toCheck, regex))
+                throw new IllegalArgumentException();
+        } catch (IllegalArgumentException ex) {
+            throw new PetDataValidationException(messageToThrow);
+        }
+    }
+
 
     private static Double commonSizeValidation(String toCheck, String messageToThrow) throws PetDataValidationException {
         if ("".equals(toCheck))

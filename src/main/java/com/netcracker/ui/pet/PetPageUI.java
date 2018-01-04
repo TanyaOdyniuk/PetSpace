@@ -18,8 +18,6 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
 
 @SpringComponent
 @UIScope
@@ -61,9 +59,12 @@ public class PetPageUI extends VerticalLayout {
         galleryPanel.setHeight("100%");
 
         Image petAvatar = new Image();
+        if (pet.getPetAvatar() != null)
+            petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
+        else
+            petAvatar = PageElements.getNoImage();
         petAvatar.setHeight(250, Unit.PIXELS);
         petAvatar.setWidth(250, Unit.PIXELS);
-        petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
         petAvatar.setDescription("Pet avatar");
 
         Button editPage = PageElements.createClickedLabel("Редактировать информацию");
@@ -111,7 +112,16 @@ public class PetPageUI extends VerticalLayout {
         Label petBreed = PageElements.createCheckedValueLabel(pet.getPetBreed());
         petBreed.setCaption("Порода");
 
-        Label petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "лет");
+        Label petAge;
+        if (pet.getPetAge() % 10 == 1)
+            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "год");
+        else if (pet.getPetAge() % 10 == 2 ||
+                pet.getPetAge() % 10 == 3 ||
+                pet.getPetAge() % 10 == 4)
+            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "года");
+        else
+            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "лет");
+        
         petAge.setCaption("Возраст");
 
         Label petOwnerSign = PageElements.createLabel(2, "Владелец");
@@ -144,7 +154,7 @@ public class PetPageUI extends VerticalLayout {
         infoPanel.setHeight("100%");
         infoPanel.setWidth("100%");
 
-        PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
+        //PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
         HorizontalLayout photosLayout = new HorizontalLayout();
         /*if (album != null) {
             List<PhotoRecord> photos = album.getPhotoRecords();
@@ -153,10 +163,10 @@ public class PetPageUI extends VerticalLayout {
                 photosLayout.addComponentsAndExpand(photo);
             }
         } else {*/
-            for (int i = 0; i < 4; i++) {
-                Image emptyPhoto = PageElements.getNoImage();
-                photosLayout.addComponentsAndExpand(emptyPhoto);
-            }
+        for (int i = 0; i < 4; i++) {
+            Image emptyPhoto = PageElements.getNoImage();
+            photosLayout.addComponentsAndExpand(emptyPhoto);
+        }
         //}
 
         galleryPanel.setContent(photosLayout);
@@ -172,10 +182,10 @@ public class PetPageUI extends VerticalLayout {
         return pet;
     }
 
-    private PetSpecies getSpecies(){
+    private PetSpecies getSpecies() {
         PetSpecies species =
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/pet/" + petId + "/species" , PetSpecies.class);
+                        "/pet/" + petId + "/species", PetSpecies.class);
         return species;
     }
 

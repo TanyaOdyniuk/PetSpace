@@ -36,6 +36,7 @@ public class Pet extends BaseEntity {
     private Profile petOwner;
     @Reference(PetConstant.PET_STATE)
     private Status petStatus;
+
     //TODO SERVICE GETADVERTISEMENTS
     @Reference(AdvertisementConstant.AD_PETS)
     private Set<Advertisement> petAdvertisements;
@@ -186,8 +187,8 @@ public class Pet extends BaseEntity {
                 ", petSpecificParam='" + petSpecificParam + '\'' +
                 //", petOwner=" + petOwner +
                 ", petStatus=" + petStatus +
-                ", advertisementPets=" + petAdvertisements +
-                ", petPhotoAlbums=" + petPhotoAlbums +
+                /*", advertisementPets=" + petAdvertisements +
+                ", petPhotoAlbums=" + petPhotoAlbums +*/
                 '}';
     }
 }

@@ -26,10 +26,18 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Autowired
     UserService userService;
 
+    /*
+    @Autowired
+    StatusService statusService;
+     */
+
     @Override
     public Pet createPetProfile(Pet pet) {
         //User currentUser = userService.getCurrentUser();
         //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
+        /*
+        pet.setStatus(statusService.getActiveStatus ());
+         */
         Pet newPet = entityManagerService.create(pet);
         Profile profile = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
         List<Pet> newList = new ArrayList<>(profile.getProfilePets());
@@ -39,6 +47,7 @@ public class PetProfileServiceImpl implements PetProfileService {
         Profile cutProfile = new Profile();
         cutProfile.setObjectId(profile.getObjectId());
         newPet.setPetOwner(cutProfile);
+
         return newPet;
     }
 
