@@ -121,7 +121,7 @@ public class PetPageUI extends VerticalLayout {
             petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "года");
         else
             petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "лет");
-        
+
         petAge.setCaption("Возраст");
 
         Label petOwnerSign = PageElements.createLabel(2, "Владелец");

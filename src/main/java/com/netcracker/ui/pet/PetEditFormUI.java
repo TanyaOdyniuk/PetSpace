@@ -147,7 +147,8 @@ public class PetEditFormUI extends Window {
 
     private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
                            String petWeight, String petHeight, String specificParameters) {
-        PetDataAssert.assertAvatarURL(avatar);
+
+        avatar = PetDataAssert.assertAvatarURL(avatar);
         PetDataAssert.assertName(petName);
 
         Integer age = PetDataAssert.assertAge(petAge);
