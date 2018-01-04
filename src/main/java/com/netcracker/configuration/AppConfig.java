@@ -6,6 +6,10 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 @Configuration
 public class AppConfig {
     @Bean
@@ -33,7 +37,16 @@ public class AppConfig {
         dataSource.setCommitOnReturn(true);  */
         return dataSource;
     }
-
+    @Bean
+    public Logger getLogger(){
+        try {
+            LogManager.getLogManager().readConfiguration(
+                    getClass().getClassLoader().getResourceAsStream("logging.properties"));
+        } catch (IOException e) {
+            System.err.println("Could not setup logger configuration: " + e.toString());
+        }
+        return Logger.getLogger("Application getLogger");
+    }
     @Bean
     public EntityManager getEntityManager(){
         return new EntityManager(getDataSource());

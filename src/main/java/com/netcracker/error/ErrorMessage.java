@@ -22,7 +22,6 @@ public interface ErrorMessage {
     String PET_VALIDATION_WEIGHT = "Проверьте правильность ввода\nвеса питомца";
     String PET_VALIDATION_AGE = "Проверьте правильность ввода\nвозраста питомца";
 
-
     //PRIVILIGIES
     String PRIVILIGIES_GROUP = "У вас недостаточно прав\nдля просмотра данной группы.";
     String PRIVILIGIES_PET = "У вас недостаточно прав\nдля просмотра страницы питомца.";

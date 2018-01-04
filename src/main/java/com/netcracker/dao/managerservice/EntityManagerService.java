@@ -7,6 +7,8 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.dao.manager.EntityManager;
 import com.netcracker.dao.manager.query.QueryDescriptor;
+import com.netcracker.error.ErrorMessage;
+import com.netcracker.error.exceptions.EntityManagerException;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.user.UsersProfileConstant;
 import javafx.util.Pair;
@@ -24,9 +26,11 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class EntityManagerService {
-
+    @Autowired
+    private Logger logger;
     private EntityManager manager;
 
     @Autowired
@@ -63,7 +67,6 @@ public class EntityManagerService {
     public <T extends BaseEntity> T getById(BigInteger objectId, Class baseEntityClass) {
         Entity entity = manager.getById(objectId);
         return (T) new Converter().convertToBaseEntity(entity, baseEntityClass);
-
     }
 
     private <T extends BaseEntity> T getByIdRef(BigInteger objectId, Class baseEntityClass) {
@@ -71,7 +74,7 @@ public class EntityManagerService {
         return (T) new Converter().convertToBaseEntity(entity, baseEntityClass);
     }
 
-    public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, QueryDescriptor queryDescriptor/*, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
+    public <T extends BaseEntity> List<T> getAll(BigInteger objectTypeId, Class<T> baseEntityClass, QueryDescriptor queryDescriptor) {
         List<Entity> entities = manager.getAll(objectTypeId, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
@@ -81,7 +84,7 @@ public class EntityManagerService {
         return baseEntities;
     }
 
-    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, QueryDescriptor queryDescriptor /*boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/) {
+    public <T extends BaseEntity> List<T> getObjectsBySQL(String sqlQuery, Class<T> baseEntityClass, QueryDescriptor queryDescriptor) {
         List<Entity> entities = manager.getBySQL(sqlQuery, queryDescriptor);
         List<T> baseEntities = new ArrayList<>();
         for (Entity entity : entities) {
@@ -91,7 +94,7 @@ public class EntityManagerService {
         return baseEntities;
     }
 
-    class Converter {
+    private class Converter {
 
         private final Date EMPTY_DATE = new Date(-1);
         private final Timestamp EMPTY_TIMESTAMP = new Timestamp(-1);
@@ -122,11 +125,11 @@ public class EntityManagerService {
             entity.setReferences(references);
             return entity;
         }
+
         private void getAllFields(Field[] fields, BaseEntity baseEntity, Class<?> baseEntityClass,
                                   Map<Pair<BigInteger, Integer>, Object> attributes,
-                                  Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references){
+                                  Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references) {
             BigInteger attrId;
-
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Attribute.class)) {
                     Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
@@ -147,6 +150,7 @@ public class EntityManagerService {
                 }
             }
         }
+
         private void putBoolean(Map<Pair<BigInteger, Integer>, Object> attributes, BigInteger attrId, String yesno,
                                 BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
             Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
@@ -180,9 +184,9 @@ public class EntityManagerService {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
                 } else if (field.getType() == Date.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_DATE);
-                } else if (field.getType() == Timestamp.class){
+                } else if (field.getType() == Timestamp.class) {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_TIMESTAMP);
-                } else{
+                } else {
                     attributes.put(new Pair<>(attrId, 0), EMPTY_STRING);
                 }
             } else {
@@ -192,17 +196,15 @@ public class EntityManagerService {
                 }
                 if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List tempAttributes = (List) fieldValue;
-                    if (tempAttributes != null) {
-                        for (int i = 0; i < tempAttributes.size(); i++) {
-                            Object attribute = tempAttributes.get(i);
-                            Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
-                            if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
-                                attributes.put(new Pair<>(attrId, seq_no), attribute);
-                            } else if (Date.class.isAssignableFrom(attribute.getClass())) {
-                                attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
-                            } else {
-                                attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
-                            }
+                    for (int i = 0; i < tempAttributes.size(); i++) {
+                        Object attribute = tempAttributes.get(i);
+                        Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
+                        if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
+                            attributes.put(new Pair<>(attrId, seq_no), attribute);
+                        } else if (Date.class.isAssignableFrom(attribute.getClass())) {
+                            attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
+                        } else {
+                            attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
                         }
                     }
                 } else {
@@ -216,24 +218,26 @@ public class EntityManagerService {
                 }
             }
         }
-        private Integer getSeqNo(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id){
+
+        private Integer getSeqNo(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id) {
             Integer seq_no;
-            if(attr_type_id.intValue() == UsersProfileConstant.USER_PROFILE){
+            if (attr_type_id.intValue() == UsersProfileConstant.USER_PROFILE) {
                 seq_no = 0;
-            } else{
+            } else {
                 seq_no = manager.getNextSeqNoObjRef(obj_id, ref_id, attr_type_id);
             }
             return seq_no;
         }
+
         private void putReference(Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> references, BigInteger attrId, Integer isParentChildRef,
                                   BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
             Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
             BigInteger curObjId = baseEntity.getObjectId();
             Pair<BigInteger, BigInteger> objIdRef;
             if (fieldValue == null) {
-                if(isParentChildRef == 1){
+                if (isParentChildRef == 1) {
                     objIdRef = new Pair<>(EMPTY_INTEGER, curObjId);
-                } else{
+                } else {
                     objIdRef = new Pair<>(curObjId, EMPTY_INTEGER);
                 }
 
@@ -246,26 +250,25 @@ public class EntityManagerService {
                 if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List<BaseEntity> tempReferences = (List<BaseEntity>) fieldValue;
                     for (int i = 0; i < tempReferences.size(); i++) {
-
                         BaseEntity reference = tempReferences.get(i);
-                        if(isParentChildRef == 1){
+                        if (isParentChildRef == 1) {
                             objIdRef = new Pair<>(reference != null ? reference.getObjectId() : EMPTY_INTEGER, curObjId);
-                        } else{
+                        } else {
                             objIdRef = new Pair<>(curObjId, reference != null ? reference.getObjectId() : EMPTY_INTEGER);
                         }
-                        //seq_no = manager.getNextSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId);
-                        references.put(new Pair<>(attrId, getSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId)/*i + 1*/), objIdRef); //взять след из базы
+                        references.put(new Pair<>(attrId, getSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId)), objIdRef);
                     }
                 } else {
-                    if(isParentChildRef == 1){
+                    if (isParentChildRef == 1) {
                         objIdRef = new Pair<>(((BaseEntity) fieldValue).getObjectId(), curObjId);
-                    } else{
+                    } else {
                         objIdRef = new Pair<>(curObjId, ((BaseEntity) fieldValue).getObjectId());
                     }
                     references.put(new Pair<>(attrId, getSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId)), objIdRef);
                 }
             }
         }
+
         private Object getValueFromField(BaseEntity baseEntity, Class<?> baseEntityClass, Field field) {
             Object value;
             PropertyDescriptor property;
@@ -273,43 +276,44 @@ public class EntityManagerService {
                 property = new PropertyDescriptor(field.getName(), baseEntityClass);
                 Method getMethod = property.getReadMethod();
                 value = getMethod.invoke(baseEntity);
-            } catch (IntrospectionException e) {
-                throw new RuntimeException("Unable to find the field");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("The field doesn't have public get method.");
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+                logger.throwing(EntityManagerService.class.getName(), "getValueFromField", e);
+                throw new EntityManagerException(ErrorMessage.ERROR_UNKNOWN, e);
             }
             return value;
         }
 
-        private <T extends BaseEntity> T convertToBaseEntity(Entity entity, Class clazz) {
-            if (clazz == BaseEntity.class)
-                throw new IllegalArgumentException("You can't create object with BaseEntity type");
-            T baseEntity = null;
+        private <T extends BaseEntity> T convertToBaseEntity(Entity entity, Class clazz) throws EntityManagerException {
+            if (clazz == BaseEntity.class) {
+                Throwable ex = new IllegalArgumentException("You can't create object with BaseEntity type");
+                logger.throwing(EntityManager.class.getName(), "convertToBaseEntity", ex);
+                throw new EntityManagerException(ErrorMessage.ERROR_UNKNOWN, ex);
+            }
+            T baseEntity;
             try {
                 baseEntity = (T) clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            baseEntity.setName(entity.getName());
-            baseEntity.setObjectId(entity.getObjectId());
-            baseEntity.setDescription(entity.getDescription());
-            baseEntity.setParentId(entity.getParentId());
+                baseEntity.setName(entity.getName());
+                baseEntity.setObjectId(entity.getObjectId());
+                baseEntity.setDescription(entity.getDescription());
+                baseEntity.setParentId(entity.getParentId());
 
-            Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
-            Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap = entity.getReferences();
-            if (!attrMap.isEmpty() || !refMap.isEmpty()) {
-                setFieldsInParents(baseEntity, attrMap, refMap);
-                Field[] fields = clazz.getDeclaredFields();
-                setAllFields(fields, baseEntity, clazz, attrMap, refMap);
+                Map<Pair<BigInteger, Integer>, Object> attrMap = entity.getAttributes();
+                Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap = entity.getReferences();
+                if (!attrMap.isEmpty() || !refMap.isEmpty()) {
+                    setFieldsInParents(baseEntity, attrMap, refMap);
+                    Field[] fields = clazz.getDeclaredFields();
+                    setAllFields(fields, baseEntity, clazz, attrMap, refMap);
+                }
+                return baseEntity;
+            } catch (InstantiationException | IllegalAccessException e) {
+                logger.throwing(EntityManager.class.getName(), "convertToBaseEntity", e);
+                throw new EntityManagerException(ErrorMessage.ERROR_UNKNOWN, e);
             }
-            return baseEntity;
         }
 
         private void setAllFields(Field[] fields, BaseEntity baseEntity, Class<?> baseEntityClass,
                                   Map<Pair<BigInteger, Integer>, Object> attrMap,
-                                  Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap){
+                                  Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap) {
             BigInteger attrId;
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Attribute.class)) {
@@ -331,6 +335,7 @@ public class EntityManagerService {
                 }
             }
         }
+
         private void setRef(Field field, BaseEntity baseEntity, Class<?> baseEntityClass,
                             List<Pair<BigInteger, Integer>> pairs,
                             Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap,
@@ -338,19 +343,19 @@ public class EntityManagerService {
             Class fieldType = field.getType();
             Object value = null;
             if (List.class.isAssignableFrom(fieldType) || Set.class.isAssignableFrom(fieldType)) {
-                Object[] values = new Object[ pairs.size()];
+                Object[] values = new Object[pairs.size()];
                 int counter = 0;
                 for (Pair<BigInteger, Integer> pair : pairs) {
                     Pair<BigInteger, BigInteger> objIdRef = refMap.get(pair);
                     BigInteger attribute;
-                    if (!outerEntityId.equals(objIdRef.getKey())){
+                    if (!outerEntityId.equals(objIdRef.getKey())) {
                         attribute = objIdRef.getKey();
-                    } else{
+                    } else {
                         attribute = objIdRef.getValue();
                     }
                     ParameterizedType listType = (ParameterizedType) field.getGenericType();
                     Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-                        values[counter] = attribute != null ? getByIdRef(attribute, listClass) : null;
+                    values[counter] = attribute != null ? getByIdRef(attribute, listClass) : null;
                     counter++;
                 }
                 value = Arrays.asList(values);
@@ -361,9 +366,9 @@ public class EntityManagerService {
                 if (!pairs.isEmpty()) {
                     Pair<BigInteger, BigInteger> objIdRef = refMap.get(pairs.get(0));
                     BigInteger attribute;
-                    if (!outerEntityId.equals(objIdRef.getKey())){
+                    if (!outerEntityId.equals(objIdRef.getKey())) {
                         attribute = objIdRef.getKey();
-                    } else{
+                    } else {
                         attribute = objIdRef.getValue();
                     }
                     value = attribute != null ? getByIdRef(attribute, fieldType) : null;
@@ -412,7 +417,8 @@ public class EntityManagerService {
                                 Method m = fieldType.getMethod("valueOf", String.class);
                                 value = m.invoke(fieldType, attribute);
                             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                                e.printStackTrace();
+                                logger.throwing(EntityManager.class.getName(), "setValue", e);
+                                throw new EntityManagerException(ErrorMessage.ERROR_UNKNOWN, e);
                             }
                         }
                     }
@@ -450,12 +456,9 @@ public class EntityManagerService {
                 if (setMethod != null) {
                     setMethod.invoke(baseEntity, value);
                 }
-            } catch (IntrospectionException e) {
-                throw new RuntimeException("Unable to find the field");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("The field doesn't have public set method.");
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+                logger.throwing(EntityManager.class.getName(), "setValueIntoField", e);
+                throw new EntityManagerException(ErrorMessage.ERROR_UNKNOWN, e);
             }
         }
 
@@ -471,7 +474,7 @@ public class EntityManagerService {
         }
 
         private void getFieldsFromParents(BaseEntity baseEntity, Map<Pair<BigInteger, Integer>, Object> attrMap,
-                                          Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap){
+                                          Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap) {
             List<Class<?>> parents = getAllClassInHierarchy(baseEntity.getClass());
             Collections.reverse(parents);
             Iterator<Class<?>> iterator = parents.iterator();
@@ -485,6 +488,7 @@ public class EntityManagerService {
                 }
             }
         }
+
         private void setFieldsInParents(BaseEntity baseEntity, Map<Pair<BigInteger, Integer>, Object> attrMap,
                                         Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> refMap) {
             List<Class<?>> parents = getAllClassInHierarchy(baseEntity.getClass());

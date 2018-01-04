@@ -24,7 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     String registrationBonusProp;
     @Value("${currency.registration.invitedby}")
     String invitedByBonusProp;
-
     @Autowired
     EntityManagerService entityManagerService;
     @Autowired

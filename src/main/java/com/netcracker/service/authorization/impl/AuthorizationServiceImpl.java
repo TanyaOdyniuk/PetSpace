@@ -60,7 +60,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public User authenticate(String emailField, String passwordField, Collection<? extends GrantedAuthority> authorities) {
         User user = userDetailsService.loadUserByUsername(emailField);
         Boolean bool = bCryptEncoder.matches(passwordField, user.getPassword());
-
         // TO UI
         if (!bool) {
             Notification.show("Wrong email or password!");

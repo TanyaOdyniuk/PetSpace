@@ -33,7 +33,8 @@ public class EntityManager {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
     }
-    public Integer getNextSeqNoObjRef(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id){
+
+    public Integer getNextSeqNoObjRef(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withFunctionName("get_next_seq_no_objreference");
         SqlParameterSource in = new MapSqlParameterSource()
@@ -43,7 +44,8 @@ public class EntityManager {
         BigDecimal res = jdbcCall.executeFunction(BigDecimal.class, in);
         return res.intValue();
     }
-    public Integer getNextSeqNoObjAttributes(BigInteger obj_id, BigInteger attr_type_id){
+
+    public Integer getNextSeqNoObjAttributes(BigInteger obj_id, BigInteger attr_type_id) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withFunctionName("get_next_seq_no_attributes");
         SqlParameterSource in = new MapSqlParameterSource()
@@ -52,7 +54,8 @@ public class EntityManager {
         BigDecimal res = jdbcCall.executeFunction(BigDecimal.class, in);
         return res.intValue();
     }
-    public BigInteger getNextObjId(){
+
+    public BigInteger getNextObjId() {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withFunctionName("check_id");
         SqlParameterSource in = new MapSqlParameterSource()
@@ -63,35 +66,38 @@ public class EntityManager {
 
     @Transactional
     public Entity create(Entity entity) {
-        Map<String, Object> result = executeObjectJdbcCall(entity, 0, null);
-        //entity.setObjectId(((BigDecimal) result.get("p_OBJECT_ID")).toBigInteger());
+        executeObjectJdbcCall(entity, 0, null);
+
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
             if (!(entry.getValue().toString().equals("-1")) && entry.getValue() != null) {
-                executeAttributeJdbcCall(entity, entry,0);
+                executeAttributeJdbcCall(entity, entry);
             }
         }
+
         for (Map.Entry entry : entity.getReferences().entrySet()) {
-            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>)entry.getValue();
+            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>) entry.getValue();
             if (objIdRef.getKey() != null && objIdRef.getValue() != null
                     && !(objIdRef.getKey().toString().equals("-1"))
-                    && !(objIdRef.getValue().toString().equals("-1"))){
-                executeObjRefJdbcCall(/*entity,*/ entry, 0);
+                    && !(objIdRef.getValue().toString().equals("-1"))) {
+                executeObjRefJdbcCall(entry);
             }
         }
         return entity;
     }
 
     public void update(Entity entity) {
-        executeObjectJdbcCall(entity,0, null);
+        executeObjectJdbcCall(entity, 0, null);
+
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
-            executeAttributeJdbcCall(entity, entry,0);
+            executeAttributeJdbcCall(entity, entry);
         }
+
         for (Map.Entry entry : entity.getReferences().entrySet()) {
-            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>)entry.getValue();
+            Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>) entry.getValue();
             if (objIdRef.getKey() != null && objIdRef.getValue() != null
                     && !(objIdRef.getKey().toString().equals("-1"))
                     && !(objIdRef.getValue().toString().equals("-1"))) {
-                executeObjRefJdbcCall(/*entity,*/ entry, 0);
+                executeObjRefJdbcCall(entry);
             }
         }
     }
@@ -152,7 +158,6 @@ public class EntityManager {
         return attributes;
     }
 
-
     private Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> getReferences(List<Map<String, Object>> rowss, BigInteger curObjId) {
         Map<Pair<BigInteger, Integer>, Pair<BigInteger, BigInteger>> reference = new HashMap<>();
         for (Map row : rowss) {
@@ -179,7 +184,8 @@ public class EntityManager {
         queryDescriptor.setInnerQuery(Query.SELECT_FROM_OBJECTS);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 queryBuilder.build(queryDescriptor),
-                new Object[]{objectTypeId});
+                objectTypeId
+                /*new Object[]{objectTypeId}*/);
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {
@@ -201,17 +207,22 @@ public class EntityManager {
         }
         return entityList;
     }
-    public int getAllCount(BigInteger objectTypeId){
+
+    public int getAllCount(BigInteger objectTypeId) {
         return jdbcTemplate.queryForObject(QueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS),
-                (resultSet, i) -> { return resultSet.getInt("c"); },
+                (resultSet, i) -> {
+                    return resultSet.getInt("c");
+                },
                 objectTypeId);
     }
 
-    public int getBySqlCount(String sqlQuery){
+    public int getBySqlCount(String sqlQuery) {
         return jdbcTemplate.queryForObject(QueryBuilder.buildCountQuery(Query.SELECT_FROM_OBJECTS_BY_SUBQUERY.concat("( ").concat(sqlQuery).concat(" )")),
                 (resultSet, i) -> {
-                    return resultSet.getInt("c"); });
+                    return resultSet.getInt("c");
+                });
     }
+
     private Map<String, Object> executeObjectJdbcCall(Entity entity, int delete, Integer forceDel) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(
@@ -234,7 +245,7 @@ public class EntityManager {
         return jdbcCall.execute(in);
     }
 
-    private Map<String, Object> executeAttributeJdbcCall(Entity entity, Map.Entry entry, int delete) {
+    private Map<String, Object> executeAttributeJdbcCall(Entity entity, Map.Entry entry) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         Map<String, Object> inParam = new HashMap<>();
         inParam.put("P_OBJECT_ID", entity.getObjectId());
@@ -242,37 +253,33 @@ public class EntityManager {
         Integer seq_no = (Integer) (((Pair) entry.getKey()).getValue());
         inParam.put("P_SEQ_NO", seq_no == 0 ? null : BigInteger.valueOf(seq_no));
         String entryClassName = entry.getValue().getClass().getSimpleName();
-        /*if (entryClassName.equals("String")) {
-            if (entry.getValue().equals("-1")) {
+        switch (entryClassName) {
+            case "Date":
                 inParam.put("p_VALUE", null);
-            } else {
-                inParam.put("p_VALUE", entry.getValue());
-            }
-            inParam.put("p_DATE_VALUE", null);
-
-        } else*/ if (entryClassName.equals("Date")) {
-            inParam.put("p_VALUE", null);
-            if (((Date) entry.getValue()).getTime() == new Date(-1).getTime()) {
-                inParam.put("p_DATE_VALUE", null);
-            } else {
-                inParam.put("p_DATE_VALUE", new Timestamp(((Date) entry.getValue()).getTime()));
-            }
-        } else if ( entryClassName.equals("Timestamp")) {
-            inParam.put("p_VALUE", null);
-            if (((Timestamp) entry.getValue()).getTime() == new Date(-1).getTime()) {
-                inParam.put("p_DATE_VALUE", null);
-            } else {
-                inParam.put("p_DATE_VALUE", entry.getValue());
-            }
-        } else{
-            if (entry.getValue().equals("-1")) {
+                if (((Date) entry.getValue()).getTime() == new Date(-1).getTime()) {
+                    inParam.put("p_DATE_VALUE", null);
+                } else {
+                    inParam.put("p_DATE_VALUE", new Timestamp(((Date) entry.getValue()).getTime()));
+                }
+                break;
+            case "Timestamp":
                 inParam.put("p_VALUE", null);
-            } else {
-                inParam.put("p_VALUE", entry.getValue());
-            }
-            inParam.put("p_DATE_VALUE", null);
+                if (((Timestamp) entry.getValue()).getTime() == new Date(-1).getTime()) {
+                    inParam.put("p_DATE_VALUE", null);
+                } else {
+                    inParam.put("p_DATE_VALUE", entry.getValue());
+                }
+                break;
+            default:
+                if (entry.getValue().equals("-1")) {
+                    inParam.put("p_VALUE", null);
+                } else {
+                    inParam.put("p_VALUE", entry.getValue());
+                }
+                inParam.put("p_DATE_VALUE", null);
+                break;
         }
-        inParam.put("p_TO_DEL", delete);
+        inParam.put("p_TO_DEL", 0);
         jdbcCall.withProcedureName("UPDATE_ATTRIBUTE").declareParameters(
                 new SqlParameter("p_OBJECT_ID", OracleTypes.NUMBER),
                 new SqlParameter("P_ATTR_ID", OracleTypes.NUMBER),
@@ -285,7 +292,7 @@ public class EntityManager {
         return jdbcCall.execute(in);
     }
 
-    private Map<String, Object> executeObjRefJdbcCall(/*Entity entity,*/ Map.Entry entry, int delete) {
+    private Map<String, Object> executeObjRefJdbcCall(Map.Entry entry) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         Map<String, Object> inParam = new HashMap<>();
         Pair<BigInteger, BigInteger> objIdRef = (Pair<BigInteger, BigInteger>) entry.getValue();
@@ -294,7 +301,7 @@ public class EntityManager {
         Integer seq_no = (Integer) ((Pair) entry.getKey()).getValue();
         inParam.put("P_SEQ_NO", seq_no == 0 ? null : BigInteger.valueOf(seq_no));
         inParam.put("P_OBJREFERENCE", objIdRef.getValue());
-        inParam.put("p_TO_DEL", delete);
+        inParam.put("p_TO_DEL", 0);
         jdbcCall.withProcedureName("UPDATE_OBJREFERENCE").declareParameters(
                 new SqlParameter("P_OBJECT_ID", OracleTypes.NUMBER),
                 new SqlParameter("P_ATTRTYPE_ID", OracleTypes.NUMBER),

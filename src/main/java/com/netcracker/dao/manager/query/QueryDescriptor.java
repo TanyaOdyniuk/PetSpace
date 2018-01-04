@@ -1,8 +1,6 @@
 package com.netcracker.dao.manager.query;
 
 import javafx.util.Pair;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 
