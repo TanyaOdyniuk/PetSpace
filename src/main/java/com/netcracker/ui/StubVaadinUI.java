@@ -139,7 +139,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(/*203*/22)));
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(/*203*/25)));//пока привязка к профилю (временно)
                 break;
             case "My groups":
                 primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));//нет такой группы в прод базе
