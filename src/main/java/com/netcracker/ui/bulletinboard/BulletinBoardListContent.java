@@ -49,10 +49,10 @@ public class BulletinBoardListContent extends VerticalLayout {
         gridPagingLayout = new VerticalLayout();
         getGrid();
         selectedCategories = new Category[0];
-        advertisementList(1);
-        getPagingLayout();
         gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(grid);
+        advertisementList(1);
+        getPagingLayout();
         if (pagingLayout != null) {
             gridPagingLayout.addComponent(pagingLayout);
         } else {

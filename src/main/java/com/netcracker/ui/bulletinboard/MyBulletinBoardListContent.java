@@ -49,13 +49,13 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         getGrid();
         this.profileId = profileId;
         selectedCategories = new Category[0];
-        advertisementList(1);
-        getPagingLayout();
         newAdBtn = new Button("Add new advertisement", VaadinIcons.PLUS);
         newAdBtn.setHeight(30, Unit.PIXELS);
         gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(newAdBtn);
         gridPagingLayout.addComponent(grid);
+        advertisementList(1);
+        getPagingLayout();
         if (pagingLayout != null) {
             gridPagingLayout.addComponent(pagingLayout);
         }
@@ -89,6 +89,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         Grid.Column categoryColumn = grid.addColumn(ad ->
                 (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setSortable(false);
         grid.addItemClickListener(event -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
+
     }
 
     private void getCategoryFilterLayout() {
@@ -185,6 +186,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         List<Advertisement> advertisements = ads.getContent();
         if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
+            Integer k = gridPagingLayout.getComponentCount();
             gridPagingLayout.removeComponent(grid);
         } else {
             if (gridPagingLayout.getComponentCount() == 1) {

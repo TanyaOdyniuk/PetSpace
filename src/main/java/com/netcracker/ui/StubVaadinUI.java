@@ -115,7 +115,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = BigInteger.valueOf(22);
+        BigInteger profileId = BigInteger.valueOf(25);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if(primaryAreaLayout.getComponentCount() > 1){
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
@@ -142,7 +142,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(/*203*/22)));
                 break;
             case "My groups":
-                primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));
+                primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));//нет такой группы в прод базе
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));

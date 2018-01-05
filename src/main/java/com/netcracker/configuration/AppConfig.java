@@ -26,7 +26,7 @@ public class AppConfig {
         //dataSource.setPassword("testpass");
         dataSource.setInitialSize(30);
         dataSource.setMaxActive(50);
-        dataSource.setMaxIdle(12);
+        dataSource.setMaxIdle(30);
         /*
         dataSource.setMinIdle(7);
         dataSource.setMaxWait(50000);

@@ -8,6 +8,7 @@ import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
 
+import com.netcracker.service.status.StatusService;
 import com.netcracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,19 +27,17 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Autowired
     UserService userService;
 
-    /*
+
     @Autowired
     StatusService statusService;
-     */
 
     @Override
     public Pet createPetProfile(Pet pet) {
         //User currentUser = userService.getCurrentUser();
         //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
-        /*
-        pet.setStatus(statusService.getActiveStatus ());
-         */
+
         Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
+        pet.setPetStatus(statusService.getActiveStatus ());
         pet.setPetOwner(profile);
         return entityManagerService.create(pet);
     }
