@@ -5,13 +5,8 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.status.Status;
-import com.netcracker.model.advertisement.Advertisement;
-import com.netcracker.model.advertisement.AdvertisementConstant;
-import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.user.Profile;
 
-import java.util.List;
-import java.util.Set;
 
 @ObjectType(PetConstant.PET_TYPE)
 public class Pet extends BaseEntity {

@@ -35,7 +35,7 @@ class PetEditFormUI extends Window {
             avatar = new Image("", new ExternalResource(pet.getPetAvatar()));
         avatar.setHeight("200px");
         avatar.setWidth("200px");
-        TextField avatarField = PageElements.createTextField("Аватар", "Ссылка на аватар", true);
+        TextField avatarField = PageElements.createTextField("Аватар", "Ссылка на аватар");
         avatarField.setWidth("100%");
         avatarField.setValue(pet.getPetAvatar() == null ? "" : pet.getPetAvatar());
         Button avatarSelect = new Button("Загрузить");
@@ -76,7 +76,7 @@ class PetEditFormUI extends Window {
         breedTypeField.setWidth("100%");
         breedTypeField.setValue(pet.getPetBreed() == null ? "" : pet.getPetBreed());
 
-        TextField ageField = PageElements.createTextField("Возраст", "Возраст (полных лет)");
+        TextField ageField = PageElements.createTextField("Возраст", "Возраст (полных лет)", true);
         ageField.setWidth("100%");
         ageField.setValue(pet.getPetAge() == null ? "" : pet.getPetAge().toString() );
 
@@ -146,27 +146,24 @@ class PetEditFormUI extends Window {
 
     private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
                            String petWeight, String petHeight, String specificParameters) {
-        PetDataAssert.assertAvatarURL(avatar);
+
+        avatar = PetDataAssert.assertAvatarURL(avatar);
         PetDataAssert.assertName(petName);
 
         Integer age = PetDataAssert.assertAge(petAge);
         Double weight = PetDataAssert.assertWeight(petWeight);
         Double height = PetDataAssert.assertHeight(petHeight);
 
-        /*User currentUser = new UserService().getCurrentUser();
-        Profile profile = new Profile();
-        profile.setObjectId(BigInteger.valueOf(1));*/
-
         Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
-                weight, height, specificParameters/*, profile*/);
+                weight, height, specificParameters);
 
         HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet);
 
-        CustomRestTemplate.getInstance()
+        createdPet = CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", petEntity, Pet.class);
         Notification.show("Питомец успешно добавлен!");
         this.close();
-        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new MyPetsListUI(BigInteger.valueOf(1)));
+        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
     }
 
     private void updatePet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,

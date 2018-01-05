@@ -26,10 +26,18 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Autowired
     UserService userService;
 
+    /*
+    @Autowired
+    StatusService statusService;
+     */
+
     @Override
     public Pet createPetProfile(Pet pet) {
         //User currentUser = userService.getCurrentUser();
         //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
+        /*
+        pet.setStatus(statusService.getActiveStatus ());
+         */
         Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
         pet.setPetOwner(profile);
         return entityManagerService.create(pet);

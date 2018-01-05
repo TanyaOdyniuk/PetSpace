@@ -15,8 +15,11 @@ public class PetDataAssert {
         commomStringValidation(name, RegexTemplate.PET_NAME, ErrorMessage.PET_VALIDATION_NAME);
     }
 
-    public static void assertAvatarURL(String url) throws PetDataValidationException {
-        commomStringValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
+    public static String assertAvatarURL(String url) throws PetDataValidationException {
+        if(!(url == null || "".equals(url)))
+            return commomURLValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
+        else
+            return "https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png";
     }
 
     public static Double assertHeight(String height) throws PetDataValidationException {
@@ -53,6 +56,17 @@ public class PetDataAssert {
             throw new PetDataValidationException(messageToThrow);
         }
     }
+
+    private static String commomURLValidation(String toCheck, String regex, String messageToThrow) throws PetDataValidationException {
+        try {
+            if (!isMatchingRegex(toCheck, regex))
+                throw new IllegalArgumentException();
+            return toCheck;
+        } catch (IllegalArgumentException ex) {
+            throw new PetDataValidationException(messageToThrow);
+        }
+    }
+
 
     private static Double commonSizeValidation(String toCheck, String messageToThrow) throws PetDataValidationException {
         if ("".equals(toCheck))

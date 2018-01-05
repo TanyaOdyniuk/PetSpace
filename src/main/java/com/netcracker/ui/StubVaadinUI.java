@@ -12,6 +12,7 @@ import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
+import com.netcracker.ui.secutitybook.SecurityBookUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
@@ -150,6 +151,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 getPage().setLocation("/authorization");
                 SecurityContextHolder.clearContext();
                 getSession().close();
+                break;
+            case "Settings":
+                primaryAreaLayout.addComponentsAndExpand(new SecurityBookUI(profileId));
                 break;
             default:
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);
