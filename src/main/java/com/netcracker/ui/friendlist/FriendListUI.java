@@ -4,20 +4,14 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Sizeable;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class FriendListUI extends VerticalLayout{
 
-    @Autowired
     public FriendListUI(BigInteger profileId){
         super();
         setWidth("100%");
@@ -49,9 +43,8 @@ public class FriendListUI extends VerticalLayout{
 
 
     private List<Profile> getProfileFriends(BigInteger profileId){
-        List<Profile> friendList = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/friends/" + profileId, Profile[].class));
-        return friendList;
     }
 }

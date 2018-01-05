@@ -57,7 +57,6 @@ public class BulletinBoardListContent extends VerticalLayout {
             gridPagingLayout.addComponent(pagingLayout);
         } else {
             grid.setWidth("100%");
-            grid.setHeight("100%");
             gridPagingLayout.setWidth("100%");
             gridPagingLayout.setHeight("100%");
         }
@@ -71,9 +70,7 @@ public class BulletinBoardListContent extends VerticalLayout {
 
     private void getGrid() {
         grid = new Grid<>();
-        grid.setHeight("50%");
         grid.setWidth("100%");
-        //grid.setStyleName("v-scrollable");
         Grid.Column topicColumn = grid.addColumn(ad ->
                 ad.getAdTopic()).setCaption("Topic").setWidth(150).setSortable(false);
         Grid.Column authorColumn = grid.addColumn(ad ->
@@ -183,8 +180,15 @@ public class BulletinBoardListContent extends VerticalLayout {
         List<Advertisement> advertisements = ads.getContent();
         if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
+            gridPagingLayout.removeComponent(grid);
+        } else{
+            if(gridPagingLayout.getComponentCount() == 0){
+                gridPagingLayout.addComponent(grid);
+            }
+            grid.setItems(advertisements);
+            int height = advertisements.size() * 100;
+            grid.setHeight("" + height + "px");
         }
-        grid.setItems(advertisements);
     }
 
     private void advertisementList(int pageNumber, String topic, Category[] categories) {
@@ -197,10 +201,17 @@ public class BulletinBoardListContent extends VerticalLayout {
                 createRequest, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
         ads = pageResponseEntity.getBody();
         List<Advertisement> advertisements = ads.getContent();
-        if ( advertisements.isEmpty()) {
+        if (advertisements.isEmpty()) {
             Notification.show("No ads with the specified filters were found");
+            gridPagingLayout.removeComponent(grid);
+        } else{
+            if(gridPagingLayout.getComponentCount() == 0){
+                gridPagingLayout.addComponent(grid);
+            }
+            grid.setItems(advertisements);
+            int height = advertisements.size() * 100;
+            grid.setHeight("" + height + "px");
         }
-        grid.setItems(advertisements);
     }
 
     private void getData(boolean isNotSelectedCategories, boolean isTopicFilter, int page) {

@@ -13,6 +13,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.grid.HeaderRow;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -23,8 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class MyBulletinBoardListContent extends VerticalLayout {
     private Grid<Advertisement> grid;
     private final Button newAdBtn;
@@ -57,7 +56,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         gridPagingLayout.setWidth("100%");
         gridPagingLayout.addComponent(newAdBtn);
         gridPagingLayout.addComponent(grid);
-        if(pagingLayout != null){
+        if (pagingLayout != null) {
             gridPagingLayout.addComponent(pagingLayout);
         }
         getCategoryFilterLayout();
@@ -179,14 +178,22 @@ public class MyBulletinBoardListContent extends VerticalLayout {
 
     private void advertisementList(int pageNumber) {
         ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
-                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/myAds/" + profileId + "/" +pageNumber, HttpMethod.GET,
-                        null, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/myAds/" + profileId + "/" + pageNumber, HttpMethod.GET,
+                        null, new ParameterizedTypeReference<RestResponsePage<Advertisement>>() {
+                        });
         ads = pageResponseEntity.getBody();
         List<Advertisement> advertisements = ads.getContent();
         if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
+            gridPagingLayout.removeComponent(grid);
+        } else {
+            if (gridPagingLayout.getComponentCount() == 1) {
+                gridPagingLayout.addComponent(grid);
+            }
+            int height = (advertisements.size()) * 100;
+            grid.setHeight("" + height + "px");
+            grid.setItems(advertisements);
         }
-        grid.setItems(advertisements);
     }
 
     private void advertisementList(int pageNumber, String topic, Category[] categories) {
@@ -203,8 +210,15 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         List<Advertisement> advertisements = ads.getContent();
         if (advertisements.isEmpty()) {
             Notification.show("No ads with the specified filters were found");
+            gridPagingLayout.removeComponent(grid);
+        } else {
+            if (gridPagingLayout.getComponentCount() == 1) {
+                gridPagingLayout.addComponent(grid);
+            }
+            grid.setItems(advertisements);
+            int height = advertisements.size() * 100;
+            grid.setHeight("" + height + "px");
         }
-        grid.setItems(advertisements);
     }
 
     private void getData(boolean isNotSelectedCategories, boolean isTopicFilter, int page) {

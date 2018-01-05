@@ -1,9 +1,7 @@
 package com.netcracker.ui.pet;
 
-import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
-import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
@@ -11,18 +9,10 @@ import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.Page;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
 
-@SpringComponent
-@UIScope
 public class PetPageUI extends VerticalLayout {
 
     private BigInteger petId;
@@ -166,16 +156,13 @@ public class PetPageUI extends VerticalLayout {
     }
 
     private Pet getPet(BigInteger petId) {
-        Pet pet = CustomRestTemplate.getInstance().customGetForObject(
+        return CustomRestTemplate.getInstance().customGetForObject(
                 "/pet/" + petId, Pet.class);
-        return pet;
     }
 
     private PetSpecies getSpecies(){
-        PetSpecies species =
-                CustomRestTemplate.getInstance().customGetForObject(
+        return CustomRestTemplate.getInstance().customGetForObject(
                         "/pet/" + petId + "/species" , PetSpecies.class);
-        return species;
     }
 
 

@@ -16,11 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class GroupUI extends VerticalLayout {
-    HorizontalLayout headerLayout = new HorizontalLayout();
-    HorizontalLayout mainLayout = new HorizontalLayout();
+    private HorizontalLayout headerLayout = new HorizontalLayout();
+    private HorizontalLayout mainLayout = new HorizontalLayout();
 
     public GroupUI(BigInteger groupId) {
         addStyleName("v-scrollable");
@@ -148,13 +146,11 @@ public class GroupUI extends VerticalLayout {
     }
 
     private Group getGroup(BigInteger groupId) {
-        Group group = CustomRestTemplate.getInstance().customGetForObject("/groups/" + groupId, Group.class);
-        return group;
+        return CustomRestTemplate.getInstance().customGetForObject("/groups/" + groupId, Group.class);
     }
 
     private List<GroupType> getGroupType(BigInteger groupId) {
-        List<GroupType> groupType = Arrays.asList(CustomRestTemplate.getInstance().
+        return Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/groups/" + groupId + "/type", GroupType[].class));
-        return groupType;
     }
 }

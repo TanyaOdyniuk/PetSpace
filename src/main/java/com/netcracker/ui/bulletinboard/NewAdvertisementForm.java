@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.netcracker.ui.validation.UiValidationConstants.CHECK_FULLNESS;
 
-public class NewAdvertisementForm extends Window {
+class NewAdvertisementForm extends Window {
     private BigInteger profileId;
     private HorizontalLayout authorTopicDateLayout;
     private HorizontalLayout categoryPetStatusLayout;
@@ -40,7 +40,7 @@ public class NewAdvertisementForm extends Window {
     private TextArea mainInfo;
     private Binder<VaadinValidationBinder> mainInfoBinder;
     private Binder<VaadinValidationBinder> topicBinder;
-    public NewAdvertisementForm(BigInteger profileId) {
+    NewAdvertisementForm(BigInteger profileId) {
         super();
         this.profileId = profileId;
         Window subWindow = new Window("Sub-window");
@@ -66,7 +66,7 @@ public class NewAdvertisementForm extends Window {
         subContent.addComponent(submit);
         center();
     }
-    private void addNewAdvertisement(){//установить статус, карту, характерные признаки
+    private void addNewAdvertisement(){// карту, характерные признаки
         Advertisement newAd = new Advertisement(topicField.getValue(), "Ad for " + profile.getObjectId());
         newAd.setAdCategory(selectedCategory.getSelectedItem().get());
         newAd.setAdAuthor(profile);
@@ -139,7 +139,9 @@ public class NewAdvertisementForm extends Window {
         selectedStatus.setValue(true);
         verticalLayout.addComponent(selectedStatus);
         categoryPetStatusLayout.addComponent(verticalLayout);
-        categoryPetStatusLayout.addComponent(selectedPets);
+        if(!pets.isEmpty()){
+            categoryPetStatusLayout.addComponent(selectedPets);
+        }
     }
     private void getMainInfoLayout(){
         mainInfoBinder = new Binder<>();

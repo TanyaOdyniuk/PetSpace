@@ -8,31 +8,23 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@SpringComponent
-@UIScope
-public class GalleryUI extends VerticalLayout {
-    HorizontalGallery horizontalGallery;
-    VerticalLayout photosLayout;
-    Window newPhotoRecordWindow;
-    BigInteger albumId;
+class GalleryUI extends VerticalLayout {
+    private HorizontalGallery horizontalGallery;
+    private VerticalLayout photosLayout;
+    private Window newPhotoRecordWindow;
+    private BigInteger albumId;
 
-    @Autowired
-    public GalleryUI(BigInteger albumId) {
+    GalleryUI(BigInteger albumId) {
         this.albumId = albumId;
         addStyleName("v-scrollable");
         setHeight("100%");
@@ -107,10 +99,9 @@ public class GalleryUI extends VerticalLayout {
     }
 
     private List<PhotoRecord> getPhotosFromAlbum(BigInteger albumId) {
-        List<PhotoRecord> photos = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/gallery/" + albumId, PhotoRecord[].class));
-        return photos;
     }
 
     private void createPhotoRecord(String photoLink, String description, BigInteger albumId) {

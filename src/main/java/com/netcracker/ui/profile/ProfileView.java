@@ -31,8 +31,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class ProfileView extends VerticalLayout {
     private final Profile profile;
     private final BigInteger profileId;
@@ -44,7 +42,6 @@ public class ProfileView extends VerticalLayout {
     private int browserHeight;
     private int browserWidth;
 
-    @Autowired
     public ProfileView(BigInteger profileId) {
         super();
         this.profileId = profileId;

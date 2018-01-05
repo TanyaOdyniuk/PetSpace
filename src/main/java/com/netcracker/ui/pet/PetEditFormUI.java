@@ -15,11 +15,11 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-public class PetEditFormUI extends Window {
+class PetEditFormUI extends Window {
 
-    Pet pet;
+    private Pet pet;
 
-    public PetEditFormUI(Pet pet) {
+    PetEditFormUI(Pet pet) {
         super();
         this.pet = pet;
         setCaption("Информация о питомце");
@@ -63,7 +63,7 @@ public class PetEditFormUI extends Window {
         petNameField.setValue(pet.getPetName() == null ? "" : pet.getPetName());
 
         List<PetSpecies> speciesList = getSpecies();
-        ComboBox<PetSpecies> speciesTypeSelect = new ComboBox("Вид", speciesList);
+        ComboBox<PetSpecies> speciesTypeSelect = new ComboBox<>("Вид", speciesList);
         speciesTypeSelect.setItemCaptionGenerator(PetSpecies::getSpeciesName);
 
         speciesTypeSelect.setEmptySelectionAllowed(false);
@@ -139,10 +139,9 @@ public class PetEditFormUI extends Window {
     }
 
     private List<PetSpecies> getSpecies() {
-        List<PetSpecies> speciesList = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/species", PetSpecies[].class));
-        return speciesList;
     }
 
     private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,

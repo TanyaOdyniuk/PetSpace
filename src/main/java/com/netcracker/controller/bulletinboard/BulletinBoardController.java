@@ -57,4 +57,9 @@ public class BulletinBoardController {
     public Advertisement addAd(@RequestBody Advertisement ad){
         return bulletinBoardService.addAd(ad);
     }
+
+    @GetMapping("/delete/{adId}")
+    public void deleteAd(@PathVariable("adId") BigInteger adId){
+        bulletinBoardService.deleteAd(adId);
+    }
 }

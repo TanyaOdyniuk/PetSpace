@@ -19,13 +19,10 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class AllPetsListUI extends VerticalLayout {
 
     private int browserHeight;
 
-    @Autowired
     public AllPetsListUI() {
         super();
         this.browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
@@ -82,9 +79,8 @@ public class AllPetsListUI extends VerticalLayout {
     }
 
     private List<Pet> getAllPets() {
-        List<Pet> petList = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/pets/", Pet[].class));
-        return petList;
     }
 }

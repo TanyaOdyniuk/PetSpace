@@ -36,6 +36,6 @@ public interface BulletinBoardService {
      * полной информации о конкретном объявлении(FR: PetSpace.BulletinBoardService.GetAd) система должна предоставить
      * пользователю возможность удалить текущее объявление
      */
-    void deleteAd(Advertisement ad);
+    void deleteAd(BigInteger adId);
 
 }

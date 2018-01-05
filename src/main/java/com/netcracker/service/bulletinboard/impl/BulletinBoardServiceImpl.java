@@ -172,8 +172,8 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
 
     @Override
-    public void deleteAd(Advertisement ad) {
-
+    public void deleteAd(BigInteger adId) {
+        entityManagerService.delete(adId, -1);
     }
 
     @Override

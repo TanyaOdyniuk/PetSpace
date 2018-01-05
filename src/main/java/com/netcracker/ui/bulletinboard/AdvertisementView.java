@@ -1,21 +1,24 @@
 package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import org.springframework.http.HttpEntity;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 
-@SpringComponent
-@UIScope
-public class AdvertisementView extends VerticalLayout {
+class AdvertisementView extends VerticalLayout {
 
     private final Advertisement adv;
 
-    public AdvertisementView(Advertisement ad) {
+    AdvertisementView(Advertisement ad) {
         this.adv = ad;
 
         Panel mainPanel = new Panel();
@@ -38,8 +41,8 @@ public class AdvertisementView extends VerticalLayout {
         headerLayout.addComponentsAndExpand(themeLabel, dateLabel);
 
         HorizontalLayout petSignsLayout = new HorizontalLayout();
-        petSignsLayout.addComponent(new Label("Характерные признаки: "));
         if (adv.getAdPetSigns() != null) {
+            petSignsLayout.addComponent(new Label("Характерные признаки: "));
             for (String petSign : adv.getAdPetSigns()) {
                 petSignsLayout.addComponent(new Button(petSign));
             }
@@ -59,6 +62,19 @@ public class AdvertisementView extends VerticalLayout {
 
         mainLayout.addComponents(headerLayout, petSignsLayout, mainInfo, mapLayout);
         mainPanel.setContent(mainLayout);
+        //если юзер владелец объявления
+        addComponent(getDeleteAdvButton());
         addComponent(mainPanel);
+    }
+    private Button getDeleteAdvButton(){
+        Button tempButton = new Button("Delete advertisement", VaadinIcons.TRASH);
+        tempButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                DeleteAdForm sub = new DeleteAdForm(adv.getAdAuthor().getObjectId(), adv.getObjectId());
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        return tempButton;
     }
 }

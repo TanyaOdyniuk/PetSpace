@@ -16,8 +16,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class AlbumsUI extends  HorizontalLayout{
     private static GalleryUI galleryUI;
     private Panel panel;
@@ -93,10 +91,9 @@ public class AlbumsUI extends  HorizontalLayout{
     }
 
     private List<PhotoAlbum> getAlbumList(BigInteger petId){
-        List<PhotoAlbum> albumList = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/albums/" + petId, PhotoAlbum[].class));
-        return albumList;
     }
 
     private void createAlbum(String albumName, String description, BigInteger petId) {
