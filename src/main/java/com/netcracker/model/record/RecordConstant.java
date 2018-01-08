@@ -8,6 +8,8 @@ public interface RecordConstant {
     int REC_LDLREF = 409;
     int REC_COMREF = 410;
     int REC_AUTOR = 411;
+    int REC_STATE = 431;
+    int REC_WALLOWNER = 432;
 
     int PR_TYPE = 203;
     int PR_PHOTO = 210;

@@ -8,6 +8,7 @@ import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.record.RecordService;
+import com.netcracker.service.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,13 @@ import java.util.List;
 public class RecordServiceImpl implements RecordService {
     @Autowired
     EntityManagerService entityManagerService;
+    @Autowired
+    private StatusService statusService;
 
     @Override
     public List<WallRecord> getProfileWallRecords(BigInteger profileID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + UsersProfileConstant.PROFILE_WALLREC;
+                "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
     }
 
@@ -36,29 +39,15 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public Profile getWallRecordAuthor(BigInteger wallRecordID) {
-        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_AUTOR;
+        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_AUTOR;
         List<Profile> currentWallRecordAuthor = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
         return currentWallRecordAuthor.get(0);
     }
 
     @Override
     public WallRecord createWallRecord(WallRecord wallRecord) {
-        Profile receiver = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
-
-
-        BigInteger cutAuthorObjectID = wallRecord.getRecordAuthor().getObjectId();
-        wallRecord.setRecordAuthor(null);
-        WallRecord createdWallRecord = entityManagerService.create(wallRecord);
-        //Profile receiver = entityManagerService.getById(BigInteger.valueOf(1), Profile.class);
-        //List<WallRecord> wallRecordsList = new ArrayList<>(receiver.getProfileWallRecords());
-        //wallRecordsList.add(createdWallRecord);
-        //receiver.setProfileWallRecords(wallRecordsList);
-        entityManagerService.update(receiver);
-        Profile cutAuthor = new Profile();
-        cutAuthor.setObjectId(cutAuthorObjectID);
-        createdWallRecord.setRecordAuthor(cutAuthor);
-        //entityManagerService.update(createdWallRecord);
-        return createdWallRecord;
+        wallRecord.setRecordState(statusService.getActiveStatus());
+        return entityManagerService.create(wallRecord);
     }
 }

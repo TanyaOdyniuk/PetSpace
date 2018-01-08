@@ -11,6 +11,8 @@ import java.util.List;
 public class WallRecord extends AbstractRecord {
     @Reference(value = RecordConstant.REC_AUTOR, isParentChild = 0)
     private Profile recordAuthor;
+    @Reference(value = RecordConstant.REC_WALLOWNER, isParentChild = 0)
+    private Profile wallOwner;
 
     public WallRecord() {
     }
@@ -30,10 +32,20 @@ public class WallRecord extends AbstractRecord {
     public void setRecordAuthor(Profile recordAuthor) {
         this.recordAuthor = recordAuthor;
     }
+
+    public Profile getWallOwner() {
+        return wallOwner;
+    }
+
+    public void setWallOwner(Profile wallOwner) {
+        this.wallOwner = wallOwner;
+    }
+
     @Override
     public String toString() {
         return "WallRecord{" +
                 "recordAuthor=" + recordAuthor +
+                "wallOwner=" + wallOwner +
                 '}';
     }
 }

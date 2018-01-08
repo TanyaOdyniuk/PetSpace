@@ -17,12 +17,10 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.ZoneId;
@@ -41,10 +39,12 @@ public class ProfileView extends VerticalLayout {
     private Window newWallRecordWindow;
     private int browserHeight;
     private int browserWidth;
+    private String stubAvatar = "https://goo.gl/6eEoWo";
+    private BigInteger stubAuthorId = BigInteger.valueOf(29);
 
-    public ProfileView(BigInteger profileId) {
+    public ProfileView(BigInteger profileID) {
         super();
-        this.profileId = profileId;
+        this.profileId = profileID;
         profile = CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + profileId, Profile.class);
         friendList = Arrays.asList(CustomRestTemplate.getInstance().
@@ -77,7 +77,8 @@ public class ProfileView extends VerticalLayout {
         Image avatarImage = new Image();
         avatarImage.setHeight(250, Unit.PIXELS);
         avatarImage.setWidth(250, Unit.PIXELS);
-        avatarImage.setSource(new ExternalResource(profile.getProfileAvatar()));
+        String profileAvatar = profile.getProfileAvatar();
+        avatarImage.setSource(new ExternalResource(profileAvatar == null ? stubAvatar : profileAvatar));
         avatarImage.setDescription("Profile avatar");
         Button addToFriendsButton = new Button("Add friend", VaadinIcons.SMILEY_O);
         addToFriendsButton.setHeight(50, Unit.PIXELS);
@@ -93,28 +94,32 @@ public class ProfileView extends VerticalLayout {
             }
         });
         VerticalLayout petsLayout = new VerticalLayout();
+        GridLayout petsGrid;
         int petColumns = 3;
-        int petRows = 1;
         if (petList.size() != 0) {
-            petRows = petList.size() / petColumns;
+            int petRows = petList.size() / petColumns;
             if (petList.size() % petColumns != 0) {
                 petRows++;
             }
-        }
-        GridLayout petsGrid = new GridLayout(petColumns, petRows);
-        petsGrid.setSpacing(true);
-        for (Pet singlePet : petList) {
-            Image petMiniImage = new Image();
-            petMiniImage.setHeight(55, Unit.PIXELS);
-            petMiniImage.setWidth(55, Unit.PIXELS);
-            petMiniImage.setSource(new ExternalResource(singlePet.getPetAvatar()));
-            petMiniImage.setDescription(singlePet.getPetName());
-            petMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));
-            petsGrid.addComponent(petMiniImage);
+            petsGrid = new GridLayout(petColumns, petRows);
+            petsGrid.setSpacing(true);
+            for (Pet singlePet : petList) {
+                Image petMiniImage = new Image();
+                petMiniImage.setHeight(55, Unit.PIXELS);
+                petMiniImage.setWidth(55, Unit.PIXELS);
+                petMiniImage.setSource(new ExternalResource(singlePet.getPetAvatar()));
+                petMiniImage.setDescription(singlePet.getPetName());
+                petMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
+                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));
+                petsGrid.addComponent(petMiniImage);
+            }
+        } else {
+            petsGrid = new GridLayout(1, 1);
+            petsGrid.addComponent(new Label("No pets yet ;("));
         }
         petsLayout.addComponents(profilePets, petsGrid);
         petsPanel.setContent(petsLayout);
+
 
         Panel friendsPanel = new Panel();
         friendsPanel.setWidth("100%");
@@ -126,25 +131,29 @@ public class ProfileView extends VerticalLayout {
             }
         });
         VerticalLayout friendsLayout = new VerticalLayout();
+        GridLayout friendsGrid;
         int friendColumns = 3;
-        int friendRows = 1;
         if (friendList.size() != 0) {
-            friendRows = friendList.size() / friendColumns;
+            int friendRows = friendList.size() / friendColumns;
             if (friendList.size() % friendColumns != 0) {
                 friendRows++;
             }
-        }
-        GridLayout friendsGrid = new GridLayout(friendColumns, friendRows);
-        friendsGrid.setSpacing(true);
-        for (Profile singleFriend : friendList) {
-            Image friendMiniImage = new Image();
-            friendMiniImage.setHeight(55, Unit.PIXELS);
-            friendMiniImage.setWidth(55, Unit.PIXELS);
-            friendMiniImage.setSource(new ExternalResource(singleFriend.getProfileAvatar()));
-            friendMiniImage.setDescription(singleFriend.getProfileName() + " " + singleFriend.getProfileSurname());
-            friendMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));
-            friendsGrid.addComponent(friendMiniImage);
+            friendsGrid = new GridLayout(friendColumns, friendRows);
+            friendsGrid.setSpacing(true);
+            for (Profile singleFriend : friendList) {
+                String singleFriendAvatar = singleFriend.getProfileAvatar();
+                Image friendMiniImage = new Image();
+                friendMiniImage.setHeight(55, Unit.PIXELS);
+                friendMiniImage.setWidth(55, Unit.PIXELS);
+                friendMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
+                friendMiniImage.setDescription(singleFriend.getProfileName() + " " + singleFriend.getProfileSurname());
+                friendMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
+                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));
+                friendsGrid.addComponent(friendMiniImage);
+            }
+        } else {
+            friendsGrid = new GridLayout(1, 1);
+            friendsGrid.addComponent(new Label("No friends yet ;("));
         }
         friendsLayout.addComponents(profileFriends, friendsGrid);
         friendsPanel.setContent(friendsLayout);
@@ -163,17 +172,27 @@ public class ProfileView extends VerticalLayout {
         HorizontalLayout interestsLayout = new HorizontalLayout();
         interestsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         interestsLayout.addComponent(new Label("Interests: "));
-        for (String singleInterest : profile.getProfileHobbies()) {
-            interestsLayout.addComponent(new Button(singleInterest));
+        List<String> profileHobbies = profile.getProfileHobbies();
+        if (profileHobbies == null) {
+            interestsLayout.addComponent(new Label("не указаны."));
+        } else {
+            for (String singleInterest : profile.getProfileHobbies()) {
+                interestsLayout.addComponent(new Button(singleInterest));
+            }
         }
         HorizontalLayout favBreedsLayout = new HorizontalLayout();
         favBreedsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         favBreedsLayout.addComponent(new Label("Favourite breeds: "));
-        for (String singleFavBreed : profile.getProfileFavouriteBreeds()) {
-            favBreedsLayout.addComponent(new Button(singleFavBreed));
+        List<String> profileFavBreeds = profile.getProfileFavouriteBreeds();
+        if (profileFavBreeds == null) {
+            favBreedsLayout.addComponent(new Label("не указаны."));
+        } else {
+            for (String singleFavBreed : profile.getProfileFavouriteBreeds()) {
+                favBreedsLayout.addComponent(new Button(singleFavBreed));
+            }
         }
         simpleInfoLayout.addComponents(
-                new Label("Age: " + profile.getProfileAge()),
+                new Label("Age: " + (profile.getProfileAge() == null ? "не указан." : profile.getProfileAge())),
                 interestsLayout,
                 favBreedsLayout
         );
@@ -215,23 +234,23 @@ public class ProfileView extends VerticalLayout {
             }
         });
         wallHeaderLayout.addComponents(
-                new Label("Records on " + profile.getProfileName() + "`s wall:"),
-                /*addWallRecordPopupView*/ addNewWallRecordButton);
+                new Label("Records on " + profile.getProfileName() + "`s wall:"), addNewWallRecordButton);
         wallHeaderLayout.setComponentAlignment(addNewWallRecordButton, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
 
         for (int i = wallRecordsList.size(); i > 0; i--) {
-            WallRecord currentWallRecord = wallRecordsList.get(i-1);
-            Profile currentWallRecordAuthor = CustomRestTemplate.getInstance().
+            WallRecord currentWallRecord = wallRecordsList.get(i - 1);
+            Profile commentator = CustomRestTemplate.getInstance().
                     customGetForObject("/wallrecords/author/" + currentWallRecord.getObjectId(), Profile.class);
             Panel singleWallRecordPanel = new Panel();
             VerticalLayout singleWallRecordLayout = new VerticalLayout();
 
             HorizontalLayout recordInfoLayout = new HorizontalLayout();
+            String commentatorAvatar = commentator.getProfileAvatar();
             Image recordAuthorAvatar = new Image();
-            recordAuthorAvatar.setSource(new ExternalResource(currentWallRecordAuthor.getProfileAvatar()));
-            recordAuthorAvatar.setDescription(currentWallRecordAuthor.getProfileName() + " " +
-                    currentWallRecordAuthor.getProfileSurname());
+            recordAuthorAvatar.setSource(new ExternalResource(commentatorAvatar == null ? stubAvatar : commentatorAvatar));
+            recordAuthorAvatar.setDescription(commentator.getProfileName() + " " +
+                    commentator.getProfileSurname());
             recordAuthorAvatar.setHeight(100, Unit.PIXELS);
             recordAuthorAvatar.setWidth(100, Unit.PIXELS);
             Label recordName = new Label("Record from " + recordAuthorAvatar.getDescription());
@@ -243,7 +262,8 @@ public class ProfileView extends VerticalLayout {
                 recordDateString = "null!";
             }
             Label recordDate = new Label(recordDateString);
-            recordInfoLayout.addComponentsAndExpand(recordAuthorAvatar, recordName, recordDate);
+            recordInfoLayout.addComponent(recordAuthorAvatar);
+            recordInfoLayout.addComponentsAndExpand(recordName, recordDate);
             recordInfoLayout.setComponentAlignment(recordName, Alignment.TOP_CENTER);
             recordInfoLayout.setComponentAlignment(recordDate, Alignment.TOP_RIGHT);
 
@@ -313,14 +333,17 @@ public class ProfileView extends VerticalLayout {
                 newWallRecord.setRecordDate(Timestamp.valueOf(
                         new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                 newWallRecord.setRecordText(wallRecordText.getValue());
-                //recordAuthor = getCurrentUser.getProfile(); 21 is stub
-                newWallRecord.setRecordAuthor(CustomRestTemplate.getInstance().
-                        customGetForObject("/profile/" + 21, Profile.class));
-                //newWallRecord.setRecordAuthor(profile);
+                //recordAuthor = getCurrentUser.getProfile(); stubAuthorId is temporarily being used.
+                Profile recordAuthor = CustomRestTemplate.getInstance().
+                        customGetForObject("/profile/" + stubAuthorId, Profile.class);
+                newWallRecord.setRecordAuthor(recordAuthor);
+                newWallRecord.setWallOwner(profile);
+                newWallRecord.setName("Wallrecord");
+                newWallRecord.setDescription("From " + recordAuthor.getProfileSurname() + " to " + profile.getProfileSurname());
                 createWallRecord(newWallRecord);
                 Notification.show("Wall record added successfully!");
                 newWallRecordWindow.close();
-                ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
             }
         });
 

@@ -126,6 +126,7 @@ public class Profile extends BaseEntity {
     public void setProfileUser(User profileUser) {
         this.profileUser = profileUser;
     }
+
     @Override
     public String toString() {
         return "Profile{" +

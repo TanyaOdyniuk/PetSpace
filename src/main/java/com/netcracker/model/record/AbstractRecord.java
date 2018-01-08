@@ -5,6 +5,7 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.like.RecordLikeDislike;
+import com.netcracker.model.status.Status;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -16,6 +17,8 @@ public abstract class AbstractRecord extends BaseEntity {
     private String recordText;
     @Attribute(RecordConstant.REC_DATE)
     private Timestamp recordDate;
+    @Reference(value = RecordConstant.REC_STATE, isParentChild = 0)
+    private Status recordState;
 
     public AbstractRecord() {
     }
@@ -44,11 +47,20 @@ public abstract class AbstractRecord extends BaseEntity {
         this.recordDate = recordDate;
     }
 
+    public Status getRecordState() {
+        return recordState;
+    }
+
+    public void setRecordState(Status recordState) {
+        this.recordState = recordState;
+    }
+
     @Override
     public String toString() {
         return "AbstractRecord{" +
                 "recordText='" + recordText + '\'' +
                 ", recordDate=" + recordDate +
+                ", recordState=" + recordState +
                 '}';
     }
 }
