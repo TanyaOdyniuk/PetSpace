@@ -9,6 +9,7 @@ import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.groups.GroupUI;
+import com.netcracker.ui.groups.MyGroupsListUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -115,7 +116,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = BigInteger.valueOf(29);
+        BigInteger profileId = BigInteger.valueOf(25);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if(primaryAreaLayout.getComponentCount() > 1){
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
@@ -139,10 +140,10 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(/*203*/25)));//пока привязка к профилю (временно)
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(50)));
                 break;
             case "My groups":
-                primaryAreaLayout.addComponentsAndExpand(new GroupUI(BigInteger.valueOf(101)));//нет такой группы в прод базе
+                primaryAreaLayout.addComponentsAndExpand(new MyGroupsListUI(BigInteger.valueOf(25)));
                 break;
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));

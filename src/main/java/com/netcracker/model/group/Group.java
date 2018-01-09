@@ -5,10 +5,8 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.status.Status;
-import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.user.Profile;
 import java.util.List;
-import java.util.Set;
 
 @ObjectType(GroupConstant.GR_TYPE)
 public class Group extends BaseEntity {
@@ -17,14 +15,16 @@ public class Group extends BaseEntity {
     private String groupName;
     @Attribute(GroupConstant.GR_DESCR)
     private String groupDescription;
+    @Attribute(GroupConstant.GR_AVATAR)
+    private String groupAvatar;
     @Reference(value = GroupConstant.GR_GROUPTYPE, isParentChild = 0)
     private GroupType groupType;
     @Reference(value = GroupConstant.GR_STATUS, isParentChild = 0)
     private Status groupStatus;
-    @Reference(value = GroupConstant.GR_ADMIN, isParentChild = 1)
+    @Reference(value = GroupConstant.GR_ADMIN, isParentChild = 0)
     private Profile groupAdmin;
-    @Attribute(GroupConstant.GR_AVATAR)
-    private String groupAvatar;
+    @Reference(value = GroupConstant.GR_PARTICIPANTS, isParentChild = 0)
+    private List<Profile> groupParticipants;
 
     public Group() {
     }
@@ -85,6 +85,14 @@ public class Group extends BaseEntity {
         this.groupAvatar = groupAvatar;
     }
 
+    public List<Profile> getGroupParticipants() {
+        return groupParticipants;
+    }
+
+    public void setGroupParticipants(List<Profile> groupParticipants) {
+        this.groupParticipants = groupParticipants;
+    }
+
     @Override
     public String toString() {
         return "Group{" +
@@ -94,6 +102,7 @@ public class Group extends BaseEntity {
                 ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
                 ", groupAdmin=" + groupAdmin +
+                ", groupParticipants=" + groupParticipants +
                 '}';
     }
 }

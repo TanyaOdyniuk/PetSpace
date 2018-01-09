@@ -6,7 +6,7 @@ public interface GroupConstant {
     int GR_NAME = 422;
     int GR_DESCR = 423;
     int GR_ADMIN = 424;
-    int GR_PROFILE = 425;
+    int GR_PARTICIPANTS = 425;
     int GR_GROUPTYPE = 426;
     int GR_STATUS = 427;
     int GR_RECORDS = 428;

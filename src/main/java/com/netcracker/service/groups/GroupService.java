@@ -13,10 +13,18 @@ public interface GroupService {
 //    Система должна отображать страницу группы
     Group getGroup(BigInteger groupId);
 
-    List<GroupType> getGroupType(BigInteger groupId);
+    GroupType getGroupType(BigInteger groupId);
+
+    List<Group> getMyGroupsList(BigInteger profileId);
+
+    List<Profile> getGroupSubscribers(BigInteger groupId);
+
+    Profile getGroupAdmin(BigInteger groupId);
+
+    List<GroupType> getAllGroupTypes();
 
 //    Система должна позволять зарегистрированному пользователю создавать страницу группы
-    Group createNewGroup(Profile pfofile, Group newGroup);
+    Group createNewGroup(Group newGroup, BigInteger profileId);
 
 //    Система должна позволять админу вносить изменения в группу
     void editGroup(Group groupForChangeOnlyAdmin);

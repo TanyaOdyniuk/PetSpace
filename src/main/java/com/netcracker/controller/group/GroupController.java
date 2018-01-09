@@ -2,6 +2,7 @@ package com.netcracker.controller.group;
 
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupType;
+import com.netcracker.model.user.Profile;
 import com.netcracker.service.groups.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,17 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/type")
-    public List<GroupType> getGroupType(@PathVariable("id") BigInteger groupId){
+    public GroupType getGroupType(@PathVariable("id") BigInteger groupId){
         return groupService.getGroupType(groupId);
+    }
+
+    @GetMapping("/{id}/subscribers")
+    public List<Profile> getGroupSubscribers(@PathVariable("id") BigInteger groupId){
+        return groupService.getGroupSubscribers(groupId);
+    }
+
+    @GetMapping("/{id}/admin")
+    public Profile getGroupAdmin(@PathVariable("id") BigInteger groupId){
+        return groupService.getGroupAdmin(groupId);
     }
 }
