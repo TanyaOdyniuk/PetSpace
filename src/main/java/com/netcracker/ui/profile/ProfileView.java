@@ -9,6 +9,7 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.friendlist.FriendListUI;
+import com.netcracker.ui.messages.NewMessageWindowUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.util.CustomRestTemplate;
@@ -83,6 +84,18 @@ public class ProfileView extends VerticalLayout {
         Button addToFriendsButton = new Button("Add friend", VaadinIcons.SMILEY_O);
         addToFriendsButton.setHeight(50, Unit.PIXELS);
         addToFriendsButton.setWidth("100%");
+
+        Button sendDirectMessage = new Button("Send message", VaadinIcons.ENVELOPE_O);
+        sendDirectMessage.setHeight(50, Unit.PIXELS);
+        sendDirectMessage.setWidth("100%");
+
+        sendDirectMessage.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                NewMessageWindowUI sub = new NewMessageWindowUI(BigInteger.valueOf(27)/*SENDER*/, profileId/*RECEIVER*/);
+                UI.getCurrent().addWindow(sub);
+            }
+        });
 
         Panel petsPanel = new Panel();
         petsPanel.setWidth("100%");
@@ -303,7 +316,7 @@ public class ProfileView extends VerticalLayout {
         wallPanel.setContent(wallLayout);
 
         //Filling matryoshka layout
-        leftPartLayout.addComponents(avatarImage, addToFriendsButton, petsPanel, friendsPanel);
+        leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
         rightPartLayout.addComponents(nameAndBalancePanel, simpleInfoPanel, photosPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);

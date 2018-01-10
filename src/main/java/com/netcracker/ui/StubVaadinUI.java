@@ -10,12 +10,14 @@ import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.groups.MyGroupsListUI;
+import com.netcracker.ui.messages.MessagesListUI;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.secutitybook.SecurityBookUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
@@ -32,6 +34,7 @@ import java.util.List;
 
 @SpringUI(path = "testpage")
 @Theme("valo")
+@Title("PetSpace")
 public class StubVaadinUI extends UI implements Button.ClickListener {
 
     private final HorizontalLayout topPanel;
@@ -116,7 +119,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = BigInteger.valueOf(25);
+        BigInteger profileId = BigInteger.valueOf(27);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if(primaryAreaLayout.getComponentCount() > 1){
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
@@ -138,6 +141,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 break;
             case "Pets":
                 primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
+                break;
+            case "My messages":
+                primaryAreaLayout.addComponentsAndExpand(new MessagesListUI(profileId));
                 break;
             case "My albums":
                 primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(50)));
