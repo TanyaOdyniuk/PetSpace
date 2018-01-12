@@ -32,22 +32,19 @@ public class ProfileView extends VerticalLayout {
     private final List<Profile> friendList;
     private final List<Pet> petList;
     private final List<WallRecord> wallRecordsList;
-    private List<WallRecordComment> currentWallRecordComments;
     private Window newWallRecordWindow;
     private Window newCommentWindow;
     private int browserHeight;
     private int browserWidth;
     private String stubAvatar = "https://goo.gl/6eEoWo";
-    private final Profile stubCurrentUserProfile;
-    private BigInteger stubAuthorId = BigInteger.valueOf(29);
+    private final Profile currentUserProfile;
 
     public ProfileView(BigInteger profileID) {
         super();
         this.profileId = profileID;
         profile = CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + profileId, Profile.class);
-        stubCurrentUserProfile = CustomRestTemplate.getInstance().
-                customGetForObject("/profile/" + stubAuthorId, Profile.class);
+        currentUserProfile = profile;   //THIS IS STUB!
         friendList = Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/friends/" + profileId, Profile[].class));
         petList = Arrays.asList(CustomRestTemplate.getInstance().
@@ -258,7 +255,7 @@ public class ProfileView extends VerticalLayout {
                 new Label(labelCaptionStart + " on " + profile.getProfileName() + "`s wall:"), addNewWallRecordButton);
         wallHeaderLayout.setComponentAlignment(addNewWallRecordButton, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
-
+        //WallRecords
         for (int i = wallRecordsListSize; i > 0; i--) {
             WallRecord currentWallRecord = wallRecordsList.get(i - 1);
             List<WallRecordComment> commentsList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
@@ -306,6 +303,7 @@ public class ProfileView extends VerticalLayout {
             });
             recordLikeAndCommentsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
             recordLikeAndCommentsLayout.addComponents(likeRecordButton, dislikeRecordButton);
+            //Comments
             Panel allCommentsPanel = new Panel();
             allCommentsPanel.setVisible(false);
             int commentsListSize = commentsList.size();
@@ -402,15 +400,13 @@ public class ProfileView extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 addWallRecordButton.setComponentError(null);
-                WallRecord newWallRecord = new WallRecord();
+                WallRecord newWallRecord = new WallRecord("WallRecord",
+                        "From " + currentUserProfile.getProfileSurname() + " to " + profile.getProfileSurname());
                 newWallRecord.setRecordDate(Timestamp.valueOf(
                         new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                 newWallRecord.setRecordText(wallRecordText.getValue());
-                //recordAuthor = getCurrentUser.getProfile(); stubAuthorId is temporarily being used.
-                newWallRecord.setRecordAuthor(stubCurrentUserProfile);
+                newWallRecord.setRecordAuthor(currentUserProfile);
                 newWallRecord.setWallOwner(profile);
-                newWallRecord.setName("Wallrecord");
-                newWallRecord.setDescription("From " + stubCurrentUserProfile.getProfileSurname() + " to " + profile.getProfileSurname());
                 createWallRecord(newWallRecord);
                 Notification.show("Wall record added successfully!");
                 newWallRecordWindow.close();
@@ -443,15 +439,14 @@ public class ProfileView extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 addCommentButton.setComponentError(null);
-                WallRecordComment newComment = new WallRecordComment();
+                WallRecordComment newComment = new WallRecordComment("Comment",
+                        "From " + currentUserProfile.getProfileSurname() + " to wall record№" + currentWallRecord.getObjectId());
                 newComment.setCommentDate(Timestamp.valueOf(
                         new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                 newComment.setCommentText(commentText.getValue());
                 //recordAuthor = getCurrentUser.getProfile(); stubAuthorId is temporarily being used.
-                newComment.setCommentAuthor(stubCurrentUserProfile);
+                newComment.setCommentAuthor(currentUserProfile);
                 newComment.setCommentedWallRecord(currentWallRecord);
-                newComment.setName("Comment");
-                newComment.setDescription("From " + stubCurrentUserProfile.getProfileSurname() + " to wall record№" + currentWallRecord.getObjectId());
                 createWallRecordComment(newComment);
                 Notification.show("Comment added successfully!");
                 newCommentWindow.close();
