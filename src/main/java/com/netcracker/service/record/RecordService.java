@@ -11,17 +11,13 @@ import java.util.List;
 @Service
 public interface RecordService {
 
-    //Получить список записей на стене профиля по его ID
+    //Get list of all records on profile`s wall by his ID
     List<WallRecord> getProfileWallRecords(BigInteger profileID);
 
-    //Получить список комментариев к записи на стене по её ID
-    List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID);
-
-    //Получить профиль автора из записи на стене
+    //Get author`s profile from certain wall record
     Profile getWallRecordAuthor(BigInteger wallRecordID);
 
-    //Создать запись на стене
+    //Create new wall record (with already filled fields)
     WallRecord createWallRecord(WallRecord wallRecord);
-
 
 }

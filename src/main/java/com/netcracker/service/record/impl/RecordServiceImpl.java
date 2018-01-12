@@ -31,13 +31,6 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID) {
-        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
-        return entityManagerService.getObjectsBySQL(sqlQuery, WallRecordComment.class, new QueryDescriptor());
-    }
-
-    @Override
     public Profile getWallRecordAuthor(BigInteger wallRecordID) {
         String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
                 "WHERE OBJECT_ID = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_AUTOR;

@@ -21,11 +21,6 @@ public class RecordController {
         return recordService.getProfileWallRecords(profileId);
     }
 
-    @GetMapping("/comments/{id}")
-    public List<WallRecordComment> getWallRecordComments(@PathVariable("id") BigInteger wallRecordID) {
-        return recordService.getWallRecordComments(wallRecordID);
-    }
-
     @GetMapping("/author/{id}")
     public Profile getWallRecordAuthor(@PathVariable("id") BigInteger wallRecordID) {
         return recordService.getWallRecordAuthor(wallRecordID);
