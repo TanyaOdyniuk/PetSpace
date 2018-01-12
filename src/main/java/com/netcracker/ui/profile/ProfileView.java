@@ -39,8 +39,11 @@ public class ProfileView extends VerticalLayout {
     private String stubAvatar = "https://goo.gl/6eEoWo";
     private final Profile currentUserProfile;
 
+    private BigInteger currentUserId;
+
     public ProfileView(BigInteger profileID) {
         super();
+        this.currentUserId = BigInteger.valueOf(25); //STUB_USER_ID (used for messages button show) (Should be currentUserProfile.getObjectId(), but current user is stub so...)
         this.profileId = profileID;
         profile = CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + profileId, Profile.class);
@@ -83,17 +86,20 @@ public class ProfileView extends VerticalLayout {
         addToFriendsButton.setHeight(50, Unit.PIXELS);
         addToFriendsButton.setWidth("100%");
 
-        Button sendDirectMessage = new Button("Send message", VaadinIcons.ENVELOPE_O);
-        sendDirectMessage.setHeight(50, Unit.PIXELS);
-        sendDirectMessage.setWidth("100%");
+        Button sendDirectMessage = new Button();
+        if(!currentUserId.equals(profileID)) {
+            sendDirectMessage = new Button("Send message", VaadinIcons.ENVELOPE_O);
+            sendDirectMessage.setHeight(50, Unit.PIXELS);
+            sendDirectMessage.setWidth("100%");
 
-        sendDirectMessage.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                NewMessageWindowUI sub = new NewMessageWindowUI(BigInteger.valueOf(45)/*SENDER*/, profileId/*RECEIVER*/);
-                UI.getCurrent().addWindow(sub);
-            }
-        });
+            sendDirectMessage.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    NewMessageWindowUI sub = new NewMessageWindowUI(currentUserId/*SENDER*/, profileId/*RECEIVER*/);
+                    UI.getCurrent().addWindow(sub);
+                }
+            });
+        }
 
         Panel petsPanel = new Panel();
         petsPanel.setWidth("100%");
@@ -374,7 +380,10 @@ public class ProfileView extends VerticalLayout {
         wallPanel.setContent(wallLayout);
 
         //Filling matryoshka layout
-        leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
+        if(!currentUserId.equals(profileID))
+            leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
+        else
+            leftPartLayout.addComponents(avatarImage, addToFriendsButton, petsPanel, friendsPanel);
         rightPartLayout.addComponents(nameAndBalancePanel, simpleInfoPanel, photosPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);

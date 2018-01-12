@@ -127,6 +127,10 @@ public class Profile extends BaseEntity {
         this.profileUser = profileUser;
     }
 
+    public String getProfileFullName(){
+        return this.profileName + " " + this.profileSurname;
+    }
+
     @Override
     public String toString() {
         return "Profile{" +

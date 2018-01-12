@@ -21,7 +21,8 @@ public class MessageServiceImpl implements MessageService {
         String query = "SELECT OBJECT_ID \n" +
                 "FROM OBJREFERENCE \n" +
                 "WHERE ATTRTYPE_ID = 31 /*RECEIVER*/\n" +
-                "AND REFERENCE = " + profileId;
+                "AND REFERENCE = " + profileId /*+ " \n" +
+                "ORDER BY OBJECT_ID DESC"*/;
         List<Message> messagesList = entityManagerService.getObjectsBySQL(query, Message.class, new QueryDescriptor());
         return messagesList;
     }

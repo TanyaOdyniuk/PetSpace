@@ -8,6 +8,8 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class PageElements {
 
+    public static String noImageURL = "https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png";
+
     public static Label createGrayLabel(String text) {
         return createLabel(3, "gray", text);
     }
@@ -73,7 +75,7 @@ public class PageElements {
     }
 
     public static Image getNoImage() {
-        return new Image("", new ExternalResource("https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png"));
+        return new Image("", new ExternalResource(noImageURL));
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

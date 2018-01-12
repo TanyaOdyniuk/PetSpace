@@ -5,7 +5,10 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubPagingBar;
+import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
@@ -13,7 +16,6 @@ import com.vaadin.ui.*;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class MessagesListUI extends VerticalLayout {
@@ -32,11 +34,11 @@ public class MessagesListUI extends VerticalLayout {
 
         VerticalLayout mainLayout = new VerticalLayout();
 
-        Button sendNewMessage = new Button("Создать сообщение");
+        Button sendNewMessage = new Button("Создать сообщение", VaadinIcons.PLUS);
         sendNewMessage.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                NewMessageWindowUI sub = new NewMessageWindowUI(BigInteger.valueOf(27), BigInteger.valueOf(25));
+                NewMessageWindowUI sub = new NewMessageWindowUI(profileId/*SENDER*//*, BigInteger.valueOf(27)*//*RECEIVER*/);
                 UI.getCurrent().addWindow(sub);
             }
         });
@@ -52,12 +54,11 @@ public class MessagesListUI extends VerticalLayout {
             return;
         }
         for (Message message: messages) {
-        //for(int i = 0; i < 5; i++){
             Panel messagePanel = new Panel();
             HorizontalLayout messageMainLayout = new HorizontalLayout();
             messageMainLayout.setMargin(new MarginInfo(false, true, false, true));
             Profile senderProfile = getProfile(message.getMessageSender().getObjectId());
-            Image senderAvatar = new Image("", new ExternalResource(senderProfile.getProfileAvatar()));
+            Image senderAvatar = new Image("", new ExternalResource(senderProfile.getProfileAvatar() == null ? PageElements.noImageURL : senderProfile.getProfileAvatar()));
             senderAvatar.setHeight("100px");
             senderAvatar.setWidth("100px");
 
@@ -67,7 +68,14 @@ public class MessagesListUI extends VerticalLayout {
             gridLayout.setWidth("100%");
             gridLayout.setSpacing(true);
 
-            Label messageSender = PageElements.createStandartLabel(senderProfile.getProfileName() + " " + senderProfile.getProfileSurname());
+            Button messageSender = PageElements.createClickedLabel(senderProfile.getProfileName() + " " + senderProfile.getProfileSurname());
+            messageSender.setHeight("25px");
+            messageSender.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(senderProfile.getObjectId()));
+                }
+            });
 
             Label messageText = PageElements.createStandartLabel(message.getMessageText());
             messageText.setWidth(browserWidth * 0.61f, Unit.PIXELS);
