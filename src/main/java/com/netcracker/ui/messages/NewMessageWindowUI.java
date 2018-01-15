@@ -18,8 +18,6 @@ public class NewMessageWindowUI extends Window {
 
     private Profile sender;
     private Profile receiver;
-    private static Image imageAvatar;
-
 
     public NewMessageWindowUI(BigInteger senderId, BigInteger receiverId) {
         super();
@@ -33,7 +31,7 @@ public class NewMessageWindowUI extends Window {
 
     private void initWindow(BigInteger senderId, BigInteger receiverId){
         this.sender = getProfile(senderId);
-        setCaption("Написать сообщение");
+        setCaption("Write message");
         setWidth("400px");
 
         VerticalLayout mainLayout = new VerticalLayout();
@@ -41,6 +39,8 @@ public class NewMessageWindowUI extends Window {
         //infoLayout.setSpacing(true);
         infoLayout.setWidth("100%");
         infoLayout.setMargin(new MarginInfo(false, false, false, false));
+
+        Image imageAvatar;
 
         if(receiverId != null){
             this.receiver = getProfile(receiverId);
@@ -55,7 +55,7 @@ public class NewMessageWindowUI extends Window {
         else{
             List<Profile> friendsList = getFriends(senderId);
             if(friendsList.size() == 0){
-                Notification.show("У вас нет друзей\nдля отправки сообщения", Notification.Type.WARNING_MESSAGE);
+                Notification.show("You don't have any\nfriend to send message", Notification.Type.WARNING_MESSAGE);
                 return;
             }
             this.receiver = friendsList.get(0);
@@ -80,17 +80,17 @@ public class NewMessageWindowUI extends Window {
         imageAvatar.setWidth("150px");
         infoLayout.addComponent(imageAvatar, 0,0);
 
-        TextArea messageArea = new TextArea("Введите Ваше сообщение");
+        TextArea messageArea = new TextArea("Enter your message");
         messageArea.setWidth("100%");
 
-        Button sendMessageButton = new Button("Отправить");
+        Button sendMessageButton = new Button("Send");
         sendMessageButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 if(!("".equals(messageArea.getValue())) || messageArea.getValue() == null)
                     sendMessage(new Message(messageArea.getValue(), new Timestamp(System.currentTimeMillis()), receiver, sender));
                 else
-                    Notification.show("Вы не можете отправить пустое сообщение!", Notification.Type.WARNING_MESSAGE);
+                    Notification.show("You cannot send empty message!", Notification.Type.WARNING_MESSAGE);
             }
         });
 

@@ -54,11 +54,11 @@ public class PetPageUI extends VerticalLayout {
             petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
         else
             petAvatar = PageElements.getNoImage();
-        petAvatar.setHeight(250, Unit.PIXELS);
-        petAvatar.setWidth(250, Unit.PIXELS);
+        petAvatar.setHeight(225, Unit.PIXELS);
+        petAvatar.setWidth(225, Unit.PIXELS);
         petAvatar.setDescription("Pet avatar");
 
-        Button editPage = PageElements.createClickedLabel("Редактировать информацию");
+        Button editPage = PageElements.createClickedLabel("Update pet's profile");
         editPage.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -67,7 +67,7 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        Button deletePage = PageElements.createClickedLabel("Удалить страницу");
+        Button deletePage = PageElements.createClickedLabel("Delete page");
         deletePage.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -75,7 +75,7 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        Button albums = PageElements.createClickedLabel("Альбомы");
+        Button albums = PageElements.createClickedLabel("Albums");
         albums.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -83,39 +83,27 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        Button argue = PageElements.createClickedLabel("Пожаловаться");
-        argue.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                Notification.show("Здесь будут жалобы!\nНо это не точно :)", Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
-
-        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), editPage, deletePage, PageElements.getSeparator(), argue, albums);
+        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), editPage, deletePage, PageElements.getSeparator(), albums);
         avatarPanel.setContent(leftPageLayout);
         avatarLayout.addComponents(avatarPanel);
 
         Label petName = PageElements.createLabel(5, pet.getPetName());
 
         Label petSpecies = PageElements.createCheckedValueLabel(this.petSpecies.getSpeciesName());
-        petSpecies.setCaption("Вид");
+        petSpecies.setCaption("Species");
 
         Label petBreed = PageElements.createCheckedValueLabel(pet.getPetBreed());
-        petBreed.setCaption("Порода");
+        petBreed.setCaption("Breed");
 
         Label petAge;
-        if (pet.getPetAge() % 10 == 1)
-            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "год");
-        else if (pet.getPetAge() % 10 == 2 ||
-                pet.getPetAge() % 10 == 3 ||
-                pet.getPetAge() % 10 == 4)
-            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "года");
+        if (pet.getPetAge() == 1)
+            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "year");
         else
-            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "лет");
+            petAge = PageElements.createCheckedValueLabel(pet.getPetAge(), "years");
 
-        petAge.setCaption("Возраст");
+        petAge.setCaption("Age");
 
-        Label petOwnerSign = PageElements.createLabel(2, "Владелец");
+        Label petOwnerSign = PageElements.createLabel(2, "Owner");
 
         Button petOwner = PageElements.createClickedLabel(owner.getProfileName() + " " + owner.getProfileSurname());
         petOwner.addClickListener(new AbstractClickListener() {
@@ -126,16 +114,16 @@ public class PetPageUI extends VerticalLayout {
         });
 
 
-        Label additionInfo = PageElements.createGrayLabel("Дополнительная информация");
+        Label additionInfo = PageElements.createGrayLabel("Additional information");
 
-        Label petWeight = PageElements.createCheckedValueLabel(pet.getPetWeight(), "кг");
-        petWeight.setCaption("Вес");
+        Label petWeight = PageElements.createCheckedValueLabel(pet.getPetWeight(), "kg");
+        petWeight.setCaption("Weight");
 
-        Label petHeight = PageElements.createCheckedValueLabel(pet.getPetHeight(), "м");
-        petHeight.setCaption("Рост");
+        Label petHeight = PageElements.createCheckedValueLabel(pet.getPetHeight(), "m");
+        petHeight.setCaption("Height");
 
         Label petSpecParam = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
-        petSpecParam.setCaption("Особые данные");
+        petSpecParam.setCaption("Other info");
 
         infoLayout.addComponentsAndExpand(petName, PageElements.getSeparator(), petSpecies, petBreed,
                 petAge, petOwnerSign, petOwner, additionInfo, PageElements.getSeparator(), petWeight,

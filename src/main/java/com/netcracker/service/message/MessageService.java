@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface MessageService {
 
-    List<Message> getProfileMessages(BigInteger profileId);
+    int getAllMessagePageCount(BigInteger profileId);
+    List<Message> getProfileMessages(BigInteger profileId, int page);
 
     Message sendMessage(Message message);
 }

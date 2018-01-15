@@ -9,13 +9,8 @@ import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +41,7 @@ public class AllPetsListUI extends VerticalLayout {
             System.out.println(pet.getPetName());
             Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + buff.getObjectId(), Profile.class);
 
-            Label petNameSign = PageElements.createGrayLabel("Кличка питомца");
+            Label petNameSign = PageElements.createGrayLabel("Pet's name");
             Button petName = PageElements.createClickedLabel(pet.getPetName());
             petName.addClickListener(new AbstractClickListener() {
                 @Override
@@ -54,7 +49,7 @@ public class AllPetsListUI extends VerticalLayout {
                     ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
                 }
             });
-            Label petOwnerSign = PageElements.createGrayLabel("Владелец");
+            Label petOwnerSign = PageElements.createGrayLabel("Owner");
             Button petOwner = PageElements.createClickedLabel(owner.getProfileName() + " " + owner.getProfileSurname());
             petOwner.addClickListener(new AbstractClickListener() {
                 @Override
@@ -64,7 +59,7 @@ public class AllPetsListUI extends VerticalLayout {
             });
 
             Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
-            petInfo.setCaption("Информация о питомце");
+            petInfo.setCaption("Information about pet");
 
             //PET INFO
             petInfoLayout.addComponents(petNameSign, petName, petOwnerSign, petOwner, petInfo);

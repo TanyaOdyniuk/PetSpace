@@ -11,7 +11,6 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +21,7 @@ class PetEditFormUI extends Window {
     PetEditFormUI(Pet pet) {
         super();
         this.pet = pet;
-        setCaption("Информация о питомце");
+        setCaption("Information about pet");
         VerticalLayout mainLayout = new VerticalLayout();
 
         GridLayout avatarLayout = new GridLayout(2,1);
@@ -35,10 +34,10 @@ class PetEditFormUI extends Window {
             avatar = new Image("", new ExternalResource(pet.getPetAvatar()));
         avatar.setHeight("200px");
         avatar.setWidth("200px");
-        TextField avatarField = PageElements.createTextField("Аватар", "Ссылка на аватар");
+        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         avatarField.setWidth("100%");
         avatarField.setValue(pet.getPetAvatar() == null ? "" : pet.getPetAvatar());
-        Button avatarSelect = new Button("Загрузить");
+        Button avatarSelect = new Button("Load");
         avatarSelect.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -58,12 +57,12 @@ class PetEditFormUI extends Window {
         infoLayout.setWidth("100%");
         infoLayout.setSpacing(true);
         //FIELDS
-        TextField petNameField = PageElements.createTextField("Кличка питомца", "Кличка питомца", true);
+        TextField petNameField = PageElements.createTextField("Pet's name", "Pet's name", true);
         petNameField.setWidth("100%");
         petNameField.setValue(pet.getPetName() == null ? "" : pet.getPetName());
 
         List<PetSpecies> speciesList = getSpecies();
-        ComboBox<PetSpecies> speciesTypeSelect = new ComboBox<>("Вид", speciesList);
+        ComboBox<PetSpecies> speciesTypeSelect = new ComboBox<>("Species", speciesList);
         speciesTypeSelect.setItemCaptionGenerator(PetSpecies::getSpeciesName);
 
         speciesTypeSelect.setEmptySelectionAllowed(false);
@@ -72,19 +71,19 @@ class PetEditFormUI extends Window {
         speciesTypeSelect.setTextInputAllowed(false);
         speciesTypeSelect.setValue(pet.getPetSpecies() == null ? speciesList.get(0) : pet.getPetSpecies());
 
-        TextField breedTypeField = PageElements.createTextField("Порода питомца", "Порода питомца");
+        TextField breedTypeField = PageElements.createTextField("Pet's breed", "Pet's breed");
         breedTypeField.setWidth("100%");
         breedTypeField.setValue(pet.getPetBreed() == null ? "" : pet.getPetBreed());
 
-        TextField ageField = PageElements.createTextField("Возраст", "Возраст (полных лет)", true);
+        TextField ageField = PageElements.createTextField("Age", "Age (full years)", true);
         ageField.setWidth("100%");
         ageField.setValue(pet.getPetAge() == null ? "" : pet.getPetAge().toString() );
 
-        TextField weightField = PageElements.createTextField("Вес", "Вес (кг)");
+        TextField weightField = PageElements.createTextField("Weight", "Weight (kg)");
         weightField.setWidth("100%");
         weightField.setValue(pet.getPetWeight() == null ? "" : pet.getPetWeight().toString());
 
-        TextField heightField = PageElements.createTextField("Рост", "Рост (м)");
+        TextField heightField = PageElements.createTextField("Height", "Height (m)");
         heightField.setWidth("100%");
         heightField.setValue(pet.getPetHeight() == null ? "" : pet.getPetHeight().toString());
 
@@ -97,13 +96,13 @@ class PetEditFormUI extends Window {
 
         mainLayout.addComponent(infoLayout);
 
-        TextArea specParamField = new TextArea("Особые данные");
+        TextArea specParamField = new TextArea("Other information");
         specParamField.setWidth("100%");
         specParamField.setValue(pet.getPetSpecificParam() == null ? "" : pet.getPetSpecificParam());
 
         Button addPet;
         if(pet.getObjectId() == null) {
-            addPet = new Button("Добавить питомца");
+            addPet = new Button("Add pet");
             addPet.setWidth("100%");
             addPet.addClickListener(new AbstractClickListener() {
                 @Override
@@ -114,7 +113,7 @@ class PetEditFormUI extends Window {
                 }
             });
         } else {
-            addPet = new Button("Обновить данные");
+            addPet = new Button("Update information");
             addPet.setWidth("100%");
             addPet.addClickListener(new AbstractClickListener() {
                 @Override
@@ -161,7 +160,7 @@ class PetEditFormUI extends Window {
 
         createdPet = CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", petEntity, Pet.class);
-        Notification.show("Питомец успешно добавлен!");
+        Notification.show("Pet was successfully added!");
         this.close();
         ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
     }
@@ -188,7 +187,7 @@ class PetEditFormUI extends Window {
 
         CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/update", petEntity, Pet.class);
-        Notification.show("Данные питомца обновлены");
+        Notification.show("Pet's information was updated");
         this.close();
         ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
     }

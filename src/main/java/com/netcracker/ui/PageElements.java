@@ -34,7 +34,7 @@ public class PageElements {
             else
                 return createStandartLabel(PageElements.htmlTabulation + text);
         } else
-            return createStandartLabel(PageElements.htmlTabulation + "Не указано");
+            return createStandartLabel(PageElements.htmlTabulation + "No information");
     }
 
     public static Label createCheckedValueLabel(Object value) {

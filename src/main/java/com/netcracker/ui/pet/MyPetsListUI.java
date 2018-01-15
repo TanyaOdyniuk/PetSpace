@@ -8,11 +8,9 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import elemental.css.CSSStyleDeclaration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
@@ -39,7 +37,7 @@ public class MyPetsListUI extends VerticalLayout {
         mainPanel.setWidth("100%");
         mainPanel.setHeight(browserHeight - 300, Unit.PIXELS);
         VerticalLayout petRecordsLayout = new VerticalLayout();
-        Button addNewPet = new Button("Добавить нового питомца", VaadinIcons.PLUS);
+        Button addNewPet = new Button("Add new pet", VaadinIcons.PLUS);
         addNewPet.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -49,7 +47,7 @@ public class MyPetsListUI extends VerticalLayout {
         });
         List<Pet> petList = getProfilePets(profileId);
         if (petList.size() == 0) {
-            Label noPetsLabel = PageElements.createLabel(5, "У вас ещё нет питомца!");
+            Label noPetsLabel = PageElements.createLabel(5, "You don't have any pet yet!");
             petRecordsLayout.addComponent(noPetsLabel);
             petRecordsLayout.setComponentAlignment(noPetsLabel, Alignment.MIDDLE_CENTER);
             mainPanel.setContent(petRecordsLayout);
@@ -69,7 +67,7 @@ public class MyPetsListUI extends VerticalLayout {
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
-            Label petNameSign = PageElements.createGrayLabel("Кличка питомца");
+            Label petNameSign = PageElements.createGrayLabel("Pet's name");
             Button petName = PageElements.createClickedLabel(pet.getPetName());
             petName.addClickListener(new AbstractClickListener() {
                 @Override
@@ -78,7 +76,7 @@ public class MyPetsListUI extends VerticalLayout {
                 }
             });
             Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
-            petInfo.setCaption("Информация о питомце");
+            petInfo.setCaption("Information about pet");
 
             //PET INFO
             petInfoLayout.addComponents(petNameSign, petName, petInfo);

@@ -36,7 +36,7 @@ public class PetProfileServiceImpl implements PetProfileService {
         //User currentUser = userService.getCurrentUser();
         //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
 
-        Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
+        Profile profile = entityManagerService.getById(BigInteger.valueOf(25), Profile.class);
         pet.setPetStatus(statusService.getActiveStatus ());
         pet.setPetOwner(profile);
         return entityManagerService.create(pet);
