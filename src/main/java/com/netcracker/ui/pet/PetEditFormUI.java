@@ -8,8 +8,12 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -156,7 +160,13 @@ class PetEditFormUI extends Window {
         Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
                 weight, height, specificParameters);
 
-        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet);
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("login", login);
+
+        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet, headers);
 
         createdPet = CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", petEntity, Pet.class);

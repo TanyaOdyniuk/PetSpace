@@ -7,14 +7,12 @@ import com.netcracker.model.pet.PetConstant;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
-
 import com.netcracker.service.status.StatusService;
 import com.netcracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,12 +31,12 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public Pet createPetProfile(Pet pet) {
-        //User currentUser = userService.getCurrentUser();
-        //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
+//        User currentUser = userService.getCurrentUser(login);
+//        //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
+//        Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
+//        pet.setPetOwner(profile);
 
-        Profile profile = entityManagerService.getById(BigInteger.valueOf(25), Profile.class);
-        pet.setPetStatus(statusService.getActiveStatus ());
-        pet.setPetOwner(profile);
+        pet.setPetStatus(statusService.getActiveStatus());
         return entityManagerService.create(pet);
     }
 

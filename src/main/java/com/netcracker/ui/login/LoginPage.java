@@ -14,14 +14,10 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Theme("valo")
@@ -88,18 +84,20 @@ public class LoginPage extends UI {
                     requestUser.setPassword(passwordField.getValue());
                     requestUser.setUserAuthorities(authorities);
 
+                    /* DO NOT TOUCH
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_JSON);
                     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
                     HttpEntity<User> request = new HttpEntity<>(requestUser, headers);
 
-                   //User user = CustomRestTemplate.getInstance().customPostForObject("/login", request, User.class);
+                    User user = CustomRestTemplate.getInstance().customPostForObject("/login", request, User.class);
 
-////                    if (user == null) {
-////                        Notification.show("Wrong email or password!");
-////                    } else {
-////                        LoginPage.getCurrent().getPage().setLocation("/testpage");
-////                    }
+                    if (user == null) {
+                        Notification.show("Wrong email or password!");
+                    } else {
+                        LoginPage.getCurrent().getPage().setLocation("/testpage");
+                    }
+*/
 
                     authorizationService.authenticate(emailField.getValue(), passwordField.getValue(), authorities);
                 } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
@@ -179,11 +177,5 @@ public class LoginPage extends UI {
             }
         });
         return layoutContent;
-    }
-
-    private static String createUserInJson(String name, String email, String password) {
-        return "{ \"name\": \"" + name + "\", " +
-                "\"emailAddress\":\"" + email + "\"," +
-                "\"password\":\"" + password + "\"}";
     }
 }

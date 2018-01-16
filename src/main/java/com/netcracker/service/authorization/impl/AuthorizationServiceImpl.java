@@ -4,10 +4,11 @@ import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.user.User;
 import com.netcracker.service.authorization.AuthorizationService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
+import com.netcracker.service.util.BCryptEncoder;
 import com.netcracker.service.util.EmailService;
 import com.netcracker.service.util.RandomStringGenerator;
 import com.netcracker.ui.login.LoginPage;
-import com.netcracker.service.util.BCryptEncoder;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

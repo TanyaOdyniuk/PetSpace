@@ -8,7 +8,6 @@ import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
-import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.groups.MyGroupsListUI;
 import com.netcracker.ui.messages.MessagesListUI;
 import com.netcracker.ui.pet.AllPetsListUI;
@@ -20,11 +19,9 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigInteger;
@@ -71,7 +68,6 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     protected void init(VaadinRequest request) {
-        Notification.show(userService.getCurrentUser().getLogin());
         addUsersLayout.addComponentsAndExpand(addNewBtn, grid, stubUserEditor);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(0), 1.0f);
         addUsersLayout.setExpandRatio(addUsersLayout.getComponent(1), 15.0f);
@@ -119,10 +115,10 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        BigInteger profileId = userService.getCurrentUser().getProfile().getObjectId();
-        //BigInteger profileId = BigInteger.valueOf(29);
+       // BigInteger profileId = userService.getCurrentUser("levil133@gmail.com").getProfile().getObjectId();
+        BigInteger profileId = BigInteger.valueOf(25);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
-        if(primaryAreaLayout.getComponentCount() > 1){
+        if (primaryAreaLayout.getComponentCount() > 1) {
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         }
         switch (clickedButtonCaption) {
@@ -169,7 +165,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
 
-    public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet){
+    public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet) {
         ObjectAssert.isNull(layoutToSet);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         primaryAreaLayout.addComponentsAndExpand(layoutToSet);
