@@ -4,6 +4,7 @@ import com.netcracker.model.messages.Message;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
+import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -59,7 +60,7 @@ public class NewMessageWindowUI extends Window {
                 return;
             }
             this.receiver = friendsList.get(0);
-            imageAvatar = new Image("", new ExternalResource(receiver.getProfileAvatar() == null ? PageElements.noImageURL : receiver.getProfileAvatar()));
+            imageAvatar = new Image("", new ExternalResource(receiver.getProfileAvatar() == null ? UIConstants.NO_IMAGE_URL : receiver.getProfileAvatar()));
             ComboBox<Profile> receiverSelect = new ComboBox<>("", friendsList);
             receiverSelect.setItemCaptionGenerator(Profile::getProfileFullName);
             receiverSelect.setEmptySelectionAllowed(false);
@@ -71,7 +72,7 @@ public class NewMessageWindowUI extends Window {
 
             receiverSelect.addSelectionListener(event -> {
                     String avatarURL = receiverSelect.getValue().getProfileAvatar();
-                    ((Image)infoLayout.getComponent(0,0)).setSource(new ExternalResource(avatarURL == null ? PageElements.noImageURL : avatarURL));
+                    ((Image)infoLayout.getComponent(0,0)).setSource(new ExternalResource(avatarURL == null ? UIConstants.NO_IMAGE_URL : avatarURL));
                     this.receiver = receiverSelect.getValue();
             });
         }

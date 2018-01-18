@@ -3,10 +3,7 @@ package com.netcracker.ui.messages;
 import com.netcracker.model.messages.Message;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.util.RestResponsePage;
-import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubPagingBar;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.*;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
@@ -91,7 +88,7 @@ public class MessagesListUI extends VerticalLayout {
                 HorizontalLayout messageMainLayout = new HorizontalLayout();
                 messageMainLayout.setMargin(new MarginInfo(false, true, false, true));
                 Profile senderProfile = getProfile(message.getMessageSender().getObjectId());
-                Image senderAvatar = new Image("", new ExternalResource(senderProfile.getProfileAvatar() == null ? PageElements.noImageURL : senderProfile.getProfileAvatar()));
+                Image senderAvatar = new Image("", new ExternalResource(senderProfile.getProfileAvatar() == null ? UIConstants.NO_IMAGE_URL : senderProfile.getProfileAvatar()));
                 senderAvatar.setHeight("100px");
                 senderAvatar.setWidth("100px");
 

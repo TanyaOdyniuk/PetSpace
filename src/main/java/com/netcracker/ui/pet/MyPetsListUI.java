@@ -1,5 +1,6 @@
 package com.netcracker.ui.pet;
 
+import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
@@ -8,11 +9,13 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -60,9 +63,13 @@ public class MyPetsListUI extends VerticalLayout {
             Image petAvatar = new Image();
             petAvatar.setHeight(250, Unit.PIXELS);
             petAvatar.setWidth(250, Unit.PIXELS);
-            if(pet.getPetAvatar() != null)
-                petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
-            else
+            String petAvatarSource = pet.getPetAvatar();
+            if (petAvatarSource != null) {
+                if (PetDataAssert.isAvatarURL(petAvatarSource))
+                    petAvatar.setSource(new ExternalResource(petAvatarSource));
+                else
+                    petAvatar.setSource(new FileResource(new File(petAvatarSource)));
+            } else
                 petAvatar = PageElements.getNoImage();
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));

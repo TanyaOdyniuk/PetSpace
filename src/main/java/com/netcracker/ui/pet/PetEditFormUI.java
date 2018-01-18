@@ -6,45 +6,59 @@ import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.UploadWindow;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.StreamResource;
-import com.vaadin.server.StreamVariable;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
-import com.vaadin.ui.dnd.FileDropTarget;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.io.*;
+import java.io.File;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-class PetEditFormUI extends Window {
+public class PetEditFormUI extends Window {
 
     private Pet pet;
+    private Window windowToSend;
+    private Image avatar;
+    private String avatarPath;
+    private Boolean isFileResource;
 
     PetEditFormUI(Pet pet) {
         super();
         this.pet = pet;
+        this.windowToSend = this;
+        this.isFileResource = false;
         setCaption("Information about pet");
         VerticalLayout mainLayout = new VerticalLayout();
 
-        GridLayout avatarLayout = new GridLayout(2,1);
+        GridLayout avatarLayout = new GridLayout(2, 1);
         VerticalLayout avatarContext = new VerticalLayout();
-
-        Image avatar;
-        if(pet.getPetAvatar() == null)
+        String petAvatarSource = pet.getPetAvatar();
+        avatar = new Image();
+        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
+        if (petAvatarSource != null) {
+            if (PetDataAssert.isAvatarURL(petAvatarSource)) {
+                avatar.setSource(new ExternalResource(petAvatarSource));
+                avatarField.setValue(pet.getPetAvatar());
+            }
+            else
+                avatar.setSource(new FileResource(new File(petAvatarSource)));
+        } else
             avatar = PageElements.getNoImage();
-        else
-            avatar = new Image("", new ExternalResource(pet.getPetAvatar()));
         avatar.setHeight("200px");
         avatar.setWidth("200px");
-        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
+
         avatarField.setWidth("100%");
-        avatarField.setValue(pet.getPetAvatar() == null ? "" : pet.getPetAvatar());
-        Button avatarSelect = new Button("Load");
+
+
+        Button avatarSelect = new Button("Set URL");
         avatarSelect.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
@@ -57,10 +71,13 @@ class PetEditFormUI extends Window {
         uploadAvatar.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                UploadWindow sub = new UploadWindow();
+                UploadWindow sub = new UploadWindow(UIConstants.PATH_TO_AVATAR_PET, windowToSend);
                 UI.getCurrent().addWindow(sub);
             }
         });
+
+        avatarSelect.setWidth("185px");
+        uploadAvatar.setWidth("185px");
 
         avatarContext.addComponents(avatarField, avatarSelect, uploadAvatar);
 
@@ -69,7 +86,7 @@ class PetEditFormUI extends Window {
 
         mainLayout.addComponent(avatarLayout);
 
-        GridLayout infoLayout = new GridLayout(2,3);
+        GridLayout infoLayout = new GridLayout(2, 3);
         infoLayout.setWidth("100%");
         infoLayout.setSpacing(true);
         //FIELDS
@@ -93,7 +110,7 @@ class PetEditFormUI extends Window {
 
         TextField ageField = PageElements.createTextField("Age", "Age (full years)", true);
         ageField.setWidth("100%");
-        ageField.setValue(pet.getPetAge() == null ? "" : pet.getPetAge().toString() );
+        ageField.setValue(pet.getPetAge() == null ? "" : pet.getPetAge().toString());
 
         TextField weightField = PageElements.createTextField("Weight", "Weight (kg)");
         weightField.setWidth("100%");
@@ -103,12 +120,12 @@ class PetEditFormUI extends Window {
         heightField.setWidth("100%");
         heightField.setValue(pet.getPetHeight() == null ? "" : pet.getPetHeight().toString());
 
-        infoLayout.addComponent(petNameField, 0,0);
-        infoLayout.addComponent(speciesTypeSelect, 1,0);
-        infoLayout.addComponent(breedTypeField, 0,1);
-        infoLayout.addComponent(ageField, 1,1);
-        infoLayout.addComponent(weightField, 0,2);
-        infoLayout.addComponent(heightField, 1,2);
+        infoLayout.addComponent(petNameField, 0, 0);
+        infoLayout.addComponent(speciesTypeSelect, 1, 0);
+        infoLayout.addComponent(breedTypeField, 0, 1);
+        infoLayout.addComponent(ageField, 1, 1);
+        infoLayout.addComponent(weightField, 0, 2);
+        infoLayout.addComponent(heightField, 1, 2);
 
         mainLayout.addComponent(infoLayout);
 
@@ -117,14 +134,14 @@ class PetEditFormUI extends Window {
         specParamField.setValue(pet.getPetSpecificParam() == null ? "" : pet.getPetSpecificParam());
 
         Button addPet;
-        if(pet.getObjectId() == null) {
+        if (pet.getObjectId() == null) {
             addPet = new Button("Add pet");
             addPet.setWidth("100%");
             addPet.addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
                     addPet.setComponentError(null);
-                    createPet(avatarField.getValue(), petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
+                    createPet(avatarPath, petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
                             weightField.getValue(), heightField.getValue(), specParamField.getValue());
                 }
             });
@@ -135,7 +152,7 @@ class PetEditFormUI extends Window {
                 @Override
                 public void buttonClickListener() {
                     addPet.setComponentError(null);
-                    updatePet(avatarField.getValue(), petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
+                    updatePet(avatarPath, petNameField.getValue(), ageField.getValue(), speciesTypeSelect.getValue(), breedTypeField.getValue(),
                             weightField.getValue(), heightField.getValue(), specParamField.getValue());
                 }
             });
@@ -147,10 +164,18 @@ class PetEditFormUI extends Window {
         center();
     }
 
+    public void updateAvatar(File imageSource) {
+        avatar.setSource(new FileResource(imageSource));
+        this.isFileResource = true;
+        this.avatarPath = imageSource.getPath();
+    }
+
     private void updateAvatar(String imageURL, Image imageToUpdate) {
-        PetDataAssert.assertAvatarURL(imageURL);
+        imageURL = PetDataAssert.assertAvatarURL(imageURL);
         pet.setPetAvatar(imageURL);
         imageToUpdate.setSource(new ExternalResource(imageURL));
+        this.isFileResource = false;
+        this.avatarPath = imageURL;
     }
 
     private List<PetSpecies> getSpecies() {
@@ -159,38 +184,47 @@ class PetEditFormUI extends Window {
                         "/species", PetSpecies[].class));
     }
 
-    private void createPet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
+    private void createPet(String avatarPath, String petName, String petAge, PetSpecies petSpecies, String petBreed,
                            String petWeight, String petHeight, String specificParameters) {
 
-        avatar = PetDataAssert.assertAvatarURL(avatar);
+        if (!isFileResource)
+            avatarPath = PetDataAssert.assertAvatarURL(avatarPath);
         PetDataAssert.assertName(petName);
 
         Integer age = PetDataAssert.assertAge(petAge);
         Double weight = PetDataAssert.assertWeight(petWeight);
         Double height = PetDataAssert.assertHeight(petHeight);
 
-        Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
+        Pet createdPet = new Pet(avatarPath, petName, age, petSpecies, petBreed,
                 weight, height, specificParameters);
 
-        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet);
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("login", login);
+
+        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet, headers);
 
         createdPet = CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", petEntity, Pet.class);
         Notification.show("Pet was successfully added!");
         this.close();
-        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
+        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
     }
 
-    private void updatePet(String avatar, String petName, String petAge, PetSpecies petSpecies, String petBreed,
-                           String petWeight, String petHeight, String specificParameters){
-        PetDataAssert.assertAvatarURL(avatar);
+    private void updatePet(String avatarPath, String petName, String petAge, PetSpecies petSpecies, String petBreed,
+                           String petWeight, String petHeight, String specificParameters) {
+
+        if (!isFileResource)
+            avatarPath = PetDataAssert.assertAvatarURL(avatarPath);
         PetDataAssert.assertName(petName);
 
         Integer age = PetDataAssert.assertAge(petAge);
         Double weight = PetDataAssert.assertWeight(petWeight);
         Double height = PetDataAssert.assertHeight(petHeight);
 
-        pet.setPetAvatar(avatar);
+        pet.setPetAvatar(avatarPath);
         pet.setPetName(petName);
         pet.setPetAge(age);
         pet.setPetSpecies(petSpecies);
@@ -205,6 +239,6 @@ class PetEditFormUI extends Window {
                 .customPostForObject("/pet/update", petEntity, Pet.class);
         Notification.show("Pet's information was updated");
         this.close();
-        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
+        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
     }
 }

@@ -1,5 +1,6 @@
 package com.netcracker.ui.pet;
 
+import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
@@ -9,8 +10,10 @@ import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.ui.*;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +36,14 @@ public class AllPetsListUI extends VerticalLayout {
             Image petAvatar = new Image();
             petAvatar.setHeight(250, Unit.PIXELS);
             petAvatar.setWidth(250, Unit.PIXELS);
-            petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
+            String petAvatarSource = pet.getPetAvatar();
+            if (petAvatarSource != null) {
+                if (PetDataAssert.isAvatarURL(petAvatarSource))
+                    petAvatar.setSource(new ExternalResource(petAvatarSource));
+                else
+                    petAvatar.setSource(new FileResource(new File(petAvatarSource)));
+            } else
+                petAvatar = PageElements.getNoImage();
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 

@@ -1,5 +1,6 @@
 package com.netcracker.ui.pet;
 
+import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
@@ -9,8 +10,10 @@ import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.ui.*;
 
+import java.io.File;
 import java.math.BigInteger;
 
 public class PetPageUI extends VerticalLayout {
@@ -50,8 +53,13 @@ public class PetPageUI extends VerticalLayout {
         galleryPanel.setHeight("100%");
 
         Image petAvatar = new Image();
-        if (pet.getPetAvatar() != null)
-            petAvatar.setSource(new ExternalResource(pet.getPetAvatar()));
+        String petAvatarSource = pet.getPetAvatar();
+        if (petAvatarSource != null) {
+            if (PetDataAssert.isAvatarURL(petAvatarSource))
+                petAvatar.setSource(new ExternalResource(petAvatarSource));
+            else
+                petAvatar.setSource(new FileResource(new File(petAvatarSource)));
+        }
         else
             petAvatar = PageElements.getNoImage();
         petAvatar.setHeight(225, Unit.PIXELS);
@@ -112,6 +120,7 @@ public class PetPageUI extends VerticalLayout {
                 ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(owner.getObjectId()));
             }
         });
+        petOwner.setHeight("25px");
 
 
         Label additionInfo = PageElements.createGrayLabel("Additional information");
@@ -125,7 +134,7 @@ public class PetPageUI extends VerticalLayout {
         Label petSpecParam = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
         petSpecParam.setCaption("Other info");
 
-        infoLayout.addComponentsAndExpand(petName, PageElements.getSeparator(), petSpecies, petBreed,
+        infoLayout.addComponents(petName, PageElements.getSeparator(), petSpecies, petBreed,
                 petAge, petOwnerSign, petOwner, additionInfo, PageElements.getSeparator(), petWeight,
                 petHeight, petSpecParam);
 

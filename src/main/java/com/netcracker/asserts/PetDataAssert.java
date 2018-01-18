@@ -2,6 +2,7 @@ package com.netcracker.asserts;
 
 import com.netcracker.error.ErrorMessage;
 import com.netcracker.error.exceptions.PetDataValidationException;
+import com.netcracker.ui.UIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.logging.Logger;
@@ -11,15 +12,20 @@ import java.util.regex.Pattern;
 public class PetDataAssert {
     @Autowired
     private static Logger logger;
+
     public static void assertName(String name) throws PetDataValidationException {
         commomStringValidation(name, RegexTemplate.PET_NAME, ErrorMessage.PET_VALIDATION_NAME);
     }
 
     public static String assertAvatarURL(String url) throws PetDataValidationException {
-        if(!(url == null || "".equals(url)))
+        if (!(url == null || "".equals(url)))
             return commomURLValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
         else
-            return "https://assets2.bus.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png";
+            return UIConstants.NO_IMAGE_URL;
+    }
+
+    public static Boolean isAvatarURL(String url) {
+        return isMatchingRegex(url, RegexTemplate.URL_IMAGE);
     }
 
     public static Double assertHeight(String height) throws PetDataValidationException {
@@ -33,9 +39,9 @@ public class PetDataAssert {
     public static Integer assertAge(String age) throws PetDataValidationException {
         try {
             ObjectAssert.isNullOrEmpty(age, ErrorMessage.PET_VALIDATION_AGE);
-            if (ObjectAssert.isConvertibleToInteger(age)){
+            if (ObjectAssert.isConvertibleToInteger(age)) {
                 Integer result = Integer.parseInt(age);
-                if(result > 0)
+                if (result > 0)
                     return result;
             }
             throw new IllegalArgumentException();
