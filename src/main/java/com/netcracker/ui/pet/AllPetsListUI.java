@@ -38,7 +38,6 @@ public class AllPetsListUI extends VerticalLayout {
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
             Profile buff = pet.getPetOwner();
-            System.out.println(pet.getPetName());
             Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + buff.getObjectId(), Profile.class);
 
             Label petNameSign = PageElements.createGrayLabel("Pet's name");

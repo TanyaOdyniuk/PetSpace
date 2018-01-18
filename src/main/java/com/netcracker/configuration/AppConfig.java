@@ -21,7 +21,7 @@ public class AppConfig {
         //dataSource.setUsername("ODESSA_19");
         //dataSource.setPassword("ODESSA_19");
         dataSource.setUsername("petspace");
-        dataSource.setPassword("p1234");
+        dataSource.setPassword("1234");
         //dataSource.setUsername("ODESSA_18");
         //dataSource.setPassword("testpass");
         dataSource.setInitialSize(30);

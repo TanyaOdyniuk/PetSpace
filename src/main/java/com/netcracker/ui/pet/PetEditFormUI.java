@@ -7,15 +7,18 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.netcracker.ui.util.UploadWindow;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamVariable;
 import com.vaadin.ui.*;
+import com.vaadin.ui.dnd.FileDropTarget;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import java.io.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 class PetEditFormUI extends Window {
@@ -50,7 +53,16 @@ class PetEditFormUI extends Window {
             }
         });
 
-        avatarContext.addComponents(avatarField, avatarSelect);
+        Button uploadAvatar = new Button("Upload");
+        uploadAvatar.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                UploadWindow sub = new UploadWindow();
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+
+        avatarContext.addComponents(avatarField, avatarSelect, uploadAvatar);
 
         avatarLayout.addComponent(avatar, 0, 0);
         avatarLayout.addComponent(avatarContext, 1, 0);
@@ -160,13 +172,7 @@ class PetEditFormUI extends Window {
         Pet createdPet = new Pet(avatar, petName, age, petSpecies, petBreed,
                 weight, height, specificParameters);
 
-        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-        String login = o.getAuthentication().getPrincipal().toString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("login", login);
-
-        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet, headers);
+        HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet);
 
         createdPet = CustomRestTemplate.getInstance()
                 .customPostForObject("/pet/add", petEntity, Pet.class);
