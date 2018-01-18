@@ -49,15 +49,20 @@ public class EntityManagerService {
     @Transactional
     public <T extends BaseEntity> T create(T baseEntity) {
         baseEntity.setObjectId(manager.getNextObjId());
-        manager.create(new Converter().convertToEntity(baseEntity));
+        Entity entity = new Converter().convertToEntity(baseEntity);
+        manager.create(entity);
         return baseEntity;
     }
-
-    public <T extends BaseEntity> void update(T baseEntity) {
+    public void dropRef(int attr_id, BigInteger obj, int flag){
+        manager.dropRef(attr_id, obj, flag);
+    }
+    public <T extends BaseEntity> BigInteger update(T baseEntity) {
         if (baseEntity.getObjectId() == null) {
-            create(baseEntity);
+            T temp = create(baseEntity);
+            return temp.getObjectId();
         }
         manager.update(new Converter().convertToEntity(baseEntity));
+        return baseEntity.getObjectId();
     }
 
     public void delete(BigInteger objectId, int forceDelete) {
@@ -156,14 +161,14 @@ public class EntityManagerService {
             Object fieldValue = getValueFromField(baseEntity, baseEntityClass, field);
             if (List.class.isAssignableFrom(fieldValue.getClass())) {
                 List<java.lang.Boolean> booleans = (List<java.lang.Boolean>) getValueFromField(baseEntity, baseEntityClass, field);
+                Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
                 if (booleans != null) {
                     for (int i = 0; i < booleans.size(); i++) {
                         java.lang.Boolean element = booleans.get(i);
-                        Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
                         if (element) {
-                            attributes.put(new Pair<>(attrId, seq_no), yesno);
+                            attributes.put(new Pair<>(attrId, seq_no + i), yesno);
                         } else {
-                            attributes.put(new Pair<>(attrId, seq_no), "otherValue");
+                            attributes.put(new Pair<>(attrId, seq_no + i), "otherValue");
                         }
                     }
                 }
@@ -196,15 +201,15 @@ public class EntityManagerService {
                 }
                 if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List tempAttributes = (List) fieldValue;
+                    Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
                     for (int i = 0; i < tempAttributes.size(); i++) {
                         Object attribute = tempAttributes.get(i);
-                        Integer seq_no = manager.getNextSeqNoObjAttributes(baseEntity.getObjectId(), attrId);
                         if (Timestamp.class.isAssignableFrom(fieldValue.getClass())) {
-                            attributes.put(new Pair<>(attrId, seq_no), attribute);
+                            attributes.put(new Pair<>(attrId, seq_no + i), attribute);
                         } else if (Date.class.isAssignableFrom(attribute.getClass())) {
-                            attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
+                            attributes.put(new Pair<>(attrId, seq_no + i), attribute.toString());
                         } else {
-                            attributes.put(new Pair<>(attrId, seq_no), attribute.toString());
+                            attributes.put(new Pair<>(attrId, seq_no + i), attribute.toString());
                         }
                     }
                 } else {
@@ -249,6 +254,7 @@ public class EntityManagerService {
                 }
                 if (List.class.isAssignableFrom(fieldValue.getClass())) {
                     List<BaseEntity> tempReferences = (List<BaseEntity>) fieldValue;
+
                     for (int i = 0; i < tempReferences.size(); i++) {
                         BaseEntity reference = tempReferences.get(i);
                         if (isParentChildRef == 1) {
@@ -256,7 +262,7 @@ public class EntityManagerService {
                         } else {
                             objIdRef = new Pair<>(curObjId, reference != null ? reference.getObjectId() : EMPTY_INTEGER);
                         }
-                        references.put(new Pair<>(attrId, getSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId)), objIdRef);
+                        references.put(new Pair<>(attrId, getSeqNo(objIdRef.getKey(), objIdRef.getValue(), attrId) + i), objIdRef);
                     }
                 } else {
                     if (isParentChildRef == 1) {

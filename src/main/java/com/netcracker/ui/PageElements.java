@@ -51,13 +51,13 @@ public class PageElements {
 
     public static Button createBlueClickedLabel(String text, Resource icon) {
         Button clickedLabel;
-        if (icon != null)
+        if (icon != null) {
             clickedLabel = new Button(text, icon);
-        else
+        } else {
             clickedLabel = new Button(text);
+        }
 
         clickedLabel.addStyleName(ValoTheme.BUTTON_LINK);
-        //clickedLabel.setDisableOnClick(true);
         return clickedLabel;
     }
 

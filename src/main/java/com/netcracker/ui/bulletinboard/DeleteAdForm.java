@@ -4,6 +4,8 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 
 import java.math.BigInteger;
@@ -21,7 +23,6 @@ class DeleteAdForm extends Window {
         subContent.addComponent(getWarningMessage());
         subContent.addComponent(getButtonLayout());
         center();
-        //VaadinIcons.WARNING
     }
     private void wClose(){
         this.close();

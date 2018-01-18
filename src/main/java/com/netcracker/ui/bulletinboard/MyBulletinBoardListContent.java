@@ -13,7 +13,6 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import com.vaadin.ui.components.grid.HeaderRow;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -69,7 +68,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         newAdBtn.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                NewAdvertisementForm sub = new NewAdvertisementForm(profileId);
+                NewAdvertisementForm sub = new NewAdvertisementForm(profileId, null);
                 UI.getCurrent().addWindow(sub);
             }
         });
@@ -186,7 +185,6 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         List<Advertisement> advertisements = ads.getContent();
         if (advertisements.isEmpty()) {
             Notification.show("No ads were found");
-            Integer k = gridPagingLayout.getComponentCount();
             gridPagingLayout.removeComponent(grid);
         } else {
             if (gridPagingLayout.getComponentCount() == 1) {

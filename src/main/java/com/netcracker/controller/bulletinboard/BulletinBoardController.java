@@ -15,9 +15,9 @@ import java.util.List;
 @RequestMapping("/bulletinboard")
 public class BulletinBoardController {
     @Autowired
-    BulletinBoardService bulletinBoardService;
+    private BulletinBoardService bulletinBoardService;
     @Value("${advertisement.list.pageCapasity}")
-    String adPageCapacityProp;
+    private String adPageCapacityProp;
 
     @GetMapping("/{pageNumber}")
     public RestResponsePage<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber) {
@@ -54,7 +54,7 @@ public class BulletinBoardController {
         return new RestResponsePage<>(advertisements, null, count);
     }
     @PostMapping("/add")
-    public Advertisement addAd(@RequestBody Advertisement ad){
+    public BigInteger addAd(@RequestBody Advertisement ad){
         return bulletinBoardService.addAd(ad);
     }
 

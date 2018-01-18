@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -23,12 +24,16 @@ public class UserController {
     private RegistrationService registrationService;
 
     @Autowired
-    BCryptEncoder bCryptEncoder;
+    private BCryptEncoder bCryptEncoder;
 
     @GetMapping
     public User getCurrentUser() {
         String login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetailsService.loadUserByUsername(login);
+    }
+    @PostMapping("/profileId")
+    public BigInteger getProfileIdByLogin(@RequestBody String login){
+       return userDetailsService.loadUserByUsername(login).getProfile().getObjectId();
     }
     @PostMapping
     public User registerUser(@RequestBody User user) {
@@ -41,7 +46,7 @@ public class UserController {
 
     @PutMapping("/increasebalance")
     public void editUserById(@RequestBody String login) {
-            registrationService.invitedByUser(login);
+        registrationService.invitedByUser(login);
     }
 
 }

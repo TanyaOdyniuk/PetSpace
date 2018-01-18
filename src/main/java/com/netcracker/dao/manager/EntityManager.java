@@ -222,7 +222,19 @@ public class EntityManager {
                     return resultSet.getInt("c");
                 });
     }
-
+    public void dropRef(int attr_id, BigInteger obj, int flag){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withProcedureName("DROPOBJREF").declareParameters(
+                new SqlParameter("attr", OracleTypes.NUMBER),
+                new SqlParameter("obj", OracleTypes.NUMBER),
+                new SqlParameter("flag", OracleTypes.NUMBER));
+        Map<String, Object> inParam = new HashMap<>();
+        inParam.put("attr", attr_id);
+        inParam.put("obj", obj);
+        inParam.put("flag", flag);
+        SqlParameterSource in = new MapSqlParameterSource(inParam);
+        jdbcCall.execute(in);
+    }
     private Map<String, Object> executeObjectJdbcCall(Entity entity, int delete, Integer forceDel) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(

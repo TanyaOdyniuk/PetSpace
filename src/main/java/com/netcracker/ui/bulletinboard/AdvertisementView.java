@@ -1,23 +1,31 @@
 package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.model.advertisement.Advertisement;
+import com.netcracker.model.pet.Pet;
 import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 class AdvertisementView extends VerticalLayout {
-
     private final Advertisement adv;
-
     AdvertisementView(Advertisement ad) {
         this.adv = ad;
 
@@ -40,15 +48,31 @@ class AdvertisementView extends VerticalLayout {
         }
         headerLayout.addComponentsAndExpand(themeLabel, dateLabel);
 
-        HorizontalLayout petSignsLayout = new HorizontalLayout();
-        if (adv.getAdPetSigns() != null) {
-            petSignsLayout.addComponent(new Label("Характерные признаки: "));
-            for (String petSign : adv.getAdPetSigns()) {
-                petSignsLayout.addComponent(new Button(petSign));
-            }
-        }
+        HorizontalLayout adPetLayout = new HorizontalLayout();
 
+        Iterator<Pet> adPets = adv.getAdPets().iterator();
+        if (!adv.getAdPets().isEmpty()){
+            Panel petPanel = new Panel("Pets in this advertisement");
+            petPanel.setHeight(100, Unit.PIXELS);
+            petPanel.setWidth(300, Unit.PIXELS);
+            VerticalLayout petLayout = new VerticalLayout();
+            petLayout.setMargin(false);
+            while (adPets.hasNext()){
+                Pet tempPet = CustomRestTemplate.getInstance().customGetForObject("/pet/" + adPets.next().getObjectId(), Pet.class);
+                Button petButton = PageElements.createBlueClickedLabel(tempPet.getPetName(), null);
+                petButton.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(tempPet.getObjectId()));
+                    }
+                });
+                petLayout.addComponent(petButton);
+            }
+            petPanel.setContent(petLayout);
+            adPetLayout.addComponents(petPanel);
+        }
         TextField mainInfo = new TextField();
+        mainInfo.setReadOnly(true);
         mainInfo.setValue(adv.getAdBasicInfo());
         mainInfo.setHeight(200, Unit.PIXELS);
         mainInfo.setWidth("100%");
@@ -60,10 +84,18 @@ class AdvertisementView extends VerticalLayout {
             mapLayout.addComponents(mapLabel, mapLink);
         }
 
-        mainLayout.addComponents(headerLayout, petSignsLayout, mainInfo, mapLayout);
+        mainLayout.addComponents(headerLayout, adPetLayout, mainInfo, mapLayout);
         mainPanel.setContent(mainLayout);
-        //если юзер владелец объявления
-        addComponent(getDeleteAdvButton());
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        BigInteger profileId  = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+
+        if(profileId.equals(adv.getAdAuthor().getObjectId())){
+            HorizontalLayout authorButtonLayuout = new HorizontalLayout();
+            authorButtonLayuout.addComponent(getDeleteAdvButton());
+            authorButtonLayuout.addComponent(getEditAdvButton());
+            addComponent(authorButtonLayuout);
+        }
         addComponent(mainPanel);
     }
     private Button getDeleteAdvButton(){
@@ -72,6 +104,18 @@ class AdvertisementView extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 DeleteAdForm sub = new DeleteAdForm(adv.getAdAuthor().getObjectId(), adv.getObjectId());
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        return tempButton;
+    }
+
+    private Button getEditAdvButton(){
+        Button tempButton = new Button("Edit advertisement", VaadinIcons.EDIT);
+        tempButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                NewAdvertisementForm sub = new NewAdvertisementForm(adv.getAdAuthor().getObjectId(), adv);
                 UI.getCurrent().addWindow(sub);
             }
         });

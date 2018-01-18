@@ -6,11 +6,15 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
@@ -20,13 +24,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.netcracker.ui.validation.UiValidationConstants.CHECK_FULLNESS;
 
 class NewAdvertisementForm extends Window {
+    private Advertisement curAd;
     private BigInteger profileId;
     private HorizontalLayout authorTopicDateLayout;
     private HorizontalLayout categoryPetStatusLayout;
@@ -35,14 +38,17 @@ class NewAdvertisementForm extends Window {
     private DateTimeField dateTimeField;
     private Profile profile;
     private ComboBox<Category> selectedCategory;
-    private TwinColSelect<Pet> selectedPets;
+    private List<Pet> pets;
+    private CheckBoxGroup<String> petCheckBoxGroup;
     private CheckBox selectedStatus;
     private TextArea mainInfo;
     private Binder<VaadinValidationBinder> mainInfoBinder;
     private Binder<VaadinValidationBinder> topicBinder;
-    NewAdvertisementForm(BigInteger profileId) {
+
+    NewAdvertisementForm(BigInteger profileId, Advertisement ad) {
         super();
         this.profileId = profileId;
+        curAd = ad;
         Window subWindow = new Window("Sub-window");
         VerticalLayout subContent = new VerticalLayout();
         setContent(subContent);
@@ -54,11 +60,11 @@ class NewAdvertisementForm extends Window {
         subContent.addComponent(categoryPetStatusLayout);
         getMainInfoLayout();
         subContent.addComponent(mainInfoLayout);
-        Button submit = new Button("Add advertisement", VaadinIcons.CHECK_CIRCLE);
+        Button submit = new Button("Save", VaadinIcons.CHECK_CIRCLE);
         submit.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                if(topicBinder.validate().isOk() && mainInfoBinder.validate().isOk()){
+                if (topicBinder.validate().isOk() && mainInfoBinder.validate().isOk()) {
                     addNewAdvertisement();
                 }
             }
@@ -66,29 +72,37 @@ class NewAdvertisementForm extends Window {
         subContent.addComponent(submit);
         center();
     }
-    private void addNewAdvertisement(){// карту, характерные признаки
+
+    private void addNewAdvertisement() {// карту, характерные признаки
         Advertisement newAd = new Advertisement(topicField.getValue(), "Ad for " + profile.getObjectId());
         newAd.setAdCategory(selectedCategory.getSelectedItem().get());
         newAd.setAdAuthor(profile);
         newAd.setAdBasicInfo(mainInfo.getValue());
         newAd.setAdIsVip(selectedStatus.getValue());
-        newAd.setAdPets(selectedPets.getSelectedItems());
+        List<Pet> petSubList = getSubList(petCheckBoxGroup.getSelectedItems());
+        newAd.setAdPets(petSubList != null ? new HashSet<>(petSubList) : null);
         Timestamp ts = Timestamp.valueOf(dateTimeField.getValue());
         newAd.setAdDate(ts);
         newAd.setAdTopic(topicField.getValue());
+        if (curAd != null) {
+            newAd.setObjectId(curAd.getObjectId());
+        }
         HttpEntity<Advertisement> request = new HttpEntity<>(newAd);
-        Advertisement ad = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/add", request, Advertisement.class);
-        if(ad != null){
-            Notification.show("Advertisement was added!");
+        BigInteger newId = CustomRestTemplate.getInstance().customPostForObject("/bulletinboard/add", request, BigInteger.class);
+        if (newId != null) {
+            newAd.setObjectId(newId);
+            Notification.show("Advertisement was saved!");
         }
         this.close();
         StubVaadinUI currentUI = (StubVaadinUI) UI.getCurrent();
         currentUI.changePrimaryAreaLayout(new AdvertisementView(newAd));
     }
+
     private void getAuthorTopicDateLayout() {
         authorTopicDateLayout = new HorizontalLayout();
         topicField = new TextField("Topic");
         topicField.setRequiredIndicatorVisible(true);
+        topicField.setValue(curAd != null ? curAd.getAdTopic() : "");
         topicBinder = new Binder<>();
         topicBinder.forField(topicField)
                 .asRequired(CHECK_FULLNESS)
@@ -99,7 +113,7 @@ class NewAdvertisementForm extends Window {
         LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         dateTimeField = new DateTimeField("Date");
         dateTimeField.setDateFormat(dateFormatPattern);
-        dateTimeField.setValue(localDateTime);
+        dateTimeField.setValue(curAd != null ? curAd.getAdDate().toLocalDateTime() : localDateTime);
         dateTimeField.setReadOnly(true);
         TextField authorField = new TextField("Author");
         authorField.setIcon(VaadinIcons.USER);
@@ -117,36 +131,77 @@ class NewAdvertisementForm extends Window {
                         "/category", Category[].class));
         selectedCategory.setItems(categories);
         selectedCategory.setItemCaptionGenerator(Category::getCategoryName);
-        selectedCategory.setSelectedItem(categories.get(0));
+        selectedCategory.setSelectedItem(curAd != null ? curAd.getAdCategory() : categories.get(0));
         authorTopicDateLayout.addComponent(topicField);
         authorTopicDateLayout.addComponent(selectedCategory);
         authorTopicDateLayout.addComponent(dateTimeField);
         authorTopicDateLayout.addComponent(authorField);
     }
 
-    private void getCategoryPetStatusLayout() {
-        selectedPets = new TwinColSelect<>("Pets");
-        selectedPets.setIcon(VaadinIcons.PIGGY_BANK);
-        List<Pet> pets = Arrays.asList(
+    private Panel getPetsPanel() {
+        pets = Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/pets/" + 23, Pet[].class));
-        selectedPets.setItems(pets);
-        selectedPets.setItemCaptionGenerator(Pet::getPetName);
-        selectedPets.setRows(3);
+                        "/pets/" + profileId, Pet[].class));
+        Iterator<Pet> profilePets = pets.iterator();
+        if (!pets.isEmpty()) {
+            Panel petPanel = new Panel("Pets for this advertisement");
+            petPanel.setHeight(100, Unit.PIXELS);
+            petPanel.setWidth(300, Unit.PIXELS);
+            VerticalLayout petLayout = new VerticalLayout();
+            petLayout.setMargin(false);
+            petCheckBoxGroup = new CheckBoxGroup<>();
+            List<String> petNames = new ArrayList<>();
+            while (profilePets.hasNext()) {
+                Pet curPet = profilePets.next();
+                petNames.add(curPet.getPetName());
+            }
+            petCheckBoxGroup.setItems(petNames);
+            petCheckBoxGroup.setData(pets);
+            if (curAd != null) {
+                for (Pet p : curAd.getAdPets()) {
+                    String name = CustomRestTemplate.getInstance().customGetForObject("/pet/" + p.getObjectId(), Pet.class).getPetName();
+                    petCheckBoxGroup.select(name);
+                }
+            }
+            petLayout.addComponent(petCheckBoxGroup);
+            petPanel.setContent(petLayout);
+            return petPanel;
+        }
+        return null;
+    }
+
+    private List<Pet> getSubList(Set<String> selectedPetsName) {
+        List<Pet> selectedPets = new ArrayList<>();
+        for (String str : selectedPetsName) {
+            for (Pet p : pets) {
+                if (str.equals(p.getPetName())) {
+                    selectedPets.add(p);
+                    break;
+                }
+            }
+        }
+        return selectedPets;
+    }
+
+    private void getCategoryPetStatusLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
         categoryPetStatusLayout = new HorizontalLayout();
         selectedStatus = new CheckBox("Make VIP ad?");
         selectedStatus.setValue(true);
         verticalLayout.addComponent(selectedStatus);
         categoryPetStatusLayout.addComponent(verticalLayout);
-        if(!pets.isEmpty()){
-            categoryPetStatusLayout.addComponent(selectedPets);
+        Panel pets = getPetsPanel();
+        if (pets != null) {
+            pets.setIcon(VaadinIcons.PIGGY_BANK);
+            categoryPetStatusLayout.addComponent(pets);
         }
     }
-    private void getMainInfoLayout(){
+
+    private void getMainInfoLayout() {
         mainInfoBinder = new Binder<>();
         mainInfoLayout = new HorizontalLayout();
         mainInfo = new TextArea("Main info");
+        mainInfo.setValue(curAd != null ? curAd.getAdBasicInfo() : "");
         mainInfo.setRows(5);
         mainInfo.setRequiredIndicatorVisible(true);
         mainInfo.setWidth("100%");

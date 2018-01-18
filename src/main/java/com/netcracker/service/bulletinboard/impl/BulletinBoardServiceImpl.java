@@ -156,19 +156,14 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     }
 
     @Override
-    public Advertisement addAd(Advertisement ad) {
+    public BigInteger addAd(Advertisement ad) {
         ad.setAdStatus(statusService.getActiveStatus());
-        return entityManagerService.create(ad);
-    }
-
-    @Override
-    public List<String> getAd(Advertisement ad) {
-        return null;
-    }
-
-    @Override
-    public void updateAd(Advertisement ad) {
-
+        BigInteger id = ad.getObjectId();
+        if(id != null){
+            entityManagerService.dropRef(AdvertisementConstant.AD_CATEGORY, id, 0);
+            entityManagerService.dropRef(AdvertisementConstant.AD_PETS, id, 1);
+        }
+        return entityManagerService.update(ad);
     }
 
     @Override

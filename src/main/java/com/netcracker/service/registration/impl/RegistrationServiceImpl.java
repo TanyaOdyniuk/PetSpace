@@ -21,17 +21,17 @@ import java.util.List;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
     @Value("${currency.registration.newuser}")
-    String registrationBonusProp;
+    private String registrationBonusProp;
     @Value("${currency.registration.invitedby}")
-    String invitedByBonusProp;
+    private String invitedByBonusProp;
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
     @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
     @Autowired
-    StatusService statusService;
+    private StatusService statusService;
     @Override
     public User registerUser(User user) {
         increaseBalanceAtStart(user);

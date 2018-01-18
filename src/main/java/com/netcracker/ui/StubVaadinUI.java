@@ -3,6 +3,7 @@ package com.netcracker.ui;
 import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.StubUser;
 
+import com.netcracker.model.user.User;
 import com.netcracker.service.user.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
@@ -19,10 +20,13 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -115,8 +119,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-       // BigInteger profileId = userService.getCurrentUser("levil133@gmail.com").getProfile().getObjectId();
-        BigInteger profileId = BigInteger.valueOf(25);
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        BigInteger profileId  = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if (primaryAreaLayout.getComponentCount() > 1) {
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
