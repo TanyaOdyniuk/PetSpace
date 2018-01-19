@@ -61,14 +61,18 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public User authenticate(String emailField, String passwordField, Collection<? extends GrantedAuthority> authorities) {
         User user = userDetailsService.loadUserByUsername(emailField);
-        Boolean bool = bCryptEncoder.matches(passwordField, user.getPassword());
-        // TO UI
-        if (!bool) {
-            Notification.show("Wrong email or password!");
+        if (user == null) {
+            Notification.show("Wrong email!");
         } else {
-            Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField, authorities);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            LoginPage.getCurrent().getPage().setLocation("/testpage");
+            Boolean bool = bCryptEncoder.matches(passwordField, user.getPassword());
+            // TO UI
+            if (!bool) {
+                Notification.show("Wrong password!");
+            } else {
+                Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField, authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                LoginPage.getCurrent().getPage().setLocation("/testpage");
+            }
         }
         return user;
     }

@@ -194,10 +194,8 @@ public class PetEditFormUI extends Window {
 
         SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         String login = o.getAuthentication().getPrincipal().toString();
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("login", login);
-
         HttpEntity<Pet> petEntity = new HttpEntity<>(createdPet, headers);
 
         createdPet = CustomRestTemplate.getInstance()

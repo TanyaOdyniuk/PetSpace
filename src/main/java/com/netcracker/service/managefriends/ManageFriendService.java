@@ -24,4 +24,8 @@ public interface ManageFriendService {
     }
 
     List<Profile> getFriendList(BigInteger profileId);
+
+    List<Profile> searchForFriendsByName(String name, String surname);
+
+    List<Profile> searchForFriendsByEmail(String email);
 }
