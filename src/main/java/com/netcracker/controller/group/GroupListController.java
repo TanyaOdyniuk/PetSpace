@@ -25,8 +25,8 @@ public class GroupListController {
         return groupService.createNewGroup(group, profileId);
     }
 
-    @GetMapping("/allGroupTypes")
-    public List<GroupType> getAllGroupTypes(){
-        return groupService.getAllGroupTypes();
-    }
+//    @GetMapping("/allGroupTypes")
+//    public List<GroupType> getAllGroupTypes(){
+//        return groupService.getAllGroupTypes();
+//    }
 }

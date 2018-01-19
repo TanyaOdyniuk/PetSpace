@@ -1,6 +1,5 @@
 package com.netcracker.controller.gallery;
 
-import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.service.media.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,7 @@ public class GalleryController {
     MediaService mediaService;
 
     @GetMapping("/{id}")
-    public List<PhotoRecord> getImagesGalary(@PathVariable("id") BigInteger albumId){
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
+    public List<PhotoRecord> getImagesGallery(@PathVariable("id") BigInteger albumId){
         return mediaService.getImagesGallery(albumId);
     }
 

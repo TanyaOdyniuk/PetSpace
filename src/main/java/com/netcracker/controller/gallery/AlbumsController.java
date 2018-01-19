@@ -1,6 +1,7 @@
 package com.netcracker.controller.gallery;
 
 import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.service.media.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +15,17 @@ public class AlbumsController {
     MediaService mediaService;
 
     @GetMapping("/{id}")
-    public List<PhotoAlbum> getAlbum(@PathVariable("id") BigInteger petId){
-        return mediaService.getMyAlbums(petId,false,null, null);
+    public List<PhotoAlbum> getMyAlbums(@PathVariable("id") BigInteger profileId){
+        return mediaService.getMyAlbums(profileId);
     }
 
     @PostMapping("/{id}/add")
-    public PhotoAlbum createNewPet(@RequestBody PhotoAlbum album, @PathVariable("id") BigInteger petId){
+    public PhotoAlbum createNewAlbum(@RequestBody PhotoAlbum album, @PathVariable("id") BigInteger petId){
         return mediaService.createAlbum(album, petId);
+    }
+
+    @GetMapping("/lastPhotos")
+    public List<PhotoRecord> getLastPhotos(){
+        return mediaService.getLastPhotos();
     }
 }

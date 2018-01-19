@@ -3,6 +3,7 @@ package com.netcracker.service.groups;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupType;
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -10,10 +11,8 @@ import java.util.List;
 
 @Service
 public interface GroupService {
-//    Система должна отображать страницу группы
-    Group getGroup(BigInteger groupId);
 
-    GroupType getGroupType(BigInteger groupId);
+    Group getGroup(BigInteger groupId);
 
     List<Group> getMyGroupsList(BigInteger profileId);
 
@@ -21,12 +20,10 @@ public interface GroupService {
 
     Profile getGroupAdmin(BigInteger groupId);
 
-    List<GroupType> getAllGroupTypes();
+    List<User> getSubscribedUsersList(BigInteger groupId);
 
-//    Система должна позволять зарегистрированному пользователю создавать страницу группы
     Group createNewGroup(Group newGroup, BigInteger profileId);
 
-//    Система должна позволять админу вносить изменения в группу
     void editGroup(Group groupForChangeOnlyAdmin);
 
 //    Система должна позволять администратору удалить группу
@@ -43,6 +40,5 @@ public interface GroupService {
     void removeParticipantFromGroup(Group group, BigInteger userID);
 
 //    Приглашенный пользователь должен подтвердить свое участие в группе
-    boolean confirmInvitationToGroup(Profile invited);   //?
-
+    boolean confirmInvitationToGroup(Profile invited);
 }

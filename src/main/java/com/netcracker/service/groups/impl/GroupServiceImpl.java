@@ -6,6 +6,7 @@ import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.group.GroupType;
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
 import com.netcracker.service.groups.GroupService;
 import com.netcracker.service.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,19 @@ public class GroupServiceImpl implements GroupService{
 
     @Override
     public Group getGroup(BigInteger groupId) {
-        Group group = entityManagerService.getById(groupId, Group.class);
-        return group;
+        return entityManagerService.getById(groupId, Group.class);
     }
 
-    @Override
-    public GroupType getGroupType(BigInteger groupId) {
-        GroupType groupType = ((Group)entityManagerService.getById(groupId, Group.class)).getGroupType();
-        return entityManagerService.getById(groupType.getObjectId(), GroupType.class);
-    }
+//    @Override
+//    public GroupType getGroupType(BigInteger groupId) {
+//        GroupType groupType = ((Group)entityManagerService.getById(groupId, Group.class)).getGroupType();
+//        return entityManagerService.getById(groupType.getObjectId(), GroupType.class);
+//    }
 
     @Override
     public List<Group> getMyGroupsList(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS/*GR_ADMIN*/;
         return entityManagerService.getObjectsBySQL(sqlQuery, Group.class, new QueryDescriptor());
     }
 
@@ -57,6 +57,19 @@ public class GroupServiceImpl implements GroupService{
     }
 
     @Override
+    public List<User> getSubscribedUsersList(BigInteger groupId) {
+        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = 3\n" +
+                "AND OBJECT_ID IN (SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + groupId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS + ")";
+        List<User> users = entityManagerService.getObjectsBySQL(sqlQuery, User.class, new QueryDescriptor());
+        for (User user : users) {
+            user.setProfile(null);
+            user.setUserAuthorities(null);
+        }
+        return users;
+    }
+
+    @Override
     public Group createNewGroup(Group newGroup, BigInteger profileId) {
         Profile owner = entityManagerService.getById(profileId, Profile.class);
         newGroup.setGroupAdmin(owner);
@@ -68,11 +81,11 @@ public class GroupServiceImpl implements GroupService{
         return entityManagerService.create(newGroup);
     }
 
-    @Override
-    public List<GroupType> getAllGroupTypes() {
-        return entityManagerService.getAll(
-                BigInteger.valueOf(GroupConstant.GRT_TYPE), GroupType.class, new QueryDescriptor());
-    }
+//    @Override
+//    public List<GroupType> getAllGroupTypes() {
+//        return entityManagerService.getAll(
+//                BigInteger.valueOf(GroupConstant.GRT_TYPE), GroupType.class, new QueryDescriptor());
+//    }
 
     @Override
     public void editGroup(Group groupForChangeOnlyAdmin) {

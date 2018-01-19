@@ -4,6 +4,7 @@ import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
@@ -74,12 +75,10 @@ class GalleryUI extends VerticalLayout {
         newPhotoRecordWindow.setCaption("Creating new photo:");
         VerticalLayout windowContent = new VerticalLayout();
         HorizontalLayout addPhotoRecordButtonsLayout = new HorizontalLayout();
-
         TextField photoLink = PageElements.createTextField("Enter photos link:", "photos link", true);
         photoLink.setWidth("100%");
         TextField description = PageElements.createTextField("Enter photos description:", "photos description", false);
         description.setWidth("100%");
-
         Button addPhotoRecordButton = new Button("Add photo");
         addPhotoRecordButton.addClickListener(new AbstractClickListener() {
             @Override
@@ -93,7 +92,6 @@ class GalleryUI extends VerticalLayout {
         Button cancelAddingNewPhoto = new Button("Cancel", click -> newPhotoRecordWindow.close());
         addPhotoRecordButtonsLayout.addComponentsAndExpand(addPhotoRecordButton, cancelAddingNewPhoto);
         windowContent.addComponents(photoLink, description, addPhotoRecordButtonsLayout);
-
         newPhotoRecordWindow.setContent(windowContent);
         newPhotoRecordWindow.center();
     }
@@ -109,11 +107,10 @@ class GalleryUI extends VerticalLayout {
         PhotoRecord createdPhoto = new PhotoRecord();
         createdPhoto.setPhoto(photoLink);
         createdPhoto.setRecordText(description);
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        Timestamp ts = Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         createdPhoto.setRecordDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
         HttpEntity<PhotoRecord> photo = new HttpEntity<>(createdPhoto);
-        PhotoRecord dbAlbum = CustomRestTemplate.getInstance()
+        CustomRestTemplate.getInstance()
                 .customPostForObject("/gallery/" + albumId + "/add", photo, PhotoRecord.class);
+        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(albumId));
     }
 }

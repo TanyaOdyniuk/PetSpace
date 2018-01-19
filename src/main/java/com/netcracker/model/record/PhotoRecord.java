@@ -5,9 +5,6 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.album.PhotoAlbumConstant;
-import com.netcracker.model.comment.PhotoRecordComment;
-
-import java.util.List;
 
 @ObjectType(RecordConstant.PR_TYPE)
 public class PhotoRecord extends AbstractRecord {
@@ -16,6 +13,7 @@ public class PhotoRecord extends AbstractRecord {
     private String photo;
     @Reference(value = PhotoAlbumConstant.PA_CONTPHOTO, isParentChild = 0)
     private PhotoAlbum photoAlbum;
+
     public PhotoRecord() {
     }
 
@@ -34,6 +32,7 @@ public class PhotoRecord extends AbstractRecord {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
+
     public PhotoAlbum getPhotoAlbum() {
         return photoAlbum;
     }

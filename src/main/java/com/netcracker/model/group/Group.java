@@ -33,8 +33,10 @@ public class Group extends BaseEntity {
         super(name);
     }
 
-    public Group(String name, String description) {
-        super(name, description);
+    public Group(String name, String description, String groupAvatar) {
+        this.groupName = name;
+        this.groupDescription = description;
+        this.groupAvatar = groupAvatar;
     }
 
     public String getGroupName() {
@@ -97,8 +99,8 @@ public class Group extends BaseEntity {
     public String toString() {
         return "Group{" +
                 "groupName='" + groupName + '\'' +
-                ", groupAvatar='" + groupAvatar + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
+                ", groupAvatar='" + groupAvatar + '\'' +
                 ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
                 ", groupAdmin=" + groupAdmin +

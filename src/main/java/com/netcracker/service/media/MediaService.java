@@ -20,13 +20,13 @@ public interface MediaService {
 //    List<WallRecord> imagesGalary(Profile profile);
     List<PhotoRecord> getImagesGallery(BigInteger albumId);
 
-    List<PhotoAlbum> getMyAlbums(BigInteger petId, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc);
-
-    PhotoAlbum getAlbum(BigInteger albumId);
+    List<PhotoAlbum> getMyAlbums(BigInteger profileId/*, boolean isPaging, Pair<Integer, Integer> pagingDesc, Map<String, String> sortingDesc*/);
 
     PhotoAlbum createAlbum(PhotoAlbum album, BigInteger petId);
 
     PhotoRecord createPhotoRecord(PhotoRecord photoRecord, BigInteger albumId);
+
+    List<PhotoRecord> getLastPhotos(/*List<BigInteger> ids, BigInteger id*/);
 
     //создание и редактирование пользователем одного и более фотоальбомов для каждого из своих питомцев
     void createAndEditPetAlbum(Profile profile);

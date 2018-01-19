@@ -146,7 +146,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 primaryAreaLayout.addComponentsAndExpand(new MessagesListUI(profileId));
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(BigInteger.valueOf(50)));
+                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(profileId));
                 break;
             case "My groups":
                 primaryAreaLayout.addComponentsAndExpand(new MyGroupsListUI(profileId));
@@ -174,6 +174,13 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         ObjectAssert.isNull(layoutToSet);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         primaryAreaLayout.addComponentsAndExpand(layoutToSet);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+    }
+    public void changePrimaryAreaLayout(Panel panel){
+        ObjectAssert.isNull(panel);
+        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        primaryAreaLayout.addComponentsAndExpand(panel);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }

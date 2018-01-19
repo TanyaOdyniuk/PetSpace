@@ -5,16 +5,17 @@ import com.netcracker.ui.AbstractClickListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
+
 import java.util.List;
 
-public class HorizontalGallery extends /*HorizontalLayout*/ Window{
+public class HorizontalGallery extends Window {
     Panel panel;
     HorizontalLayout galleryLayout;
     Image image;
     HorizontalLayout imageLayout;
     Integer index;
 
-    public HorizontalGallery(List<PhotoRecord> list, Integer i){
+    public HorizontalGallery(List<PhotoRecord> list, Integer i) {
         setModal(true);
 //        center();
         panel = new Panel();
@@ -22,25 +23,25 @@ public class HorizontalGallery extends /*HorizontalLayout*/ Window{
         imageLayout = new HorizontalLayout();
         index = i;
 
-        Panel imagePanel = new Panel();
-        imagePanel.setWidth("400px");
-        imagePanel.setHeight("400px");
-        imagePanel.setContent(imageLayout);
+//        Panel imagePanel = new Panel();
+//        imagePanel.setWidth("400px");
+//        imagePanel.setHeight("400px");
+//        imagePanel.setContent(imageLayout);
         image = new Image();
         image.setSource(new ExternalResource(list.get(index).getPhoto()));
         image.setDescription(list.get(index).getDescription());
-        panel.setWidth(900,Unit.PIXELS);//1100
-        panel.setHeight(630,Unit.PIXELS);//650
+        panel.setWidth(900, Unit.PIXELS);//1100
+        panel.setHeight(630, Unit.PIXELS);//650
 
         Button arrowLeft = new Button();
-        arrowLeft.setWidth(10,Unit.PIXELS);
-        arrowLeft.setHeight(40,Unit.PIXELS);
+        arrowLeft.setWidth(10, Unit.PIXELS);
+        arrowLeft.setHeight(40, Unit.PIXELS);
         arrowLeft.setIcon(VaadinIcons.ARROW_LEFT);
         arrowLeft.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 index--;
-                if(index < 0)
+                if (index < 0)
                     index = list.size() - 1;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
                 image.setDescription(list.get(index).getDescription());
@@ -49,14 +50,14 @@ public class HorizontalGallery extends /*HorizontalLayout*/ Window{
         });
 
         Button arrowRight = new Button();
-        arrowRight.setWidth(10,Unit.PIXELS);
-        arrowRight.setHeight(40,Unit.PIXELS);
+        arrowRight.setWidth(10, Unit.PIXELS);
+        arrowRight.setHeight(40, Unit.PIXELS);
         arrowRight.setIcon(VaadinIcons.ARROW_RIGHT);
         arrowRight.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 index++;
-                if(index == list.size())
+                if (index == list.size())
                     index = 0;
                 image.setSource(new ExternalResource(list.get(index).getPhoto()));
                 image.setDescription(list.get(index).getDescription());
@@ -67,13 +68,14 @@ public class HorizontalGallery extends /*HorizontalLayout*/ Window{
 
         imageLayout.addComponent(image);
 
-        galleryLayout.addComponents(arrowLeft,imagePanel /*imageLayout*/, arrowRight);
+        galleryLayout.addComponents(arrowLeft, imageLayout, arrowRight);
 
         galleryLayout.setComponentAlignment(arrowLeft, Alignment.MIDDLE_LEFT);
         galleryLayout.setComponentAlignment(arrowRight, Alignment.MIDDLE_RIGHT);
 
+        Panel galleryLayoutPanel = new Panel();
+        galleryLayoutPanel.setContent(galleryLayout);
         panel.setContent(galleryLayout);
-//        addComponentsAndExpand(panel);
         setContent(panel);
     }
 }
