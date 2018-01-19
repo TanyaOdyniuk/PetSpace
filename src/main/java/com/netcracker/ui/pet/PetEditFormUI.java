@@ -8,7 +8,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.netcracker.ui.util.UploadWindow;
+import com.netcracker.ui.util.upload.ImageUpload;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinSession;
@@ -25,7 +25,6 @@ import java.util.List;
 public class PetEditFormUI extends Window {
 
     private Pet pet;
-    private Window windowToSend;
     private Image avatar;
     private String avatarPath;
     private Boolean isFileResource;
@@ -33,7 +32,6 @@ public class PetEditFormUI extends Window {
     PetEditFormUI(Pet pet) {
         super();
         this.pet = pet;
-        this.windowToSend = this;
         this.isFileResource = false;
         setCaption("Information about pet");
         VerticalLayout mainLayout = new VerticalLayout();
@@ -57,7 +55,6 @@ public class PetEditFormUI extends Window {
 
         avatarField.setWidth("100%");
 
-
         Button avatarSelect = new Button("Set URL");
         avatarSelect.addClickListener(new AbstractClickListener() {
             @Override
@@ -67,19 +64,16 @@ public class PetEditFormUI extends Window {
             }
         });
 
-        Button uploadAvatar = new Button("Upload");
-        uploadAvatar.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                UploadWindow sub = new UploadWindow(UIConstants.PATH_TO_AVATAR_PET, windowToSend);
-                UI.getCurrent().addWindow(sub);
-            }
-        });
+        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET, this);
 
-        avatarSelect.setWidth("185px");
-        uploadAvatar.setWidth("185px");
+        //avatarSelect.setWidth("185px");
+        //uploadAvatar.setWidth("185px");
+        avatarSelect.setWidth("100%");
+        uploadAvatar.setWidth("100%");
 
         avatarContext.addComponents(avatarField, avatarSelect, uploadAvatar);
+        avatarContext.setComponentAlignment(avatarSelect, Alignment.MIDDLE_CENTER);
+        avatarContext.setComponentAlignment(uploadAvatar, Alignment.MIDDLE_CENTER);
 
         avatarLayout.addComponent(avatar, 0, 0);
         avatarLayout.addComponent(avatarContext, 1, 0);
