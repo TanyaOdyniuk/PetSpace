@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PetDataAssert {
-    @Autowired
-    private static Logger logger;
 
     public static void assertName(String name) throws PetDataValidationException {
         commomStringValidation(name, RegexTemplate.PET_NAME, ErrorMessage.PET_VALIDATION_NAME);
@@ -46,9 +44,7 @@ public class PetDataAssert {
             }
             throw new IllegalArgumentException();
         } catch (IllegalArgumentException ex) {
-            logger.throwing(PetDataAssert.class.getName(), "assertAge", ex);
             throw new PetDataValidationException(ErrorMessage.PET_VALIDATION_AGE);
-
         }
     }
 
@@ -58,7 +54,6 @@ public class PetDataAssert {
             if (!isMatchingRegex(toCheck, regex))
                 throw new IllegalArgumentException();
         } catch (IllegalArgumentException ex) {
-            logger.throwing(PetDataAssert.class.getName(), "commomStringValidation", ex);
             throw new PetDataValidationException(messageToThrow);
         }
     }
@@ -83,7 +78,6 @@ public class PetDataAssert {
                 throw new PetDataValidationException(messageToThrow);
             return number;
         }
-        logger.severe(PetDataAssert.class.getName() + " commomSizeValidation " + messageToThrow);
         throw new PetDataValidationException(messageToThrow);
     }
 
