@@ -1,6 +1,5 @@
 package com.netcracker.ui.util.upload;
 
-import com.netcracker.ui.util.UploadableComponent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;

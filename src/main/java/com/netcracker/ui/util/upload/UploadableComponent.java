@@ -1,7 +1,6 @@
-package com.netcracker.ui.util;
+package com.netcracker.ui.util.upload;
 
 import com.netcracker.ui.pet.PetEditFormUI;
-import com.netcracker.ui.util.upload.ImageReceiver;
 
 import java.io.File;
 

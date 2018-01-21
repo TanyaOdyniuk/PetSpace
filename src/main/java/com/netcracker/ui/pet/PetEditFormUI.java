@@ -8,7 +8,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.netcracker.ui.util.UploadableComponent;
+import com.netcracker.ui.util.upload.UploadableComponent;
 import com.netcracker.ui.util.upload.ImageUpload;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
