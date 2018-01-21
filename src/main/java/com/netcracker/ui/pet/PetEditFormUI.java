@@ -8,6 +8,7 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.netcracker.ui.util.UploadableComponent;
 import com.netcracker.ui.util.upload.ImageUpload;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -22,7 +23,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class PetEditFormUI extends Window {
+public class PetEditFormUI extends Window implements UploadableComponent {
 
     private Pet pet;
     private Image avatar;
@@ -60,14 +61,12 @@ public class PetEditFormUI extends Window {
             @Override
             public void buttonClickListener() {
                 avatarSelect.setComponentError(null);
-                updateAvatar(avatarField.getValue(), avatar);
+                updateImage(avatarField.getValue(), avatar);
             }
         });
 
-        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET, this);
+        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET, pet.getObjectId(), this);
 
-        //avatarSelect.setWidth("185px");
-        //uploadAvatar.setWidth("185px");
         avatarSelect.setWidth("100%");
         uploadAvatar.setWidth("100%");
 
@@ -83,6 +82,7 @@ public class PetEditFormUI extends Window {
         GridLayout infoLayout = new GridLayout(2, 3);
         infoLayout.setWidth("100%");
         infoLayout.setSpacing(true);
+
         //FIELDS
         TextField petNameField = PageElements.createTextField("Pet's name", "Pet's name", true);
         petNameField.setWidth("100%");
@@ -158,13 +158,14 @@ public class PetEditFormUI extends Window {
         center();
     }
 
-    public void updateAvatar(File imageSource) {
-        avatar.setSource(new FileResource(imageSource));
+    @Override
+    public void updateImage(File imageFile) {
+        avatar.setSource(new FileResource(imageFile));
         this.isFileResource = true;
-        this.avatarPath = imageSource.getPath();
+        this.avatarPath = imageFile.getPath();
     }
 
-    private void updateAvatar(String imageURL, Image imageToUpdate) {
+    private void updateImage(String imageURL, Image imageToUpdate) {
         imageURL = PetDataAssert.assertAvatarURL(imageURL);
         pet.setPetAvatar(imageURL);
         imageToUpdate.setSource(new ExternalResource(imageURL));
