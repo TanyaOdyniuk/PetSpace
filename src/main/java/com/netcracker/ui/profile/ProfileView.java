@@ -1,5 +1,6 @@
 package com.netcracker.ui.profile;
 
+import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.AbstractRecord;
@@ -16,11 +17,13 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.ZoneId;
@@ -123,9 +126,17 @@ public class ProfileView extends VerticalLayout {
             petsGrid.setSpacing(true);
             for (Pet singlePet : petList) {
                 Image petMiniImage = new Image();
+                String petAvatar = singlePet.getPetAvatar();
+                if (petAvatar != null) {
+                    if (PetDataAssert.isAvatarURL(petAvatar))
+                        petMiniImage.setSource(new ExternalResource(petAvatar));
+                    else
+                        petMiniImage.setSource(new FileResource(new File(petAvatar)));
+                } else
+                    petMiniImage = PageElements.getNoImage();
+
                 petMiniImage.setHeight(55, Unit.PIXELS);
                 petMiniImage.setWidth(55, Unit.PIXELS);
-                petMiniImage.setSource(new ExternalResource(singlePet.getPetAvatar()));
                 petMiniImage.setDescription(singlePet.getPetName());
                 petMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
                         ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));

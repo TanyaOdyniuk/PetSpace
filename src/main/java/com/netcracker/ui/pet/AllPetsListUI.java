@@ -109,7 +109,7 @@ public class AllPetsListUI extends VerticalLayout {
 
     private List<Pet> getAllPets(int pageNumber) {
         ResponseEntity<RestResponsePage<Pet>> pageResponseEntity =
-                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/pets/" + pageNumber, HttpMethod.GET,
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/pets/all/" + pageNumber, HttpMethod.GET,
                         null, new ParameterizedTypeReference<RestResponsePage<Pet>>() {
                         });
         petsResponse = pageResponseEntity.getBody();

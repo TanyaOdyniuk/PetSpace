@@ -20,9 +20,6 @@ public class PetsListPageController {
     PetProfileService petProfileService;
 
     @GetMapping("/{id}/{page}")
-    //public List<Pet> getMyPets(@PathVariable("id") BigInteger id) {
-     //   return petProfileService.getAllProfilePets(id);
-    //}
     public RestResponsePage<Pet> getMyMessages(@PathVariable("id") BigInteger profileId, @PathVariable("page") int page) {
         Integer count = petProfileService.getAllPetsPageCount(profileId);
         List<Pet> petsProfileList =  petProfileService.getAllProfilePets(profileId, page);
@@ -30,10 +27,15 @@ public class PetsListPageController {
     }
 
 
-    @GetMapping("/{page}")
+    @GetMapping("/all/{page}")
     public RestResponsePage<Pet> getAllPets(@PathVariable("page") int page) {
         Integer count = petProfileService.getAllPetsPageCount();
         List<Pet> petsList =  petProfileService.getAllPets(page);
         return new RestResponsePage<>(petsList, null, count);
+    }
+
+    @GetMapping("/{id}")
+    public List<Pet> getMyPets(@PathVariable("id") BigInteger id) {
+        return petProfileService.getAllProfilePets(id);
     }
 }

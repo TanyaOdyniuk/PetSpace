@@ -47,6 +47,9 @@ public interface PetProfileService {
     //Получить список животных переданного профиля
     List<Pet> getAllProfilePets(BigInteger profileId, int page);
 
+
+    List<Pet> getAllProfilePets(BigInteger profileId);
+
     //Получить список видов
     List<PetSpecies> getAllSpecies();
 

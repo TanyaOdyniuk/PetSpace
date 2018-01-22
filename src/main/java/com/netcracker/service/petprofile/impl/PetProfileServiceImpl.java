@@ -66,7 +66,7 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Override
     public void deleteProfile(BigInteger profileId) {
-        entityManagerService.delete(profileId, 0);
+        entityManagerService.delete(profileId, -1);
     }
 
     @Override
@@ -98,6 +98,11 @@ public class PetProfileServiceImpl implements PetProfileService {
         descriptor.addPagingDescriptor(page, Integer.valueOf(petsPageCapacity));
         descriptor.addSortingDesc(PetConstant.PET_NAME, "ASC", false);
         return entityManagerService.getObjectsBySQL(profilePetsQuery + profileId, Pet.class, descriptor);
+    }
+
+    @Override
+    public List<Pet> getAllProfilePets(BigInteger profileId){
+        return entityManagerService.getObjectsBySQL(profilePetsQuery + profileId, Pet.class, new QueryDescriptor());
     }
 
     @Override
