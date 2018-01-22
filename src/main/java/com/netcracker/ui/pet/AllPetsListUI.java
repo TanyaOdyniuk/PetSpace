@@ -3,23 +3,36 @@ package com.netcracker.ui.pet;
 import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.user.Profile;
+import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
+import com.netcracker.ui.StubPagingBar;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.netcracker.ui.util.VaadinValidationBinder;
+import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.event.MouseEvents;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.*;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class AllPetsListUI extends VerticalLayout {
 
     private int browserHeight;
+
+    private RestResponsePage<Pet> petsResponse;
+
+    private StubPagingBar pagingLayout;
+    private VerticalLayout petRecordsLayout;
 
     public AllPetsListUI() {
         super();
@@ -28,8 +41,18 @@ public class AllPetsListUI extends VerticalLayout {
         Panel mainPanel = new Panel();
         mainPanel.setWidth("100%");
         mainPanel.setHeight(browserHeight - 250, Unit.PIXELS);
-        VerticalLayout petRecordsLayout = new VerticalLayout();
-        List<Pet> petList = getAllPets();
+        petRecordsLayout = new VerticalLayout();
+
+        initPetsPage(1);
+
+        mainPanel.setContent(petRecordsLayout);
+        addComponent(mainPanel);
+        setPagingLayout();
+    }
+
+    private void initPetsPage(int pageNumber){
+        petRecordsLayout.removeAllComponents();
+        List<Pet> petList = getAllPets(pageNumber);
         for (Pet pet : petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
@@ -78,13 +101,89 @@ public class AllPetsListUI extends VerticalLayout {
 
             petRecordsLayout.addComponents(petRecord, PageElements.getSeparator());
         }
-        mainPanel.setContent(petRecordsLayout);
-        addComponent(mainPanel);
+        if(pagingLayout != null)
+            petRecordsLayout.addComponent(pagingLayout);
+        else
+            setPagingLayout();
     }
 
-    private List<Pet> getAllPets() {
-        return Arrays.asList(
-                CustomRestTemplate.getInstance().customGetForObject(
-                        "/pets/", Pet[].class));
+    private List<Pet> getAllPets(int pageNumber) {
+        ResponseEntity<RestResponsePage<Pet>> pageResponseEntity =
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/pets/" + pageNumber, HttpMethod.GET,
+                        null, new ParameterizedTypeReference<RestResponsePage<Pet>>() {
+                        });
+        petsResponse = pageResponseEntity.getBody();
+        return petsResponse.getContent();
+    }
+
+    private void setPagingLayout() {
+        if (pagingLayout != null) {
+            petRecordsLayout.removeComponent(pagingLayout);
+        }
+        int pageCount = (int) petsResponse.getTotalElements();
+        if (pageCount > 1) {
+            pagingLayout = new StubPagingBar(pageCount);
+            pagingLayout.setBorderButtonsState(true);
+            pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    pagingLayout.setBorderButtonsState(true);
+                    Integer page = (Integer) pagingLayout.getFirstPageButton().getData();
+                    initPetsPage(page);
+                    pagingLayout.currentPageNumber = 1;
+                    pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                }
+            });
+            pagingLayout.getLastPageButton().addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    pagingLayout.setBorderButtonsState(false);
+                    Integer page = (Integer) pagingLayout.getLastPageButton().getData();
+                    initPetsPage(page);
+                    pagingLayout.currentPageNumber = page;
+                    pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                }
+            });
+            pagingLayout.getPrevPageButton().addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    if (pagingLayout.currentPageNumber > 1) {
+                        --pagingLayout.currentPageNumber;
+                        initPetsPage(pagingLayout.currentPageNumber);
+                        pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        if (pagingLayout.currentPageNumber == 1)
+                            pagingLayout.setBorderButtonsState(true);
+                        else
+                            pagingLayout.setAllButtonsStateEnabled();
+                    }
+                }
+            });
+            pagingLayout.getNextPageButton().addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    if (pagingLayout.currentPageNumber < pageCount) {
+                        ++pagingLayout.currentPageNumber;
+                        initPetsPage(pagingLayout.currentPageNumber);
+                        pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        if (pagingLayout.currentPageNumber == pageCount)
+                            pagingLayout.setBorderButtonsState(false);
+                        else
+                            pagingLayout.setAllButtonsStateEnabled();
+                    }
+                }
+            });
+
+            pagingLayout.getPageNumberField().addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+                @Override
+                public void handleAction(Object o, Object o1) {
+                    BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
+                    if (!status.hasErrors()) {
+                        pagingLayout.currentPageNumber = Integer.valueOf(pagingLayout.getPageNumberField().getValue());
+                        initPetsPage(pagingLayout.currentPageNumber);
+                    }
+                }
+            });
+            petRecordsLayout.addComponent(pagingLayout);
+        }
     }
 }

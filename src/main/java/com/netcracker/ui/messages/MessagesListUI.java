@@ -139,52 +139,62 @@ public class MessagesListUI extends VerticalLayout {
         int pageCount = (int) messageResponse.getTotalElements();
         if (pageCount > 1) {
             pagingLayout = new StubPagingBar(pageCount);
-
-            ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
+            pagingLayout.setBorderButtonsState(true);
+            pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    Integer page = (Integer) ((Button) pagingLayout.getComponent(0)).getData();
+                    pagingLayout.setBorderButtonsState(true);
+                    Integer page = (Integer) pagingLayout.getFirstPageButton().getData();
                     initMessagePage(page);
                     pagingLayout.currentPageNumber = 1;
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
+                    pagingLayout.getPageNumberField().setValue(String.valueOf(page));
                 }
             });
-            ((Button) pagingLayout.getComponent(6)).addClickListener(new AbstractClickListener() {
+            pagingLayout.getLastPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    Integer page = (Integer) ((Button) pagingLayout.getComponent(6)).getData();
+                    pagingLayout.setBorderButtonsState(false);
+                    Integer page = (Integer) pagingLayout.getLastPageButton().getData();
                     initMessagePage(page);
                     pagingLayout.currentPageNumber = page;
-                    ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
+                    pagingLayout.getPageNumberField().setValue(String.valueOf(page));
                 }
             });
-            ((Button) pagingLayout.getComponent(1)).addClickListener(new AbstractClickListener() {
+            pagingLayout.getPrevPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
                     if (pagingLayout.currentPageNumber > 1) {
                         --pagingLayout.currentPageNumber;
                         initMessagePage(pagingLayout.currentPageNumber);
-                        ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        if (pagingLayout.currentPageNumber == 1)
+                            pagingLayout.setBorderButtonsState(true);
+                        else
+                            pagingLayout.setAllButtonsStateEnabled();
                     }
                 }
             });
-            ((Button) pagingLayout.getComponent(5)).addClickListener(new AbstractClickListener() {
+            pagingLayout.getNextPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
                     if (pagingLayout.currentPageNumber < pageCount) {
                         ++pagingLayout.currentPageNumber;
                         initMessagePage(pagingLayout.currentPageNumber);
-                        ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
+                        if (pagingLayout.currentPageNumber == pageCount)
+                            pagingLayout.setBorderButtonsState(false);
+                        else
+                            pagingLayout.setAllButtonsStateEnabled();
                     }
                 }
             });
 
-            ((TextField) pagingLayout.getComponent(3)).addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+            pagingLayout.getPageNumberField().addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
                 @Override
                 public void handleAction(Object o, Object o1) {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
-                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
+                        pagingLayout.currentPageNumber = Integer.valueOf(pagingLayout.getPageNumberField().getValue());
                         initMessagePage(pagingLayout.currentPageNumber);
                     }
                 }

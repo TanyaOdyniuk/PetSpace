@@ -32,8 +32,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int getAllMessagePageCount(BigInteger profileId) {
-        Integer adPageCapacity = new Integer(messagePageCapacity);
-        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getMessagesQuery + profileId));
+        Integer msgPageCapacity = new Integer(messagePageCapacity);
+        return pageCounterService.getPageCount(msgPageCapacity, entityManagerService.getBySqlCount(getMessagesQuery + profileId));
     }
 
     @Override
