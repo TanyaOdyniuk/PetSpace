@@ -7,7 +7,7 @@ import com.netcracker.model.advertisement.AdvertisementConstant;
 
 @ObjectType(CommentConstant.COM_TYPE)
 public class AdvertisementComment extends AbstractComment {
-    @Reference(value = AdvertisementConstant.AD_TYPE, isParentChild = 0)//нет списка комментов
+    @Reference(value = AdvertisementConstant.AD_TYPE, isParentChild = 0)
     private Advertisement commentedAdvertisement;
 
     public AdvertisementComment() {

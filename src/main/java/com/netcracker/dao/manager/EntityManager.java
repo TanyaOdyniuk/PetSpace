@@ -184,8 +184,7 @@ public class EntityManager {
         queryDescriptor.setInnerQuery(Query.SELECT_FROM_OBJECTS);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 queryBuilder.build(queryDescriptor),
-                objectTypeId
-                /*new Object[]{objectTypeId}*/);
+                objectTypeId);
         if (rows.isEmpty()) return Collections.emptyList();
         List<Entity> entityList = new ArrayList<>();
         for (Map row : rows) {

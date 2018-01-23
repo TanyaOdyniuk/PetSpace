@@ -49,27 +49,29 @@ class AdvertisementView extends VerticalLayout {
         headerLayout.addComponentsAndExpand(themeLabel, dateLabel);
 
         HorizontalLayout adPetLayout = new HorizontalLayout();
+        if(adv.getAdPets() != null){
 
-        Iterator<Pet> adPets = adv.getAdPets().iterator();
-        if (!adv.getAdPets().isEmpty()){
-            Panel petPanel = new Panel("Pets in this advertisement");
-            petPanel.setHeight(100, Unit.PIXELS);
-            petPanel.setWidth(300, Unit.PIXELS);
-            VerticalLayout petLayout = new VerticalLayout();
-            petLayout.setMargin(false);
-            while (adPets.hasNext()){
-                Pet tempPet = CustomRestTemplate.getInstance().customGetForObject("/pet/" + adPets.next().getObjectId(), Pet.class);
-                Button petButton = PageElements.createBlueClickedLabel(tempPet.getPetName(), null);
-                petButton.addClickListener(new AbstractClickListener() {
-                    @Override
-                    public void buttonClickListener() {
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(tempPet.getObjectId()));
-                    }
-                });
-                petLayout.addComponent(petButton);
+            Iterator<Pet> adPets = adv.getAdPets().iterator();
+            if (!adv.getAdPets().isEmpty()){
+                Panel petPanel = new Panel("Pets in this advertisement");
+                petPanel.setHeight(100, Unit.PIXELS);
+                petPanel.setWidth(300, Unit.PIXELS);
+                VerticalLayout petLayout = new VerticalLayout();
+                petLayout.setMargin(false);
+                while (adPets.hasNext()){
+                    Pet tempPet = CustomRestTemplate.getInstance().customGetForObject("/pet/" + adPets.next().getObjectId(), Pet.class);
+                    Button petButton = PageElements.createBlueClickedLabel(tempPet.getPetName(), null);
+                    petButton.addClickListener(new AbstractClickListener() {
+                        @Override
+                        public void buttonClickListener() {
+                            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(tempPet.getObjectId()));
+                        }
+                    });
+                    petLayout.addComponent(petButton);
+                }
+                petPanel.setContent(petLayout);
+                adPetLayout.addComponents(petPanel);
             }
-            petPanel.setContent(petLayout);
-            adPetLayout.addComponents(petPanel);
         }
         TextField mainInfo = new TextField();
         mainInfo.setReadOnly(true);

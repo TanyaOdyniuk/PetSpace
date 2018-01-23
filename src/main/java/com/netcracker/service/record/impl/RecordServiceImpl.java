@@ -39,6 +39,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public Profile getWallRecordOwner(BigInteger wallRecordID) {
+        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER;
+        List<Profile> currentWallRecordAuthor = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
+        return currentWallRecordAuthor.get(0);
+    }
+
+    @Override
     public WallRecord createWallRecord(WallRecord wallRecord) {
         wallRecord.setRecordState(statusService.getActiveStatus());
         return entityManagerService.create(wallRecord);

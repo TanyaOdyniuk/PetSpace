@@ -79,7 +79,10 @@ class NewAdvertisementForm extends Window {
         newAd.setAdAuthor(profile);
         newAd.setAdBasicInfo(mainInfo.getValue());
         newAd.setAdIsVip(selectedStatus.getValue());
-        List<Pet> petSubList = getSubList(petCheckBoxGroup.getSelectedItems());
+        List<Pet> petSubList = null;
+        if(petCheckBoxGroup != null){
+            petSubList = getSubList(petCheckBoxGroup.getSelectedItems());
+        }
         newAd.setAdPets(petSubList != null ? new HashSet<>(petSubList) : null);
         Timestamp ts = Timestamp.valueOf(dateTimeField.getValue());
         newAd.setAdDate(ts);
@@ -93,9 +96,9 @@ class NewAdvertisementForm extends Window {
             newAd.setObjectId(newId);
             Notification.show("Advertisement was saved!");
         }
-        this.close();
         StubVaadinUI currentUI = (StubVaadinUI) UI.getCurrent();
         currentUI.changePrimaryAreaLayout(new AdvertisementView(newAd));
+        this.close();
     }
 
     private void getAuthorTopicDateLayout() {

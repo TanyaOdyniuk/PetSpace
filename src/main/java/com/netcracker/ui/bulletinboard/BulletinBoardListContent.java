@@ -107,7 +107,7 @@ public class BulletinBoardListContent extends VerticalLayout {
                 }
             }
         });
-        selectAll.click();
+        //selectAll.click();
         deselectAll.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {

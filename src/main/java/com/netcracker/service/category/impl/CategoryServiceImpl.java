@@ -18,13 +18,13 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
-    PageCounterService pageCounterService;
+    private PageCounterService pageCounterService;
     @Autowired
-    BulletinBoardUtilService bulletinBoardUtilService;
-    @Value("${advertisement.list.pageCapasity}")
-    String adPageCapacityProp;
+    private BulletinBoardUtilService bulletinBoardUtilService;
+    @Value("${advertisement.list.pageCapacity}")
+    private String adPageCapacityProp;
 
     @Override
     public List<Category> getCategories() {

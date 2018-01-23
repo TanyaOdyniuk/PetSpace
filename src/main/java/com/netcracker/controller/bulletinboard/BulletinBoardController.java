@@ -16,7 +16,7 @@ import java.util.List;
 public class BulletinBoardController {
     @Autowired
     private BulletinBoardService bulletinBoardService;
-    @Value("${advertisement.list.pageCapasity}")
+    @Value("${advertisement.list.pageCapacity}")
     private String adPageCapacityProp;
 
     @GetMapping("/{pageNumber}")

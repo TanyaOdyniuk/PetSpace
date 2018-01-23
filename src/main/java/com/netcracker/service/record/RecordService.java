@@ -17,6 +17,9 @@ public interface RecordService {
     //Get author`s profile from certain wall record
     Profile getWallRecordAuthor(BigInteger wallRecordID);
 
+    //Get owner`s profile from certain wall record
+    Profile getWallRecordOwner(BigInteger wallRecordID);
+
     //Create new wall record (with already filled fields)
     WallRecord createWallRecord(WallRecord wallRecord);
 

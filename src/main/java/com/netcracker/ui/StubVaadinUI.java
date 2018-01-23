@@ -3,7 +3,6 @@ package com.netcracker.ui;
 import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.StubUser;
 
-import com.netcracker.model.user.User;
 import com.netcracker.service.user.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
@@ -11,6 +10,7 @@ import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.groups.MyGroupsListUI;
 import com.netcracker.ui.messages.MessagesListUI;
+import com.netcracker.ui.news.NewsView;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -128,6 +128,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         }
         switch (clickedButtonCaption) {
+            case "Main page":
+                primaryAreaLayout.addComponentsAndExpand(new NewsView(profileId));
+                break;
             case "My profile":
                 primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
                 break;

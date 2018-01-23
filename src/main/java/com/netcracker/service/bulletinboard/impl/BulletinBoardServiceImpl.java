@@ -27,9 +27,9 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     private BulletinBoardUtilService bulletinBoardUtilService;
     @Autowired
     private StatusService statusService;
-    @Value("${advertisement.list.pageCapasity}")
+    @Value("${advertisement.list.pageCapacity}")
     private String adPageCapacityProp;
-    @Value("${advertisement.mylist.pageCapasity}")
+    @Value("${advertisement.mylist.pageCapacity}")
     private String myAdPageCapacityProp;
 
     @Override
