@@ -5,22 +5,9 @@ import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.status.Status;
-import com.netcracker.model.advertisement.Advertisement;
-import com.netcracker.model.advertisement.AdvertisementConstant;
-import com.netcracker.model.comment.AbstractComment;
-import com.netcracker.model.comment.CommentConstant;
-import com.netcracker.model.group.Group;
-import com.netcracker.model.group.GroupConstant;
-import com.netcracker.model.like.AbstractLikeDislike;
-import com.netcracker.model.like.LikeConstant;
-import com.netcracker.model.pet.Pet;
-import com.netcracker.model.pet.PetConstant;
-import com.netcracker.model.record.WallRecord;
-import com.netcracker.model.service.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @ObjectType(UsersProfileConstant.PROFILE_TYPE)
 public class Profile extends BaseEntity {

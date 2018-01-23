@@ -6,18 +6,18 @@ import com.netcracker.model.comment.AbstractComment;
 import com.netcracker.model.comment.CommentConstant;
 
 @ObjectType(LikeConstant.LDL_TYPE)
-public class CommentLikeDislike extends AbstractLikeDislike {
+public class CommentLike extends AbstractLike {
     @Reference(value = CommentConstant.COM_LIKEDISLIKE, isParentChild = 0)
     private AbstractComment likedDislikedComment;
 
-    public CommentLikeDislike() {
+    public CommentLike() {
     }
 
-    public CommentLikeDislike(String name) {
+    public CommentLike(String name) {
         super(name);
     }
 
-    public CommentLikeDislike(String name, String description) {
+    public CommentLike(String name, String description) {
         super(name, description);
     }
 
@@ -31,7 +31,7 @@ public class CommentLikeDislike extends AbstractLikeDislike {
 
     @Override
     public String toString() {
-        return "CommentLikeDislike{" +
+        return "CommentLike{" +
                 "likedDislikedComment=" + likedDislikedComment +
                 '}';
     }

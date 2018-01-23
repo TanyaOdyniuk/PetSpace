@@ -21,13 +21,18 @@ public class CommentController {
         return commentService.getWallRecordComments(wallRecordID);
     }
 
+    @GetMapping("/author/{id}")
+    public Profile getCommentAuthor(@PathVariable("id") BigInteger commentID) {
+        return commentService.getCommentAuthor(commentID);
+    }
+
     @PostMapping("/add")
-    public WallRecordComment createWallRecordComment(@RequestBody WallRecordComment comment){
+    public WallRecordComment createWallRecordComment(@RequestBody WallRecordComment comment) {
         return commentService.createWallRecordComment(comment);
     }
 
-    @GetMapping("/author/{id}")
-    public Profile getCurrentCommentAuthor(@PathVariable("id") BigInteger commentID){
-        return commentService.getCommentAuthor(commentID);
+    @PostMapping("/update")
+    public void updateWallRecordComment(@RequestBody WallRecordComment comment){
+        commentService.updateWallRecordComment(comment);
     }
 }

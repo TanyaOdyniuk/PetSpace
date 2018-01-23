@@ -1,17 +1,13 @@
 package com.netcracker.model.record;
 
 import com.netcracker.dao.annotation.Attribute;
-import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
-import com.netcracker.model.like.RecordLikeDislike;
 import com.netcracker.model.status.Status;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
-public abstract class AbstractRecord extends BaseEntity {
+public class AbstractRecord extends BaseEntity {
 
     @Attribute(RecordConstant.REC_INFO)
     private String recordText;

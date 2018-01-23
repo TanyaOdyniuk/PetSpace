@@ -48,11 +48,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             user.setPassword(bCryptEncoder.encode(newTempPassword));
             entityManagerService.update(user);
             emailService = (EmailService) new ClassPathXmlApplicationContext("SpringMail.xml").getBean("mailMail");
-            emailService.sendMail("PetSpaceInfo@gmail.com", "levil133@gmail.com", "Your new password MATE", "Your new password is: " + newTempPassword);
-            emailService.sendMail("PetSpaceInfo@gmail.com", "tanyaodyniuk@gmail.com", "Your new password MATE", "Your new password is: " + newTempPassword);
-            emailService.sendMail("PetSpaceInfo@gmail.com", "dok.ttv@gmail.com", "Your new password MATE", "Your new password is: " + newTempPassword);
-            emailService.sendMail("PetSpaceInfo@gmail.com", "vlad.drabynka@gmail.com", "Your new password MATE", "Your new password is: " + newTempPassword);
-            emailService.sendMail("PetSpaceInfo@gmail.com", "galaolala@gmail.coma", "Your new password MATE", "Your new password is: " + newTempPassword);
+            emailService.sendMail("PetSpaceInfo@gmail.com", email, "New password on Petspace", "Your new password is: " + newTempPassword);
             return user;
         }
     }

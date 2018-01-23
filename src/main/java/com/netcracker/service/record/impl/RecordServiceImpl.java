@@ -43,4 +43,9 @@ public class RecordServiceImpl implements RecordService {
         wallRecord.setRecordState(statusService.getActiveStatus());
         return entityManagerService.create(wallRecord);
     }
+
+    @Override
+    public void updateWallRecord(WallRecord wallRecord) {
+        entityManagerService.update(wallRecord);
+    }
 }

@@ -20,4 +20,6 @@ public interface RecordService {
     //Create new wall record (with already filled fields)
     WallRecord createWallRecord(WallRecord wallRecord);
 
+    //Update existing wall record (with already filled fields)
+    void updateWallRecord(WallRecord wallRecord);
 }

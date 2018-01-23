@@ -1,6 +1,7 @@
 package com.netcracker.service.comment;
 
 import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +11,15 @@ import java.util.List;
 @Service
 public interface CommentService {
 
-    //Get list of comment from certain wall record
+    //Get list of all comments on wall record by its ID
     List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID);
 
-    //Add comment to the wall record
-    WallRecordComment createWallRecordComment(WallRecordComment comment);
-
-    //Edit comment on the wall record
-    WallRecordComment updateWallRecordComment(WallRecordComment comment);
-
-    //Delete comment from wall record
-    void deleteWallRecordComment(WallRecordComment comment);
-
-    //Get author`s profile of the current comment
+    //Get author`s profile from certain wall record comment
     Profile getCommentAuthor(BigInteger commentID);
 
+    //Create new wall record comment (with already filled fields)
+    WallRecordComment createWallRecordComment(WallRecordComment comment);
+
+    //Update existing wall record comment (with already filled fields)
+    void updateWallRecordComment(WallRecordComment comment);
 }

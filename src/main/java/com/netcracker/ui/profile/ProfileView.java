@@ -1,6 +1,11 @@
 package com.netcracker.ui.profile;
 
+import com.netcracker.model.BaseEntity;
+import com.netcracker.model.comment.AbstractComment;
 import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.like.AbstractLike;
+import com.netcracker.model.like.CommentLike;
+import com.netcracker.model.like.RecordLike;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.WallRecord;
@@ -17,9 +22,12 @@ import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -27,34 +35,34 @@ import java.time.ZoneId;
 import java.util.*;
 
 public class ProfileView extends VerticalLayout {
+    private static final Resource likeOn = VaadinIcons.THUMBS_UP;
+    private static final Resource likeOff = VaadinIcons.THUMBS_UP_O;
+    private static final Resource dislikeOn = VaadinIcons.THUMBS_DOWN;
+    private static final Resource dislikeOff = VaadinIcons.THUMBS_DOWN_O;
     private final Profile profile;
     private final BigInteger profileId;
     private final List<Profile> friendList;
     private final List<Pet> petList;
     private final List<WallRecord> wallRecordsList;
-    private Window newWallRecordWindow;
-    private Window newCommentWindow;
+    private Window updateWallRecordWindow;
+    private Window updateCommentWindow;
     private int browserHeight;
     private int browserWidth;
     private String stubAvatar = "https://goo.gl/6eEoWo";
-    private final Profile currentUserProfile;
-
-    private BigInteger currentUserId;
+    private Profile currentProfile;
+    private BigInteger currentProfileId;
 
     public ProfileView(BigInteger profileID) {
         super();
-        this.currentUserId = BigInteger.valueOf(25); //STUB_USER_ID (used for messages button show) (Should be currentUserProfile.getObjectId(), but current user is stub so...)
-        this.profileId = profileID;
+        profileId = profileID;
         profile = CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + profileId, Profile.class);
-        currentUserProfile = profile;   //THIS IS STUB!
+        setCurrentProfile();
         friendList = Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/friends/" + profileId, Profile[].class));
         petList = Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/pets/" + profileId, Pet[].class));
-        wallRecordsList = Arrays.asList(CustomRestTemplate.getInstance().
-                customGetForObject("/wallrecords/" + profileId, WallRecord[].class));
-        wallRecordsList.sort(Comparator.comparing(AbstractRecord::getRecordDate));
+        wallRecordsList = getWallRecords(profileId);
 
         //Creating matryoshka layout
         HorizontalLayout mainLayout = new HorizontalLayout();
@@ -87,7 +95,7 @@ public class ProfileView extends VerticalLayout {
         addToFriendsButton.setWidth("100%");
 
         Button sendDirectMessage = new Button();
-        if(!currentUserId.equals(profileID)) {
+        if (!currentProfileId.equals(profileId)) {
             sendDirectMessage = new Button("Send message", VaadinIcons.ENVELOPE_O);
             sendDirectMessage.setHeight(50, Unit.PIXELS);
             sendDirectMessage.setWidth("100%");
@@ -95,7 +103,7 @@ public class ProfileView extends VerticalLayout {
             sendDirectMessage.addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    NewMessageWindowUI sub = new NewMessageWindowUI(currentUserId/*SENDER*/, profileId/*RECEIVER*/);
+                    NewMessageWindowUI sub = new NewMessageWindowUI(currentProfileId/*SENDER*/, profileId/*RECEIVER*/);
                     UI.getCurrent().addWindow(sub);
                 }
             });
@@ -224,7 +232,6 @@ public class ProfileView extends VerticalLayout {
         GridLayout photosGrid = new GridLayout(photosColumns, photosRows);
         photosGrid.setSpacing(true);
         Resource photoResource = new ExternalResource("https://image.ibb.co/d9Oc9b/2004039.png");
-        Image photosImage = new Image();
         for (int i = 0; i < photosColumns * photosRows; i++) {
             Panel singlePhotoPanel = new Panel();
             Image singlePhotoImage = new Image();
@@ -241,15 +248,15 @@ public class ProfileView extends VerticalLayout {
         wallPanel.setWidth("100%");
         VerticalLayout wallLayout = new VerticalLayout();
         HorizontalLayout wallHeaderLayout = new HorizontalLayout();
-        VerticalLayout newWallRecordLayout = new VerticalLayout();
-        newWallRecordLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        Button addNewWallRecordButton = new Button("Add new record", VaadinIcons.PLUS);
-        addNewWallRecordButton.setWidth(180, Unit.PIXELS);
-        addNewWallRecordButton.addClickListener(new AbstractClickListener() {
+        VerticalLayout addWallRecordLayout = new VerticalLayout();
+        addWallRecordLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        Button addWallRecordButton = new Button("Add new record", VaadinIcons.PLUS);
+        addWallRecordButton.setWidth(180, Unit.PIXELS);
+        addWallRecordButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                getNewWallRecord();
-                UI.getCurrent().addWindow(newWallRecordWindow);
+                editWallRecord(null);
+                UI.getCurrent().addWindow(updateWallRecordWindow);
             }
         });
         int wallRecordsListSize = wallRecordsList.size();
@@ -258,14 +265,13 @@ public class ProfileView extends VerticalLayout {
             labelCaptionStart += "s";
         }
         wallHeaderLayout.addComponents(
-                new Label(labelCaptionStart + " on " + profile.getProfileName() + "`s wall:"), addNewWallRecordButton);
-        wallHeaderLayout.setComponentAlignment(addNewWallRecordButton, Alignment.MIDDLE_RIGHT);
+                new Label(labelCaptionStart + " on " + profile.getProfileName() + "`s wall:"), addWallRecordButton);
+        wallHeaderLayout.setComponentAlignment(addWallRecordButton, Alignment.MIDDLE_RIGHT);
         wallLayout.addComponent(wallHeaderLayout);
         //WallRecords
         for (int i = wallRecordsListSize; i > 0; i--) {
             WallRecord currentWallRecord = wallRecordsList.get(i - 1);
-            List<WallRecordComment> commentsList = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
-                    "/comments/" + currentWallRecord.getObjectId(), WallRecordComment[].class));
+            List<WallRecordComment> commentsList = getRecordComments(currentWallRecord.getObjectId());
             Profile commentator = CustomRestTemplate.getInstance().
                     customGetForObject("/wallrecords/author/" + currentWallRecord.getObjectId(), Profile.class);
             Panel singleWallRecordPanel = new Panel();
@@ -275,8 +281,8 @@ public class ProfileView extends VerticalLayout {
             String commentatorAvatar = commentator.getProfileAvatar();
             Image recordAuthorAvatar = new Image();
             recordAuthorAvatar.setSource(new ExternalResource(commentatorAvatar == null ? stubAvatar : commentatorAvatar));
-            recordAuthorAvatar.setDescription(commentator.getProfileName() + " " +
-                    commentator.getProfileSurname());
+            recordAuthorAvatar.setDescription(commentator.getProfileName()
+                    + " " + commentator.getProfileSurname());
             recordAuthorAvatar.setHeight(100, Unit.PIXELS);
             recordAuthorAvatar.setWidth(100, Unit.PIXELS);
             Label recordName = new Label("Record from " + recordAuthorAvatar.getDescription());
@@ -292,23 +298,35 @@ public class ProfileView extends VerticalLayout {
             recordInfoLayout.addComponentsAndExpand(recordName, recordDate);
             recordInfoLayout.setComponentAlignment(recordName, Alignment.TOP_CENTER);
             recordInfoLayout.setComponentAlignment(recordDate, Alignment.TOP_RIGHT);
-
             HorizontalLayout recordLikeAndCommentsLayout = new HorizontalLayout();
-            Button likeRecordButton = new Button(String.valueOf((int) ((Math.random() - 0.3) * 100 / 1)), VaadinIcons.THUMBS_UP);
+            Button likeRecordButton = new Button();
             likeRecordButton.setWidth(70, Unit.PIXELS);
-            Button dislikeRecordButton = new Button(String.valueOf((int) ((Math.random() - 0.3) * 100 / 1)), VaadinIcons.THUMBS_DOWN);
-            likeRecordButton.setWidth(70, Unit.PIXELS);
-            Button addCommentButton = new Button("Add comment", VaadinIcons.COMMENT);
-            addCommentButton.setWidth(160, Unit.PIXELS);
+            Button dislikeRecordButton = new Button();
+            dislikeRecordButton.setWidth(70, Unit.PIXELS);
+            likeRecordButton.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    checkAndAddLike(currentWallRecord, false, likeRecordButton, dislikeRecordButton);
+                }
+            });
+            dislikeRecordButton.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    checkAndAddLike(currentWallRecord, true, likeRecordButton, dislikeRecordButton);
+                }
+            });
+            Button addCommentButton = new Button("Add new comment", VaadinIcons.PLUS);
             addCommentButton.addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    getNewComment(currentWallRecord);
-                    UI.getCurrent().addWindow(newCommentWindow);
+                    addComment(currentWallRecord);
+                    UI.getCurrent().addWindow(updateCommentWindow);
                 }
             });
+            countAndShowLikes(currentWallRecord, likeRecordButton, dislikeRecordButton);
             recordLikeAndCommentsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
             recordLikeAndCommentsLayout.addComponents(likeRecordButton, dislikeRecordButton);
+
             //Comments
             Panel allCommentsPanel = new Panel();
             allCommentsPanel.setVisible(false);
@@ -320,13 +338,11 @@ public class ProfileView extends VerticalLayout {
                 if (commentsListSize != 1) {
                     buttonCaption += "s";
                 }
-                Button showCommentsButton = new Button(buttonCaption);
-                showCommentsButton.setWidth(200, Unit.PIXELS);
+                Button showCommentsButton = new Button(buttonCaption, VaadinIcons.COMMENT_O);
                 showCommentsButton.addClickListener(new AbstractClickListener() {
                     @Override
                     public void buttonClickListener() {
                         VerticalLayout allCommentsLayout = new VerticalLayout();
-                        commentsList.sort(Comparator.comparing(WallRecordComment::getCommentDate));
                         for (int j = commentsListSize; j > 0; j--) {
                             WallRecordComment currentComment = commentsList.get(j - 1);
                             Panel currentCommentPanel = new Panel();
@@ -348,16 +364,41 @@ public class ProfileView extends VerticalLayout {
                                     new Label("Comment from " + authorNameAndSurname),
                                     new Label(currentComment.getCommentDate().toString())
                             );
-                            HorizontalLayout commentLikeDislikeLayout = new HorizontalLayout();
-                            Button likeCommentButton = new Button(String.valueOf((int) ((Math.random() - 0.3) * 100 / 1)), VaadinIcons.THUMBS_UP);
+                            HorizontalLayout commentLikeLayout = new HorizontalLayout();
+                            Button likeCommentButton = new Button();
                             likeCommentButton.setWidth(70, Unit.PIXELS);
-                            Button dislikeCommentButton = new Button(String.valueOf((int) ((Math.random() - 0.3) * 100 / 1)), VaadinIcons.THUMBS_DOWN);
+                            Button dislikeCommentButton = new Button();
                             likeCommentButton.setWidth(70, Unit.PIXELS);
-                            commentLikeDislikeLayout.addComponents(likeCommentButton, dislikeCommentButton);
+                            likeCommentButton.addClickListener(new AbstractClickListener() {
+                                @Override
+                                public void buttonClickListener() {
+                                    checkAndAddLike(currentComment, false, likeCommentButton, dislikeCommentButton);
+                                }
+                            });
+                            dislikeCommentButton.addClickListener(new AbstractClickListener() {
+                                @Override
+                                public void buttonClickListener() {
+                                    checkAndAddLike(currentComment, true, likeCommentButton, dislikeCommentButton);
+                                }
+                            });
+                            countAndShowLikes(currentComment, likeCommentButton, dislikeCommentButton);
+                            commentLikeLayout.addComponents(likeCommentButton, dislikeCommentButton);
+                            if (currentComment.getCommentAuthor().getObjectId().equals(currentProfileId)) {
+                                Button editCommentButton = new Button("Edit", VaadinIcons.EDIT);
+                                editCommentButton.setWidth(100, Unit.PIXELS);
+                                editCommentButton.addClickListener(new AbstractClickListener() {
+                                    @Override
+                                    public void buttonClickListener() {
+                                        editWallRecordComment(currentComment, currentWallRecord);
+                                        UI.getCurrent().addWindow(updateCommentWindow);
+                                    }
+                                });
+                                commentLikeLayout.addComponents(editCommentButton, new Button("Delete"));
+                            }
                             currentCommentLayout.addComponents(
                                     commentDateAndAvatarLayout,
                                     new Label(currentComment.getCommentText()),
-                                    commentLikeDislikeLayout
+                                    commentLikeLayout
                             );
                             currentCommentPanel.setContent(currentCommentLayout);
                             allCommentsLayout.addComponent(currentCommentPanel);
@@ -365,9 +406,24 @@ public class ProfileView extends VerticalLayout {
                         allCommentsLayout.addComponent(addCommentButton);
                         allCommentsPanel.setContent(allCommentsLayout);
                         allCommentsPanel.setVisible(!allCommentsPanel.isVisible());
+                        showCommentsButton.setIcon(
+                                showCommentsButton.getIcon().equals(VaadinIcons.COMMENT_O) ?
+                                        VaadinIcons.COMMENT : VaadinIcons.COMMENT_O);
                     }
                 });
                 recordLikeAndCommentsLayout.addComponent(showCommentsButton);
+            }
+            if(currentWallRecord.getRecordAuthor().getObjectId().equals(currentProfileId)){
+                Button editWallRecordButton = new Button("Edit", VaadinIcons.EDIT);
+                editWallRecordButton.setWidth(100, Unit.PIXELS);
+                editWallRecordButton.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        editWallRecord(currentWallRecord);
+                        UI.getCurrent().addWindow(updateWallRecordWindow);
+                    }
+                });
+                recordLikeAndCommentsLayout.addComponents(editWallRecordButton, new Button("Delete"));
             }
             singleWallRecordLayout.addComponents(
                     recordInfoLayout,
@@ -380,7 +436,7 @@ public class ProfileView extends VerticalLayout {
         wallPanel.setContent(wallLayout);
 
         //Filling matryoshka layout
-        if(!currentUserId.equals(profileID))
+        if (!currentProfileId.equals(profileId))
             leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
         else
             leftPartLayout.addComponents(avatarImage, addToFriendsButton, petsPanel, friendsPanel);
@@ -392,92 +448,333 @@ public class ProfileView extends VerticalLayout {
         addComponents(mainLayout);
     }
 
-    private void getNewWallRecord() {
-        newWallRecordWindow = new Window();
-        newWallRecordWindow.setWidth("400px");
-        newWallRecordWindow.setHeight("250px");
-        newWallRecordWindow.setCaption("Creating new wall record:");
-        newWallRecordWindow.setModal(true);
-        VerticalLayout windowContent = new VerticalLayout();
-        HorizontalLayout addWallRecordButtonsLayout = new HorizontalLayout();
-
-        TextArea wallRecordText = new TextArea();
-        wallRecordText.setWidth("100%");
-
-        Button addWallRecordButton = new Button("Add record");
-        addWallRecordButton.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                addWallRecordButton.setComponentError(null);
-                WallRecord newWallRecord = new WallRecord("WallRecord",
-                        "From " + currentUserProfile.getProfileSurname() + " to " + profile.getProfileSurname());
-                newWallRecord.setRecordDate(Timestamp.valueOf(
-                        new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
-                newWallRecord.setRecordText(wallRecordText.getValue());
-                newWallRecord.setRecordAuthor(currentUserProfile);
-                newWallRecord.setWallOwner(profile);
-                createWallRecord(newWallRecord);
-                Notification.show("Wall record added successfully!");
-                newWallRecordWindow.close();
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+    private void countAndShowLikes(BaseEntity entity, Button likeRecordButton, Button dislikeRecordButton) {
+        List<AbstractLike> likesList = null;
+        Class cc = entity.getClass();
+        if (AbstractRecord.class.isAssignableFrom(cc)) {
+            likesList = getRecordLikes(entity.getObjectId());
+        } else if (AbstractComment.class.isAssignableFrom(cc)) {
+            likesList = getCommentLikes(entity.getObjectId());
+        }
+        likeRecordButton.setIcon(likeOff);
+        dislikeRecordButton.setIcon(dislikeOff);
+        int dislikesCount = 0;
+        boolean ownLikeFound = false;
+        for (AbstractLike rc : likesList) {
+            if (rc.getIsDislike().equals("true")) {
+                dislikesCount++;
             }
-        });
-
-        Button cancelAddingNewWallRecord = new Button("Cancel", click -> newWallRecordWindow.close());
-        addWallRecordButtonsLayout.addComponentsAndExpand(addWallRecordButton, cancelAddingNewWallRecord);
-        windowContent.addComponents(wallRecordText, addWallRecordButtonsLayout);
-
-        newWallRecordWindow.setContent(windowContent);
-        newWallRecordWindow.center();
+            if (!ownLikeFound) {
+                if (rc.getParentId().equals(currentProfileId)) {
+                    ownLikeFound = true;
+                    if (rc.getIsDislike().equals("true")) {
+                        dislikeRecordButton.setIcon(dislikeOn);
+                    } else {
+                        likeRecordButton.setIcon(likeOn);
+                    }
+                }
+            }
+        }
+        likeRecordButton.setCaption(String.valueOf(likesList.size() - dislikesCount));
+        dislikeRecordButton.setCaption(String.valueOf(dislikesCount));
     }
 
-    private void getNewComment(WallRecord currentWallRecord) {
-        newCommentWindow = new Window();
-        newCommentWindow.setWidth("400px");
-        newCommentWindow.setHeight("250px");
-        newCommentWindow.setCaption("Creating new wall record:");
-        newCommentWindow.setModal(true);
+    private void checkAndAddLike(BaseEntity entity, boolean isDislike, Button likeRecordButton, Button dislikeRecordButton) {
+        List<AbstractLike> likesList = null;
+        Class cc = entity.getClass();
+        if (AbstractRecord.class.isAssignableFrom(cc)) {
+            likesList = getRecordLikes(entity.getObjectId());
+        } else if (AbstractComment.class.isAssignableFrom(cc)) {
+            likesList = getCommentLikes(entity.getObjectId());
+        }
+        outer:
+        {
+            for (AbstractLike al : likesList) {
+                boolean isCurrentDislike = Boolean.valueOf(al.getIsDislike());
+                if (al.getParentId().equals(currentProfileId)) {
+                    deleteLike(al.getObjectId());
+                    changeButtons(isCurrentDislike, likeRecordButton, dislikeRecordButton);
+                    if (isCurrentDislike != isDislike) {
+                        addLike(entity, isDislike);
+                        changeButtons(isDislike, likeRecordButton, dislikeRecordButton);
+                        break outer;
+                    }
+                    break outer;
+                }
+            }
+            addLike(entity, isDislike);
+            changeButtons(isDislike, likeRecordButton, dislikeRecordButton);
+        }
+    }
+
+    private void changeButtons(boolean isDislike, Button likeRecordButton, Button dislikeRecordButton) {
+        if (isDislike) {
+            reverseButton(dislikeRecordButton);
+        } else {
+            reverseButton(likeRecordButton);
+        }
+    }
+
+    private void reverseButton(Button button) {
+        Resource icon = button.getIcon();
+        int count = Integer.parseInt(button.getCaption());
+        button.setIcon(
+                icon.equals(likeOn) ?
+                        likeOff : icon.equals(likeOff) ?
+                            likeOn : icon.equals(dislikeOn) ?
+                                dislikeOff : icon.equals(dislikeOff) ?
+                                    dislikeOn : dislikeOff
+        );
+        button.setCaption(String.valueOf((icon.equals(likeOn) || icon.equals(dislikeOn)) ? --count : ++count));
+    }
+
+    private List<WallRecord> getWallRecords(BigInteger profileId) {
+        List<WallRecord> result = Arrays.asList(CustomRestTemplate.getInstance().
+                customGetForObject("/wallrecords/" + profileId, WallRecord[].class));
+        result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
+        return result;
+    }
+
+    private List<WallRecordComment> getRecordComments(BigInteger wallRecordID) {
+        List<WallRecordComment> result = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
+                "/comments/" + wallRecordID, WallRecordComment[].class));
+        result.sort(Comparator.comparing(WallRecordComment::getCommentDate));
+        return result;
+    }
+
+    private List<AbstractLike> getRecordLikes(BigInteger wallRecordID) {
+        return Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
+                "/likes/record/" + wallRecordID, AbstractLike[].class));
+    }
+
+    private List<AbstractLike> getCommentLikes(BigInteger commentID) {
+        return Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
+                "/likes/comment/" + commentID, AbstractLike[].class));
+    }
+
+    private void addComment(WallRecord currentWallRecord) {
+        updateCommentWindow = new Window();
+        updateCommentWindow.setWidth("400px");
+        updateCommentWindow.setHeight("250px");
+        updateCommentWindow.setCaption("Creating new wall record:");
+        updateCommentWindow.setModal(true);
         VerticalLayout windowContent = new VerticalLayout();
         HorizontalLayout addCommentButtonsLayout = new HorizontalLayout();
 
         TextArea commentText = new TextArea();
         commentText.setWidth("100%");
 
-        Button addCommentButton = new Button("Add comment");
-        addCommentButton.addClickListener(new AbstractClickListener() {
+        Button add = new Button("Add comment");
+        add.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                addCommentButton.setComponentError(null);
-                WallRecordComment newComment = new WallRecordComment("Comment",
-                        "From " + currentUserProfile.getProfileSurname() + " to wall record№" + currentWallRecord.getObjectId());
-                newComment.setCommentDate(Timestamp.valueOf(
+                add.setComponentError(null);
+                WallRecordComment comment = new WallRecordComment("Comment",
+                        "From " + currentProfile.getProfileSurname() + " to wall record№" + currentWallRecord.getObjectId());
+                comment.setCommentDate(Timestamp.valueOf(
                         new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
-                newComment.setCommentText(commentText.getValue());
-                //recordAuthor = getCurrentUser.getProfile(); stubAuthorId is temporarily being used.
-                newComment.setCommentAuthor(currentUserProfile);
-                newComment.setCommentedWallRecord(currentWallRecord);
-                createWallRecordComment(newComment);
-                Notification.show("Comment added successfully!");
-                newCommentWindow.close();
+                comment.setCommentText(commentText.getValue());
+                comment.setCommentAuthor(currentProfile);
+                comment.setCommentedWallRecord(currentWallRecord);
+                editWallRecordComment(null, currentWallRecord);
+                updateCommentWindow.close();
                 ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
             }
         });
 
-        Button cancelAddingNewWallRecord = new Button("Cancel", click -> newCommentWindow.close());
-        addCommentButtonsLayout.addComponentsAndExpand(addCommentButton, cancelAddingNewWallRecord);
+        Button cancel = new Button("Cancel", click -> updateCommentWindow.close());
+        addCommentButtonsLayout.addComponentsAndExpand(add, cancel);
         windowContent.addComponents(commentText, addCommentButtonsLayout);
 
-        newCommentWindow.setContent(windowContent);
-        newCommentWindow.center();
+        updateCommentWindow.setContent(windowContent);
+        updateCommentWindow.center();
+    }
+
+    private void addLike(BaseEntity entity, boolean isDislike) {
+        Class cc = entity.getClass();
+        if (AbstractRecord.class.isAssignableFrom(cc)) {
+            addWallRecordLike((AbstractRecord) entity, isDislike);
+        } else if (AbstractComment.class.isAssignableFrom(cc)) {
+            addCommentLike((AbstractComment) entity, isDislike);
+        }
+    }
+
+    private void editWallRecord(WallRecord currentRecord) {
+        updateWallRecordWindow = new Window();
+        updateWallRecordWindow.setWidth("400px");
+        updateWallRecordWindow.setHeight("250px");
+        updateWallRecordWindow.setCaption("New wall record");
+        updateWallRecordWindow.setModal(true);
+        VerticalLayout windowContent = new VerticalLayout();
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+
+        if(currentRecord == null) {
+            TextArea text = new TextArea();
+            text.setWidth("100%");
+            Button add = new Button("Add record");
+            add.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    add.setComponentError(null);
+                    WallRecord record = new WallRecord("WallRecord",
+                            "From " + currentProfile.getProfileSurname() + " to " + profile.getProfileSurname());
+                    record.setRecordDate(Timestamp.valueOf(
+                            new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                    record.setRecordText(text.getValue());
+                    record.setRecordAuthor(currentProfile);
+                    record.setWallOwner(profile);
+                    createWallRecord(record);
+                    Notification.show("Record added!");
+                    updateWallRecordWindow.close();
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+                }
+            });
+            buttonsLayout.addComponentsAndExpand(add);
+            windowContent.addComponent(text);
+        } else {
+            TextArea text = new TextArea();
+            text.setWidth("100%");
+            text.setValue(currentRecord.getRecordText());
+            Button edit = new Button("Edit record");
+            edit.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    edit.setComponentError(null);
+                    currentRecord.setRecordText(text.getValue());
+                    updateWallRecord(currentRecord);
+                    Notification.show("Record edited!");
+                    updateWallRecordWindow.close();
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+                }
+            });
+            buttonsLayout.addComponentsAndExpand(edit);
+            windowContent.addComponent(text);
+        }
+        Button cancel = new Button("Cancel", click -> updateWallRecordWindow.close());
+        buttonsLayout.addComponentsAndExpand(cancel);
+        windowContent.addComponent(buttonsLayout);
+
+        updateWallRecordWindow.setContent(windowContent);
+        updateWallRecordWindow.center();
+    }
+
+    private void editWallRecordComment(WallRecordComment currentComment, WallRecord currentWallRecord) {
+        updateCommentWindow = new Window();
+        updateCommentWindow.setWidth("400px");
+        updateCommentWindow.setHeight("250px");
+        updateCommentWindow.setCaption("New wall record comment");
+        updateCommentWindow.setModal(true);
+        VerticalLayout windowContent = new VerticalLayout();
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+
+        if(currentComment == null) {
+            TextArea text = new TextArea();
+            text.setWidth("100%");
+            Button add = new Button("Add comment");
+            add.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    add.setComponentError(null);
+                    WallRecordComment comment = new WallRecordComment("WallRecordComment",
+                            "From " + currentProfile.getProfileSurname() + " to wall record№" + currentWallRecord.getObjectId());
+                    comment.setCommentDate(Timestamp.valueOf(
+                            new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                    comment.setCommentText(text.getValue());
+                    comment.setCommentAuthor(currentProfile);
+                    comment.setCommentedWallRecord(currentWallRecord);
+                    createWallRecordComment(comment);
+                    Notification.show("Comment added!");
+                    updateCommentWindow.close();
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+                }
+            });
+            buttonsLayout.addComponentsAndExpand(add);
+            windowContent.addComponent(text);
+        } else {
+            TextArea text = new TextArea();
+            text.setWidth("100%");
+            text.setValue(currentComment.getCommentText());
+            Button edit = new Button("Edit comment");
+            edit.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    edit.setComponentError(null);
+                    currentComment.setCommentText(text.getValue());
+                    updateWallRecordComment(currentComment);
+                    Notification.show("Comment edited!");
+                    updateCommentWindow.close();
+                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileId));
+                }
+            });
+            buttonsLayout.addComponentsAndExpand(edit);
+            windowContent.addComponent(text);
+        }
+        Button cancel = new Button("Cancel", click -> updateCommentWindow.close());
+        buttonsLayout.addComponentsAndExpand(cancel);
+        windowContent.addComponent(buttonsLayout);
+
+        updateCommentWindow.setContent(windowContent);
+        updateCommentWindow.center();
+    }
+
+    private void addWallRecordLike(AbstractRecord currentRecord, boolean isDislike) {
+        RecordLike like = new RecordLike(isDislike ? "Dislike" : "Like",
+                "From " + currentProfile.getProfileSurname() + " to wall record№" + currentRecord.getObjectId());
+        like.setIsDislike(Boolean.toString(isDislike));
+        like.setParentId(currentProfile.getObjectId());
+        like.setLikedRecord(currentRecord);
+        createWallRecordLike(like);
+    }
+
+    private void addCommentLike(AbstractComment currentComment, boolean isDislike) {
+        CommentLike like = new CommentLike(isDislike ? "Dislike" : "Like",
+                "From " + currentProfile.getProfileSurname() + " to wall record№" + currentComment.getObjectId());
+        like.setIsDislike(Boolean.toString(isDislike));
+        like.setParentId(currentProfile.getObjectId());
+        like.setLikedDislikedComment(currentComment);
+        createCommentLike(like);
+    }
+
+    private void createWallRecord(WallRecord record) {
+        HttpEntity<WallRecord> request = new HttpEntity<>(record);
+        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/add", request, WallRecord.class);
     }
 
     private void createWallRecordComment(WallRecordComment comment) {
         HttpEntity<WallRecordComment> request = new HttpEntity<>(comment);
-        CustomRestTemplate.getInstance().customPostForObject("/comments/add", request, WallRecord.class);
+        CustomRestTemplate.getInstance().customPostForObject("/comments/add", request, WallRecordComment.class);
     }
 
-    private void createWallRecord(WallRecord wallRecord) {
-        HttpEntity<WallRecord> request = new HttpEntity<>(wallRecord);
-        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/add", request, WallRecord.class);
+    private void createWallRecordLike(RecordLike like) {
+        HttpEntity<RecordLike> request = new HttpEntity<>(like);
+        CustomRestTemplate.getInstance().customPostForObject("/likes/record/add", request, RecordLike.class);
+    }
+
+    private void createCommentLike(CommentLike like) {
+        HttpEntity<CommentLike> request = new HttpEntity<>(like);
+        CustomRestTemplate.getInstance().customPostForObject("/likes/comment/add", request, CommentLike.class);
+    }
+
+    private void updateWallRecord(WallRecord record) {
+        HttpEntity<WallRecord> request = new HttpEntity<>(record);
+        CustomRestTemplate.getInstance().customPostForObject("/wallrecords/update", request, WallRecord.class);
+    }
+
+    private void updateWallRecordComment(WallRecordComment comment) {
+        HttpEntity<WallRecordComment> request = new HttpEntity<>(comment);
+        CustomRestTemplate.getInstance().customPostForObject("/comments/update", request, WallRecordComment.class);
+    }
+
+    private void deleteLike(BigInteger likeID) {
+        CustomRestTemplate.getInstance().customGetForObject("/likes/delete/" + likeID, Void.class);
+    }
+
+    private void setCurrentProfile() {
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        BigInteger currentProfileId = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+        currentProfile = CustomRestTemplate.getInstance().
+                customGetForObject("/profile/" + currentProfileId, Profile.class);
+        this.currentProfileId = currentProfile.getObjectId();
     }
 }

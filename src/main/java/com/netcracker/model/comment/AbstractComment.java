@@ -7,7 +7,7 @@ import com.netcracker.model.user.Profile;
 
 import java.sql.Timestamp;
 
-public abstract class AbstractComment extends BaseEntity {
+public class AbstractComment extends BaseEntity {
     @Attribute(CommentConstant.COM_INFO)
     private String commentText;
     @Attribute(CommentConstant.COM_DATE)
