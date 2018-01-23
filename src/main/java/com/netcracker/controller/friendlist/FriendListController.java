@@ -23,13 +23,18 @@ public class FriendListController {
         return manageFriendService.getFriendList(id);
     }
 
-    @GetMapping("/search/{name}/{surname}")
-    public List<Profile> searchFriendsByName(@PathVariable("name") String name, @PathVariable("surname") String surname) {
-        return manageFriendService.searchForFriendsByName(name, surname);
+    @GetMapping("/search/people/byFullName/{name}/{surname}")
+    public List<Profile> searchPeopleByFullName(@PathVariable("name") String name, @PathVariable("surname") String surname) {
+        return manageFriendService.searchForPeopleByFullName(name, surname);
     }
 
-    @GetMapping("/search/{email}")
-    public List<Profile> searchFriendsByEmail(@PathVariable("email") String email) {
-        return manageFriendService.searchForFriendsByEmail(email);
+    @GetMapping("/search/people/byName/{name}")
+    public List<Profile> searchPeopleByNameOrSurname(@PathVariable("name") String name){
+        return manageFriendService.searchPeopleByNameOrSurname(name);
+    }
+
+    @GetMapping("/search/people/byEmail/{email:.+}")
+    public List<Profile> searchPeopleByEmail(@PathVariable("email") String email) {
+        return manageFriendService.searchForPeopleByEmail(email);
     }
 }

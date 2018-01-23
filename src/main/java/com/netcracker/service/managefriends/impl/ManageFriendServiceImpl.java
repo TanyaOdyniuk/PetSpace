@@ -6,12 +6,16 @@ import com.netcracker.model.status.StatusConstant;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.request.FriendRequestConstant;
 import com.netcracker.model.user.Profile;
+import com.netcracker.model.user.User;
 import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.managefriends.ManageFriendService;
+import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +23,9 @@ public class ManageFriendServiceImpl implements ManageFriendService {
 
     @Autowired
     EntityManagerService entityManagerService;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     @Override
     public void addFriend(Profile profile) {
@@ -37,7 +44,6 @@ public class ManageFriendServiceImpl implements ManageFriendService {
 
     @Override
     public void sortFriendList(SortListFriendMod sortMod) {
-
     }
 
     @Override
@@ -59,33 +65,44 @@ public class ManageFriendServiceImpl implements ManageFriendService {
     }
 
     @Override
-    public List<Profile> searchForFriendsByName(String name, String surname) {
+    public List<Profile> searchForPeopleByFullName(String name, String surname) {
         String query = "" +
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
-                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
+                "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
                 "AND attr.value = '" + name + "'" +
-                "INTERSECT " +
+                " INTERSECT " +
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
-                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
+                "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
                 "AND attr.value = '" + surname + "'";
         return entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
     }
 
     @Override
-    public List<Profile> searchForFriendsByEmail(String email) {
-        String query = "" +
-                "SELECT obj.object_id " +
+    public List<Profile> searchPeopleByNameOrSurname(String name) {
+        String surnameQuery = "" +
+                "SELECT DISTINCT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
-                "WHERE obj.object_type_id = " + UsersProfileConstant.USER_TYPE + " " +
-                "AND attr.attrtype_id = " + UsersProfileConstant.USER_LOGIN + " " +
-                "AND attr.value = '" + email + "'";
-        return entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
+                "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
+                "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
+                "AND attr.value = '" + name + "' " +
+                "OR " +
+                "attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
+                "AND attr.value = '" + name + "' ";
+        return entityManagerService.getObjectsBySQL(surnameQuery, Profile.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<Profile> searchForPeopleByEmail(String email) {
+        List<Profile> foundFriends = new ArrayList<>();
+        BigInteger ProfileId = userDetailsService.loadUserByUsername(email).getProfile().getObjectId();
+        foundFriends.add(entityManagerService.getById(ProfileId, Profile.class));
+        return foundFriends;
     }
 }
