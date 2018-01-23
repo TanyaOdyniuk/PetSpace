@@ -34,4 +34,9 @@ public class RecordController {
     public void updateWallRecord(@RequestBody WallRecord wallRecord){
         recordService.updateWallRecord(wallRecord);
     }
+
+    @PostMapping("/delete")
+    public void deleteWallRecord(@RequestBody WallRecord wallRecord){
+        recordService.deleteWallRecord(wallRecord);
+    }
 }

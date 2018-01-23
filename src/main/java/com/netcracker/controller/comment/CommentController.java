@@ -35,4 +35,9 @@ public class CommentController {
     public void updateWallRecordComment(@RequestBody WallRecordComment comment){
         commentService.updateWallRecordComment(comment);
     }
+
+    @PostMapping("/delete")
+    public void deleteWallRecordComment(@RequestBody WallRecordComment comment){
+        commentService.deleteWallRecordComment(comment);
+    }
 }

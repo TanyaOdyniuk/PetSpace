@@ -22,4 +22,7 @@ public interface RecordService {
 
     //Update existing wall record (with already filled fields)
     void updateWallRecord(WallRecord wallRecord);
+
+    //Delete wall record
+    void deleteWallRecord(WallRecord wallRecord);
 }

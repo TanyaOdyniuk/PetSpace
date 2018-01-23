@@ -3,6 +3,7 @@ package com.netcracker.model.comment;
 import com.netcracker.dao.annotation.Attribute;
 import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.BaseEntity;
+import com.netcracker.model.status.Status;
 import com.netcracker.model.user.Profile;
 
 import java.sql.Timestamp;
@@ -14,6 +15,8 @@ public class AbstractComment extends BaseEntity {
     private Timestamp commentDate;
     @Reference(value = CommentConstant.COM_AUTOR, isParentChild = 0)
     private Profile commentAuthor;
+    @Reference(value = CommentConstant.COM_STATE, isParentChild = 0)
+    private Status commentState;
 
     public AbstractComment() {
     }
@@ -50,14 +53,21 @@ public class AbstractComment extends BaseEntity {
         this.commentAuthor = commentAuthor;
     }
 
+    public Status getCommentState() {
+        return commentState;
+    }
+
+    public void setCommentState(Status commentState) {
+        this.commentState = commentState;
+    }
+
     @Override
     public String toString() {
         return "AbstractComment{" +
                 "commentText='" + commentText + '\'' +
-                ", commentDate='" + commentDate + '\'' +
-                ", commentAuthor=" + commentAuthor +/*
-                ", commentLikes=" + commentLikes +
-                ", commentDislikes=" + commentDislikes +*/
+                ", commentDate=" + commentDate +
+                ", commentAuthor=" + commentAuthor +
+                ", commentState=" + commentState +
                 '}';
     }
 }
