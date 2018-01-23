@@ -41,4 +41,9 @@ public class PetPageController {
     public void updatePet(@RequestBody Pet pet){
         petProfileService.updatePet(pet);
     }
+
+    @PostMapping("/delete")
+    public void deletePet(@RequestBody BigInteger petId){
+        petProfileService.deleteProfile(petId);
+    }
 }

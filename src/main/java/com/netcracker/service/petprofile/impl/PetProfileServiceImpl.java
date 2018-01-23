@@ -9,7 +9,9 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.service.petprofile.PetProfileService;
 import com.netcracker.service.status.StatusService;
 import com.netcracker.service.user.UserService;
+import com.netcracker.service.util.PageCounterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -19,23 +21,35 @@ import java.util.List;
 @Service
 public class PetProfileServiceImpl implements PetProfileService {
 
+    @Value("${petlist.pageCapacity}")
+    private String petsPageCapacity;
+
     @Autowired
     EntityManagerService entityManagerService;
 
     @Autowired
-    UserService userService;
-
+    PageCounterService pageCounterService;
 
     @Autowired
     StatusService statusService;
 
+    String profilePetsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+            "WHERE ATTRTYPE_ID = " + PetConstant.PET_OWNER + " AND REFERENCE = ";
+
+    @Override
+    public int getAllPetsPageCount(BigInteger profileId) {
+        Integer ptsPageCapacity = new Integer(petsPageCapacity);
+        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getBySqlCount(profilePetsQuery + profileId));
+    }
+
+    @Override
+    public int getAllPetsPageCount() {
+        Integer ptsPageCapacity = new Integer(petsPageCapacity);
+        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(PetConstant.PET_TYPE)));
+    }
+
     @Override
     public Pet createPetProfile(Pet pet) {
-//        User currentUser = userService.getCurrentUser(login);
-//        //Profile profile = entityManagerService.getById(currentUser.getProfile().getObjectId(), Profile.class);
-//        Profile profile = entityManagerService.getById(BigInteger.valueOf(22), Profile.class);
-//        pet.setPetOwner(profile);
-
         pet.setPetStatus(statusService.getActiveStatus());
         return entityManagerService.create(pet);
     }
@@ -46,34 +60,19 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
-    public void validation(Object dataForValidate) {
-
-    }
-
-    @Override
     public void editProfile(Profile profile) {
         entityManagerService.update(profile);
     }
 
     @Override
     public void deleteProfile(BigInteger profileId) {
-        entityManagerService.delete(profileId, 0);
-    }
-
-    @Override
-    public void changePetOwner(Profile owner, Profile newOwner) {
-
+        entityManagerService.delete(profileId, -1);
     }
 
     @Override
     public PetSpecies getConcretePetSpecies(BigInteger petId) {
         PetSpecies petSpecies = ((Pet)entityManagerService.getById(petId, Pet.class)).getPetSpecies();
         return entityManagerService.getById(petSpecies.getObjectId(), PetSpecies.class);
-    }
-
-    @Override
-    public Date ageCalculation(Pet pet) {
-        return null;
     }
 
     @Override
@@ -87,15 +86,23 @@ public class PetProfileServiceImpl implements PetProfileService {
     }
 
     @Override
-    public List<Pet> getAllPets() {
-        return entityManagerService.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, new QueryDescriptor());
+    public List<Pet> getAllPets(int page) {
+        QueryDescriptor descriptor = new QueryDescriptor();
+        descriptor.addPagingDescriptor(page, Integer.valueOf(petsPageCapacity));
+        return entityManagerService.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, descriptor);
     }
 
     @Override
-    public List<Pet> getAllProfilePets(BigInteger profileId) {
-        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER;
-        return entityManagerService.getObjectsBySQL(sqlQuery, Pet.class, new QueryDescriptor());
+    public List<Pet> getAllProfilePets(BigInteger profileId, int page) {
+        QueryDescriptor descriptor = new QueryDescriptor();
+        descriptor.addPagingDescriptor(page, Integer.valueOf(petsPageCapacity));
+        descriptor.addSortingDesc(PetConstant.PET_NAME, "ASC", false);
+        return entityManagerService.getObjectsBySQL(profilePetsQuery + profileId, Pet.class, descriptor);
+    }
+
+    @Override
+    public List<Pet> getAllProfilePets(BigInteger profileId){
+        return entityManagerService.getObjectsBySQL(profilePetsQuery + profileId, Pet.class, new QueryDescriptor());
     }
 
     @Override

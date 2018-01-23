@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
             }
         });
 
-        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET, pet.getObjectId(), this);
+        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET, pet.getObjectId() == null ? getCurrentUserProfileId() : pet.getObjectId(), this);
 
         avatarSelect.setWidth("100%");
         uploadAvatar.setWidth("100%");
@@ -177,6 +178,12 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/species", PetSpecies[].class));
+    }
+
+    private BigInteger getCurrentUserProfileId(){
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        return CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
     }
 
     private void createPet(String avatarPath, String petName, String petAge, PetSpecies petSpecies, String petBreed,

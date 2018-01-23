@@ -44,6 +44,41 @@ public class StubPagingBar extends HorizontalLayout {
         addComponent(nextPageButton, 5);
         addComponent(lastPageButton, 6);
     }
+
+    public void setBorderButtonsState(boolean isFirstPage){
+        firstPageButton.setEnabled(!isFirstPage);
+        prevPageButton.setEnabled(!isFirstPage);
+        nextPageButton.setEnabled(isFirstPage);
+        lastPageButton.setEnabled(isFirstPage);
+    }
+
+    public void setAllButtonsStateEnabled(){
+        firstPageButton.setEnabled(true);
+        prevPageButton.setEnabled(true);
+        nextPageButton.setEnabled(true);
+        lastPageButton.setEnabled(true);
+    }
+
+    public Button getFirstPageButton() {
+        return firstPageButton;
+    }
+
+    public Button getLastPageButton() {
+        return lastPageButton;
+    }
+
+    public Button getNextPageButton() {
+        return nextPageButton;
+    }
+
+    public Button getPrevPageButton() {
+        return prevPageButton;
+    }
+
+    public TextField getPageNumberField() {
+        return pageNumberField;
+    }
+
     private void getBinder(){
         pageNumberFieldBinder = new Binder<>();
         pageNumberFieldBinder.forField(pageNumberField)

@@ -9,9 +9,13 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -26,8 +30,12 @@ public class PetPageUI extends VerticalLayout {
         this.petId = petId;
         this.petSpecies = getSpecies();
         this.pet = getPet(petId);
+
         setSizeFull();
         setSpacing(true);
+
+        BigInteger currentUserProfileId = getCurrentUserProfileId();
+
         Profile owner = CustomRestTemplate.getInstance().customGetForObject("/profile/" + pet.getPetOwner().getObjectId(), Profile.class);
 
         HorizontalLayout mainLayout = new HorizontalLayout();
@@ -59,29 +67,40 @@ public class PetPageUI extends VerticalLayout {
                 petAvatar.setSource(new ExternalResource(petAvatarSource));
             else
                 petAvatar.setSource(new FileResource(new File(petAvatarSource)));
-        }
-        else
+        } else
             petAvatar = PageElements.getNoImage();
         petAvatar.setHeight(225, Unit.PIXELS);
         petAvatar.setWidth(225, Unit.PIXELS);
         petAvatar.setDescription("Pet avatar");
 
-        Button editPage = PageElements.createClickedLabel("Update pet's profile");
-        editPage.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                PetEditFormUI sub = new PetEditFormUI(pet);
-                UI.getCurrent().addWindow(sub);
-            }
-        });
+        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator());
 
-        Button deletePage = PageElements.createClickedLabel("Delete page");
-        deletePage.addClickListener(new AbstractClickListener() {
-            @Override
-            public void buttonClickListener() {
-                Notification.show("Тут можно будет удалить\nстраницу, если ты владелец", Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
+        if (owner.getObjectId().equals(currentUserProfileId)) {
+            Button editPage = PageElements.createClickedLabel("Update pet's profile");
+            editPage.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    PetEditFormUI sub = new PetEditFormUI(pet);
+                    UI.getCurrent().addWindow(sub);
+                }
+            });
+
+            Button deletePage = PageElements.createClickedLabel("Delete page");
+            deletePage.addClickListener(new AbstractClickListener() {
+                @Override
+                public void buttonClickListener() {
+                    PetDeleteConfirmationWindow sub = new PetDeleteConfirmationWindow(pet.getObjectId(), owner.getObjectId());
+                    UI.getCurrent().addWindow(sub);
+                }
+            });
+            editPage.setWidth("100%");
+            deletePage.setWidth("100%");
+
+            editPage.setIcon(VaadinIcons.EDIT);
+            deletePage.setIcon(VaadinIcons.TRASH);
+
+            leftPageLayout.addComponents(editPage, deletePage, PageElements.getSeparator());
+        }
 
         Button albums = PageElements.createClickedLabel("Albums");
         albums.addClickListener(new AbstractClickListener() {
@@ -91,7 +110,7 @@ public class PetPageUI extends VerticalLayout {
             }
         });
 
-        leftPageLayout.addComponents(petAvatar, PageElements.getSeparator(), editPage, deletePage, PageElements.getSeparator(), albums);
+        leftPageLayout.addComponents(albums);
         avatarPanel.setContent(leftPageLayout);
         avatarLayout.addComponents(avatarPanel);
 
@@ -169,10 +188,14 @@ public class PetPageUI extends VerticalLayout {
                 "/pet/" + petId, Pet.class);
     }
 
-    private PetSpecies getSpecies(){
+    private PetSpecies getSpecies() {
         return CustomRestTemplate.getInstance().customGetForObject(
-                        "/pet/" + petId + "/species" , PetSpecies.class);
+                "/pet/" + petId + "/species", PetSpecies.class);
     }
 
-
+    private BigInteger getCurrentUserProfileId() {
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        return CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+    }
 }

@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ImageReceiver implements Upload.Receiver, Upload.SucceededListener, Upload.FailedListener, Upload.StartedListener, Upload.ProgressListener {
@@ -37,7 +38,7 @@ public class ImageReceiver implements Upload.Receiver, Upload.SucceededListener,
     public OutputStream receiveUpload(String filename, String mimeType) {
         FileOutputStream fos;
         String fileExtension = FilenameUtils.getExtension(filename);
-        filename = FilenameUtils.getBaseName(filename) + objectId.toString();
+        filename = FilenameUtils.getBaseName(filename) + objectId.toString() + new Date().getTime();
         try {
             String hashedFilename = DigestUtils.sha256Hex(filename) + "." +  fileExtension;
             file = new File(path + hashedFilename);
