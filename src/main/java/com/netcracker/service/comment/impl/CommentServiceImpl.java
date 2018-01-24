@@ -5,7 +5,6 @@ import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.comment.CommentConstant;
 import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.record.RecordConstant;
-import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.comment.CommentService;
 import com.netcracker.service.status.StatusService;
@@ -39,11 +38,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public WallRecordComment createWallRecordComment(WallRecordComment comment) {
+        comment.setCommentState(statusService.getActiveStatus());
         return entityManagerService.create(comment);
     }
 
     @Override
     public void updateWallRecordComment(WallRecordComment comment) {
         entityManagerService.update(comment);
+    }
+
+    @Override
+    public void deleteWallRecordComment(WallRecordComment comment) {
+        entityManagerService.delete(comment.getObjectId(), -1);
     }
 }

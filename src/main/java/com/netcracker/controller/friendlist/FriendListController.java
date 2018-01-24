@@ -3,6 +3,7 @@ package com.netcracker.controller.friendlist;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.managefriends.ManageFriendService;
+import com.netcracker.service.search.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,24 +18,28 @@ public class FriendListController {
     @Autowired
     ManageFriendService manageFriendService;
 
+    @Autowired
+    SearchService searchService;
+
     @GetMapping("/{id}")
     public List<Profile> getMyFriends(@PathVariable("id") BigInteger id) {
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
         return manageFriendService.getFriendList(id);
     }
 
-    @GetMapping("/search/people/byFullName/{name}/{surname}")
-    public List<Profile> searchPeopleByFullName(@PathVariable("name") String name, @PathVariable("surname") String surname) {
-        return manageFriendService.searchForPeopleByFullName(name, surname);
+    @GetMapping("/search/byFullName/{name}/{surname}/{id}")
+    public List<Profile> searchFriendsByFullName(@PathVariable("name") String name, @PathVariable("surname") String surname, @PathVariable("id") BigInteger id) {
+        return searchService.searchForFriendsByFullName(name, surname, getMyFriends(id));
     }
 
-    @GetMapping("/search/people/byName/{name}")
-    public List<Profile> searchPeopleByNameOrSurname(@PathVariable("name") String name){
-        return manageFriendService.searchPeopleByNameOrSurname(name);
+    @GetMapping("/search/byName/{name}/{id}")
+    public List<Profile> searchFriendsByNameOrSurname(@PathVariable("name") String name, @PathVariable("id") BigInteger id) {
+        return searchService.searchFriendsByNameOrSurname(name, getMyFriends(id));
     }
 
-    @GetMapping("/search/people/byEmail/{email:.+}")
-    public List<Profile> searchPeopleByEmail(@PathVariable("email") String email) {
-        return manageFriendService.searchForPeopleByEmail(email);
+    @GetMapping("/search/byEmail/{email:.+}/{id}")
+    public List<Profile> searchFriendsByEmail(@PathVariable("email") String email, @PathVariable("id") BigInteger id) {
+        return searchService.searchForFriendsByEmail(email, getMyFriends(id));
     }
+
+
 }

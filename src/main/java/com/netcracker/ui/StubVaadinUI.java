@@ -15,6 +15,7 @@ import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.secutitybook.SecurityBookUI;
+import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -122,7 +123,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     public void buttonClick(Button.ClickEvent clickEvent) {
         SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         String login = o.getAuthentication().getPrincipal().toString();
-        BigInteger profileId  = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+        BigInteger profileId = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
         String clickedButtonCaption = clickEvent.getButton().getCaption();
         if (primaryAreaLayout.getComponentCount() > 1) {
             primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
@@ -158,6 +159,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
             case "My friends":
                 primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));
                 break;
+            case "Users":
+                primaryAreaLayout.addComponentsAndExpand(new UsersUI(profileId));
+                break;
             case "Logout":
                 getPage().setLocation("/authorization");
                 SecurityContextHolder.clearContext();
@@ -181,7 +185,8 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
     }
-    public void changePrimaryAreaLayout(Panel panel){
+
+    public void changePrimaryAreaLayout(Panel panel) {
         ObjectAssert.isNull(panel);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
         primaryAreaLayout.addComponentsAndExpand(panel);

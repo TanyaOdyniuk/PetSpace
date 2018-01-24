@@ -22,4 +22,7 @@ public interface CommentService {
 
     //Update existing wall record comment (with already filled fields)
     void updateWallRecordComment(WallRecordComment comment);
+
+    //Delete wall record comment
+    void deleteWallRecordComment(WallRecordComment comment);
 }

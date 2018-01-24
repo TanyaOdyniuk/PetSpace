@@ -7,4 +7,5 @@ public interface CommentConstant {
     int COM_INFO = 404;
     int COM_LIKEDISLIKE = 405;
     int COM_AUTOR = 406;
+    int COM_STATE = 433;
 }
