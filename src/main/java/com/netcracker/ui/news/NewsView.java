@@ -2,7 +2,6 @@ package com.netcracker.ui.news;
 
 import com.netcracker.model.BaseEntity;
 import com.netcracker.model.comment.AbstractComment;
-import com.netcracker.model.comment.GroupRecordComment;
 import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.like.AbstractLike;
 import com.netcracker.model.like.CommentLike;
@@ -239,8 +238,8 @@ public class NewsView extends VerticalLayout {
                 new Label(labelCaptionStart + " of your friends"));
         wallLayout.addComponent(wallHeaderLayout);
         //WallRecords
-        for (int i = wallRecordsList.getContent().size(); i > 0; i--) {
-            WallRecord currentWallRecord = wallRecordsList.getContent().get(i - 1);
+        for (int i = 0; i < wallRecordsList.getContent().size(); i++) {
+            WallRecord currentWallRecord = wallRecordsList.getContent().get(i);
             List<WallRecordComment> commentsList = getRecordComments(currentWallRecord.getObjectId());
             Profile commentator = currentWallRecord.getRecordAuthor();
             Profile wallOwner = currentWallRecord.getWallOwner();

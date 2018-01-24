@@ -73,7 +73,7 @@ public class NewsServiceImpl implements NewsService {
                 ")";
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, new Integer(newsFriendsCapacityProp));
-        //queryDescriptor.addSortingDesc(6, "DESC", true);
+        queryDescriptor.addSortingDesc(RecordConstant.REC_DATE, "DESC", true);
         List<WallRecord> friendsRecords = entityManagerService.getObjectsBySQL(selectFriendsRecord, WallRecord.class, queryDescriptor);
         for (WallRecord record : friendsRecords) {
             BigInteger wallRecordId = record.getObjectId();
