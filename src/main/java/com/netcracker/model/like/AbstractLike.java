@@ -10,12 +10,9 @@ import com.netcracker.model.user.Profile;
 import java.sql.Timestamp;
 
 public class AbstractLike extends BaseEntity {
-/*    @Attribute(LikeConstant.LDL_DATE)
-    private Timestamp likeDate;*/
     @Attribute(value = LikeConstant.LDL_ISDISLIKE)
     private String isDislike;
-/*    @Reference(value = LikeConstant.LDL_AUTOR, isParentChild = 0)
-    private Profile likeAuthor;*/
+
     public AbstractLike() {
     }
 
