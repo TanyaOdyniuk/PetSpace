@@ -14,7 +14,10 @@ import java.util.List;
 public interface RecordService {
 
     //Get list of all records on profile`s wall by his ID
-    List<WallRecord> getProfileWallRecords(BigInteger profileID);
+    List<WallRecord> getWallRecords(BigInteger profileID);
+
+    //Get list of all records on group`s wall by his ID
+    List<GroupRecord> getGroupRecords(BigInteger groupID);
 
     //Get author`s profile from certain wall record
     Profile getRecordAuthor(BigInteger recordID);

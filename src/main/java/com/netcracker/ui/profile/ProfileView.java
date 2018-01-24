@@ -299,7 +299,7 @@ public class ProfileView extends VerticalLayout {
 
     private List<WallRecord> getWallRecords(BigInteger profileId) {
         List<WallRecord> result = Arrays.asList(CustomRestTemplate.getInstance().
-                customGetForObject("/records/" + profileId, WallRecord[].class));
+                customGetForObject("/records/wall/" + profileId, WallRecord[].class));
         result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
         return result;
     }

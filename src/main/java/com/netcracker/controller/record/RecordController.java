@@ -17,9 +17,14 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
-    @GetMapping("/{id}")
-    public List<WallRecord> getProfileWallRecords(@PathVariable("id") BigInteger profileId) {
-        return recordService.getProfileWallRecords(profileId);
+    @GetMapping("/wall/{id}")
+    public List<WallRecord> getWallRecords(@PathVariable("id") BigInteger profileId) {
+        return recordService.getWallRecords(profileId);
+    }
+
+    @GetMapping("/group/{id}")
+    public List<GroupRecord> getGroupRecords(@PathVariable("id") BigInteger groupId) {
+        return recordService.getGroupRecords(groupId);
     }
 
     @GetMapping("/author/{id}")

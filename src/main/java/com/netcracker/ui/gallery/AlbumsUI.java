@@ -25,11 +25,14 @@ public class AlbumsUI extends HorizontalLayout{
     private Window newAlbumWindow;
     private Grid<PhotoAlbum> grid;
     private List<PhotoAlbum> albums;
+    private BigInteger profileId;
 
     public AlbumsUI(BigInteger profileId) {
         super();
         addStyleName("v-scrollable");
         setHeight("100%");
+
+        this.profileId = profileId;
 
         albums = getAlbumList(profileId);
         List<BigInteger> ids = new ArrayList<>();
@@ -98,7 +101,7 @@ public class AlbumsUI extends HorizontalLayout{
         VerticalLayout windowContent = new VerticalLayout();
         HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
 
-        List<Pet> allPetsUserList = getProfilePets(BigInteger.valueOf(25));
+        List<Pet> allPetsUserList = getProfilePets(profileId);
         ComboBox<Pet> petsComboBox = new ComboBox("Select the pet for the new album:");
         petsComboBox.setItems(allPetsUserList);
         petsComboBox.setItemCaptionGenerator(Pet::getPetName);

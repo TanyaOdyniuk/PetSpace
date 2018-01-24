@@ -29,10 +29,17 @@ public class RecordServiceImpl implements RecordService {
     CommentService commentService;
 
     @Override
-    public List<WallRecord> getProfileWallRecords(BigInteger profileID) {
+    public List<WallRecord> getWallRecords(BigInteger profileID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<GroupRecord> getGroupRecords(BigInteger groupID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + groupID + " AND ATTRTYPE_ID = " + GroupConstant.GR_RECORDS;
+        return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecord.class, new QueryDescriptor());
     }
 
     @Override

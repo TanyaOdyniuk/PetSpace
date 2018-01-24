@@ -1,10 +1,11 @@
 package com.netcracker.ui.groups;
 
 import com.netcracker.model.group.Group;
+import com.netcracker.model.record.AbstractRecord;
+import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
-import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.*;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
@@ -20,6 +21,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @SpringComponent
@@ -76,12 +78,21 @@ public class GroupUI extends VerticalLayout {
         VerticalLayout groupRecordsLayout = new VerticalLayout();
         HorizontalLayout wallListAddRecordayout = new HorizontalLayout();
         wallListAddRecordayout.setWidth("705px");
-        Button addRecordButton = new Button("Add record", VaadinIcons.PLUS);
+        //Button addRecordButton = new Button("Add record", VaadinIcons.PLUS);
+        Button addRecordButton = new AddRecordButton(curGroup);
+
         wallListAddRecordayout.addComponents(new Label("Wall 396 records"), addRecordButton);
         wallListAddRecordayout.setComponentAlignment(addRecordButton, Alignment.TOP_RIGHT);
-        groupRecordsLayout.addComponents(wallListAddRecordayout, groupRecord, groupRecord1, groupRecord2);
-        mainLeftPanel.setContent(groupRecordsLayout);
 
+        List<GroupRecord> groupRecords = getWallRecords(groupId);
+
+        for(GroupRecord currentRecord : groupRecords) {
+            Panel singleRecord = new RecordPanel(currentRecord, curGroup, false, 0, false);
+            groupRecordsLayout.addComponent(singleRecord);
+        }
+
+        groupRecordsLayout.addComponents(wallListAddRecordayout/*, groupRecord, groupRecord1, groupRecord2*/);
+        mainLeftPanel.setContent(groupRecordsLayout);
 
         Panel mainRightPanel = new Panel();
         mainRightPanel.setWidth("240px");
@@ -250,5 +261,12 @@ public class GroupUI extends VerticalLayout {
     private Profile getGroupAdmin(BigInteger groupId) {
         return CustomRestTemplate.getInstance().
                 customGetForObject("/groups/" + groupId + "/admin", Profile.class);
+    }
+
+    private List<GroupRecord> getWallRecords(BigInteger groupId) {
+        List<GroupRecord> result = Arrays.asList(CustomRestTemplate.getInstance().
+                customGetForObject("/records/group/" + groupId, GroupRecord[].class));
+        result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
+        return result;
     }
 }

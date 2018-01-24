@@ -14,6 +14,7 @@ import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.bulletinboard.AdvertisementView;
+import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.news.NewsView;
@@ -55,6 +56,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
     private boolean isFromNews = false;
     private int pageNumber = 1;
     private boolean isFriendNews = true;
+
     public CommentsPanel(BaseEntity currentRecord, Class<T> commentsType, AbstractComponentContainer parentComponent, BaseEntity reloadPageTo, int pageNumber, boolean isFriendNews){
         this(currentRecord, commentsType, parentComponent, reloadPageTo);
         isFromNews = true;
@@ -531,7 +533,8 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
         } else if(Group.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
         } else if(PhotoAlbum.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
+            //((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
+            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AlbumsUI(currentProfileId));
         } else if(Advertisement.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView((Advertisement) reloadTo));
         }

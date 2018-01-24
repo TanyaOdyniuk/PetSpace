@@ -1,11 +1,15 @@
 package com.netcracker.ui.gallery;
 
+import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.comment.PhotoRecordComment;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.CommentsPanel;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class HorizontalGallery extends Window {
@@ -17,7 +21,7 @@ public class HorizontalGallery extends Window {
 
     public HorizontalGallery(List<PhotoRecord> list, Integer i) {
         setModal(true);
-//        center();
+        center();
         panel = new Panel();
         galleryLayout = new HorizontalLayout();
         imageLayout = new HorizontalLayout();
@@ -27,11 +31,12 @@ public class HorizontalGallery extends Window {
 //        imagePanel.setWidth("400px");
 //        imagePanel.setHeight("400px");
 //        imagePanel.setContent(imageLayout);
+        PhotoRecord currentRecord = list.get(index);
         image = new Image();
-        image.setSource(new ExternalResource(list.get(index).getPhoto()));
-        image.setDescription(list.get(index).getDescription());
-        panel.setWidth(900, Unit.PIXELS);//1100
-        panel.setHeight(630, Unit.PIXELS);//650
+        image.setSource(new ExternalResource(currentRecord.getPhoto()));
+        image.setDescription(currentRecord.getDescription());
+        //panel.setWidth(900, Unit.PIXELS);//1100
+        //panel.setHeight(630, Unit.PIXELS);//650
 
         Button arrowLeft = new Button();
         arrowLeft.setWidth(10, Unit.PIXELS);
@@ -73,9 +78,15 @@ public class HorizontalGallery extends Window {
         galleryLayout.setComponentAlignment(arrowLeft, Alignment.MIDDLE_LEFT);
         galleryLayout.setComponentAlignment(arrowRight, Alignment.MIDDLE_RIGHT);
 
+        VerticalLayout mainLayout = new VerticalLayout();
+        mainLayout.addComponent(galleryLayout);
+
+        Panel commentsLikes = new CommentsPanel<>(currentRecord, PhotoRecordComment.class, mainLayout, new PhotoAlbum());
+        mainLayout.addComponent(commentsLikes);
+
         Panel galleryLayoutPanel = new Panel();
-        galleryLayoutPanel.setContent(galleryLayout);
-        panel.setContent(galleryLayout);
+        galleryLayoutPanel.setContent(mainLayout);
+        panel.setContent(mainLayout);
         setContent(panel);
     }
 }

@@ -16,13 +16,25 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/wall/{id}")
-    public List<WallRecordComment> getComments(@PathVariable("id") BigInteger recordID) {
+    public List<WallRecordComment> getWallRecordComments(@PathVariable("id") BigInteger recordID) {
         return commentService.getWallRecordComments(recordID);
     }
+
+    @GetMapping("/group/{id}")
+    public List<GroupRecordComment> getGroupRecordComments(@PathVariable("id") BigInteger recordID) {
+        return commentService.getGroupRecordComments(recordID);
+    }
+
+    @GetMapping("/photo/{id}")
+    public List<PhotoRecordComment> getPhotoRecordComments(@PathVariable("id") BigInteger recordID) {
+        return commentService.getPhotoRecordComments(recordID);
+    }
+
     @GetMapping("/ad/{id}")
     public List<AdvertisementComment> getAdvertisementComments(@PathVariable("id") BigInteger recordID) {
         return commentService.getAdvertisementComments(recordID);
     }
+
     @GetMapping("/author/{id}")
     public Profile getCommentAuthor(@PathVariable("id") BigInteger commentID) {
         return commentService.getCommentAuthor(commentID);
