@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserListController {
     @Autowired
-    SearchService searchService;
+    private SearchService searchService;
 
     @GetMapping("/search/byFullName/{name}/{surname}")
     public List<Profile> searchPeopleByFullName(@PathVariable("name") String name, @PathVariable("surname") String surname) {

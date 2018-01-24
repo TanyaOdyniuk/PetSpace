@@ -15,10 +15,10 @@ import java.math.BigInteger;
 public class PetPageController {
 
     @Autowired
-    PetProfileService petProfileService;
+    private PetProfileService petProfileService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GetMapping("/{id}")
     public Pet getPetById(@PathVariable("id") BigInteger id){

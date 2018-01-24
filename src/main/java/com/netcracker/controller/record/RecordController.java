@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/records")
 public class RecordController {
     @Autowired
-    RecordService recordService;
+    private RecordService recordService;
 
     @GetMapping("/{id}")
     public List<WallRecord> getProfileWallRecords(@PathVariable("id") BigInteger profileId) {

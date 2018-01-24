@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
     private StatusService statusService;
 
@@ -47,7 +47,9 @@ public class CommentServiceImpl implements CommentService {
     public List<AdvertisementComment> getAdvertisementComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + AdvertisementConstant.AD_COM;
-        return entityManagerService.getObjectsBySQL(sqlQuery, AdvertisementComment.class, new QueryDescriptor());
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addSortingDesc(CommentConstant.COM_DATE, "DESC", true);
+        return entityManagerService.getObjectsBySQL(sqlQuery, AdvertisementComment.class, queryDescriptor);
     }
 
     @Override

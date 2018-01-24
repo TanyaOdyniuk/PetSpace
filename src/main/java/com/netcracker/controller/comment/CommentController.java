@@ -13,13 +13,16 @@ import java.util.List;
 @RequestMapping("/comments")
 public class CommentController {
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @GetMapping("/wall/{id}")
     public List<WallRecordComment> getComments(@PathVariable("id") BigInteger recordID) {
         return commentService.getWallRecordComments(recordID);
     }
-
+    @GetMapping("/ad/{id}")
+    public List<AdvertisementComment> getAdvertisementComments(@PathVariable("id") BigInteger recordID) {
+        return commentService.getAdvertisementComments(recordID);
+    }
     @GetMapping("/author/{id}")
     public Profile getCommentAuthor(@PathVariable("id") BigInteger commentID) {
         return commentService.getCommentAuthor(commentID);

@@ -33,6 +33,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
@@ -76,7 +77,7 @@ public class RecordPanel extends Panel {
         recordAuthorAvatar.addClickListener((MouseEvents.ClickListener) clickEvent ->
                 ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(recordAuthor.getObjectId())));
         Label recordName = new Label("Record from " + recordAuthorAvatar.getDescription());
-        Label recordDate = new Label(currentRecord.getRecordDate().toString());
+        Label recordDate = new Label(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(currentRecord.getRecordDate()));
         recordInfoLayout.addComponent(recordAuthorAvatar);
         recordInfoLayout.addComponentsAndExpand(recordName, recordDate);
         recordInfoLayout.setComponentAlignment(recordName, Alignment.TOP_CENTER);

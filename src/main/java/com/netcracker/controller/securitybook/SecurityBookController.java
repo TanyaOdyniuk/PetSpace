@@ -16,7 +16,7 @@ import java.util.List;
 public class SecurityBookController {
 
     @Autowired
-    SecurityBookServiceImpl service;
+    private SecurityBookServiceImpl service;
 
     @GetMapping("/types")
     public List<SecurityType> getSecurityTypes() {

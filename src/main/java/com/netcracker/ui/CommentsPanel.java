@@ -13,6 +13,7 @@ import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
+import com.netcracker.ui.bulletinboard.AdvertisementView;
 import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.news.NewsView;
@@ -30,6 +31,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -79,10 +81,9 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
         }
 
         int commentsListSize = commentsList.size();
-        System.out.println(commentsListSize);
 
-        for (int j = commentsListSize; j > 0; j--) {
-            AbstractComment currentComment = commentsList.get(j - 1);
+        for (int j = 0; j < commentsListSize; j++) {
+            AbstractComment currentComment = commentsList.get(j);
             Panel currentCommentPanel = new Panel();
             VerticalLayout currentCommentLayout = new VerticalLayout();
             HorizontalLayout commentDateAndAvatarLayout = new HorizontalLayout();
@@ -100,7 +101,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
             commentDateAndAvatarLayout.addComponents(
                     commentatorMiniImage,
                     new Label("Comment from " + authorNameAndSurname),
-                    new Label(currentComment.getCommentDate().toString())
+                    new Label(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(currentComment.getCommentDate()))
             );
             HorizontalLayout commentLikeLayout = new HorizontalLayout();
             Button likeCommentButton = new Button();
@@ -434,10 +435,8 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
     }
 
     private List<AdvertisementComment> getAdvertisementComments(BigInteger recordID) {
-        List<AdvertisementComment> result = Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
+        return Arrays.asList(CustomRestTemplate.getInstance().customGetForObject(
                 "/comments/ad/" + recordID, AdvertisementComment[].class));
-        result.sort(Comparator.comparing(AbstractComment::getCommentDate));
-        return result;
     }
 
     private List<AbstractLike> getRecordLikes(BigInteger recordID) {
@@ -534,7 +533,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
         } else if(PhotoAlbum.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
         } else if(Advertisement.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView((Advertisement) reloadTo));
         }
     }
 

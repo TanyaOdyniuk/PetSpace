@@ -14,7 +14,7 @@ import java.util.List;
 public class MessageController {
 
     @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @GetMapping("/{id}/{page}")
     public RestResponsePage<Message> getMyMessages(@PathVariable("id") BigInteger profileId, @PathVariable("page") int page) {

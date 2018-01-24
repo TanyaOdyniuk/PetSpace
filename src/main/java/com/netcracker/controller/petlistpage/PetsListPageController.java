@@ -17,7 +17,7 @@ import java.util.List;
 public class PetsListPageController {
 
     @Autowired
-    PetProfileService petProfileService;
+    private PetProfileService petProfileService;
 
     @GetMapping("/{id}/{page}")
     public RestResponsePage<Pet> getMyMessages(@PathVariable("id") BigInteger profileId, @PathVariable("page") int page) {

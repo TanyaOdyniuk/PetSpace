@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/albums")
 public class AlbumsController {
     @Autowired
-    MediaService mediaService;
+    private MediaService mediaService;
 
     @GetMapping("/{id}")
     public List<PhotoAlbum> getMyAlbums(@PathVariable("id") BigInteger profileId){

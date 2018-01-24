@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/profile")
 public class ProfileController {
     @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
 
     @GetMapping("/{id}")
     public Profile getProfile(@PathVariable("id") BigInteger profileId) {

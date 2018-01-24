@@ -16,10 +16,10 @@ import java.util.List;
 public class FriendListController {
 
     @Autowired
-    ManageFriendService manageFriendService;
+    private ManageFriendService manageFriendService;
 
     @Autowired
-    SearchService searchService;
+    private SearchService searchService;
 
     @GetMapping("/{id}")
     public List<Profile> getMyFriends(@PathVariable("id") BigInteger id) {

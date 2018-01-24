@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/groupList")
 public class GroupListController {
     @Autowired
-    GroupService groupService;
+    private GroupService groupService;
 
     @GetMapping("/all")
     public List<Group> getAllGroupsList() {

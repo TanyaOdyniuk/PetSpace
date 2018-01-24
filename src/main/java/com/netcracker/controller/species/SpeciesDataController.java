@@ -14,7 +14,7 @@ import java.util.List;
 public class SpeciesDataController {
 
     @Autowired
-    PetProfileService petProfileService;
+    private PetProfileService petProfileService;
 
     @GetMapping
     public List<PetSpecies> getAllSpecies() {

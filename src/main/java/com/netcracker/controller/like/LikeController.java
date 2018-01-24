@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/likes")
 public class LikeController {
     @Autowired
-    LikeService likeService;
+    private LikeService likeService;
 
     @GetMapping("/record/{id}")
     public List<RecordLike> getRecordLikes(@PathVariable("id") BigInteger recordID) {

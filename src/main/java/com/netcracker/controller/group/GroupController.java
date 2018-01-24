@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupController {
     @Autowired
-    GroupService groupService;
+    private GroupService groupService;
 
     @GetMapping("/{id}")
     public Group getGroup(@PathVariable("id") BigInteger groupId) {
