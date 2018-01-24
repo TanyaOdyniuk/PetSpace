@@ -12,15 +12,6 @@ import java.util.List;
 
 @SpringBootApplication
 public class PetSpaceApplication {
-    @Bean(name = "users")
-    public List<StubUser> getUsers() {
-        List<StubUser> users = new ArrayList<>();
-        users.add(new StubUser(StubUser.objectCount++, "Vasya", "Pupkin"));
-        users.add(new StubUser(StubUser.objectCount++, "Ivan", "Ivanov"));
-        users.add(new StubUser(StubUser.objectCount, "Petr", "Petrov"));
-        return users;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(new Object[]{PetSpaceApplication.class, AppConfig.class, SecurityConfig.class}, args);
     }
