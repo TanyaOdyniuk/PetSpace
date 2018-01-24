@@ -1,13 +1,14 @@
 package com.netcracker.controller.group;
 
 import com.netcracker.model.group.Group;
-import com.netcracker.model.group.GroupType;
 import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
 import com.netcracker.service.groups.GroupService;
-import com.netcracker.service.user.UserService;
+import com.netcracker.service.util.RestResponsePage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -17,8 +18,6 @@ import java.util.List;
 public class GroupController {
     @Autowired
     GroupService groupService;
-    @Autowired
-    UserService userService;
 
     @GetMapping("/{id}")
     public Group getGroup(@PathVariable("id") BigInteger groupId) {
@@ -30,23 +29,30 @@ public class GroupController {
         return groupService.getGroupSubscribers(groupId);
     }
 
-    @GetMapping("/{id}/subscribers/users")
-    public List<User> getSubscribedUsersList(@PathVariable("id") BigInteger groupId) {
-        return groupService.getSubscribedUsersList(groupId);
-    }
-
     @GetMapping("/{id}/admin")
     public Profile getGroupAdmin(@PathVariable("id") BigInteger groupId) {
         return groupService.getGroupAdmin(groupId);
     }
 
-    @GetMapping("/curUserId/{login}")
-    public User getCurUserId(@RequestHeader("login") String login){
-        return userService.getCurrentUser(login);
+    @GetMapping("/leaveGroup/{groupId}/{profileId}")
+    public void leaveGroup(@PathVariable("groupId") BigInteger groupId, @PathVariable("profileId") BigInteger profileId){
+        groupService.leaveGroup(groupId, profileId);
     }
 
-    @GetMapping("/leaveGroup/{groupId}/{userId}")
-    public void leaveGroup(@PathVariable("groupId") BigInteger groupId, @PathVariable("userId") BigInteger userId){
+    @GetMapping("/subscribe/{groupId}/{profileId}")
+    public void subscribe(@PathVariable("groupId") BigInteger groupId, @PathVariable("profileId") BigInteger profileId){
+        groupService.subscribe(groupId, profileId);
+    }
 
+    @GetMapping("/isAdmin/{id}")
+    public List<Group> getProfileCreatedGroupsList(@PathVariable("id") BigInteger profileId) {
+        return groupService.getProfileCreatedGroups(profileId);
+    }
+
+    @GetMapping("/isAdmin/{id}/{page}")
+    public RestResponsePage<Group> getAdministerGroups(@PathVariable("id") BigInteger profileId, @PathVariable("page") Integer page) {
+        Integer pageCount = groupService.getAdministerGroupsPageCount(profileId);
+        List<Group> allGroups =  groupService.getAdministerGroupsList(profileId, page);
+        return new RestResponsePage<>(allGroups, null, pageCount);
     }
 }

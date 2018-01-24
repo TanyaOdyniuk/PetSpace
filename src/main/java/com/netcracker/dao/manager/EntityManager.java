@@ -234,6 +234,33 @@ public class EntityManager {
         SqlParameterSource in = new MapSqlParameterSource(inParam);
         jdbcCall.execute(in);
     }
+    public void dropRefDual(int attr_id, BigInteger ref, BigInteger obj){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withProcedureName("DROPOBJREFDUAL").declareParameters(
+                new SqlParameter("attr", OracleTypes.NUMBER),
+                new SqlParameter("refer", OracleTypes.NUMBER),
+                new SqlParameter("obj", OracleTypes.NUMBER));
+        Map<String, Object> inParam = new HashMap<>();
+        inParam.put("attr", attr_id);
+        inParam.put("refer", ref);
+        inParam.put("obj", obj);
+        SqlParameterSource in = new MapSqlParameterSource(inParam);
+        jdbcCall.execute(in);
+    }
+    public void insertObjref(int attr_id, BigInteger ref, BigInteger obj){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withProcedureName("INSERTOBJREF").declareParameters(
+                new SqlParameter("attr", OracleTypes.NUMBER),
+                new SqlParameter("refer", OracleTypes.NUMBER),
+                new SqlParameter("obj", OracleTypes.NUMBER));
+        Map<String, Object> inParam = new HashMap<>();
+        inParam.put("attr", attr_id);
+        inParam.put("refer", ref);
+        inParam.put("obj", obj);
+        SqlParameterSource in = new MapSqlParameterSource(inParam);
+        jdbcCall.execute(in);
+    }
+
     private Map<String, Object> executeObjectJdbcCall(Entity entity, int delete, Integer forceDel) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(

@@ -16,8 +16,8 @@ public class LikeController {
     LikeService likeService;
 
     @GetMapping("/record/{id}")
-    public List<RecordLike> getRecordLikes(@PathVariable("id") BigInteger wallRecordID) {
-        return likeService.getRecordLikes(wallRecordID);
+    public List<RecordLike> getRecordLikes(@PathVariable("id") BigInteger recordID) {
+        return likeService.getRecordLikes(recordID);
     }
 
     @GetMapping("/comment/{id}")

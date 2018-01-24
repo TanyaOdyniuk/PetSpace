@@ -1,5 +1,7 @@
 package com.netcracker.controller.record;
 
+import com.netcracker.model.record.AbstractRecord;
+import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.record.RecordService;
@@ -10,7 +12,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/wallrecords")
+@RequestMapping("/records")
 public class RecordController {
     @Autowired
     RecordService recordService;
@@ -21,22 +23,32 @@ public class RecordController {
     }
 
     @GetMapping("/author/{id}")
-    public Profile getWallRecordAuthor(@PathVariable("id") BigInteger wallRecordID) {
-        return recordService.getWallRecordAuthor(wallRecordID);
+    public Profile getRecordAuthor(@PathVariable("id") BigInteger recordID) {
+        return recordService.getRecordAuthor(recordID);
     }
 
-    @PostMapping("/add")
-    public WallRecord createWallRecord(@RequestBody WallRecord wallRecord){
-        return recordService.createWallRecord(wallRecord);
+    @PostMapping("/wall/add")
+    public WallRecord createWallRecord(@RequestBody WallRecord record){
+        return recordService.createWallRecord(record);
     }
 
-    @PostMapping("/update")
-    public void updateWallRecord(@RequestBody WallRecord wallRecord){
-        recordService.updateWallRecord(wallRecord);
+    @PostMapping("/group/add")
+    public GroupRecord createGroupRecord(@RequestBody GroupRecord record){
+        return recordService.createGroupRecord(record);
+    }
+
+    @PostMapping("/wall/update")
+    public void updateWallRecord(@RequestBody WallRecord record){
+        recordService.updateWallRecord(record);
+    }
+
+    @PostMapping("/group/update")
+    public void updateGroupRecord(@RequestBody GroupRecord record){
+        recordService.updateGroupRecord(record);
     }
 
     @PostMapping("/delete")
-    public void deleteWallRecord(@RequestBody WallRecord wallRecord){
+    public void deleteWallRecord(@RequestBody AbstractRecord wallRecord){
         recordService.deleteWallRecord(wallRecord);
     }
 }

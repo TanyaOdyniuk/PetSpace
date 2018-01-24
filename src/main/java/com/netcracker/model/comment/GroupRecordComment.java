@@ -2,12 +2,12 @@ package com.netcracker.model.comment;
 
 import com.netcracker.dao.annotation.ObjectType;
 import com.netcracker.dao.annotation.Reference;
-import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.RecordConstant;
 
 @ObjectType(CommentConstant.COM_TYPE)
 public class GroupRecordComment extends AbstractComment {
-    @Reference(value = GroupConstant.GR_TYPE, isParentChild = 0)//нет списка комментов
+    @Reference(value = RecordConstant.REC_COMREF, isParentChild = 0)//нет списка комментов
     private GroupRecord commentedGroupRecord;
 
     public GroupRecordComment() {

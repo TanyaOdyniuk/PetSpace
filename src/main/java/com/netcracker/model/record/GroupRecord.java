@@ -5,11 +5,14 @@ import com.netcracker.dao.annotation.Reference;
 import com.netcracker.model.comment.GroupRecordComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
+import com.netcracker.model.user.Profile;
 
 import java.util.List;
 
 @ObjectType(RecordConstant.REC_TYPE)
 public class GroupRecord extends AbstractRecord {
+    @Reference(value = GroupConstant.GR_AUTOR, isParentChild = 0)
+    private Profile recordAuthor;
     @Reference(value = GroupConstant.GR_RECORDS, isParentChild = 0)
     private Group parentGroup;
 
@@ -24,6 +27,14 @@ public class GroupRecord extends AbstractRecord {
         super(name, description);
     }
 
+    public Profile getRecordAuthor() {
+        return recordAuthor;
+    }
+
+    public void setRecordAuthor(Profile recordAuthor) {
+        this.recordAuthor = recordAuthor;
+    }
+
     public Group getParentGroup() {
         return parentGroup;
     }
@@ -31,10 +42,12 @@ public class GroupRecord extends AbstractRecord {
     public void setParentGroup(Group parentGroup) {
         this.parentGroup = parentGroup;
     }
+
     @Override
     public String toString() {
         return "GroupRecord{" +
-                "parentGroup=" + parentGroup +
+                "recordAuthor=" + recordAuthor +
+                ", parentGroup=" + parentGroup +
                 '}';
     }
 }

@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-class GalleryUI extends VerticalLayout {
+public class GalleryUI extends VerticalLayout {
     private HorizontalGallery horizontalGallery;
     private VerticalLayout photosLayout;
     private Window newPhotoRecordWindow;
     private BigInteger albumId;
 
-    GalleryUI(BigInteger albumId) {
+    public GalleryUI(BigInteger albumId) {
         this.albumId = albumId;
         addStyleName("v-scrollable");
         setHeight("100%");

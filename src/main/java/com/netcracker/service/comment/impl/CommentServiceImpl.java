@@ -2,8 +2,9 @@ package com.netcracker.service.comment.impl;
 
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
-import com.netcracker.model.comment.CommentConstant;
-import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.advertisement.AdvertisementConstant;
+import com.netcracker.model.album.PhotoAlbumConstant;
+import com.netcracker.model.comment.*;
 import com.netcracker.model.record.RecordConstant;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.comment.CommentService;
@@ -22,10 +23,31 @@ public class CommentServiceImpl implements CommentService {
     private StatusService statusService;
 
     @Override
-    public List<WallRecordComment> getWallRecordComments(BigInteger wallRecordID) {
+    public List<WallRecordComment> getWallRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecordComment.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<GroupRecordComment> getGroupRecordComments(BigInteger recordID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
+        return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecordComment.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<PhotoRecordComment> getPhotoRecordComments(BigInteger recordID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.PR_COMMENTS;
+        return entityManagerService.getObjectsBySQL(sqlQuery, PhotoRecordComment.class, new QueryDescriptor());
+    }
+
+    @Override
+    public List<AdvertisementComment> getAdvertisementComments(BigInteger recordID) {
+        String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + AdvertisementConstant.AD_COM;
+        return entityManagerService.getObjectsBySQL(sqlQuery, AdvertisementComment.class, new QueryDescriptor());
     }
 
     @Override
@@ -37,18 +59,56 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public WallRecordComment createWallRecordComment(WallRecordComment comment) {
+    public WallRecordComment createComment(WallRecordComment comment) {
         comment.setCommentState(statusService.getActiveStatus());
         return entityManagerService.create(comment);
     }
 
     @Override
-    public void updateWallRecordComment(WallRecordComment comment) {
+    public GroupRecordComment createComment(GroupRecordComment comment) {
+        comment.setCommentState(statusService.getActiveStatus());
+        return entityManagerService.create(comment);
+    }
+
+    @Override
+    public PhotoRecordComment createComment(PhotoRecordComment comment) {
+        comment.setCommentState(statusService.getActiveStatus());
+        return entityManagerService.create(comment);
+    }
+
+    @Override
+    public AdvertisementComment createComment(AdvertisementComment comment) {
+        comment.setCommentState(statusService.getActiveStatus());
+        return entityManagerService.create(comment);
+    }
+
+    @Override
+    public void updateComment(AbstractComment comment) {
         entityManagerService.update(comment);
     }
 
     @Override
-    public void deleteWallRecordComment(WallRecordComment comment) {
+    public void updateComment(WallRecordComment comment) {
+        entityManagerService.update(comment);
+    }
+
+    @Override
+    public void updateComment(GroupRecordComment comment) {
+        entityManagerService.update(comment);
+    }
+
+    @Override
+    public void updateComment(PhotoRecordComment comment) {
+        entityManagerService.update(comment);
+    }
+
+    @Override
+    public void updateComment(AdvertisementComment comment) {
+        entityManagerService.update(comment);
+    }
+
+    @Override
+    public void deleteRecordComment(AbstractComment comment) {
         entityManagerService.delete(comment.getObjectId(), -1);
     }
 }

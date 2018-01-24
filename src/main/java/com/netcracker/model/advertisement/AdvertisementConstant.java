@@ -13,4 +13,5 @@ public interface AdvertisementConstant {
     int AD_STATUS = 13;
     int AD_CATEGORY = 12;
     int AD_PETS = 15;
+    int AD_COM = 436;
 }
