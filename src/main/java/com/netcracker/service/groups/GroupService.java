@@ -1,7 +1,6 @@
 package com.netcracker.service.groups;
 
 import com.netcracker.model.group.Group;
-import com.netcracker.model.group.GroupType;
 import com.netcracker.model.user.Profile;
 import com.netcracker.model.user.User;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,30 @@ public interface GroupService {
 
     Group getGroup(BigInteger groupId);
 
-    List<Group> getMyGroupsList(BigInteger profileId);
+    int getMyGroupsPageCount(BigInteger profileId);
+    List<Group> getMyGroups(BigInteger profileId);
+    List<Group> getMyGroupsList(BigInteger profileId, Integer page);
 
     List<Profile> getGroupSubscribers(BigInteger groupId);
 
     Profile getGroupAdmin(BigInteger groupId);
 
-    List<User> getSubscribedUsersList(BigInteger groupId);
+//    List<User> getSubscribedUsersList(BigInteger groupId);
 
     Group createNewGroup(Group newGroup, BigInteger profileId);
+
+    void leaveGroup(BigInteger groupId, BigInteger profileId);
+
+    int getAdministerGroupsPageCount(BigInteger profileId);
+    List<Group> getAdministerGroupsList(BigInteger profileId, Integer page);
+    int getAllGroupsPageCount();
+
+    List<Group> getAllGroups();
+    List<Group> getAllGroupsList(Integer page);
+
+    void subscribe(BigInteger groupId, BigInteger profileId);
+
+    List<Group> getProfileCreatedGroups(BigInteger profileId);
 
     void editGroup(Group groupForChangeOnlyAdmin);
 
@@ -31,9 +45,6 @@ public interface GroupService {
 
 //    Система должна позволять администратору наделять определенных участников группы вносить изменения в группу.
     void empowerForGroup(Group group, BigInteger userId);
-
-//    Уровни публичности  группы: открыта, закрыта
-    void setAccessLevelOfGroup(Group group, GroupType groupType); //то же что и обычный setter группы
 
     void inviteUserToGroup(Profile invited, Group linkToGroup);
 

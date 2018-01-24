@@ -53,9 +53,19 @@ public class EntityManagerService {
         manager.create(entity);
         return baseEntity;
     }
-    public void dropRef(int attr_id, BigInteger obj, int flag){
+
+    public void dropRef(int attr_id, BigInteger obj, int flag) {
         manager.dropRef(attr_id, obj, flag);
     }
+
+    public void dropRefDual(int attr_id, BigInteger ref, BigInteger obj) {
+        manager.dropRefDual(attr_id, ref, obj);
+    }
+
+    public void insertObjref(int attr_id, BigInteger ref, BigInteger obj) {
+        manager.insertObjref(attr_id, ref, obj);
+    }
+
     public <T extends BaseEntity> BigInteger update(T baseEntity) {
         if (baseEntity.getObjectId() == null) {
             T temp = create(baseEntity);

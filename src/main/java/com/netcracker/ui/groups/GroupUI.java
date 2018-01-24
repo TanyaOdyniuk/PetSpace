@@ -2,8 +2,8 @@ package com.netcracker.ui.groups;
 
 import com.netcracker.model.group.Group;
 import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
 import com.netcracker.ui.AbstractClickListener;
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
@@ -28,6 +28,7 @@ public class GroupUI extends VerticalLayout {
     private HorizontalLayout headerLayout;
     private HorizontalLayout contentLayout;
     private String stubAvatar = "https://goo.gl/6eEoWo";
+    private Window newGroupWindow;
 
     public GroupUI(BigInteger groupId) {
         addStyleName("v-scrollable");
@@ -126,35 +127,97 @@ public class GroupUI extends VerticalLayout {
         adminPanel.setContent(adminLayout);
         //-----------------ADMIN
 
-
         VerticalLayout mainRightLayout = new VerticalLayout();
         Button subscribeButton = new Button("Subscribe", VaadinIcons.ENTER_ARROW);
         Button leaveGroupButton = new Button("Leave", VaadinIcons.SIGN_OUT);
         SecurityContext curUser = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         String login = curUser.getAuthentication().getPrincipal().toString();
-//        User currentUser = getCurUserId(login);//new UserServiceImpl().getCurrentUser(login);
-        List<User> subscribedUsers = getSubscribedUsersList(groupId);
-        for (User user : subscribedUsers) {
-            if (login.equals(user.getLogin())) {
-                mainRightLayout.addComponent(leaveGroupButton);
-                mainRightLayout.setComponentAlignment(leaveGroupButton, Alignment.TOP_CENTER);
-            } else {
+        BigInteger profileId = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+        List<Profile> subscrs = getGroupSubscribers(groupId);
+        if (subscrs.size() == 0) {
+            mainRightLayout.addComponent(subscribeButton);
+            mainRightLayout.setComponentAlignment(subscribeButton, Alignment.TOP_CENTER);
+        }
+        for (Profile user : subscrs) {
+            if (!profileId.equals(user.getObjectId())) {
                 mainRightLayout.addComponent(subscribeButton);
                 mainRightLayout.setComponentAlignment(subscribeButton, Alignment.TOP_CENTER);
+            } else {
+                mainRightLayout.replaceComponent(subscribeButton, leaveGroupButton);
+                break;
             }
         }
+        Button editGroup = new Button("Edit the group");
+        if (profileId.equals(admin.getObjectId())) {
+            mainRightLayout.removeComponent(subscribeButton);
+            mainRightLayout.removeComponent(leaveGroupButton);
+            mainRightLayout.addComponent(editGroup);
+            mainRightLayout.setComponentAlignment(editGroup, Alignment.TOP_CENTER);
+        }
+        editGroup.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                editGroup(curGroup);
+                UI.getCurrent().addWindow(newGroupWindow);
+            }
+        });
+        subscribeButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                CustomRestTemplate.getInstance().customGetForObject(
+                        "/groups/subscribe/" + groupId + "/" + profileId, Void.class);
+                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupId));
+            }
+        });
         leaveGroupButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 CustomRestTemplate.getInstance().customGetForObject(
-                        "/leaveGroup/" + groupId + "/" /*+ currentUser.getObjectId()*/, Void.class);
+                        "/groups/leaveGroup/" + groupId + "/" + profileId, Void.class);
+                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
             }
         });
-
         mainRightLayout.addComponents(subscribersPanel, adminPanel);
         mainRightPanel.setContent(mainRightLayout);
         contentLayout.addComponents(mainLeftPanel, mainRightPanel);
         addComponents(headerLayout, contentLayout);
+    }
+
+    private void editGroup(Group group) {
+        newGroupWindow = new Window();
+        newGroupWindow.setModal(true);
+        newGroupWindow.setWidth("400px");
+        newGroupWindow.setHeight("320px");
+        newGroupWindow.setCaption("Group change:");
+        VerticalLayout windowContent = new VerticalLayout();
+        HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
+
+        TextField groupName = PageElements.createTextField(
+                "Change the name:", "old: " + group.getGroupName(), false);
+        groupName.setWidth("100%");
+        TextField groupAvatar = PageElements.createTextField(
+                "Change the avatar:", "group avatar", false);
+        groupName.setWidth("100%");
+        TextField description = PageElements.createTextField(
+                "Change the group description:", "old: " + group.getGroupDescription().substring(0,40) + "...", false);
+        description.setWidth("100%");
+
+        Button addGroupButton = new Button("Edit group");
+        addGroupButton.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                addGroupButton.setComponentError(null);
+//                createGroup(groupName.getValue(), groupAvatar.getValue(), description.getValue(), profileId);
+                newGroupWindow.close();
+                Notification.show("You have just created a new group!");
+            }
+        });
+        Button cancelAddingNewAlbum = new Button("Cancel", click -> newGroupWindow.close());
+        addAlbumButtonsLayout.addComponentsAndExpand(addGroupButton, cancelAddingNewAlbum);
+        windowContent.addComponents(groupName, groupAvatar, description, addAlbumButtonsLayout);
+
+        newGroupWindow.setContent(windowContent);
+        newGroupWindow.center();
     }
 
     private GridLayout getPhotosGrid(List<Profile> list) {
@@ -173,20 +236,6 @@ public class GroupUI extends VerticalLayout {
             photosGrid.addComponent(singlePhotoPanel);
         }
         return photosGrid;
-    }
-
-    private User getCurUserId(String login){
-        return CustomRestTemplate.getInstance()
-                .customGetForObject("groups/curUserId/" + login, User.class);
-    }
-
-//    private void leaveGroup(BigInteger groupId, BigInteger userId){
-//        return CustomRestTemplate.getInstance().customGetForObject("/groups/leave/", Void.class);
-//    }
-
-    private List<User> getSubscribedUsersList(BigInteger groupId) {
-        return Arrays.asList(CustomRestTemplate.getInstance().
-                customGetForObject("/groups/" + groupId + "/subscribers/users", User[].class));
     }
 
     private Group getGroup(BigInteger groupId) {
