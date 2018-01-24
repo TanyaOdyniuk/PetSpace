@@ -25,14 +25,15 @@ public class StubLeftBar extends VerticalLayout {
         panel.setSizeUndefined();
         Button profile = getNewButton("My profile", VaadinIcons.HOME_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button friends = getNewButton("My friends", VaadinIcons.USERS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
+        Button requests = getNewButton("My requests", VaadinIcons.BELL_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button pets = getNewButton("My pets", VaadinIcons.HEART, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button albums = getNewButton("My albums", VaadinIcons.CLIPBOARD_USER, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button adverts = getNewButton("My adverts", VaadinIcons.USER_CARD, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button groups = getNewButton("My groups", VaadinIcons.GROUP, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
-        Button settings = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
+        //Button settings = getNewButton("Settings", VaadinIcons.TOOLS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button messages = getNewButton("My messages", VaadinIcons.ENVELOPES_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         VerticalLayout layout = new VerticalLayout();
-        layout.addComponentsAndExpand(profile, friends, pets, messages, albums, adverts, groups, settings);
+        layout.addComponentsAndExpand(profile, friends, requests, pets, messages, albums, adverts, groups/*, settings*/);
         panel.setContent(layout);
         panel.setWidth("100%");
         addComponentsAndExpand(panel);

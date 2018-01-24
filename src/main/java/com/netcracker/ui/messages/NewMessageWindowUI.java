@@ -45,13 +45,13 @@ public class NewMessageWindowUI extends Window {
 
         if(receiverId != null){
             this.receiver = getProfile(receiverId);
-            imageAvatar = new Image("", new ExternalResource(receiver.getProfileAvatar()));
+            imageAvatar = new Image();
+            PageElements.setImageSource(imageAvatar, receiver.getProfileAvatar());
 
             Label nameLabel = PageElements.createStandartLabel(receiver.getProfileName() + " " + receiver.getProfileSurname());
 
             infoLayout.addComponent(nameLabel, 1,0);
             infoLayout.setComponentAlignment(nameLabel, Alignment.MIDDLE_LEFT);
-
         }
         else{
             List<Profile> friendsList = getFriends(senderId);
@@ -60,7 +60,8 @@ public class NewMessageWindowUI extends Window {
                 return;
             }
             this.receiver = friendsList.get(0);
-            imageAvatar = new Image("", new ExternalResource(receiver.getProfileAvatar() == null ? UIConstants.NO_IMAGE_URL : receiver.getProfileAvatar()));
+            imageAvatar = new Image();
+            PageElements.setImageSource(imageAvatar, receiver.getProfileAvatar());
             ComboBox<Profile> receiverSelect = new ComboBox<>("", friendsList);
             receiverSelect.setItemCaptionGenerator(Profile::getProfileFullName);
             receiverSelect.setEmptySelectionAllowed(false);
@@ -99,6 +100,7 @@ public class NewMessageWindowUI extends Window {
         mainLayout.setComponentAlignment(sendMessageButton, Alignment.MIDDLE_CENTER);
         setContent(mainLayout);
         center();
+        setResizable(false);
     }
 
     private Profile getProfile(BigInteger profileId){

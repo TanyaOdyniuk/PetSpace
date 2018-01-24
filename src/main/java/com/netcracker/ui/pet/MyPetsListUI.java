@@ -82,13 +82,14 @@ public class MyPetsListUI extends VerticalLayout {
             petAvatar.setHeight(250, Unit.PIXELS);
             petAvatar.setWidth(250, Unit.PIXELS);
             String petAvatarSource = pet.getPetAvatar();
-            if (petAvatarSource != null) {
+            /*if (petAvatarSource != null) {
                 if (PetDataAssert.isAvatarURL(petAvatarSource))
                     petAvatar.setSource(new ExternalResource(petAvatarSource));
                 else
                     petAvatar.setSource(new FileResource(new File(petAvatarSource)));
             } else
-                petAvatar = PageElements.getNoImage();
+                petAvatar = PageElements.getNoImage();*/
+            PageElements.setImageSource(petAvatar, petAvatarSource);
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 

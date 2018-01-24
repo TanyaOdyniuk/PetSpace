@@ -261,6 +261,19 @@ public class EntityManager {
         jdbcCall.execute(in);
     }
 
+    public BigInteger getProfilesFriendshipStatus(BigInteger currentProfileId, BigInteger profileToCheck){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withFunctionName("GET_PROFILES_FRIENDSHIP_STATUS").declareParameters(
+                new SqlParameter("CURRENT_PROFILE_ID", OracleTypes.NUMBER),
+                new SqlParameter("PROFILE_ID_TO_CHECK", OracleTypes.NUMBER));
+        Map<String, Object> inParam = new HashMap<>();
+        inParam.put("CURRENT_PROFILE_ID", currentProfileId);
+        inParam.put("PROFILE_ID_TO_CHECK", profileToCheck);
+        SqlParameterSource in = new MapSqlParameterSource(inParam);
+        BigDecimal res = jdbcCall.executeFunction(BigDecimal.class, in);
+        return res.toBigInteger();
+    }
+
     private Map<String, Object> executeObjectJdbcCall(Entity entity, int delete, Integer forceDel) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("UPDATE_OBJ").declareParameters(

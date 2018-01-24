@@ -4,6 +4,9 @@ import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.WallRecord;
+import com.netcracker.model.request.FriendRequest;
+import com.netcracker.model.status.Status;
+import com.netcracker.model.status.StatusConstant;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.*;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -32,6 +35,7 @@ public class ProfileView extends VerticalLayout {
     private final List<Profile> friendList;
     private final List<Pet> petList;
     private final List<WallRecord> wallRecordsList;
+    private final Button addToFriendsButton;
     private int browserHeight;
     private int browserWidth;
     private String stubAvatar = "https://goo.gl/6eEoWo";
@@ -75,13 +79,13 @@ public class ProfileView extends VerticalLayout {
         String profileAvatar = profile.getProfileAvatar();
         avatarImage.setSource(new ExternalResource(profileAvatar == null ? stubAvatar : profileAvatar));
         avatarImage.setDescription("Profile avatar");
-        Button addToFriendsButton = new Button("Add friend", VaadinIcons.SMILEY_O);
-        addToFriendsButton.setHeight(50, Unit.PIXELS);
-        addToFriendsButton.setWidth("100%");
 
+        addToFriendsButton = new Button();
         Button sendDirectMessage = new Button();
+        Status profilesStatus = checkProfilesStatus(currentProfileId, profileId);
         if (!currentProfileId.equals(profileId)) {
-            sendDirectMessage = new Button("Send message", VaadinIcons.ENVELOPE_O);
+            sendDirectMessage.setCaption("Send message");
+            sendDirectMessage.setIcon(VaadinIcons.ENVELOPE_O);
             sendDirectMessage.setHeight(50, Unit.PIXELS);
             sendDirectMessage.setWidth("100%");
 
@@ -92,6 +96,25 @@ public class ProfileView extends VerticalLayout {
                     UI.getCurrent().addWindow(sub);
                 }
             });
+
+            if(profilesStatus == null || profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_NOT_FRIEND)){
+                addToFriendsButton.setCaption("Add friend");
+                addToFriendsButton.setIcon(VaadinIcons.USERS);
+                addToFriendsButton.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        sendRequest();
+                        addToFriendsButton.setEnabled(false);
+                        addToFriendsButton.setCaption("Request was sent");
+                    }
+                });
+            } else if(profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_PENDING)) {
+                addToFriendsButton.setCaption("Request was sent");
+                addToFriendsButton.setIcon(VaadinIcons.USERS);
+                addToFriendsButton.setEnabled(false);
+            }
+            addToFriendsButton.setHeight(50, Unit.PIXELS);
+            addToFriendsButton.setWidth("100%");
         }
 
         Panel petsPanel = new Panel();
@@ -117,16 +140,9 @@ public class ProfileView extends VerticalLayout {
             for (Pet singlePet : petList) {
                 Image petMiniImage = new Image();
                 String petAvatar = singlePet.getPetAvatar();
-                if (petAvatar != null) {
-                    if (PetDataAssert.isAvatarURL(petAvatar))
-                        petMiniImage.setSource(new ExternalResource(petAvatar));
-                    else
-                        petMiniImage.setSource(new FileResource(new File(petAvatar)));
-                } else
-                    petMiniImage = PageElements.getNoImage();
+                PageElements.setImageSource(petMiniImage, petAvatar);
                 petMiniImage.setHeight(55, Unit.PIXELS);
                 petMiniImage.setWidth(55, Unit.PIXELS);
-                petMiniImage.setSource(new ExternalResource(singlePet.getPetAvatar()));
                 petMiniImage.setDescription(singlePet.getPetName());
                 petMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
                         ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));
@@ -264,10 +280,15 @@ public class ProfileView extends VerticalLayout {
         wallPanel.setContent(wallLayout);
 
         //Filling matryoshka layout
-        if (!currentProfileId.equals(profileId))
-            leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
-        else
-            leftPartLayout.addComponents(avatarImage, addToFriendsButton, petsPanel, friendsPanel);
+        if (!currentProfileId.equals(profileId)) {
+            if (profilesStatus == null || !profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_FRIEND))
+                leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
+            else {
+                Label friendsLabel = new Label("You're " + profile.getProfileName() + "'s friend");
+                leftPartLayout.addComponents(avatarImage, friendsLabel, sendDirectMessage, petsPanel, friendsPanel);
+            }
+        } else
+            leftPartLayout.addComponents(avatarImage, petsPanel, friendsPanel);
         rightPartLayout.addComponents(nameAndBalancePanel, simpleInfoPanel, photosPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);
@@ -281,6 +302,20 @@ public class ProfileView extends VerticalLayout {
                 customGetForObject("/records/" + profileId, WallRecord[].class));
         result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
         return result;
+    }
+
+    private void sendRequest(){
+        FriendRequest request = new FriendRequest();
+        request.setReqTo(profile);
+        request.setReqFrom(currentProfile);
+        CustomRestTemplate.getInstance().customPostForObject("/request/send", request, FriendRequest.class);
+    }
+
+    private Status checkProfilesStatus(BigInteger currentProfileId, BigInteger profileIdToCheck){
+        List<BigInteger> idList = new ArrayList<>();
+        idList.add(0, currentProfileId);
+        idList.add(1, profileIdToCheck);
+        return CustomRestTemplate.getInstance().customPostForObject("/request/check", idList, Status.class);
     }
 
     private void setCurrentProfile() {

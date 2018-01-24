@@ -14,6 +14,7 @@ import com.netcracker.ui.news.NewsView;
 import com.netcracker.ui.pet.AllPetsListUI;
 import com.netcracker.ui.pet.MyPetsListUI;
 import com.netcracker.ui.profile.ProfileView;
+import com.netcracker.ui.request.RequestsUI;
 import com.netcracker.ui.secutitybook.SecurityBookUI;
 import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
@@ -169,6 +170,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
                 break;
             case "Settings":
                 primaryAreaLayout.addComponentsAndExpand(new SecurityBookUI(profileId));
+                break;
+            case "My requests":
+                primaryAreaLayout.addComponentsAndExpand(new RequestsUI(profileId));
                 break;
             default:
                 primaryAreaLayout.addComponentsAndExpand(addUsersLayout);

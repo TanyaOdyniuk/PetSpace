@@ -66,6 +66,10 @@ public class EntityManagerService {
         manager.insertObjref(attr_id, ref, obj);
     }
 
+    public BigInteger getProfilesFriendshipStatus(BigInteger currentProfileId, BigInteger profileToCheck) {
+        return manager.getProfilesFriendshipStatus(currentProfileId, profileToCheck);
+    }
+
     public <T extends BaseEntity> BigInteger update(T baseEntity) {
         if (baseEntity.getObjectId() == null) {
             T temp = create(baseEntity);
