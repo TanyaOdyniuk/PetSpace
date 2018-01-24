@@ -138,7 +138,7 @@ public class MessagesListUI extends VerticalLayout {
         }
         int pageCount = (int) messageResponse.getTotalElements();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount);
+            pagingLayout = new StubPagingBar(pageCount, 1);
             pagingLayout.setBorderButtonsState(true);
             pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override

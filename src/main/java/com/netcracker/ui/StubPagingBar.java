@@ -20,8 +20,9 @@ public class StubPagingBar extends HorizontalLayout {
     public int currentPageNumber;
     public Binder<VaadinValidationBinder> pageNumberFieldBinder;
 
-    public StubPagingBar(int maxPageSize) {
-        minPageSize = currentPageNumber = 1;
+    public StubPagingBar(int maxPageSize, int curPageNumb) {
+        minPageSize = 1;
+        currentPageNumber = curPageNumb;
         this.maxPageSize = maxPageSize;
         firstPageButton = PageElements.createBlueClickedLabel("", VaadinIcons.FAST_BACKWARD);
         firstPageButton.setData(minPageSize);

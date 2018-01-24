@@ -28,8 +28,6 @@ import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class MyPetsListUI extends VerticalLayout {
 
     private BigInteger profileId;
@@ -41,7 +39,6 @@ public class MyPetsListUI extends VerticalLayout {
     private StubPagingBar pagingLayout;
     private Panel mainPanel;
 
-    @Autowired
     public MyPetsListUI(BigInteger profileId) {
         super();
         this.profileId = profileId;
@@ -135,7 +132,7 @@ public class MyPetsListUI extends VerticalLayout {
         }
         int pageCount = (int) petsResponse.getTotalElements();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount);
+            pagingLayout = new StubPagingBar(pageCount, 1);
             pagingLayout.setBorderButtonsState(true);
             pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override

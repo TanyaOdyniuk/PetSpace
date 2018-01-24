@@ -130,7 +130,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         }
         switch (clickedButtonCaption) {
             case "Main page":
-                primaryAreaLayout.addComponentsAndExpand(new NewsView(profileId));
+                primaryAreaLayout.addComponentsAndExpand(new NewsView(profileId, 1, true));
                 break;
             case "My profile":
                 primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));

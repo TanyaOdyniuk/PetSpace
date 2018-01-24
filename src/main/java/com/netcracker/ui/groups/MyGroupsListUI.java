@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringComponent
-@UIScope
 public class MyGroupsListUI extends Panel {
     private VerticalLayout mainLayout;
     private Window newGroupWindow;
@@ -207,7 +205,7 @@ public class MyGroupsListUI extends Panel {
             pageCount = (int) myGroups.getTotalElements();
 
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount);
+            pagingLayout = new StubPagingBar(pageCount, 1);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override

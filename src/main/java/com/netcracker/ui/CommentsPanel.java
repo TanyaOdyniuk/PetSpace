@@ -13,10 +13,9 @@ import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
-import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
+import com.netcracker.ui.news.NewsView;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
@@ -51,6 +50,15 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
     private final BaseEntity reloadTo;
     private final Class<T> c;
     private List<T> commentsList;
+    private boolean isFromNews = false;
+    private int pageNumber = 1;
+    private boolean isFriendNews = true;
+    public CommentsPanel(BaseEntity currentRecord, Class<T> commentsType, AbstractComponentContainer parentComponent, BaseEntity reloadPageTo, int pageNumber, boolean isFriendNews){
+        this(currentRecord, commentsType, parentComponent, reloadPageTo);
+        isFromNews = true;
+        this.isFriendNews = isFriendNews;
+        this.pageNumber = pageNumber;
+    }
 
     public CommentsPanel(BaseEntity currentRecord, Class<T> commentsType, AbstractComponentContainer parentComponent, BaseEntity reloadPageTo) {
         super();
@@ -310,7 +318,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
 
                     Notification.show("Comment added!");
                     updateCommentWindow.close();
-                    reloadPage(reloadTo);
+                    checkAndReload();
                 }
             });
             buttonsLayout.addComponentsAndExpand(add);
@@ -334,7 +342,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
                     }
                     Notification.show("Comment edited!");
                     updateCommentWindow.close();
-                    reloadPage(reloadTo);
+                    checkAndReload();
                 }
             });
             buttonsLayout.addComponentsAndExpand(edit);
@@ -393,7 +401,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
 /*                ComponentContainer parent = (ComponentContainer) currentPanel.getParent();
                 parent.removeComponent(currentPanel);*/
                 confirmDeleteWindow.close();
-                reloadPage(reloadTo);
+                checkAndReload();
             }
         });
 
@@ -506,6 +514,16 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
         CustomRestTemplate.getInstance().customGetForObject("/likes/delete/" + likeID, Void.class);
     }
 
+    private void checkAndReload(){
+        if(isFromNews){
+            reloadPage(reloadTo, pageNumber, isFriendNews);
+        } else{
+            reloadPage(reloadTo);
+        }
+    }
+    private void reloadPage(BaseEntity reloadTo, int pageNumber, boolean isFriendNews) {
+        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
+    }
     private void reloadPage(BaseEntity reloadTo){
         BigInteger destinationID = reloadTo.getObjectId();
         Class c = reloadTo.getClass();
@@ -517,8 +535,6 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
         } else if(Advertisement.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
-        } else if(Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID)); //NewsFeed reload
         }
     }
 

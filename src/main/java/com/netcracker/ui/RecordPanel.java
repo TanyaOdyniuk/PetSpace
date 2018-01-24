@@ -16,6 +16,7 @@ import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
+import com.netcracker.ui.news.NewsView;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
@@ -50,10 +51,16 @@ public class RecordPanel extends Panel {
     private Profile currentProfile;
     private BigInteger currentProfileId;
     private final BaseEntity reloadTo;
+    private boolean isFromNews;
+    private int pageNumber;
+    private boolean isFriendNews;
 
-    public RecordPanel(AbstractRecord currentRecord, BaseEntity reloadTo) {
+    public RecordPanel(AbstractRecord currentRecord, BaseEntity reloadTo, boolean isFromNews, int pageNumber, boolean isFriendNews) {
         super();
         this.reloadTo = reloadTo;
+        this.isFromNews = isFromNews;
+        this.isFriendNews = isFriendNews;
+        this.pageNumber = pageNumber;
         setCurrentProfile();
         VerticalLayout singleRecordLayout = new VerticalLayout();
         Profile recordAuthor = CustomRestTemplate.getInstance().
@@ -63,8 +70,7 @@ public class RecordPanel extends Panel {
         String commentatorAvatar = recordAuthor.getProfileAvatar();
         Image recordAuthorAvatar = new Image();
         recordAuthorAvatar.setSource(new ExternalResource(commentatorAvatar == null ? stubAvatar : commentatorAvatar));
-        recordAuthorAvatar.setDescription(recordAuthor.getProfileName()
-                + " " + recordAuthor.getProfileSurname());
+        recordAuthorAvatar.setDescription(createDescription(isFromNews, currentRecord, recordAuthor));
         recordAuthorAvatar.setHeight(100, Sizeable.Unit.PIXELS);
         recordAuthorAvatar.setWidth(100, Sizeable.Unit.PIXELS);
         recordAuthorAvatar.addClickListener((MouseEvents.ClickListener) clickEvent ->
@@ -102,12 +108,20 @@ public class RecordPanel extends Panel {
         //Comments
         Class c = currentRecord.getClass();
         if (WallRecord.class.equals(c)) {
-            allCommentsPanel = new CommentsPanel<>(currentRecord, WallRecordComment.class, recordLikeAndCommentsLayout, reloadTo);
+            if (isFromNews) {
+                allCommentsPanel = new CommentsPanel<>(currentRecord, WallRecordComment.class, recordLikeAndCommentsLayout, reloadTo, pageNumber, isFriendNews);
+            } else {
+                allCommentsPanel = new CommentsPanel<>(currentRecord, WallRecordComment.class, recordLikeAndCommentsLayout, reloadTo);
+            }
         } else if (GroupRecord.class.equals(c)) {
-            allCommentsPanel = new CommentsPanel<>(currentRecord, GroupRecordComment.class, recordLikeAndCommentsLayout, reloadTo);
+            if (isFromNews) {
+                allCommentsPanel = new CommentsPanel<>(currentRecord, GroupRecordComment.class, recordLikeAndCommentsLayout, reloadTo, pageNumber, isFriendNews);
+            } else {
+                allCommentsPanel = new CommentsPanel<>(currentRecord, GroupRecordComment.class, recordLikeAndCommentsLayout, reloadTo);
+            }
         }
 
-        if(recordAuthor.getObjectId().equals(currentProfileId)){
+        if (recordAuthor.getObjectId().equals(currentProfileId)) {
             Button editRecordButton = new Button("Edit", VaadinIcons.EDIT);
             editRecordButton.addClickListener(new AbstractClickListener() {
                 @Override
@@ -132,6 +146,26 @@ public class RecordPanel extends Panel {
                 recordLikeAndCommentsLayout,
                 allCommentsPanel);
         setContent(singleRecordLayout);
+    }
+
+    private String createDescription(boolean isFromNews, AbstractRecord currentRecord, Profile author) {
+        String result = author.getProfileName() + " " + author.getProfileSurname();
+        if (isFromNews) {
+            result += " on ";
+            if (currentRecord instanceof WallRecord) {
+                Profile recordOwner = CustomRestTemplate.getInstance().customGetForObject("/records/owner/" + currentRecord.getObjectId(), Profile.class);
+                if (recordOwner.getObjectId().equals(author.getObjectId())) {
+                    result += "own";
+                } else {
+                    result += recordOwner.getProfileName() + " " + recordOwner.getProfileSurname();
+                }
+            } else {
+                //достать группу
+                result += "groupname ";
+            }
+            result += " wall";
+        }
+        return result;
     }
 
     private void countAndShowLikes(BaseEntity entity, Button likeRecordButton, Button dislikeRecordButton) {
@@ -254,7 +288,7 @@ public class RecordPanel extends Panel {
         Timestamp date = Timestamp.valueOf(
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 
-        if(currentRecord == null) {
+        if (currentRecord == null) {
             updateWallRecordWindow.setCaption("New record");
             Button add = new Button("Add");
             add.addClickListener(new AbstractClickListener() {
@@ -271,7 +305,7 @@ public class RecordPanel extends Panel {
                         record.setRecordAuthor(currentProfile);
                         record.setWallOwner(receiver);
                         createWallRecord(record);
-                    } else if (Group.class.equals(c)){
+                    } else if (Group.class.equals(c)) {
                         Group receiver = (Group) recordType;
                         GroupRecord record = new GroupRecord("GroupRecord",
                                 "From " + currentProfile.getProfileSurname() + " to " + receiver.getGroupName());
@@ -283,7 +317,7 @@ public class RecordPanel extends Panel {
                     }
                     Notification.show("Record added!");
                     updateWallRecordWindow.close();
-                    reloadPage(reloadTo);
+                    checkAndReload();
                 }
             });
             buttonsLayout.addComponentsAndExpand(add);
@@ -302,7 +336,7 @@ public class RecordPanel extends Panel {
                         updateGroupRecord((GroupRecord) currentRecord);
                     Notification.show("Record edited!");
                     updateWallRecordWindow.close();
-                    reloadPage(reloadTo);
+                    checkAndReload();
                 }
             });
             buttonsLayout.addComponentsAndExpand(edit);
@@ -313,6 +347,14 @@ public class RecordPanel extends Panel {
 
         updateWallRecordWindow.setContent(windowContent);
         updateWallRecordWindow.center();
+    }
+
+    private void checkAndReload() {
+        if (isFromNews) {
+            reloadPage(reloadTo, pageNumber, isFriendNews);
+        } else {
+            reloadPage(reloadTo);
+        }
     }
 
     private List<AbstractLike> getRecordLikes(BigInteger recordID) {
@@ -335,7 +377,7 @@ public class RecordPanel extends Panel {
         CustomRestTemplate.getInstance().customPostForObject("/records/group/add", request, GroupRecord.class);
     }
 
-    private void confirmDelete(BaseEntity entity){
+    private void confirmDelete(BaseEntity entity) {
         confirmDeleteWindow = new Window();
         confirmDeleteWindow.setModal(true);
         VerticalLayout windowContent = new VerticalLayout();
@@ -355,7 +397,7 @@ public class RecordPanel extends Panel {
 /*                ComponentContainer parent = (ComponentContainer) currentPanel.getParent();
                 parent.removeComponent(currentPanel);*/
                 confirmDeleteWindow.close();
-                reloadPage(reloadTo);
+                checkAndReload();
             }
         });
 
@@ -400,19 +442,21 @@ public class RecordPanel extends Panel {
         CustomRestTemplate.getInstance().customGetForObject("/likes/delete/" + likeID, Void.class);
     }
 
-    private void reloadPage(BaseEntity reloadTo){
+    private void reloadPage(BaseEntity reloadTo, int pageNumber, boolean isFriendNews) {
+        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
+    }
+
+    private void reloadPage(BaseEntity reloadTo) {
         BigInteger destinationID = reloadTo.getObjectId();
         Class c = reloadTo.getClass();
-        if(Profile.class.equals(c)) {
+        if (Profile.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
-        } else if(Group.class.equals(c)) {
+        } else if (Group.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
-        } else if(PhotoAlbum.class.equals(c)) {
+        } else if (PhotoAlbum.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
-        } else if(Advertisement.class.equals(c)) {
+        } else if (Advertisement.class.equals(c)) {
             ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
-        } else if(Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID)); //NewsFeed reload
         }
     }
 

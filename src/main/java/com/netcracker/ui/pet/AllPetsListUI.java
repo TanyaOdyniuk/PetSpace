@@ -122,7 +122,7 @@ public class AllPetsListUI extends VerticalLayout {
         }
         int pageCount = (int) petsResponse.getTotalElements();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount);
+            pagingLayout = new StubPagingBar(pageCount, 1);
             pagingLayout.setBorderButtonsState(true);
             pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override

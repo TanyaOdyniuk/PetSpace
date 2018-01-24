@@ -257,7 +257,7 @@ public class ProfileView extends VerticalLayout {
         //WallRecords+Comments
         for (int i = wallRecordsListSize; i > 0; i--) {
             WallRecord currentRecord = wallRecordsList.get(i - 1);
-            Panel singleWallRecordPanel = new RecordPanel(currentRecord, profile);
+            Panel singleWallRecordPanel = new RecordPanel(currentRecord, profile, false, 0, false);
 
             wallLayout.addComponent(singleWallRecordPanel);
         }

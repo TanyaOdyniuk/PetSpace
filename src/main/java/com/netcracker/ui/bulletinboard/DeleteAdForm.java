@@ -15,9 +15,9 @@ class DeleteAdForm extends Window {
     private BigInteger adId;
     DeleteAdForm(BigInteger profileId, BigInteger adId) {
         super();
+        setModal(true);
         this.profileId = profileId;
         this.adId = adId;
-        Window subWindow = new Window("Sub-window");
         VerticalLayout subContent = new VerticalLayout();
         setContent(subContent);
         subContent.addComponent(getWarningMessage());

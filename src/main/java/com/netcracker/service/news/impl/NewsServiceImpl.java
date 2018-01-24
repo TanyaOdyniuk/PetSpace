@@ -77,9 +77,8 @@ public class NewsServiceImpl implements NewsService {
         List<WallRecord> friendsRecords = entityManagerService.getObjectsBySQL(selectFriendsRecord, WallRecord.class, queryDescriptor);
         for (WallRecord record : friendsRecords) {
             BigInteger wallRecordId = record.getObjectId();
-            record.setRecordAuthor(recordService.getWallRecordAuthor(wallRecordId));
+            record.setRecordAuthor(recordService.getRecordAuthor(wallRecordId));
             record.setWallOwner(recordService.getWallRecordOwner(wallRecordId));
-            //может надо добавить лайки
         }
         return friendsRecords;
     }

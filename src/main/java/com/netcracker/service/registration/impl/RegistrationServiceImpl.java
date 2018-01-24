@@ -24,6 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private String registrationBonusProp;
     @Value("${currency.registration.invitedby}")
     private String invitedByBonusProp;
+    @Value("${profile.defaultAvatar}")
+    private String defaultAvatar;
     @Autowired
     private EntityManagerService entityManagerService;
     @Autowired
@@ -38,6 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Profile toDBProfile = user.getProfile();
         toDBProfile.setProfileStatus(statusService.getActiveStatus());
         toDBProfile.setName("Profile " + toDBProfile.getProfileSurname());
+        toDBProfile.setProfileAvatar(defaultAvatar);
         Profile fromDBProfile = entityManagerService.create(toDBProfile);
         user.setProfile(fromDBProfile);
         List<UserAuthority> authority = entityManagerService.getObjectsBySQL(
@@ -77,6 +80,5 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void increaseBalanceMonthly() {
-
     }
 }

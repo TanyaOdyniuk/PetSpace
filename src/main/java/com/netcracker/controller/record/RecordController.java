@@ -26,6 +26,10 @@ public class RecordController {
     public Profile getRecordAuthor(@PathVariable("id") BigInteger recordID) {
         return recordService.getRecordAuthor(recordID);
     }
+    @GetMapping("/owner/{id}")
+    public Profile getWallRecordOwner(@PathVariable("id") BigInteger id) {
+        return recordService.getWallRecordOwner(id);
+    }
 
     @PostMapping("/wall/add")
     public WallRecord createWallRecord(@RequestBody WallRecord record){
