@@ -76,7 +76,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         advertisementList(1);
         pagingPanel.setWidth("100%");
         getPagingLayout(pagingPanel);
-        //Filling matryoshka layout
+
         leftPartLayout.addComponents(PageElements.getSeparator(), categoryFilterPanel, PageElements.getSeparator());
 
         rightPartLayout.addComponents(pagingPanel, gridPanel);

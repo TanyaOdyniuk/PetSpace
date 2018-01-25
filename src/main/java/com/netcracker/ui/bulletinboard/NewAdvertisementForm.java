@@ -191,8 +191,8 @@ class NewAdvertisementForm extends Window {
         categoryPetStatusLayout = new HorizontalLayout();
         selectedStatus = new CheckBox("Make VIP ad?");
         selectedStatus.setValue(true);
-        verticalLayout.addComponent(selectedStatus);
-        categoryPetStatusLayout.addComponent(verticalLayout);
+        //verticalLayout.addComponent(selectedStatus);
+        //categoryPetStatusLayout.addComponent(verticalLayout);
         Panel pets = getPetsPanel();
         if (pets != null) {
             pets.setIcon(VaadinIcons.PIGGY_BANK);

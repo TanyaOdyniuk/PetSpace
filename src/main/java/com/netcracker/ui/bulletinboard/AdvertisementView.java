@@ -10,21 +10,14 @@ import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.http.HttpEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 public class AdvertisementView extends VerticalLayout {
     private BigInteger profileId;

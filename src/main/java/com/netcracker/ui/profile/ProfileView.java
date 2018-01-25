@@ -197,8 +197,8 @@ public class ProfileView extends VerticalLayout {
         Panel nameAndBalancePanel = new Panel();
         VerticalLayout nameAndBalanceLayout = new VerticalLayout();
         nameAndBalanceLayout.addComponents(
-                new Label(profile.getProfileName() + " " + profile.getProfileSurname(), ContentMode.PREFORMATTED),
-                new Label("Balance: " + profile.getProfileCurrencyBalance())
+                new Label(profile.getProfileName() + " " + profile.getProfileSurname(), ContentMode.PREFORMATTED)/*,
+                new Label("Balance: " + profile.getProfileCurrencyBalance())*/
         );
         nameAndBalancePanel.setContent(nameAndBalanceLayout);
 

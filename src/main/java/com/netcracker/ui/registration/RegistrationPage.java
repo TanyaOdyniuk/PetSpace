@@ -76,7 +76,7 @@ public class RegistrationPage extends UI {
         friendField = new TextField("Invited by");
 
         emailLayout.addComponent(emailField);
-        emailLayout.addComponent(friendField);
+        //emailLayout.addComponent(friendField);
         return emailLayout;
     }
 
