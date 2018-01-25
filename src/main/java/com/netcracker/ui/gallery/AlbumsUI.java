@@ -35,10 +35,6 @@ public class AlbumsUI extends HorizontalLayout{
         this.profileId = profileId;
 
         albums = getAlbumList(profileId);
-        List<BigInteger> ids = new ArrayList<>();
-        for(PhotoAlbum id : albums) {
-            ids.add(id.getObjectId());
-        }
 
         panel = new Panel();
         albumLayout = new VerticalLayout();

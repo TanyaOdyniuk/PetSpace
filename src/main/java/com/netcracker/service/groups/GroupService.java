@@ -40,8 +40,7 @@ public interface GroupService {
 
     void editGroup(Group groupForChangeOnlyAdmin);
 
-//    Система должна позволять администратору удалить группу
-    void deleteGroup(Group group);
+    void deleteGroup(BigInteger groupId);
 
 //    Система должна позволять администратору наделять определенных участников группы вносить изменения в группу.
     void empowerForGroup(Group group, BigInteger userId);

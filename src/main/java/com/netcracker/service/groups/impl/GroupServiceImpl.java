@@ -139,13 +139,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void editGroup(Group groupForChangeOnlyAdmin) {
-
+    public void editGroup(Group group) {
+        entityManagerService.update(group);
     }
 
     @Override
-    public void deleteGroup(Group group) {
-
+    public void deleteGroup(BigInteger groupId) {
+        entityManagerService.delete(groupId, -1);
     }
 
     @Override

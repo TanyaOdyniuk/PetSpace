@@ -3,7 +3,6 @@ package com.netcracker.ui.groups;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
-import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.*;
 import com.netcracker.ui.profile.ProfileView;
@@ -16,6 +15,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import org.springframework.http.HttpEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
@@ -64,34 +64,18 @@ public class GroupUI extends VerticalLayout {
         //MAIN
         Panel mainLeftPanel = new Panel();
         mainLeftPanel.setWidth("730px");
-        mainLeftPanel.setHeightUndefined();
-        Panel groupRecord = new Panel();
-        groupRecord.setWidth("705px");
-        groupRecord.setHeight("300px");
-        Panel groupRecord1 = new Panel();
-        groupRecord1.setWidth("705px");
-        groupRecord1.setHeight("300px");
-        Panel groupRecord2 = new Panel();
-        groupRecord2.setWidth("705px");
-        groupRecord2.setHeight("300px");
-
         VerticalLayout groupRecordsLayout = new VerticalLayout();
         HorizontalLayout wallListAddRecordayout = new HorizontalLayout();
         wallListAddRecordayout.setWidth("705px");
-        //Button addRecordButton = new Button("Add record", VaadinIcons.PLUS);
         Button addRecordButton = new AddRecordButton(curGroup);
-
-        wallListAddRecordayout.addComponents(new Label("Wall 396 records"), addRecordButton);
-        wallListAddRecordayout.setComponentAlignment(addRecordButton, Alignment.TOP_RIGHT);
-
         List<GroupRecord> groupRecords = getWallRecords(groupId);
-
+        wallListAddRecordayout.addComponents(new Label("Wall " + groupRecords.size() + " records"), addRecordButton);
+        wallListAddRecordayout.setComponentAlignment(addRecordButton, Alignment.TOP_RIGHT);
+        groupRecordsLayout.addComponents(wallListAddRecordayout);
         for(GroupRecord currentRecord : groupRecords) {
             Panel singleRecord = new RecordPanel(currentRecord, curGroup, false, 0, false);
             groupRecordsLayout.addComponent(singleRecord);
         }
-
-        groupRecordsLayout.addComponents(wallListAddRecordayout/*, groupRecord, groupRecord1, groupRecord2*/);
         mainLeftPanel.setContent(groupRecordsLayout);
 
         Panel mainRightPanel = new Panel();
@@ -159,17 +143,27 @@ public class GroupUI extends VerticalLayout {
             }
         }
         Button editGroup = new Button("Edit the group");
+        Button deleteGroup = new Button("Delete the group");
         if (profileId.equals(admin.getObjectId())) {
             mainRightLayout.removeComponent(subscribeButton);
             mainRightLayout.removeComponent(leaveGroupButton);
             mainRightLayout.addComponent(editGroup);
             mainRightLayout.setComponentAlignment(editGroup, Alignment.TOP_CENTER);
+            mainRightLayout.addComponent(deleteGroup);
+            mainRightLayout.setComponentAlignment(deleteGroup, Alignment.TOP_CENTER);
         }
         editGroup.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
                 editGroup(curGroup);
                 UI.getCurrent().addWindow(newGroupWindow);
+            }
+        });
+        deleteGroup.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                CustomRestTemplate.getInstance().customGetForObject("/groups/delete/" + groupId, Void.class);
+                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
             }
         });
         subscribeButton.addClickListener(new AbstractClickListener() {
@@ -204,27 +198,33 @@ public class GroupUI extends VerticalLayout {
         HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
 
         TextField groupName = PageElements.createTextField(
-                "Change the name:", "old: " + group.getGroupName(), false);
+                "Change the name:", group.getGroupName(), false);
         groupName.setWidth("100%");
         TextField groupAvatar = PageElements.createTextField(
-                "Change the avatar:", "group avatar", false);
+                "Change the avatar:", group.getGroupAvatar(), false);
         groupName.setWidth("100%");
         TextField description = PageElements.createTextField(
-                "Change the group description:", "old: " + group.getGroupDescription().substring(0,40) + "...", false);
+                "Change the group description:", group.getGroupDescription(), false);
         description.setWidth("100%");
 
-        Button addGroupButton = new Button("Edit group");
-        addGroupButton.addClickListener(new AbstractClickListener() {
+        Button editGroupButton = new Button("Edit group");
+        editGroupButton.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                addGroupButton.setComponentError(null);
-//                createGroup(groupName.getValue(), groupAvatar.getValue(), description.getValue(), profileId);
+                editGroupButton.setComponentError(null);
+                groupName.setValue(group.getGroupName());
+                groupAvatar.setValue(group.getGroupAvatar());
+                description.setValue(group.getGroupDescription());
+                group.setGroupName(groupName.getValue());
+                group.setGroupAvatar(groupAvatar.getValue());
+                group.setGroupDescription(description.getValue());
+                updateGroup(group);
                 newGroupWindow.close();
-                Notification.show("You have just created a new group!");
+                Notification.show("You have just edited the group!");
             }
         });
         Button cancelAddingNewAlbum = new Button("Cancel", click -> newGroupWindow.close());
-        addAlbumButtonsLayout.addComponentsAndExpand(addGroupButton, cancelAddingNewAlbum);
+        addAlbumButtonsLayout.addComponentsAndExpand(editGroupButton, cancelAddingNewAlbum);
         windowContent.addComponents(groupName, groupAvatar, description, addAlbumButtonsLayout);
 
         newGroupWindow.setContent(windowContent);
@@ -268,5 +268,10 @@ public class GroupUI extends VerticalLayout {
                 customGetForObject("/records/group/" + groupId, GroupRecord[].class));
         result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
         return result;
+    }
+
+    private void updateGroup(Group group) {
+        HttpEntity<Group> request = new HttpEntity<>(group);
+        CustomRestTemplate.getInstance().customPostForObject("/groups/update", request, Group.class);
     }
 }

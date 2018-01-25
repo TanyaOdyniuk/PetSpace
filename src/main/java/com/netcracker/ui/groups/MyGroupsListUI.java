@@ -16,8 +16,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -41,6 +39,8 @@ public class MyGroupsListUI extends Panel {
     private RestResponsePage<Group> administerGroups;
     private RestResponsePage<Group> myGroups;
     private StubPagingBar pagingLayout;
+
+    private String stubAvatar = "https://goo.gl/6eEoWo";
 
 
     public MyGroupsListUI(BigInteger profileId) {
@@ -165,7 +165,8 @@ public class MyGroupsListUI extends Panel {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            groupAvatar.setSource(new ExternalResource(groupsList.get(i).getGroupAvatar()));
+            groupAvatar.setSource(groupsList.get(i).getGroupAvatar() == null? new ExternalResource(stubAvatar):
+            new ExternalResource(groupsList.get(i).getGroupAvatar()));
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;

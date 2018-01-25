@@ -5,10 +5,7 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.service.groups.GroupService;
 import com.netcracker.service.util.RestResponsePage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -54,5 +51,15 @@ public class GroupController {
         Integer pageCount = groupService.getAdministerGroupsPageCount(profileId);
         List<Group> allGroups =  groupService.getAdministerGroupsList(profileId, page);
         return new RestResponsePage<>(allGroups, null, pageCount);
+    }
+
+    @GetMapping("/delete/{id}")
+    public void deleteGroup(@PathVariable("id") BigInteger groupId){
+        groupService.deleteGroup(groupId);
+    }
+
+    @PostMapping("/update")
+    public void updateGroup(@RequestBody Group group){
+        groupService.editGroup(group);
     }
 }
