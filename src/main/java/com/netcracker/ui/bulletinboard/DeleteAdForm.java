@@ -1,11 +1,9 @@
 package com.netcracker.ui.bulletinboard;
 
 import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 
 import java.math.BigInteger;
@@ -38,7 +36,7 @@ class DeleteAdForm extends Window {
                 CustomRestTemplate.getInstance().customGetForObject("/bulletinboard/delete/" + adId, Void.class);
                 wClose();
                 Notification.show("Advertisement was deleted!");
-                StubVaadinUI currentUI = (StubVaadinUI) UI.getCurrent();
+                MainUI currentUI = (MainUI) UI.getCurrent();
                 currentUI.changePrimaryAreaLayout(new MyBulletinBoardListContent(profileId));
             }
         });

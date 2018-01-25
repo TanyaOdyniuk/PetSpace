@@ -6,7 +6,7 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.CommentsPanel;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
@@ -103,7 +103,7 @@ public class AdvertisementView extends VerticalLayout {
                     petButton.addClickListener(new AbstractClickListener() {
                         @Override
                         public void buttonClickListener() {
-                            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(tempPet.getObjectId()));
+                            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(tempPet.getObjectId()));
                         }
                     });
                     petLayout.addComponent(petButton);

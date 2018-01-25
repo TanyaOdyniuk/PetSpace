@@ -4,7 +4,7 @@ import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
@@ -111,6 +111,6 @@ public class GalleryUI extends VerticalLayout {
         HttpEntity<PhotoRecord> photo = new HttpEntity<>(createdPhoto);
         CustomRestTemplate.getInstance()
                 .customPostForObject("/gallery/" + albumId + "/add", photo, PhotoRecord.class);
-        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(albumId));
+        ((MainUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(albumId));
     }
 }

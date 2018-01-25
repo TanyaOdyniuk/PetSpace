@@ -116,7 +116,7 @@ public class GroupUI extends VerticalLayout {
         adminImage.setWidth("52px");
         adminImage.setHeight("45px");
         adminImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(admin.getObjectId())));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(admin.getObjectId())));
         VerticalLayout adminLayout = new VerticalLayout();
         adminLayout.addComponents(new Label("Admin"), adminImage);
         adminPanel.setContent(adminLayout);
@@ -163,7 +163,7 @@ public class GroupUI extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 CustomRestTemplate.getInstance().customGetForObject("/groups/delete/" + groupId, Void.class);
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
             }
         });
         subscribeButton.addClickListener(new AbstractClickListener() {
@@ -171,7 +171,7 @@ public class GroupUI extends VerticalLayout {
             public void buttonClickListener() {
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/groups/subscribe/" + groupId + "/" + profileId, Void.class);
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupId));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupId));
             }
         });
         leaveGroupButton.addClickListener(new AbstractClickListener() {
@@ -179,7 +179,7 @@ public class GroupUI extends VerticalLayout {
             public void buttonClickListener() {
                 CustomRestTemplate.getInstance().customGetForObject(
                         "/groups/leaveGroup/" + groupId + "/" + profileId, Void.class);
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
             }
         });
         mainRightLayout.addComponents(subscribersPanel, adminPanel);
@@ -243,7 +243,7 @@ public class GroupUI extends VerticalLayout {
             singlePhotoImage.setWidth("52px");
             singlePhotoImage.setHeight("45px");
             singlePhotoImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(user.getObjectId())));
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(user.getObjectId())));
             singlePhotoPanel.setContent(singlePhotoImage);
             photosGrid.addComponent(singlePhotoPanel);
         }

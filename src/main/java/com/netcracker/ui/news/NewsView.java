@@ -6,7 +6,7 @@ import com.netcracker.model.user.Profile;
 import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.RecordPanel;
-import com.netcracker.ui.StubPagingBar;
+import com.netcracker.ui.PagingBar;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
@@ -25,7 +25,7 @@ import java.util.List;
 public class NewsView extends VerticalLayout {
     private final Profile profile;
     private final BigInteger profileId;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
     private Panel wallPanel;
     private RestResponsePage<WallRecord> wallRecordsList;
     private RestResponsePage<GroupRecord> groupRecordsList;
@@ -147,7 +147,7 @@ public class NewsView extends VerticalLayout {
             pageCount = (int) groupRecordsList.getTotalElements();
         }
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, pageNumber);
+            pagingLayout = new PagingBar(pageCount, pageNumber);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override

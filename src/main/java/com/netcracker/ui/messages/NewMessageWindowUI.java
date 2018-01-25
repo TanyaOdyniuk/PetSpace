@@ -6,6 +6,7 @@ import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
@@ -19,6 +20,7 @@ public class NewMessageWindowUI extends Window {
 
     private Profile sender;
     private Profile receiver;
+    private Boolean isShown;
 
     public NewMessageWindowUI(BigInteger senderId, BigInteger receiverId) {
         super();
@@ -56,6 +58,8 @@ public class NewMessageWindowUI extends Window {
         else{
             List<Profile> friendsList = getFriends(senderId);
             if(friendsList.size() == 0){
+                isShown = false;
+                close();
                 Notification.show("You don't have any\nfriend to send message", Notification.Type.WARNING_MESSAGE);
                 return;
             }
@@ -73,7 +77,7 @@ public class NewMessageWindowUI extends Window {
 
             receiverSelect.addSelectionListener(event -> {
                     String avatarURL = receiverSelect.getValue().getProfileAvatar();
-                    ((Image)infoLayout.getComponent(0,0)).setSource(new ExternalResource(avatarURL == null ? UIConstants.NO_IMAGE_URL : avatarURL));
+                    PageElements.setImageSource((Image)infoLayout.getComponent(0,0), avatarURL);
                     this.receiver = receiverSelect.getValue();
             });
         }
@@ -101,6 +105,12 @@ public class NewMessageWindowUI extends Window {
         setContent(mainLayout);
         center();
         setResizable(false);
+        setModal(true);
+        isShown = true;
+    }
+
+    public Boolean getShown() {
+        return isShown;
     }
 
     private Profile getProfile(BigInteger profileId){

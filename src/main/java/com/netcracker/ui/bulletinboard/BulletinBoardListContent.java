@@ -5,8 +5,8 @@ import com.netcracker.model.category.Category;
 import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubPagingBar;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.PagingBar;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
@@ -30,7 +30,7 @@ import java.util.List;
 @UIScope
 public class BulletinBoardListContent extends VerticalLayout {
     private Grid<Advertisement> grid;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
     private final HorizontalLayout mainLayout;
     private VerticalLayout categoryFilterLayout;
     private VerticalLayout rightPartLayout;
@@ -185,7 +185,7 @@ public class BulletinBoardListContent extends VerticalLayout {
                 (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setWidth(65).setSortable(false);*/
         Grid.Column categoryColumn = grid.addColumn(ad ->
                 (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setWidth(130).setSortable(false);
-        grid.addItemClickListener(event -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
+        grid.addItemClickListener(event -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
     }
 
 
@@ -240,7 +240,7 @@ public class BulletinBoardListContent extends VerticalLayout {
         boolean isNotSelectedCategories = (selectedCategories.length == 0);
         boolean isTopicFilter = !topic.isEmpty();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, 1);
+            pagingLayout = new PagingBar(pageCount, 1);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override

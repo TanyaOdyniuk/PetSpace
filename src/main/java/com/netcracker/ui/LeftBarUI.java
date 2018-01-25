@@ -14,15 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
-public class StubLeftBar extends VerticalLayout {
+public class LeftBarUI extends VerticalLayout {
 
     @Autowired
-    public StubLeftBar(Button.ClickListener clickListener) {
+    public LeftBarUI(Button.ClickListener clickListener) {
         super();
         setSpacing(false);
-        setWidth("100%");
+        setWidth(UIConstants.LEFT_BAR_WIDTH, Unit.PIXELS);
+        setHeight("100%");
         Panel panel = new Panel();
-        panel.setSizeUndefined();
         Button profile = getNewButton("My profile", VaadinIcons.HOME_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button friends = getNewButton("My friends", VaadinIcons.USERS, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
         Button requests = getNewButton("My requests", VaadinIcons.BELL_O, ValoTheme.BUTTON_BORDERLESS_COLORED, clickListener);
@@ -35,13 +35,15 @@ public class StubLeftBar extends VerticalLayout {
         VerticalLayout layout = new VerticalLayout();
         layout.addComponentsAndExpand(profile, friends, requests, pets, messages, albums, adverts, groups/*, settings*/);
         panel.setContent(layout);
-        panel.setWidth("100%");
-        addComponentsAndExpand(panel);
+        panel.setWidth(UIConstants.LEFT_BAR_WIDTH, Unit.PIXELS);
+        panel.setHeight("100%");
+        addComponents(panel);
     }
 
     private Button getNewButton(String caption, VaadinIcons icon, String style, Button.ClickListener listener) {
         Button button = new Button();
         button.setWidth("100%");
+        button.setHeight("50px");
         button.setCaption(caption);
         button.setIcon(icon);
         button.addStyleName(style);

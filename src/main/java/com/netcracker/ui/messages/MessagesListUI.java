@@ -32,7 +32,7 @@ public class MessagesListUI extends VerticalLayout {
 
     //LAYOUTS && PAGE ELEMENTS
     private VerticalLayout mainLayout;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
     private Panel mainPanel;
     private Button sendNewMessage;
 
@@ -43,7 +43,7 @@ public class MessagesListUI extends VerticalLayout {
 
         mainPanel = new Panel();
         mainPanel.setWidth("100%");
-        mainPanel.setHeight(browserHeight * 0.695f, Unit.PIXELS);
+        mainPanel.setHeight(browserHeight * 0.7f - 50, Unit.PIXELS);
 
         mainLayout = new VerticalLayout();
 
@@ -52,7 +52,8 @@ public class MessagesListUI extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 NewMessageWindowUI sub = new NewMessageWindowUI(profileId/*SENDER*/);
-                UI.getCurrent().addWindow(sub);
+                if(sub.getShown())
+                    UI.getCurrent().addWindow(sub);
             }
         });
 
@@ -103,7 +104,7 @@ public class MessagesListUI extends VerticalLayout {
                 messageSender.addClickListener(new AbstractClickListener() {
                     @Override
                     public void buttonClickListener() {
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(senderProfile.getObjectId()));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(senderProfile.getObjectId()));
                     }
                 });
 
@@ -138,26 +139,26 @@ public class MessagesListUI extends VerticalLayout {
         }
         int pageCount = (int) messageResponse.getTotalElements();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, 1);
-            pagingLayout.setBorderButtonsState(true);
+            pagingLayout = new PagingBar(pageCount, 1);
+            pagingLayout.checkButtonsState();
             pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    pagingLayout.setBorderButtonsState(true);
                     Integer page = (Integer) pagingLayout.getFirstPageButton().getData();
                     initMessagePage(page);
                     pagingLayout.currentPageNumber = 1;
                     pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                    pagingLayout.checkButtonsState();
                 }
             });
             pagingLayout.getLastPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    pagingLayout.setBorderButtonsState(false);
                     Integer page = (Integer) pagingLayout.getLastPageButton().getData();
                     initMessagePage(page);
                     pagingLayout.currentPageNumber = page;
                     pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                    pagingLayout.checkButtonsState();
                 }
             });
             pagingLayout.getPrevPageButton().addClickListener(new AbstractClickListener() {
@@ -167,10 +168,7 @@ public class MessagesListUI extends VerticalLayout {
                         --pagingLayout.currentPageNumber;
                         initMessagePage(pagingLayout.currentPageNumber);
                         pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
-                        if (pagingLayout.currentPageNumber == 1)
-                            pagingLayout.setBorderButtonsState(true);
-                        else
-                            pagingLayout.setAllButtonsStateEnabled();
+                        pagingLayout.checkButtonsState();
                     }
                 }
             });
@@ -181,10 +179,7 @@ public class MessagesListUI extends VerticalLayout {
                         ++pagingLayout.currentPageNumber;
                         initMessagePage(pagingLayout.currentPageNumber);
                         pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
-                        if (pagingLayout.currentPageNumber == pageCount)
-                            pagingLayout.setBorderButtonsState(false);
-                        else
-                            pagingLayout.setAllButtonsStateEnabled();
+                        pagingLayout.checkButtonsState();
                     }
                 }
             });
@@ -195,6 +190,7 @@ public class MessagesListUI extends VerticalLayout {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(pagingLayout.getPageNumberField().getValue());
+                        pagingLayout.checkButtonsState();
                         initMessagePage(pagingLayout.currentPageNumber);
                     }
                 }

@@ -1,24 +1,14 @@
 package com.netcracker.ui.friendlist;
 
 import com.netcracker.model.user.Profile;
-import com.netcracker.ui.StubVaadinUI;
-import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
-import com.vaadin.data.Binder;
-import com.vaadin.data.validator.RangeValidator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.Sizeable;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class FriendListUI extends VerticalLayout {
 

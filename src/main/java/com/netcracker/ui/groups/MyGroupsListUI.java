@@ -5,8 +5,8 @@ import com.netcracker.model.group.Group;
 import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubPagingBar;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.PagingBar;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
@@ -38,7 +38,7 @@ public class MyGroupsListUI extends Panel {
     private RestResponsePage<Group> allGroups;
     private RestResponsePage<Group> administerGroups;
     private RestResponsePage<Group> myGroups;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
 
     private String stubAvatar = "https://goo.gl/6eEoWo";
 
@@ -173,7 +173,7 @@ public class MyGroupsListUI extends Panel {
             groupAvatar.addClickListener(new MouseEvents.ClickListener() {
                 @Override
                 public void click(MouseEvents.ClickEvent clickEvent) {
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(finalGroupsList.get(finalI).getObjectId()));
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(finalGroupsList.get(finalI).getObjectId()));
                 }
             });
             infoGroupLayout = new VerticalLayout();
@@ -205,7 +205,7 @@ public class MyGroupsListUI extends Panel {
             pageCount = (int) myGroups.getTotalElements();
 
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, 1);
+            pagingLayout = new PagingBar(pageCount, 1);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override
@@ -297,7 +297,7 @@ public class MyGroupsListUI extends Panel {
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;
-            groupAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupsList.get(finalI).getObjectId())));
+            groupAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupsList.get(finalI).getObjectId())));
             infoGroupLayout = new VerticalLayout();
             infoGroupLayout.addComponents(new Label(groupsList.get(i).getGroupName(), ContentMode.PREFORMATTED),
                     new Label("72630 subscribers"));
@@ -348,6 +348,6 @@ public class MyGroupsListUI extends Panel {
         Group createdGroup = new Group(groupName, description, groupAvatar);
         HttpEntity<Group> group = new HttpEntity<>(createdGroup);
         CustomRestTemplate.getInstance().customPostForObject("/groupList/" + profileId + "/add", group, Group.class);
-        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
+        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
     }
 }

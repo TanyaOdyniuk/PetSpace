@@ -11,8 +11,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Sizeable;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -28,7 +26,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
     private Grid<Advertisement> grid;
     private final Button newAdBtn;
     private final BigInteger profileId;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
     private final HorizontalLayout mainLayout;
     private VerticalLayout categoryFilterLayout;
     private VerticalLayout rightPartLayout;
@@ -195,7 +193,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
                 (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setSortable(false);*/
         Grid.Column categoryColumn = grid.addColumn(ad ->
                 (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setSortable(false);
-        grid.addItemClickListener(event -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
+        grid.addItemClickListener(event -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
     }
 
 
@@ -253,7 +251,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         boolean isNotSelectedCategories = (selectedCategories.length == 0);
         boolean isTopicFilter = !topic.isEmpty();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, 1);
+            pagingLayout = new PagingBar(pageCount, 1);
 
             ((Button) pagingLayout.getComponent(0)).addClickListener(new AbstractClickListener() {
                 @Override

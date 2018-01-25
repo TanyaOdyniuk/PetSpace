@@ -1,12 +1,11 @@
 package com.netcracker.ui.pet;
 
-import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.service.util.RestResponsePage;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubPagingBar;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.PagingBar;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
 import com.vaadin.data.BinderValidationStatus;
@@ -14,17 +13,11 @@ import com.vaadin.event.MouseEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FileResource;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -36,7 +29,7 @@ public class MyPetsListUI extends VerticalLayout {
     private RestResponsePage<Pet> petsResponse;
 
     private VerticalLayout petRecordsLayout;
-    private StubPagingBar pagingLayout;
+    private PagingBar pagingLayout;
     private Panel mainPanel;
 
     public MyPetsListUI(BigInteger profileId) {
@@ -82,23 +75,16 @@ public class MyPetsListUI extends VerticalLayout {
             petAvatar.setHeight(250, Unit.PIXELS);
             petAvatar.setWidth(250, Unit.PIXELS);
             String petAvatarSource = pet.getPetAvatar();
-            /*if (petAvatarSource != null) {
-                if (PetDataAssert.isAvatarURL(petAvatarSource))
-                    petAvatar.setSource(new ExternalResource(petAvatarSource));
-                else
-                    petAvatar.setSource(new FileResource(new File(petAvatarSource)));
-            } else
-                petAvatar = PageElements.getNoImage();*/
             PageElements.setImageSource(petAvatar, petAvatarSource);
             petAvatar.setDescription("Pet avatar");
-            petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
+            petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 
             Label petNameSign = PageElements.createGrayLabel("Pet's name");
             Button petName = PageElements.createClickedLabel(pet.getPetName());
             petName.addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
                 }
             });
             Label petInfo = PageElements.createCheckedValueLabel(pet.getPetSpecificParam());
@@ -133,26 +119,26 @@ public class MyPetsListUI extends VerticalLayout {
         }
         int pageCount = (int) petsResponse.getTotalElements();
         if (pageCount > 1) {
-            pagingLayout = new StubPagingBar(pageCount, 1);
-            pagingLayout.setBorderButtonsState(true);
+            pagingLayout = new PagingBar(pageCount, 1);
+            pagingLayout.checkButtonsState();
             pagingLayout.getFirstPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    pagingLayout.setBorderButtonsState(true);
                     Integer page = (Integer) pagingLayout.getFirstPageButton().getData();
                     initMyPetsPage(page);
                     pagingLayout.currentPageNumber = 1;
                     pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                    pagingLayout.checkButtonsState();
                 }
             });
             pagingLayout.getLastPageButton().addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    pagingLayout.setBorderButtonsState(false);
                     Integer page = (Integer) pagingLayout.getLastPageButton().getData();
                     initMyPetsPage(page);
                     pagingLayout.currentPageNumber = page;
                     pagingLayout.getPageNumberField().setValue(String.valueOf(page));
+                    pagingLayout.checkButtonsState();
                 }
             });
             pagingLayout.getPrevPageButton().addClickListener(new AbstractClickListener() {
@@ -162,10 +148,7 @@ public class MyPetsListUI extends VerticalLayout {
                         --pagingLayout.currentPageNumber;
                         initMyPetsPage(pagingLayout.currentPageNumber);
                         pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
-                        if (pagingLayout.currentPageNumber == 1)
-                            pagingLayout.setBorderButtonsState(true);
-                        else
-                            pagingLayout.setAllButtonsStateEnabled();
+                        pagingLayout.checkButtonsState();
                     }
                 }
             });
@@ -176,10 +159,7 @@ public class MyPetsListUI extends VerticalLayout {
                         ++pagingLayout.currentPageNumber;
                         initMyPetsPage(pagingLayout.currentPageNumber);
                         pagingLayout.getPageNumberField().setValue(String.valueOf(pagingLayout.currentPageNumber));
-                        if (pagingLayout.currentPageNumber == pageCount)
-                            pagingLayout.setBorderButtonsState(false);
-                        else
-                            pagingLayout.setAllButtonsStateEnabled();
+                        pagingLayout.checkButtonsState();
                     }
                 }
             });
@@ -190,6 +170,7 @@ public class MyPetsListUI extends VerticalLayout {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(pagingLayout.getPageNumberField().getValue());
+                        pagingLayout.checkButtonsState();
                         initMyPetsPage(pagingLayout.currentPageNumber);
                     }
                 }

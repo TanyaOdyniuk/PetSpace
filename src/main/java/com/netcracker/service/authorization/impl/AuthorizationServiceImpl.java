@@ -67,7 +67,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             } else {
                 Authentication auth = new UsernamePasswordAuthenticationToken(emailField, passwordField, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                LoginPage.getCurrent().getPage().setLocation("/testpage");
+                LoginPage.getCurrent().getPage().setLocation("/main");
             }
         }
         return user;

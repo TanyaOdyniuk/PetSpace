@@ -5,7 +5,7 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.UIConstants;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.upload.UploadableComponent;
@@ -36,6 +36,8 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         this.pet = pet;
         this.isFileResource = false;
         setCaption("Information about pet");
+        setModal(true);
+
         VerticalLayout mainLayout = new VerticalLayout();
 
         GridLayout avatarLayout = new GridLayout(2, 1);
@@ -43,15 +45,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         String petAvatarSource = pet.getPetAvatar();
         avatar = new Image();
         TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
-        if (petAvatarSource != null) {
-            if (PetDataAssert.isAvatarURL(petAvatarSource)) {
-                avatar.setSource(new ExternalResource(petAvatarSource));
-                avatarField.setValue(pet.getPetAvatar());
-            }
-            else
-                avatar.setSource(new FileResource(new File(petAvatarSource)));
-        } else
-            avatar = PageElements.getNoImage();
+        PageElements.setImageSource(avatar, petAvatarSource);
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 
@@ -210,7 +204,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
                 .customPostForObject("/pet/add", petEntity, Pet.class);
         Notification.show("Pet was successfully added!");
         this.close();
-        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
+        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(createdPet.getObjectId()));
     }
 
     private void updatePet(String avatarPath, String petName, String petAge, PetSpecies petSpecies, String petBreed,
@@ -239,6 +233,6 @@ public class PetEditFormUI extends Window implements UploadableComponent {
                 .customPostForObject("/pet/update", petEntity, Pet.class);
         Notification.show("Pet's information was updated");
         this.close();
-        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
+        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId()));
     }
 }

@@ -120,7 +120,7 @@ public class ProfileView extends VerticalLayout {
         profilePets.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyPetsListUI(profileId));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyPetsListUI(profileId));
             }
         });
         VerticalLayout petsLayout = new VerticalLayout();
@@ -142,7 +142,7 @@ public class ProfileView extends VerticalLayout {
                 petMiniImage.setWidth(55, Unit.PIXELS);
                 petMiniImage.setDescription(singlePet.getPetName());
                 petMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(singlePet.getObjectId())));
                 petsGrid.addComponent(petMiniImage);
             }
         } else {
@@ -158,7 +158,7 @@ public class ProfileView extends VerticalLayout {
         profileFriends.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new FriendListUI(profileId));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new FriendListUI(profileId));
             }
         });
         VerticalLayout friendsLayout = new VerticalLayout();
@@ -180,7 +180,7 @@ public class ProfileView extends VerticalLayout {
                 friendMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
                 friendMiniImage.setDescription(singleFriend.getProfileName() + " " + singleFriend.getProfileSurname());
                 friendMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));
                 friendsGrid.addComponent(friendMiniImage);
             }
         } else {
@@ -292,7 +292,7 @@ public class ProfileView extends VerticalLayout {
                     public void buttonClickListener() {
                         deleteFromFriends(currentProfileId, profileID);
                         Notification.show("Friend was deleted!");
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileID));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileID));
                     }
                 });
                 leftPartLayout.addComponents(avatarImage, friendsLabel, removeFromFriends, sendDirectMessage, petsPanel, friendsPanel);
@@ -322,17 +322,11 @@ public class ProfileView extends VerticalLayout {
     }
 
     private void deleteFromFriends(BigInteger currentProfileId, BigInteger profileIdToDelete){
-        List<BigInteger> idList = new ArrayList<>();
-        idList.add(0, currentProfileId);
-        idList.add(1, profileIdToDelete);
-        CustomRestTemplate.getInstance().customPostForObject("/request/delete", idList, Status.class);
+        CustomRestTemplate.getInstance().customGetForObject("/request/" + currentProfileId + "/delete/" + profileIdToDelete, Void.class);
     }
 
     private Status checkProfilesStatus(BigInteger currentProfileId, BigInteger profileIdToCheck){
-        List<BigInteger> idList = new ArrayList<>();
-        idList.add(0, currentProfileId);
-        idList.add(1, profileIdToCheck);
-        return CustomRestTemplate.getInstance().customPostForObject("/request/check", idList, Status.class);
+        return CustomRestTemplate.getInstance().customGetForObject("/request/" + currentProfileId + "/check/" + profileIdToCheck, Status.class);
     }
 
     private void setCurrentProfile() {

@@ -75,7 +75,7 @@ public class RecordPanel extends Panel {
         recordAuthorAvatar.setHeight(100, Sizeable.Unit.PIXELS);
         recordAuthorAvatar.setWidth(100, Sizeable.Unit.PIXELS);
         recordAuthorAvatar.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(recordAuthor.getObjectId())));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(recordAuthor.getObjectId())));
         Label recordName = new Label("Record from " + recordAuthorAvatar.getDescription());
         Label recordDate = new Label(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(currentRecord.getRecordDate()));
         recordInfoLayout.addComponent(recordAuthorAvatar);
@@ -443,20 +443,20 @@ public class RecordPanel extends Panel {
     }
 
     private void reloadPage(BaseEntity reloadTo, int pageNumber, boolean isFriendNews) {
-        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
+        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
     }
 
     private void reloadPage(BaseEntity reloadTo) {
         BigInteger destinationID = reloadTo.getObjectId();
         Class c = reloadTo.getClass();
         if (Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
         } else if (Group.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
         } else if (PhotoAlbum.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
         } else if (Advertisement.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
         }
     }
 

@@ -1,23 +1,20 @@
 package com.netcracker.ui.pet;
 
-import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
+import com.netcracker.ui.gallery.AlbumsUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.io.File;
 import java.math.BigInteger;
 
 public class PetPageUI extends VerticalLayout {
@@ -30,6 +27,9 @@ public class PetPageUI extends VerticalLayout {
         this.petId = petId;
         this.petSpecies = getSpecies();
         this.pet = getPet(petId);
+
+        int browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
+        int browserWidth = UI.getCurrent().getPage().getBrowserWindowWidth();
 
         setSizeFull();
         setSpacing(true);
@@ -45,8 +45,8 @@ public class PetPageUI extends VerticalLayout {
         VerticalLayout infoLayout = new VerticalLayout();
 
         Panel rightPagePanel = new Panel();
-        rightPagePanel.setHeight(750, Unit.PIXELS);
-        rightPagePanel.setWidth(875, Unit.PIXELS);
+        rightPagePanel.setHeight(browserHeight - 250, Unit.PIXELS);
+        rightPagePanel.setWidth(browserWidth * 0.7f - 252, Unit.PIXELS);
 
         Panel avatarPanel = new Panel();
         avatarPanel.setWidth("252px");
@@ -56,19 +56,9 @@ public class PetPageUI extends VerticalLayout {
         infoPanel.setWidth("100%");
         infoPanel.setHeight("100%");
 
-        Panel galleryPanel = new Panel();
-        galleryPanel.setWidth("100%");
-        galleryPanel.setHeight("100%");
-
         Image petAvatar = new Image();
         String petAvatarSource = pet.getPetAvatar();
-        if (petAvatarSource != null) {
-            if (PetDataAssert.isAvatarURL(petAvatarSource))
-                petAvatar.setSource(new ExternalResource(petAvatarSource));
-            else
-                petAvatar.setSource(new FileResource(new File(petAvatarSource)));
-        } else
-            petAvatar = PageElements.getNoImage();
+        PageElements.setImageSource(petAvatar, petAvatarSource);
         petAvatar.setHeight(225, Unit.PIXELS);
         petAvatar.setWidth(225, Unit.PIXELS);
         petAvatar.setDescription("Pet avatar");
@@ -102,13 +92,16 @@ public class PetPageUI extends VerticalLayout {
             leftPageLayout.addComponents(editPage, deletePage, PageElements.getSeparator());
         }
 
-        Button albums = PageElements.createClickedLabel("Albums");
+        Button albums = PageElements.createClickedLabel("Owner's albums");
         albums.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                Notification.show("Здесь будут альбомы!\nМожет быть :)", Notification.Type.TRAY_NOTIFICATION);
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AlbumsUI(owner.getObjectId()));
             }
         });
+
+        albums.setWidth("100%");
+        albums.setIcon(VaadinIcons.PICTURE);
 
         leftPageLayout.addComponents(albums);
         avatarPanel.setContent(leftPageLayout);
@@ -136,7 +129,7 @@ public class PetPageUI extends VerticalLayout {
         petOwner.addClickListener(new AbstractClickListener() {
             @Override
             public void buttonClickListener() {
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(owner.getObjectId()));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(owner.getObjectId()));
             }
         });
         petOwner.setHeight("25px");
@@ -161,23 +154,7 @@ public class PetPageUI extends VerticalLayout {
         infoPanel.setHeight("100%");
         infoPanel.setWidth("100%");
 
-        //PhotoAlbum album = pet.getPetPhotoAlbums().get(0);
-        HorizontalLayout photosLayout = new HorizontalLayout();
-        /*if (album != null) {
-            List<PhotoRecord> photos = album.getPhotoRecords();
-            for (PhotoRecord record : photos) {
-                Image photo = new Image(record.getPhoto());
-                photosLayout.addComponentsAndExpand(photo);
-            }
-        } else {*/
-        for (int i = 0; i < 4; i++) {
-            Image emptyPhoto = PageElements.getNoImage();
-            photosLayout.addComponentsAndExpand(emptyPhoto);
-        }
-        //}
-
-        galleryPanel.setContent(photosLayout);
-        rightPagePart.addComponents(infoPanel, galleryPanel);
+        rightPagePart.addComponent(infoPanel);
         rightPagePanel.setContent(rightPagePart);
         mainLayout.addComponents(avatarPanel, rightPagePanel);
         addComponents(mainLayout);

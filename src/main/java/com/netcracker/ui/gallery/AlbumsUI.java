@@ -6,7 +6,7 @@ import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -85,7 +84,7 @@ public class AlbumsUI extends HorizontalLayout{
 
         grid.setItems(albums);
         grid.addItemClickListener(album ->
-                ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(album.getItem().getObjectId())));
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(album.getItem().getObjectId())));
     }
 
     private void getNewAlbumWindow(){
@@ -150,7 +149,7 @@ public class AlbumsUI extends HorizontalLayout{
         createdAlbum = CustomRestTemplate.getInstance()
                 .customPostForObject("/albums/"+ petId +"/add", albumEntity, PhotoAlbum.class);
         Notification.show("Album successfully added!");
-        ((StubVaadinUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
+        ((MainUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
     }
 
     private List<PhotoRecord> getLastPhotos(){

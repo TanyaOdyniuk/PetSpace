@@ -29,10 +29,11 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 import java.math.BigInteger;
 
-@SpringUI(path = "testpage")
+
+@SpringUI(path = "main")
 @Theme("valo")
 @Title("PetSpace")
-public class StubVaadinUI extends UI implements Button.ClickListener {
+public class MainUI extends UI implements Button.ClickListener {
 
     private final HorizontalLayout topPanel;
 
@@ -45,9 +46,9 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
     private BigInteger profileId;
 
     @Autowired
-    public StubVaadinUI() {
-        topPanel = new StubTopBar(this);
-        leftPanel = new StubLeftBar(this);
+    public MainUI() {
+        topPanel = new TopBarUI(this);
+        leftPanel = new LeftBarUI(this);
         mainLayout = new VerticalLayout();
         primaryAreaLayout = new HorizontalLayout();
     }
@@ -58,7 +59,7 @@ public class StubVaadinUI extends UI implements Button.ClickListener {
         String login = o.getAuthentication().getPrincipal().toString();
         profileId = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
 
-        primaryAreaLayout.addComponentsAndExpand(leftPanel, new ProfileView(profileId));
+        primaryAreaLayout.addComponents(leftPanel, new ProfileView(profileId));
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
 

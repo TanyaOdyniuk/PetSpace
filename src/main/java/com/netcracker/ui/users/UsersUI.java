@@ -1,7 +1,7 @@
 package com.netcracker.ui.users;
 
 import com.netcracker.model.user.Profile;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
@@ -87,7 +87,7 @@ public class UsersUI extends VerticalLayout {
             friendName.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent clickEvent) {
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(p.getObjectId()));
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(p.getObjectId()));
                 }
             });
             Label friendInfo = new Label(p.getProfileSurname());

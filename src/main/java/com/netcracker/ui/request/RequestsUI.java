@@ -1,11 +1,10 @@
 package com.netcracker.ui.request;
 
 import com.netcracker.model.request.FriendRequest;
-import com.netcracker.model.status.Status;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
@@ -62,7 +61,7 @@ public class RequestsUI extends VerticalLayout {
                 requesterName.addClickListener(new AbstractClickListener() {
                     @Override
                     public void buttonClickListener() {
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(requesterProfile.getObjectId()));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(requesterProfile.getObjectId()));
                     }
                 });
 
@@ -77,7 +76,7 @@ public class RequestsUI extends VerticalLayout {
                     public void buttonClickListener() {
                         confirmFriendship(request);
                         Notification.show("Request was confirmed!");
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new RequestsUI(profileId));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new RequestsUI(profileId));
                     }
                 });
 
@@ -86,7 +85,7 @@ public class RequestsUI extends VerticalLayout {
                     public void buttonClickListener() {
                         declineFriendship(request);
                         Notification.show("Request was declined!");
-                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new RequestsUI(profileId));
+                        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new RequestsUI(profileId));
                     }
                 });
 

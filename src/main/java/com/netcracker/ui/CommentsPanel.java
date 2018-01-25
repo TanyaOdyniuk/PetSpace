@@ -15,7 +15,6 @@ import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.bulletinboard.AdvertisementView;
 import com.netcracker.ui.gallery.AlbumsUI;
-import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.news.NewsView;
 import com.netcracker.ui.profile.ProfileView;
@@ -99,7 +98,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
             commentatorMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
             commentatorMiniImage.setDescription(authorNameAndSurname);
             commentatorMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(commentator.getObjectId())));
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(commentator.getObjectId())));
             commentDateAndAvatarLayout.addComponents(
                     commentatorMiniImage,
                     new Label("Comment from " + authorNameAndSurname),
@@ -523,20 +522,20 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
         }
     }
     private void reloadPage(BaseEntity reloadTo, int pageNumber, boolean isFriendNews) {
-        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
+        ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new NewsView(reloadTo.getObjectId(), pageNumber, isFriendNews));
     }
     private void reloadPage(BaseEntity reloadTo){
         BigInteger destinationID = reloadTo.getObjectId();
         Class c = reloadTo.getClass();
         if(Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
         } else if(Group.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
         } else if(PhotoAlbum.class.equals(c)) {
             //((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AlbumsUI(currentProfileId));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AlbumsUI(currentProfileId));
         } else if(Advertisement.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView((Advertisement) reloadTo));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView((Advertisement) reloadTo));
         }
     }
 

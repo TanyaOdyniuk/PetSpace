@@ -7,7 +7,7 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 
-public class StubPagingBar extends HorizontalLayout {
+public class PagingBar extends HorizontalLayout {
     private final Label pageLabel;
     private final TextField pageNumberField;
     private final Label pageMaxLabel;
@@ -20,7 +20,7 @@ public class StubPagingBar extends HorizontalLayout {
     public int currentPageNumber;
     public Binder<VaadinValidationBinder> pageNumberFieldBinder;
 
-    public StubPagingBar(int maxPageSize, int curPageNumb) {
+    public PagingBar(int maxPageSize, int curPageNumb) {
         minPageSize = 1;
         currentPageNumber = curPageNumb;
         this.maxPageSize = maxPageSize;
@@ -46,18 +46,13 @@ public class StubPagingBar extends HorizontalLayout {
         addComponent(lastPageButton, 6);
     }
 
-    public void setBorderButtonsState(boolean isFirstPage){
-        firstPageButton.setEnabled(!isFirstPage);
-        prevPageButton.setEnabled(!isFirstPage);
-        nextPageButton.setEnabled(isFirstPage);
-        lastPageButton.setEnabled(isFirstPage);
-    }
-
-    public void setAllButtonsStateEnabled(){
-        firstPageButton.setEnabled(true);
-        prevPageButton.setEnabled(true);
-        nextPageButton.setEnabled(true);
-        lastPageButton.setEnabled(true);
+    public void checkButtonsState(){
+        if (this.currentPageNumber == 1)
+            this.setBorderButtonsState(true);
+        else if (this.currentPageNumber == maxPageSize)
+            this.setBorderButtonsState(false);
+        else
+            this.setAllButtonsStateEnabled();
     }
 
     public Button getFirstPageButton() {
@@ -78,6 +73,20 @@ public class StubPagingBar extends HorizontalLayout {
 
     public TextField getPageNumberField() {
         return pageNumberField;
+    }
+
+    private void setBorderButtonsState(boolean isFirstPage){
+        firstPageButton.setEnabled(!isFirstPage);
+        prevPageButton.setEnabled(!isFirstPage);
+        nextPageButton.setEnabled(isFirstPage);
+        lastPageButton.setEnabled(isFirstPage);
+    }
+
+    private void setAllButtonsStateEnabled(){
+        firstPageButton.setEnabled(true);
+        prevPageButton.setEnabled(true);
+        nextPageButton.setEnabled(true);
+        lastPageButton.setEnabled(true);
     }
 
     private void getBinder(){

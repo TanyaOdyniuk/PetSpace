@@ -2,7 +2,6 @@ package com.netcracker.controller.request;
 
 import com.netcracker.model.request.FriendRequest;
 import com.netcracker.model.status.Status;
-import com.netcracker.service.profile.ProfileService;
 import com.netcracker.service.request.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +41,10 @@ public class RequestController {
         requestService.declineRequest(request);
     }
 
-    @PostMapping("/delete")
-    public void deleteFriendshipStatus(@RequestBody List<BigInteger> profilesList) {
-        requestService.deleteFriendshipStatus(profilesList.get(0), profilesList.get(1));
+    @GetMapping("{currentProfileId}/delete/{profileIdToDelete}")
+    public void deleteFriendshipStatus(@PathVariable("currentProfileId") BigInteger currentProfileId,
+                                       @PathVariable("profileIdToDelete") BigInteger profileIdToDelete) {
+        requestService.deleteFriendshipStatus(currentProfileId, profileIdToDelete);
     }
 
     @PostMapping("/blacklist")
@@ -52,8 +52,9 @@ public class RequestController {
         //requestService.sendRequest(request);
     }
 
-    @PostMapping("/check")
-    public Status checkProfilesStatus(@RequestBody List<BigInteger> profilesList){
-        return requestService.getProfilesStatus(profilesList.get(0) /*currentProfileId*/, profilesList.get(1) /*profileIdToCheck*/);
+    @GetMapping("{currentProfileId}/check/{profileIdToCheck}")
+    public Status checkProfilesStatus(@PathVariable("currentProfileId") BigInteger currentProfileId,
+                                      @PathVariable("profileIdToCheck") BigInteger profileIdToCheck){
+        return requestService.getProfilesStatus(currentProfileId, profileIdToCheck);
     }
 }

@@ -2,7 +2,7 @@ package com.netcracker.ui.pet;
 
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.PageElements;
-import com.netcracker.ui.StubVaadinUI;
+import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
@@ -11,11 +11,15 @@ import java.math.BigInteger;
 
 public class PetDeleteConfirmationWindow extends Window {
 
+    private Boolean isDeleted;
+
     public PetDeleteConfirmationWindow(BigInteger petId, BigInteger ownerId) {
         super();
+        this.isDeleted = false;
         setCaption("Confirm the action");
         setDraggable(false);
         setResizable(false);
+        setModal(true);
         center();
 
         setWidth("300px");
@@ -34,6 +38,7 @@ public class PetDeleteConfirmationWindow extends Window {
             public void buttonClickListener() {
                 CustomRestTemplate.getInstance().customPostForObject("/pet/delete", petId, BigInteger.class);
                 Notification.show("Your pet was successfully deleted!", Notification.Type.TRAY_NOTIFICATION);
+                isDeleted = true;
                 close();
             }
         });
@@ -58,6 +63,9 @@ public class PetDeleteConfirmationWindow extends Window {
         mainLayout.setComponentAlignment(confirmText, Alignment.MIDDLE_CENTER);
         setContent(mainLayout);
 
-        addCloseListener((CloseListener) e -> ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new MyPetsListUI(ownerId)));
+        addCloseListener((CloseListener) e -> {
+            if(isDeleted)
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyPetsListUI(ownerId));
+        });
     }
 }

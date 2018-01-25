@@ -8,8 +8,6 @@ import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
-import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.StubVaadinUI;
 import com.netcracker.ui.gallery.GalleryUI;
 import com.netcracker.ui.groups.GroupUI;
 import com.netcracker.ui.profile.ProfileView;
@@ -145,15 +143,15 @@ public class AddRecordButton extends Button {
         BigInteger destinationID = reloadTo.getObjectId();
         Class c = reloadTo.getClass();
         if(Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
         } else if(Group.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(destinationID));
         } else if(PhotoAlbum.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(destinationID));
         } else if(Advertisement.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID));
         } else if(Profile.class.equals(c)) {
-            ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID)); //NewsFeed reload
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(destinationID)); //NewsFeed reload
         }
     }
 
