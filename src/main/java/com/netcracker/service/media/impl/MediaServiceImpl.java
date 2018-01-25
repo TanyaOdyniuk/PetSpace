@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+
 @Service
 public class MediaServiceImpl implements MediaService {
     @Autowired
@@ -42,7 +44,8 @@ public class MediaServiceImpl implements MediaService {
     public List<PhotoAlbum> getMyAlbums(BigInteger profileId) {
         String getAlbumsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE\n" +
                 "WHERE REFERENCE IN(SELECT OBJECT_ID FROM OBJREFERENCE WHERE " +
-                "REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER + ")\n" +
+                "REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + PetConstant.PET_OWNER +
+                " and " + IGNORING_DELETED_ELEMENTS + " )\n" +
                 "AND ATTRTYPE_ID = " + PhotoAlbumConstant.PET_PHOTOALBUM;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addSortingDesc(434, "DESC", true);

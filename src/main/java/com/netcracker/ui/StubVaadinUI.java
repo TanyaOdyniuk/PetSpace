@@ -1,9 +1,7 @@
 package com.netcracker.ui;
 
 import com.netcracker.asserts.ObjectAssert;
-import com.netcracker.model.StubUser;
 
-import com.netcracker.service.user.UserService;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -20,7 +18,6 @@ import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
@@ -31,9 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
 
 @SpringUI(path = "testpage")
 @Theme("valo")
