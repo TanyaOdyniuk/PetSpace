@@ -2,6 +2,8 @@ package com.netcracker.service.news.impl;
 
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
+import com.netcracker.model.group.Group;
+import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.RecordConstant;
 import com.netcracker.model.record.WallRecord;
@@ -32,7 +34,7 @@ public class NewsServiceImpl implements NewsService {
 
     public int getNewsFriendsPageCount(BigInteger profileId) {
         Integer newsFriendsCapacity = new Integer(newsFriendsCapacityProp);
-        String getAdsQuery = "select OBJECT_ID FROM OBJREFERENCE " +
+        String getQuery = "select OBJECT_ID FROM OBJREFERENCE " +
                 "where ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER +
                 " and REFERENCE IN ( " +
                 "SELECT REFERENCE FROM OBJREFERENCE" +
@@ -43,13 +45,24 @@ public class NewsServiceImpl implements NewsService {
                 "                    (" +
                 "                      SELECT OBJECT_ID FROM OBJREFERENCE" +
                 "                      WHERE REFERENCE = " + profileId +
-                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO +")" +
+                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
                 "                    )" +
                 "        )" +
-                "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO +")" +
+                "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
                 "  AND REFERENCE <> " + profileId +
                 ")";
-        return pageCounterService.getPageCount(newsFriendsCapacity, entityManagerService.getBySqlCount(getAdsQuery));
+        return pageCounterService.getPageCount(newsFriendsCapacity, entityManagerService.getBySqlCount(getQuery));
+    }
+
+    public int getNewsGroupsPageCount(BigInteger profileId) {
+        Integer newsGroupsCapacity = new Integer(newsGroupsCapacityProp);
+        String getQuery = "select OBJECT_ID FROM OBJREFERENCE " +
+                "where ATTRTYPE_ID = " + GroupConstant.GR_RECORDS +
+                " and REFERENCE IN ( " +
+                "SELECT distinct object_id FROM OBJREFERENCE" +
+                "  WHERE reference = " + profileId +
+                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +"))";
+        return pageCounterService.getPageCount(newsGroupsCapacity, entityManagerService.getBySqlCount(getQuery));
     }
 
     @Override
@@ -65,10 +78,10 @@ public class NewsServiceImpl implements NewsService {
                 "                    (" +
                 "                      SELECT OBJECT_ID FROM OBJREFERENCE" +
                 "                      WHERE REFERENCE = " + profileId +
-                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO +")" +
+                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
                 "                    )" +
                 "        )" +
-                "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO +")" +
+                "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
                 "  AND REFERENCE <> " + profileId +
                 ")";
         QueryDescriptor queryDescriptor = new QueryDescriptor();
@@ -84,7 +97,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<GroupRecord> getGroupsWallRecords(BigInteger profileId) {
-        return null;
+    public List<GroupRecord> getGroupsWallRecords(BigInteger profileId, Integer pageNumber) {
+        String selectGroupsRecord = "select OBJECT_ID FROM OBJREFERENCE " +
+                "where ATTRTYPE_ID = " + GroupConstant.GR_RECORDS +
+                " and REFERENCE IN ( " +
+                "SELECT distinct object_id FROM OBJREFERENCE" +
+                "  WHERE reference = " + profileId +
+                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +"))";
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addPagingDescriptor(pageNumber, new Integer(newsGroupsCapacityProp));
+        queryDescriptor.addSortingDesc(RecordConstant.REC_DATE, "DESC", true);
+        List<GroupRecord> groupsRecords = entityManagerService.getObjectsBySQL(selectGroupsRecord, GroupRecord.class, queryDescriptor);
+        for (GroupRecord record : groupsRecords) {
+            BigInteger wallRecordId = record.getObjectId();
+            record.setRecordAuthor(recordService.getRecordAuthor(wallRecordId));
+            record.setParentGroup(recordService.getGroupRecordOwner(wallRecordId));
+        }
+        return groupsRecords;
     }
 }

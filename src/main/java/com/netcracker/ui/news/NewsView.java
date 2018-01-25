@@ -87,22 +87,20 @@ public class NewsView extends VerticalLayout {
             }
         });
         //Elements for right part
+        wallPanel = new Panel();
+        wallPanel.setWidth("100%");
         if(isFriendsNews){
             getFriendsRecordsList(pageNumber);
+            wallPanel.setContent(getWallRecordsLayout());
+
         } else {
             getGroupsRecordsList(pageNumber);
+            wallPanel.setContent(getGroupRecordsLayout());
         }
 
         getPagingLayout(pagingPanel, isFriendsNews);
 
-        //Profile wall with records
-        wallPanel = new Panel();
-        wallPanel.setWidth("100%");
-        wallPanel.setContent(getWallRecordsLayout());
-
-        //Filling matryoshka layout
         leftPartLayout.addComponents(showNewsOfFriendsButton, showNewsOfGroupsButton);
-
         rightPartLayout.addComponents(pagingPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);
@@ -117,10 +115,6 @@ public class NewsView extends VerticalLayout {
                         null, new ParameterizedTypeReference<RestResponsePage<WallRecord>>() {
                         });
         wallRecordsList = pageResponseEntity.getBody();
-        List<WallRecord> advertisements = wallRecordsList.getContent();
-        if (advertisements.isEmpty()) {
-            Notification.show("No news  were found");
-        }
     }
 
     private void getGroupsRecordsList(int pageNumber) {
@@ -129,10 +123,6 @@ public class NewsView extends VerticalLayout {
                         null, new ParameterizedTypeReference<RestResponsePage<GroupRecord>>() {
                         });
         groupRecordsList = pageResponseEntity.getBody();
-        List<GroupRecord> advertisements = groupRecordsList.getContent();
-        if (advertisements.isEmpty()) {
-            Notification.show("No news  were found");
-        }
     }
 
     private void getData(int page, boolean isFriendsNews) {
@@ -217,211 +207,50 @@ public class NewsView extends VerticalLayout {
 
     private VerticalLayout getWallRecordsLayout() {
         VerticalLayout wallLayout = new VerticalLayout();
-        HorizontalLayout wallHeaderLayout = new HorizontalLayout();
-
-        int wallRecordsListSize = wallRecordsList.getContent().size();
-        String labelCaptionStart = wallRecordsListSize + " record";
-        if (wallRecordsListSize != 1) {
-            labelCaptionStart += "s";
+        List<WallRecord> wallRecords = wallRecordsList.getContent();
+        int wallRecordsListSize = wallRecords.size();
+        HorizontalLayout wallHeaderLayout = createHeader(wallRecordsListSize, true);
+        if(wallHeaderLayout != null){
+            wallLayout.addComponent(wallHeaderLayout);
         }
-        wallHeaderLayout.addComponents(
-                new Label(labelCaptionStart + " of your friends"));
-        wallLayout.addComponent(wallHeaderLayout);
         //WallRecords
-        for (int i = 0; i < wallRecordsList.getContent().size(); i++) {
-            WallRecord currentWallRecord = wallRecordsList.getContent().get(i);
+        for (int i = 0; i < wallRecordsListSize; i++) {
+            WallRecord currentWallRecord = wallRecords.get(i);
             Panel singleWallRecordPanel = new RecordPanel(currentWallRecord, profile, true,
                     pageNumber, isFriendsNews);
             wallLayout.addComponent(singleWallRecordPanel);
         }
         return wallLayout;
     }
-
-    /*доделать, т.к. пока нет функционала групп*/
+    private HorizontalLayout createHeader(int size, boolean isWallRecords){
+        HorizontalLayout headerLayout = null;
+        if(size == 0){
+            headerLayout = new HorizontalLayout();
+            String labelCaptionStart ="Unfortunately, no news from your ";
+            if (isWallRecords) {
+                labelCaptionStart += "friends ";
+            } else{
+                labelCaptionStart += "groups ";
+            }
+            labelCaptionStart += "were found";
+            headerLayout.addComponents(new Label(labelCaptionStart));
+        }
+        return headerLayout;
+    }
     private VerticalLayout getGroupRecordsLayout() {
         VerticalLayout groupLayout = new VerticalLayout();
-        HorizontalLayout groupHeaderLayout = new HorizontalLayout();
-
-        int groupRecordsListSize = groupRecordsList.getContent().size();
-        String labelCaptionStart = groupRecordsListSize + " record";
-        if (groupRecordsListSize != 1) {
-            labelCaptionStart += "s";
+        List<GroupRecord> groupRecords = groupRecordsList.getContent();
+        int groupRecordsListSize = groupRecords.size();
+        HorizontalLayout groupHeaderLayout = createHeader(groupRecordsListSize, false);
+        if(groupHeaderLayout != null){
+            groupLayout.addComponent(groupHeaderLayout);
         }
-        groupHeaderLayout.addComponents(
-                new Label(labelCaptionStart + " of your groups"));
-        groupLayout.addComponent(groupHeaderLayout);
         //GroupRecords
-        for (int i = groupRecordsList.getContent().size(); i > 0; i--) {
-            GroupRecord currentGroupRecord = groupRecordsList.getContent().get(i - 1);
-            /*
-            List<GroupRecordComment> commentsList = getGroupRecordComments(currentGroupRecord.getObjectId());
-            Profile commentator = currentGroupRecord.getRecordAuthor();
-            Profile wallOwner = currentGroupRecord.getWallOwner();
-
-            Panel singleWallRecordPanel = new Panel();
-            VerticalLayout singleWallRecordLayout = new VerticalLayout();
-
-            HorizontalLayout recordInfoLayout = new HorizontalLayout();
-            String commentatorAvatar = commentator.getProfileAvatar();
-            Image recordAuthorAvatar = new Image();
-            recordAuthorAvatar.setSource(new ExternalResource(commentatorAvatar == null ? stubAvatar : commentatorAvatar));
-            String description = "from " + commentator.getProfileName() + " " + commentator.getProfileSurname() + " on ";
-            if (commentator.equals(wallOwner)) {
-                description += "his/her";
-            } else {
-                description += wallOwner.getProfileName() + " " + wallOwner.getProfileSurname();
-            }
-            description += " wall";
-            recordAuthorAvatar.setDescription(description);
-            recordAuthorAvatar.setHeight(100, Sizeable.Unit.PIXELS);
-            recordAuthorAvatar.setWidth(100, Sizeable.Unit.PIXELS);
-            Label recordName = new Label("Record " + recordAuthorAvatar.getDescription());
-
-            String recordDateString;
-            try {
-                recordDateString = currentGroupRecord.getRecordDate().toString();
-            } catch (NullPointerException e) {
-                recordDateString = "null!";
-            }
-            Label recordDate = new Label(recordDateString);
-            recordInfoLayout.addComponent(recordAuthorAvatar);
-            recordInfoLayout.addComponentsAndExpand(recordName, recordDate);
-            recordInfoLayout.setComponentAlignment(recordName, Alignment.TOP_CENTER);
-            recordInfoLayout.setComponentAlignment(recordDate, Alignment.TOP_RIGHT);
-            HorizontalLayout recordLikeAndCommentsLayout = new HorizontalLayout();
-            Button likeRecordButton = new Button();
-            likeRecordButton.setWidth(70, Sizeable.Unit.PIXELS);
-            Button dislikeRecordButton = new Button();
-            dislikeRecordButton.setWidth(70, Sizeable.Unit.PIXELS);
-            likeRecordButton.addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    checkAndAddLike(currentGroupRecord, false, likeRecordButton, dislikeRecordButton);
-                }
-            });
-            dislikeRecordButton.addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    checkAndAddLike(currentGroupRecord, true, likeRecordButton, dislikeRecordButton);
-                }
-            });
-            Button addCommentButton = new Button("Add new comment", VaadinIcons.PLUS);
-            addCommentButton.addClickListener(new AbstractClickListener() {
-                @Override
-                public void buttonClickListener() {
-                    addComment(currentGroupRecord);
-                    UI.getCurrent().addWindow(updateCommentWindow);
-                }
-            });
-            countAndShowLikes(currentGroupRecord, likeRecordButton, dislikeRecordButton);
-            recordLikeAndCommentsLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-            recordLikeAndCommentsLayout.addComponents(likeRecordButton, dislikeRecordButton);
-
-            //Comments
-            Panel allCommentsPanel = new Panel();
-            allCommentsPanel.setVisible(true);
-            int commentsListSize = commentsList.size();
-            if (commentsListSize == 0) {
-                recordLikeAndCommentsLayout.addComponent(addCommentButton);
-            } else {
-                String buttonCaption = "Show/hide " + commentsListSize + " comment";
-                if (commentsListSize != 1) {
-                    buttonCaption += "s";
-                }
-                Button showCommentsButton = new Button(buttonCaption, VaadinIcons.COMMENT_O);
-                showCommentsButton.addClickListener(new AbstractClickListener() {
-                    @Override
-                    public void buttonClickListener() {
-                        VerticalLayout allCommentsLayout = new VerticalLayout();
-                        for (int j = commentsListSize; j > 0; j--) {
-                            WallRecordComment currentComment = commentsList.get(j - 1);
-                            Panel currentCommentPanel = new Panel();
-                            VerticalLayout currentCommentLayout = new VerticalLayout();
-                            HorizontalLayout commentDateAndAvatarLayout = new HorizontalLayout();
-                            Profile currentCommentAuthor = CustomRestTemplate.getInstance().
-                                    customGetForObject("/comments/author/" + currentComment.getObjectId(), Profile.class);
-                            String authorNameAndSurname = currentCommentAuthor.getProfileName() + " " + currentCommentAuthor.getProfileSurname();
-                            String singleFriendAvatar = currentCommentAuthor.getProfileAvatar();
-                            Image commentatorMiniImage = new Image();
-                            commentatorMiniImage.setHeight(55, Sizeable.Unit.PIXELS);
-                            commentatorMiniImage.setWidth(55, Sizeable.Unit.PIXELS);
-                            commentatorMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
-                            commentatorMiniImage.setDescription(authorNameAndSurname);
-                            commentatorMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
-                                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(currentCommentAuthor.getObjectId())));
-                            commentDateAndAvatarLayout.addComponents(
-                                    commentatorMiniImage,
-                                    new Label("Comment from " + authorNameAndSurname),
-                                    new Label(currentComment.getCommentDate().toString())
-                            );
-                            HorizontalLayout commentLikeLayout = new HorizontalLayout();
-                            Button likeCommentButton = new Button();
-                            likeCommentButton.setWidth(70, Sizeable.Unit.PIXELS);
-                            Button dislikeCommentButton = new Button();
-                            likeCommentButton.setWidth(70, Sizeable.Unit.PIXELS);
-                            likeCommentButton.addClickListener(new AbstractClickListener() {
-                                @Override
-                                public void buttonClickListener() {
-                                    checkAndAddLike(currentComment, false, likeCommentButton, dislikeCommentButton);
-                                }
-                            });
-                            dislikeCommentButton.addClickListener(new AbstractClickListener() {
-                                @Override
-                                public void buttonClickListener() {
-                                    checkAndAddLike(currentComment, true, likeCommentButton, dislikeCommentButton);
-                                }
-                            });
-                            countAndShowLikes(currentComment, likeCommentButton, dislikeCommentButton);
-                            commentLikeLayout.addComponents(likeCommentButton, dislikeCommentButton);
-                            if (currentComment.getCommentAuthor().getObjectId().equals(profileID)) {
-                                Button editCommentButton = new Button("Edit", VaadinIcons.EDIT);
-                                editCommentButton.setWidth(100, Sizeable.Unit.PIXELS);
-                                editCommentButton.addClickListener(new AbstractClickListener() {
-                                    @Override
-                                    public void buttonClickListener() {
-                                        editWallRecordComment(currentComment, currentGroupRecord);
-                                        UI.getCurrent().addWindow(updateCommentWindow);
-                                    }
-                                });
-                                commentLikeLayout.addComponents(editCommentButton, new Button("Delete"));
-                            }
-                            currentCommentLayout.addComponents(
-                                    commentDateAndAvatarLayout,
-                                    new Label(currentComment.getCommentText()),
-                                    commentLikeLayout
-                            );
-                            currentCommentPanel.setContent(currentCommentLayout);
-                            allCommentsLayout.addComponent(currentCommentPanel);
-                        }
-                        allCommentsLayout.addComponent(addCommentButton);
-                        allCommentsPanel.setContent(allCommentsLayout);
-                        allCommentsPanel.setVisible(!allCommentsPanel.isVisible());
-                        showCommentsButton.setIcon(
-                                showCommentsButton.getIcon().equals(VaadinIcons.COMMENT_O) ?
-                                        VaadinIcons.COMMENT : VaadinIcons.COMMENT_O);
-                    }
-                });
-                recordLikeAndCommentsLayout.addComponent(showCommentsButton);
-            }
-            if (currentGroupRecord.getRecordAuthor().getObjectId().equals(profileID)) {
-                Button editWallRecordButton = new Button("Edit", VaadinIcons.EDIT);
-                editWallRecordButton.setWidth(100, Sizeable.Unit.PIXELS);
-                editWallRecordButton.addClickListener(new AbstractClickListener() {
-                    @Override
-                    public void buttonClickListener() {
-                        editWallRecord(currentGroupRecord);
-                        UI.getCurrent().addWindow(updateWallRecordWindow);
-                    }
-                });
-                recordLikeAndCommentsLayout.addComponents(editWallRecordButton, new Button("Delete"));
-            }
-            singleWallRecordLayout.addComponents(
-                    recordInfoLayout,
-                    new Label(currentGroupRecord.getRecordText(), ContentMode.PREFORMATTED),
-                    recordLikeAndCommentsLayout,
-                    allCommentsPanel);
-            singleWallRecordPanel.setContent(singleWallRecordLayout);
-            groupLayout.addComponent(singleWallRecordPanel);*/
+        for (int i = 0; i < groupRecordsListSize; i++) {
+            GroupRecord currentGroupRecord = groupRecords.get(i);
+            Panel singleGroupRecordPanel = new RecordPanel(currentGroupRecord, profile, true,
+                    pageNumber, isFriendsNews);
+            groupLayout.addComponent(singleGroupRecordPanel);
         }
         return groupLayout;
     }

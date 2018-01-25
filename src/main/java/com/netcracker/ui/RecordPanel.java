@@ -160,9 +160,8 @@ public class RecordPanel extends Panel {
                 } else {
                     result += recordOwner.getProfileName() + " " + recordOwner.getProfileSurname();
                 }
-            } else {
-                //достать группу
-                result += "groupname ";
+            } else if(currentRecord instanceof GroupRecord) {
+                result += ((GroupRecord) currentRecord).getParentGroup().getGroupName();
             }
             result += " wall";
         }

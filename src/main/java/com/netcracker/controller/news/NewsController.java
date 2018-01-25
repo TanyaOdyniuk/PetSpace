@@ -26,6 +26,7 @@ public class NewsController {
 
     @GetMapping("/groups/{profileId}/{pageNumber}")
     public RestResponsePage<GroupRecord> getGroupsWallRecords(@PathVariable("profileId") BigInteger profileId, @PathVariable("pageNumber") Integer pageNumber){
-        return null;
+        Integer count = newsService.getNewsGroupsPageCount(profileId);
+        return new RestResponsePage<>(newsService.getGroupsWallRecords(profileId, pageNumber), null, count);
     }
 }

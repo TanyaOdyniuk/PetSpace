@@ -4,6 +4,7 @@ import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.comment.AbstractComment;
 import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
@@ -22,11 +23,9 @@ import java.util.List;
 @Service
 public class RecordServiceImpl implements RecordService {
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
     private StatusService statusService;
-    @Autowired
-    CommentService commentService;
 
     @Override
     public List<WallRecord> getWallRecords(BigInteger profileID) {
@@ -54,8 +53,16 @@ public class RecordServiceImpl implements RecordService {
     public Profile getWallRecordOwner(BigInteger wallRecordID) {
         String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
                 "WHERE OBJECT_ID = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER;
-        List<Profile> currentWallRecordAuthor = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
-        return currentWallRecordAuthor.get(0);
+        List<Profile> currentWallRecordOwner = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
+        return currentWallRecordOwner.get(0);
+    }
+
+    @Override
+    public Group getGroupRecordOwner(BigInteger groupRecordID) {
+        String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + groupRecordID + " AND ATTRTYPE_ID = " + GroupConstant.GR_RECORDS;
+        List<Group> currentGroupRecordOwner = entityManagerService.getObjectsBySQL(sqlQuery, Group.class, new QueryDescriptor());
+        return currentGroupRecordOwner.get(0);
     }
 
     @Override

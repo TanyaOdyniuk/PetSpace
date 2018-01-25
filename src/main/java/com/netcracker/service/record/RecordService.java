@@ -1,6 +1,7 @@
 package com.netcracker.service.record;
 
 import com.netcracker.model.comment.WallRecordComment;
+import com.netcracker.model.group.Group;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.record.WallRecord;
@@ -24,6 +25,8 @@ public interface RecordService {
 
     //Get owner`s profile from certain wall record
     Profile getWallRecordOwner(BigInteger wallRecordID);
+    //Get owner`s group from certain group record
+    Group getGroupRecordOwner(BigInteger groupRecordID);
 
     //Create new wall record (with already filled fields)
     WallRecord createWallRecord(WallRecord record);

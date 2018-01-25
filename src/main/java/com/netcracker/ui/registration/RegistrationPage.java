@@ -33,7 +33,7 @@ import static com.netcracker.ui.validation.UiValidationConstants.*;
 public class RegistrationPage extends UI {
 
     @Autowired
-    AuthorizationService authorizationService;
+    private AuthorizationService authorizationService;
 
     private static final String VIEW_NAME = "Registration Form";
     private Window regWindow;
@@ -160,6 +160,7 @@ public class RegistrationPage extends UI {
                     UserAuthority role = new UserAuthority();
                     role.setAuthority("ROLE_USER");
                     authorities.add(role);
+
                     authorizationService.authenticate(newUser.getLogin(), newUser.getPassword(), authorities);
                 }
 
