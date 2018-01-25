@@ -165,8 +165,7 @@ public class MyGroupsListUI extends Panel {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            groupAvatar.setSource(groupsList.get(i).getGroupAvatar() == null? new ExternalResource(stubAvatar):
-            new ExternalResource(groupsList.get(i).getGroupAvatar()));
+            groupAvatar.setSource(groupsList.get(i).getGroupAvatar() == null? new ExternalResource(stubAvatar): new ExternalResource(groupsList.get(i).getGroupAvatar()));
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;

@@ -21,8 +21,6 @@ public interface GroupService {
 
     Profile getGroupAdmin(BigInteger groupId);
 
-//    List<User> getSubscribedUsersList(BigInteger groupId);
-
     Group createNewGroup(Group newGroup, BigInteger profileId);
 
     void leaveGroup(BigInteger groupId, BigInteger profileId);

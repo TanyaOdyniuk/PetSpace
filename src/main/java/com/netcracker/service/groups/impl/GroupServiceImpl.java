@@ -142,7 +142,6 @@ public class GroupServiceImpl implements GroupService {
     public void editGroup(Group group) {
         entityManagerService.update(group);
     }
-
     @Override
     public void deleteGroup(BigInteger groupId) {
         entityManagerService.delete(groupId, -1);

@@ -215,6 +215,7 @@ public class GroupUI extends VerticalLayout {
                 groupName.setValue(group.getGroupName());
                 groupAvatar.setValue(group.getGroupAvatar());
                 description.setValue(group.getGroupDescription());
+
                 group.setGroupName(groupName.getValue());
                 group.setGroupAvatar(groupAvatar.getValue());
                 group.setGroupDescription(description.getValue());
