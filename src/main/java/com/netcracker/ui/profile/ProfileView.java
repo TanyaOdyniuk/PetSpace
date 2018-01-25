@@ -1,6 +1,5 @@
 package com.netcracker.ui.profile;
 
-import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.WallRecord;
@@ -17,7 +16,6 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ContentMode;
@@ -25,7 +23,6 @@ import com.vaadin.ui.*;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -285,7 +282,20 @@ public class ProfileView extends VerticalLayout {
                 leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
             else {
                 Label friendsLabel = new Label("You're " + profile.getProfileName() + "'s friend");
-                leftPartLayout.addComponents(avatarImage, friendsLabel, sendDirectMessage, petsPanel, friendsPanel);
+                Button removeFromFriends = new Button();
+                removeFromFriends.setCaption("Delete friend");
+                removeFromFriends.setIcon(VaadinIcons.USERS);
+                removeFromFriends.setHeight(50, Unit.PIXELS);
+                removeFromFriends.setWidth("100%");
+                removeFromFriends.addClickListener(new AbstractClickListener() {
+                    @Override
+                    public void buttonClickListener() {
+                        deleteFromFriends(currentProfileId, profileID);
+                        Notification.show("Friend was deleted!");
+                        ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(profileID));
+                    }
+                });
+                leftPartLayout.addComponents(avatarImage, friendsLabel, removeFromFriends, sendDirectMessage, petsPanel, friendsPanel);
             }
         } else
             leftPartLayout.addComponents(avatarImage, petsPanel, friendsPanel);
@@ -309,6 +319,13 @@ public class ProfileView extends VerticalLayout {
         request.setReqTo(profile);
         request.setReqFrom(currentProfile);
         CustomRestTemplate.getInstance().customPostForObject("/request/send", request, FriendRequest.class);
+    }
+
+    private void deleteFromFriends(BigInteger currentProfileId, BigInteger profileIdToDelete){
+        List<BigInteger> idList = new ArrayList<>();
+        idList.add(0, currentProfileId);
+        idList.add(1, profileIdToDelete);
+        CustomRestTemplate.getInstance().customPostForObject("/request/delete", idList, Status.class);
     }
 
     private Status checkProfilesStatus(BigInteger currentProfileId, BigInteger profileIdToCheck){

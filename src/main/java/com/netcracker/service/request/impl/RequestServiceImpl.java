@@ -17,7 +17,7 @@ import java.util.List;
 public class RequestServiceImpl implements RequestService {
 
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
 
     @Override
     public List<FriendRequest> getProfileRequests(BigInteger profileId) {
@@ -56,10 +56,13 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void declineRequest(FriendRequest request) {
-        Status status = entityManagerService.getById(BigInteger.valueOf(StatusConstant.ST_IS_NOT_FRIEND), Status.class);
-        request.setRequestStatus(status);
         entityManagerService.delete(request.getObjectId(), 0);
-        //entityManagerService.update(request);
+    }
+
+    @Override
+    public void deleteFriendshipStatus(BigInteger profileId, BigInteger profileIdToDelete){
+        BigInteger requestId = entityManagerService.getProfilesRequestId(profileId, profileIdToDelete);
+        entityManagerService.delete(requestId, 0);
     }
 
     @Override

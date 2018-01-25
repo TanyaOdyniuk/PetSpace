@@ -15,7 +15,7 @@ import java.util.List;
 public class RequestController {
 
     @Autowired
-    RequestService requestService;
+    private RequestService requestService;
 
     @GetMapping("/{id}")
     public List<FriendRequest> getProfileRequests(@PathVariable("id") BigInteger id){
@@ -40,6 +40,11 @@ public class RequestController {
     @PostMapping("/decline")
     public void declineRequest(@RequestBody FriendRequest request){
         requestService.declineRequest(request);
+    }
+
+    @PostMapping("/delete")
+    public void deleteFriendshipStatus(@RequestBody List<BigInteger> profilesList) {
+        requestService.deleteFriendshipStatus(profilesList.get(0), profilesList.get(1));
     }
 
     @PostMapping("/blacklist")

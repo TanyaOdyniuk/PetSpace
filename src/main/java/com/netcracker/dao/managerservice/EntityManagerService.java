@@ -70,6 +70,10 @@ public class EntityManagerService {
         return manager.getProfilesFriendshipStatus(currentProfileId, profileToCheck);
     }
 
+    public BigInteger getProfilesRequestId(BigInteger currentProfileId, BigInteger profileId) {
+        return manager.getProfilesRequestId(currentProfileId, profileId);
+    }
+
     public <T extends BaseEntity> BigInteger update(T baseEntity) {
         if (baseEntity.getObjectId() == null) {
             T temp = create(baseEntity);

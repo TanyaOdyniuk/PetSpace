@@ -20,5 +20,7 @@ public interface RequestService {
 
     void declineRequest(FriendRequest request);
 
+    void deleteFriendshipStatus(BigInteger profileId, BigInteger profileIdToDelete);
+
     Status getProfilesStatus(BigInteger profileId, BigInteger profileIdToCheck);
 }
