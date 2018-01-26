@@ -18,14 +18,16 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class ManageFriendServiceImpl implements ManageFriendService {
 
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
     public void addFriend(Profile profile) {
@@ -60,7 +62,8 @@ public class ManageFriendServiceImpl implements ManageFriendService {
                 "WHERE REFERENCE = '" + profileId + "'" +
                 " AND ATTRTYPE_ID IN ('" + FriendRequestConstant.REQ_FROM + "', '" + FriendRequestConstant.REQ_TO + "')))" +
                 " AND ATTRTYPE_ID IN ('" + FriendRequestConstant.REQ_FROM + "', '" + FriendRequestConstant.REQ_TO + "')" +
-                " AND REFERENCE <> '" + profileId + "'";
+                " AND REFERENCE <> '" + profileId + "'" +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
     }
 

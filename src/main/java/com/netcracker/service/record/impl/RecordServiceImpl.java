@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class RecordServiceImpl implements RecordService {
     @Autowired
@@ -30,14 +32,16 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<WallRecord> getWallRecords(BigInteger profileID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER;
+                "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER +
+               " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
     }
 
     @Override
     public List<GroupRecord> getGroupRecords(BigInteger groupID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + groupID + " AND ATTRTYPE_ID = " + GroupConstant.GR_RECORDS;
+                "WHERE REFERENCE = " + groupID + " AND ATTRTYPE_ID = " + GroupConstant.GR_RECORDS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecord.class, new QueryDescriptor());
     }
 

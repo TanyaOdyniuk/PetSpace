@@ -1,6 +1,10 @@
 package com.netcracker.dao.manager.query;
 
 public interface Query {
+    String IGNORING_DELETED_ELEMENTS_IN_REF = "reference NOT IN " +
+            "(SELECT o.object_id FROM objreference o " +
+            "WHERE o.ATTRTYPE_ID IN (SELECT a AS ATTRTYPE_ID FROM STATE_ATTR_TYPES) " +
+            "AND o.REFERENCE = 9) ";
     String IGNORING_DELETED_ELEMENTS = "OBJECT_ID NOT IN " +
             "(SELECT o.object_id FROM objreference o " +
             "WHERE o.ATTRTYPE_ID IN (SELECT a AS ATTRTYPE_ID FROM STATE_ATTR_TYPES) " +

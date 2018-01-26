@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Autowired
@@ -44,7 +47,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
-                + profileId;
+                + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(myAdPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
     }
     @Override
@@ -54,7 +57,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
-                + profileId;
+                + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF + " ";
         boolean checkTopic = (topic != null && !topic.isEmpty());
         boolean checkCategory = (categories != null && !(categories.length == 0));
         if (checkCategory || checkTopic) {
@@ -140,7 +143,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
-                + profileId;
+                + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, myAdPageCapacity);
@@ -211,7 +214,7 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                 " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_AUTHOR +
                 " and REFERENCE = "
-                + profileId;
+                + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         Integer myAdPageCapacity = new Integer(myAdPageCapacityProp);
         List<Advertisement> advertisements;
         QueryDescriptor queryDescriptor = new QueryDescriptor();

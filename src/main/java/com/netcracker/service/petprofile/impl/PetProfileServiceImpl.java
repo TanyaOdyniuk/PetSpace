@@ -18,6 +18,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class PetProfileServiceImpl implements PetProfileService {
 
@@ -25,21 +27,21 @@ public class PetProfileServiceImpl implements PetProfileService {
     private String petsPageCapacity;
 
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
 
     @Autowired
-    PageCounterService pageCounterService;
+    private PageCounterService pageCounterService;
 
     @Autowired
-    StatusService statusService;
+    private StatusService statusService;
 
-    String profilePetsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+    private String profilePetsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
             "WHERE ATTRTYPE_ID = " + PetConstant.PET_OWNER + " AND REFERENCE = ";
 
     @Override
     public int getAllPetsPageCount(BigInteger profileId) {
         Integer ptsPageCapacity = new Integer(petsPageCapacity);
-        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getBySqlCount(profilePetsQuery + profileId));
+        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getBySqlCount(profilePetsQuery + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF));
     }
 
     @Override

@@ -16,6 +16,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class GroupServiceImpl implements GroupService {
     @Autowired
@@ -37,21 +40,24 @@ public class GroupServiceImpl implements GroupService {
     public int getMyGroupsPageCount(BigInteger profileId) {
         Integer profileGroupsCapacity = new Integer(allGroupsPageCapacity);
         String query = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(profileGroupsCapacity, entityManagerService.getBySqlCount(query));
     }
 
     @Override
     public List<Group> getMyGroups(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, Group.class, new QueryDescriptor());
     }
 
     @Override
     public List<Group> getMyGroupsList(BigInteger profileId, Integer page) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addPagingDescriptor(page, Integer.valueOf(allGroupsPageCapacity));
         return entityManagerService.getObjectsBySQL(sqlQuery, Group.class, descriptor);
@@ -60,14 +66,16 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Profile> getGroupSubscribers(BigInteger groupId) {
         String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + groupId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS;
+                "WHERE OBJECT_ID = " + groupId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
     }
 
     @Override
     public Profile getGroupAdmin(BigInteger groupId) {
         String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + groupId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN;
+                "WHERE OBJECT_ID = " + groupId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +
+                " and " + IGNORING_DELETED_ELEMENTS;
         List<Profile> groupAdmin = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
         return groupAdmin.get(0);
     }
@@ -93,14 +101,16 @@ public class GroupServiceImpl implements GroupService {
     public int getAdministerGroupsPageCount(BigInteger profileId) {
         Integer profileGroupsCapacity = new Integer(allGroupsPageCapacity);
         String query = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(profileGroupsCapacity, entityManagerService.getBySqlCount(query));
     }
 
     @Override
     public List<Group> getAdministerGroupsList(BigInteger profileId, Integer page) {
         String query = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addPagingDescriptor(page, Integer.valueOf(allGroupsPageCapacity));
         return entityManagerService.getObjectsBySQL(query, Group.class, descriptor);
@@ -134,7 +144,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Group> getProfileCreatedGroups(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN;
+                "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, Group.class, new QueryDescriptor());
     }
 

@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -34,7 +35,8 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public List<PhotoRecord> getImagesGallery(BigInteger albumId) {
         String getRecordsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + albumId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO;
+                "WHERE REFERENCE = " + albumId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addSortingDesc(408, "DESC", true);
         return entityManagerService.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, queryDescriptor);

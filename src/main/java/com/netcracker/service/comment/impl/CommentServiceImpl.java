@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
@@ -25,28 +27,32 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<WallRecordComment> getWallRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecordComment.class, new QueryDescriptor());
     }
 
     @Override
     public List<GroupRecordComment> getGroupRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF;
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecordComment.class, new QueryDescriptor());
     }
 
     @Override
     public List<PhotoRecordComment> getPhotoRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.PR_COMMENTS;
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.PR_COMMENTS +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, PhotoRecordComment.class, new QueryDescriptor());
     }
 
     @Override
     public List<AdvertisementComment> getAdvertisementComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + AdvertisementConstant.AD_COM;
+                "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + AdvertisementConstant.AD_COM +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addSortingDesc(CommentConstant.COM_DATE, "DESC", true);
         return entityManagerService.getObjectsBySQL(sqlQuery, AdvertisementComment.class, queryDescriptor);
@@ -55,7 +61,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Profile getCommentAuthor(BigInteger commentID) {
         String sqlQuery = "SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + commentID + " AND ATTRTYPE_ID = " + CommentConstant.COM_AUTOR;
+                "WHERE OBJECT_ID = " + commentID + " AND ATTRTYPE_ID = " + CommentConstant.COM_AUTOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         List<Profile> commentAuthor = entityManagerService.getObjectsBySQL(sqlQuery, Profile.class, new QueryDescriptor());
         return commentAuthor.get(0);
     }

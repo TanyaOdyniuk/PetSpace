@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class NewsServiceImpl implements NewsService {
     @Autowired
@@ -45,11 +48,13 @@ public class NewsServiceImpl implements NewsService {
                 "                    (" +
                 "                      SELECT OBJECT_ID FROM OBJREFERENCE" +
                 "                      WHERE REFERENCE = " + profileId +
-                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
-                "                    )" +
+                "                      AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
+                                     " and " + IGNORING_DELETED_ELEMENTS_IN_REF +
+                "                    )" + " and " + IGNORING_DELETED_ELEMENTS +
                 "        )" +
+                "  " +" and " + IGNORING_DELETED_ELEMENTS_IN_REF +
                 "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
-                "  AND REFERENCE <> " + profileId +
+                "  AND REFERENCE <> " + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF +
                 ")";
         return pageCounterService.getPageCount(newsFriendsCapacity, entityManagerService.getBySqlCount(getQuery));
     }
@@ -61,7 +66,9 @@ public class NewsServiceImpl implements NewsService {
                 " and REFERENCE IN ( " +
                 "SELECT distinct object_id FROM OBJREFERENCE" +
                 "  WHERE reference = " + profileId +
-                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +"))";
+                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +")" +
+                "  and " + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
+                "  and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(newsGroupsCapacity, entityManagerService.getBySqlCount(getQuery));
     }
 
@@ -78,11 +85,13 @@ public class NewsServiceImpl implements NewsService {
                 "                    (" +
                 "                      SELECT OBJECT_ID FROM OBJREFERENCE" +
                 "                      WHERE REFERENCE = " + profileId +
-                "                            AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
-                "                    )" +
+                "                      AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF +
+                "                    )" + " and " + IGNORING_DELETED_ELEMENTS +
                 "        )" +
+                "  " +" and " + IGNORING_DELETED_ELEMENTS_IN_REF +
                 "  AND ATTRTYPE_ID IN (" + FriendRequestConstant.REQ_FROM + ", " + FriendRequestConstant.REQ_TO + ")" +
-                "  AND REFERENCE <> " + profileId +
+                "  AND REFERENCE <> " + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF +
                 ")";
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, new Integer(newsFriendsCapacityProp));
@@ -103,7 +112,9 @@ public class NewsServiceImpl implements NewsService {
                 " and REFERENCE IN ( " +
                 "SELECT distinct object_id FROM OBJREFERENCE" +
                 "  WHERE reference = " + profileId +
-                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +"))";
+                "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +")" +
+                "  and " + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
+                "  and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, new Integer(newsGroupsCapacityProp));
         queryDescriptor.addSortingDesc(RecordConstant.REC_DATE, "DESC", true);

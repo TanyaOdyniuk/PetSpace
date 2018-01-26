@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class LikeServiceImpl implements LikeService {
     @Autowired
@@ -32,14 +34,16 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<RecordLike> getRecordLikes(BigInteger wallRecordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_LDLREF;
+                "WHERE REFERENCE = " + wallRecordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_LDLREF +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, RecordLike.class, new QueryDescriptor());
     }
 
     @Override
     public List<CommentLike> getCommentLikes(BigInteger commentID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = " + commentID + " AND ATTRTYPE_ID = " + CommentConstant.COM_LIKEDISLIKE;
+                "WHERE REFERENCE = " + commentID + " AND ATTRTYPE_ID = " + CommentConstant.COM_LIKEDISLIKE +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, CommentLike.class, new QueryDescriptor());
     }
 

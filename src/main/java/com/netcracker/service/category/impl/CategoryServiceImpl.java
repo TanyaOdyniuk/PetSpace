@@ -49,6 +49,10 @@ public class CategoryServiceImpl implements CategoryService {
                 "FROM OBJREFERENCE o1, OBJREFERENCE o2 " +
                 "WHERE o1.ATTRTYPE_ID = " + AdvertisementConstant.AD_AUTHOR +
                 " and o1.REFERENCE = " + profileId +
+                " and o1.reference reference NOT IN " +
+                "(SELECT o.object_id FROM objreference o " +
+                "vWHERE o.ATTRTYPE_ID IN (SELECT a AS ATTRTYPE_ID FROM STATE_ATTR_TYPES)" +
+                " AND o.REFERENCE = 9) " +
                 " and o1.object_id = o2.OBJECT_ID" +
                 " and o2.ATTRTYPE_ID ="
                 + AdvertisementConstant.AD_CATEGORY +

@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @Service
 public class ProfileServiceImpl implements ProfileService {
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
 
     @Override
     public Profile viewProfile(BigInteger profileID) {

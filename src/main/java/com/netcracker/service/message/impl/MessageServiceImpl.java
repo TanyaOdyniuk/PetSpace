@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
+
 @Service
 public class MessageServiceImpl implements MessageService {
 
@@ -38,12 +40,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getProfileMessages(BigInteger profileId, int page) {
-        String query = this.getMessagesQuery + profileId;
+        String query = this.getMessagesQuery + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addSortingDesc(MessageConstants.MESSAGE_DATE, "DESC", true);
         descriptor.addPagingDescriptor(page, Integer.valueOf(messagePageCapacity));
-        List<Message> messagesList = entityManagerService.getObjectsBySQL(query, Message.class, descriptor);
-        return messagesList;
+        return entityManagerService.getObjectsBySQL(query, Message.class, descriptor);
     }
 
     @Override

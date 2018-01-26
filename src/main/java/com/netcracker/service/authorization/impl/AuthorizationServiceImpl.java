@@ -24,19 +24,19 @@ import java.util.Collection;
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
-    RandomStringGenerator newPassword;
+    private RandomStringGenerator newPassword;
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
 
     @Autowired
-    BCryptEncoder bCryptEncoder;
+    private BCryptEncoder bCryptEncoder;
 
     @Override
     public User passwordRecovery(String email) {
