@@ -27,9 +27,9 @@ public class MessageServiceImpl implements MessageService {
             "AND REFERENCE = ";
 
     @Autowired
-    EntityManagerService entityManagerService;
+    private EntityManagerService entityManagerService;
     @Autowired
-    PageCounterService pageCounterService;
+    private PageCounterService pageCounterService;
 
 
     @Override

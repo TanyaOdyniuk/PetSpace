@@ -1,5 +1,6 @@
 package com.netcracker.service.request.impl;
 
+import com.netcracker.dao.manager.query.Query;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.request.FriendRequest;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS;
+import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -30,7 +34,11 @@ public class RequestServiceImpl implements RequestService {
                 "    SELECT OBJECT_ID \n" +
                 "    FROM OBJREFERENCE\n" +
                 "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_TO +
-                "    AND REFERENCE = " + profileId +
+                "    AND REFERENCE = " + profileId + ")" +
+                " and OBJECT_ID not in( SELECT OBJECT_ID\n" +
+                "    FROM OBJREFERENCE\n" +
+                "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_FROM +
+                "    AND " + IGNORING_DELETED_ELEMENTS_IN_REF +
                 ")";
         return entityManagerService.getObjectsBySQL(requestsQuery, FriendRequest.class, new QueryDescriptor());
     }

@@ -38,7 +38,14 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
     @Override
     public int getAllAdPageCount() {
         Integer adPageCapacity = new Integer(adPageCapacityProp);
-        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
+        String select = "SELECT object_id " +
+                "FROM Objects " +
+                "WHERE object_type_id = " +AdvertisementConstant.AD_TYPE  +
+                " intersect SELECT OBJECT_ID" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+        return pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(select));
     }
     @Override
     public int getMyProfileAdPageCount(BigInteger profileId) {
@@ -103,11 +110,22 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                         " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
                         + AdvertisementConstant.AD_CATEGORY +
                         " and REFERENCE ";
-                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
+                getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories) ;
             }
+            getAdsQuery += " intersect SELECT OBJECT_ID as object_id" +
+            " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                    + AdvertisementConstant.AD_AUTHOR +
+                    " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
            count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(getAdsQuery));
         } else{
-            count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(AdvertisementConstant.AD_TYPE)));
+            String select = "SELECT object_id " +
+                    "FROM Objects " +
+                    "WHERE object_type_id = " +AdvertisementConstant.AD_TYPE  +
+                    " intersect SELECT OBJECT_ID" +
+                    " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                    + AdvertisementConstant.AD_AUTHOR +
+                    " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+            count = pageCounterService.getPageCount(adPageCapacity, entityManagerService.getBySqlCount(select));
         }
         return count;
     }
@@ -132,8 +150,14 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, adPageCapacity);
         queryDescriptor.addSortingDesc(6, "DESC", true);
-        BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
-        List<Advertisement> advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
+        String select = "SELECT object_id " +
+                "FROM Objects " +
+                "WHERE object_type_id = " +AdvertisementConstant.AD_TYPE  +
+                " intersect SELECT OBJECT_ID as object_id" +
+                " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                + AdvertisementConstant.AD_AUTHOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+        List<Advertisement> advertisements = entityManagerService.getObjectsBySQL(select, Advertisement.class, queryDescriptor);
         return getCategoryAndOwner(advertisements);
     }
 
@@ -201,10 +225,20 @@ public class BulletinBoardServiceImpl implements BulletinBoardService {
                         " and REFERENCE ";
                 getAdsQuery += bulletinBoardUtilService.getFilterCategoryAdditionQuery(categories);
             }
+            getAdsQuery += " intersect SELECT OBJECT_ID as object_id" +
+                    " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                    + AdvertisementConstant.AD_AUTHOR +
+                    " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
             advertisements = entityManagerService.getObjectsBySQL(getAdsQuery, Advertisement.class, queryDescriptor);
         } else {
-            BigInteger attrTypeId = BigInteger.valueOf(AdvertisementConstant.AD_TYPE);
-            advertisements = entityManagerService.getAll(attrTypeId, Advertisement.class, queryDescriptor);
+            String select = "SELECT object_id " +
+                    "FROM Objects " +
+                    "WHERE object_type_id = " +AdvertisementConstant.AD_TYPE  +
+                    " intersect SELECT OBJECT_ID as object_id" +
+                    " FROM OBJREFERENCE WHERE ATTRTYPE_ID ="
+                    + AdvertisementConstant.AD_AUTHOR +
+                    " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+            advertisements = entityManagerService.getObjectsBySQL(select, Advertisement.class, queryDescriptor);
         }
         return getCategoryAndOwner(advertisements);
     }
