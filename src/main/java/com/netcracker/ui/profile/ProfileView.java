@@ -18,7 +18,6 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -51,7 +50,6 @@ public class ProfileView extends VerticalLayout {
                 customGetForObject("/pets/" + profileId, Pet[].class));
         wallRecordsList = getWallRecords(profileId);
 
-        //Creating matryoshka layout
         HorizontalLayout mainLayout = new HorizontalLayout();
         browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
         browserWidth = UI.getCurrent().getPage().getBrowserWindowWidth();
@@ -73,8 +71,7 @@ public class ProfileView extends VerticalLayout {
         Image avatarImage = new Image();
         avatarImage.setHeight(250, Unit.PIXELS);
         avatarImage.setWidth(250, Unit.PIXELS);
-        String profileAvatar = profile.getProfileAvatar();
-        avatarImage.setSource(new ExternalResource(profileAvatar == null ? stubAvatar : profileAvatar));
+        PageElements.setImageSource(avatarImage, profile.getProfileAvatar());
         avatarImage.setDescription("Profile avatar");
 
         addToFriendsButton = new Button();
@@ -94,7 +91,7 @@ public class ProfileView extends VerticalLayout {
                 }
             });
 
-            if(profilesStatus == null || profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_NOT_FRIEND)){
+            if (profilesStatus == null || profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_NOT_FRIEND)) {
                 addToFriendsButton.setCaption("Add friend");
                 addToFriendsButton.setIcon(VaadinIcons.USERS);
                 addToFriendsButton.addClickListener(new AbstractClickListener() {
@@ -105,7 +102,7 @@ public class ProfileView extends VerticalLayout {
                         addToFriendsButton.setCaption("Request was sent");
                     }
                 });
-            } else if(profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_PENDING)) {
+            } else if (profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_PENDING)) {
                 addToFriendsButton.setCaption("Request was sent");
                 addToFriendsButton.setIcon(VaadinIcons.USERS);
                 addToFriendsButton.setEnabled(false);
@@ -177,7 +174,7 @@ public class ProfileView extends VerticalLayout {
                 Image friendMiniImage = new Image();
                 friendMiniImage.setHeight(55, Unit.PIXELS);
                 friendMiniImage.setWidth(55, Unit.PIXELS);
-                friendMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
+                PageElements.setImageSource(friendMiniImage, singleFriendAvatar);
                 friendMiniImage.setDescription(singleFriend.getProfileName() + " " + singleFriend.getProfileSurname());
                 friendMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
                         ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));
@@ -192,11 +189,17 @@ public class ProfileView extends VerticalLayout {
 
         //Elements for right part
         Panel nameAndBalancePanel = new Panel();
-        VerticalLayout nameAndBalanceLayout = new VerticalLayout();
+        HorizontalLayout nameAndBalanceLayout = new HorizontalLayout();
         nameAndBalanceLayout.addComponents(
-                new Label(profile.getProfileName() + " " + profile.getProfileSurname(), ContentMode.PREFORMATTED)/*,
+                new Label(profile.getProfileName() + " " + profile.getProfileSurname())/*,
                 new Label("Balance: " + profile.getProfileCurrencyBalance())*/
         );
+        if (profileID.equals(currentProfileId)) {
+            nameAndBalanceLayout.addComponents(
+                    new Label("(it`s your page)"), getEditProfileButton(), getDeleteProfileButton()
+            );
+        }
+        nameAndBalanceLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         nameAndBalancePanel.setContent(nameAndBalanceLayout);
 
         Panel simpleInfoPanel = new Panel();
@@ -209,7 +212,8 @@ public class ProfileView extends VerticalLayout {
             interestsLayout.addComponent(new Label("not specified."));
         } else {
             for (String singleInterest : profile.getProfileHobbies()) {
-                interestsLayout.addComponent(new Button(singleInterest));
+                if (singleInterest != null)
+                    interestsLayout.addComponent(new Button(singleInterest));
             }
         }
         HorizontalLayout favBreedsLayout = new HorizontalLayout();
@@ -220,7 +224,8 @@ public class ProfileView extends VerticalLayout {
             favBreedsLayout.addComponent(new Label("not specified."));
         } else {
             for (String singleFavBreed : profile.getProfileFavouriteBreeds()) {
-                favBreedsLayout.addComponent(new Button(singleFavBreed));
+                if (singleFavBreed != null)
+                    favBreedsLayout.addComponent(new Button(singleFavBreed));
             }
         }
         simpleInfoLayout.addComponents(
@@ -276,7 +281,6 @@ public class ProfileView extends VerticalLayout {
         }
         wallPanel.setContent(wallLayout);
 
-        //Filling matryoshka layout
         if (!currentProfileId.equals(profileId)) {
             if (profilesStatus == null || !profilesStatus.getStatusName().equalsIgnoreCase(StatusConstant.IS_FRIEND))
                 leftPartLayout.addComponents(avatarImage, addToFriendsButton, sendDirectMessage, petsPanel, friendsPanel);
@@ -307,6 +311,28 @@ public class ProfileView extends VerticalLayout {
         addComponents(mainLayout);
     }
 
+    private Button getEditProfileButton() {
+        Button result = new Button("Edit profile");
+        result.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                UI.getCurrent().addWindow(new ProfileEditUI(currentProfile));
+            }
+        });
+        return result;
+    }
+
+    private Button getDeleteProfileButton() {
+        Button result = new Button("Delete profile");
+        result.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                Notification.show("Not today!");
+            }
+        });
+        return result;
+    }
+
     private List<WallRecord> getWallRecords(BigInteger profileId) {
         List<WallRecord> result = Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/records/wall/" + profileId, WallRecord[].class));
@@ -314,18 +340,18 @@ public class ProfileView extends VerticalLayout {
         return result;
     }
 
-    private void sendRequest(){
+    private void sendRequest() {
         FriendRequest request = new FriendRequest();
         request.setReqTo(profile);
         request.setReqFrom(currentProfile);
         CustomRestTemplate.getInstance().customPostForObject("/request/send", request, FriendRequest.class);
     }
 
-    private void deleteFromFriends(BigInteger currentProfileId, BigInteger profileIdToDelete){
+    private void deleteFromFriends(BigInteger currentProfileId, BigInteger profileIdToDelete) {
         CustomRestTemplate.getInstance().customGetForObject("/request/" + currentProfileId + "/delete/" + profileIdToDelete, Void.class);
     }
 
-    private Status checkProfilesStatus(BigInteger currentProfileId, BigInteger profileIdToCheck){
+    private Status checkProfilesStatus(BigInteger currentProfileId, BigInteger profileIdToCheck) {
         return CustomRestTemplate.getInstance().customGetForObject("/request/" + currentProfileId + "/check/" + profileIdToCheck, Status.class);
     }
 

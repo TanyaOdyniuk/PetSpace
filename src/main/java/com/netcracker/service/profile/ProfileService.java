@@ -10,14 +10,16 @@ import java.util.List;
 @Service
 public interface ProfileService {
 
-    //Получить профиль по его id
+    //Get profile by its objectID
     Profile viewProfile(BigInteger profileID);
 
+    //Update profile by its objectID
+    void updateProfile(Profile profile);
+
+    //Delete profile by its objectID
     void deleteProfile(User user);
 
-    void privacySettings(Profile profile);
+    //void privacySettings(Profile profile);
 
-    void editProfile(Profile profile);
-
-    void bindServices(Service service);
+    //void bindServices(Service service);
 }

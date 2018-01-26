@@ -221,6 +221,17 @@ public class EntityManager {
                     return resultSet.getInt("c");
                 });
     }
+
+    public void delHobbiesAndBreeds(BigInteger profileId){
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
+        jdbcCall.withProcedureName("DELHOBBIESANDBREEDS").declareParameters(
+                new SqlParameter("profId", OracleTypes.NUMBER));
+        Map<String, Object> inParam = new HashMap<>();
+        inParam.put("profId", profileId);
+        SqlParameterSource in = new MapSqlParameterSource(inParam);
+        jdbcCall.execute(in);
+    }
+
     public void dropRef(int attr_id, BigInteger obj, int flag){
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("DROPOBJREF").declareParameters(
@@ -234,6 +245,7 @@ public class EntityManager {
         SqlParameterSource in = new MapSqlParameterSource(inParam);
         jdbcCall.execute(in);
     }
+
     public void dropRefDual(int attr_id, BigInteger ref, BigInteger obj){
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("DROPOBJREFDUAL").declareParameters(
@@ -247,6 +259,7 @@ public class EntityManager {
         SqlParameterSource in = new MapSqlParameterSource(inParam);
         jdbcCall.execute(in);
     }
+
     public void insertObjref(int attr_id, BigInteger ref, BigInteger obj){
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate);
         jdbcCall.withProcedureName("INSERTOBJREF").declareParameters(

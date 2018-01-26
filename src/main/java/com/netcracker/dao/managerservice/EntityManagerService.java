@@ -54,6 +54,10 @@ public class EntityManagerService {
         return baseEntity;
     }
 
+    public void delHobbiesAndBreeds(BigInteger profileId) {
+        manager.delHobbiesAndBreeds(profileId);
+    }
+
     public void dropRef(int attr_id, BigInteger obj, int flag) {
         manager.dropRef(attr_id, obj, flag);
     }

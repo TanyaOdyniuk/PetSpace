@@ -20,22 +20,13 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    public void updateProfile(Profile profile) {
+        entityManagerService.delHobbiesAndBreeds(profile.getObjectId());
+        entityManagerService.update(profile);
+    }
+
+    @Override
     public void deleteProfile(User user) {
-
-    }
-
-    @Override
-    public void privacySettings(Profile profile) {
-
-    }
-
-    @Override
-    public void editProfile(Profile profile) {
-
-    }
-
-    @Override
-    public void bindServices(Service service) {
 
     }
 }
