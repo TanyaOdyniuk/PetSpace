@@ -34,6 +34,7 @@ public class PhotoRecordFormUI extends Window implements UploadableComponent {
         this.isFileResource = false;
 
         setModal(true);
+        setResizable(false);
         setWidth("446px");
         setHeight("420px");
         setCaption("Creating new photo:");

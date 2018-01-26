@@ -78,6 +78,7 @@ public class AlbumsUI extends HorizontalLayout{
     private void getNewAlbumWindow(){
         newAlbumWindow = new Window();
         newAlbumWindow.setModal(true);
+        newAlbumWindow.setResizable(false);
         newAlbumWindow.setWidth("400px");
         newAlbumWindow.setHeight("320px");
         newAlbumWindow.setCaption("Creating new album:");
@@ -85,7 +86,7 @@ public class AlbumsUI extends HorizontalLayout{
         HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
 
         List<Pet> allPetsUserList = getProfilePets(profileId);
-        ComboBox<Pet> petsComboBox = new ComboBox("Select the pet for the new album:");
+        ComboBox<Pet> petsComboBox = new ComboBox<>("Select the pet for the new album:");
         petsComboBox.setItems(allPetsUserList);
         petsComboBox.setItemCaptionGenerator(Pet::getPetName);
         petsComboBox.setEmptySelectionAllowed(false);
@@ -114,7 +115,6 @@ public class AlbumsUI extends HorizontalLayout{
         Button cancelAddingNewAlbum = new Button("Cancel", click -> newAlbumWindow.close());
         addAlbumButtonsLayout.addComponentsAndExpand(addAlbumButton, cancelAddingNewAlbum);
         windowContent.addComponents(petsComboBox, albumName, description, addAlbumButtonsLayout);
-
         newAlbumWindow.setContent(windowContent);
         newAlbumWindow.center();
     }
@@ -145,8 +145,7 @@ public class AlbumsUI extends HorizontalLayout{
     }
 
     private List<PhotoRecord> getLastPhotos(){
-        List<PhotoRecord> list = Arrays.asList(
+        return Arrays.asList(
                 CustomRestTemplate.getInstance().customGetForObject("/albums/lastPhotos", PhotoRecord[].class));
-        return list;
     }
 }

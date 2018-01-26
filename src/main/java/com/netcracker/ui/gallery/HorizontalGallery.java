@@ -11,15 +11,16 @@ import com.vaadin.ui.*;
 
 import java.util.List;
 
-public class HorizontalGallery extends Window {
-    Panel panel;
-    HorizontalLayout galleryLayout;
-    Image image;
-    HorizontalLayout imageLayout;
-    Integer index;
+class HorizontalGallery extends Window {
+    private Panel panel;
+    private HorizontalLayout galleryLayout;
+    private Image image;
+    private HorizontalLayout imageLayout;
+    private Integer index;
 
-    public HorizontalGallery(List<PhotoRecord> list, Integer i) {
+    HorizontalGallery(List<PhotoRecord> list, Integer i) {
         setModal(true);
+        setResizable(false);
         center();
         panel = new Panel();
         galleryLayout = new HorizontalLayout();

@@ -26,7 +26,7 @@ import java.util.List;
 public class LoginPage extends UI {
 
     @Autowired
-    AuthorizationService authorizationService;
+    private AuthorizationService authorizationService;
 
     private static final String VIEW_NAME = "Login Form";
     private Window loginWindow;

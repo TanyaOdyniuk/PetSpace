@@ -273,7 +273,9 @@ public class MyGroupsListUI extends Panel {
                         foundGroups.add(group);
                 }
                 if (foundGroups.size() != 0) {
-                    mainLayout.removeComponent(pagingLayout);
+                    if(pagingLayout != null){
+                        mainLayout.removeComponent(pagingLayout);
+                    }
                     mainLayout.removeComponent(allGroupsLayout);
                     showGroups(foundGroups);
                     amountOfMyGroups.setValue("All selected groups " + foundGroups.size());
@@ -312,6 +314,7 @@ public class MyGroupsListUI extends Panel {
     private void getNewGroupWindow() {
         newGroupWindow = new Window();
         newGroupWindow.setModal(true);
+        newGroupWindow.setResizable(false);
         newGroupWindow.setWidth("400px");
         newGroupWindow.setHeight("320px");
         newGroupWindow.setCaption("Creating a new group:");

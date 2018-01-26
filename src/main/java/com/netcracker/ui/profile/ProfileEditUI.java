@@ -27,12 +27,12 @@ public class ProfileEditUI extends Window implements UploadableComponent {
     private Image avatar;
     private String avatarPath;
     private Boolean isFileResource;
-    TextField avatarField;
-    TextField nameField;
-    TextField surnameField;
-    TextField ageField;
-    TextField hobbiesField;
-    TextField breedsField;
+    private TextField avatarField;
+    private TextField nameField;
+    private TextField surnameField;
+    private TextField ageField;
+    private TextField hobbiesField;
+    private TextField breedsField;
 
     ProfileEditUI(Profile profile) {
         super();
@@ -44,7 +44,7 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         this.isFileResource = false;
         setCaption("Profile information");
         setModal(true);
-
+        setResizable(false);
         VerticalLayout mainLayout = new VerticalLayout();
 
         GridLayout avatarLayout = new GridLayout(2, 1);

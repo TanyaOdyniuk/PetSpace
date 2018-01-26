@@ -44,6 +44,7 @@ class NewAdvertisementForm extends Window {
     NewAdvertisementForm(BigInteger profileId, Advertisement ad) {
         super();
         setModal(true);
+        setResizable(false);
         this.profileId = profileId;
         curAd = ad;
         VerticalLayout subContent = new VerticalLayout();

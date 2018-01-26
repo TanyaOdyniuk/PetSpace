@@ -24,6 +24,7 @@ public class NewMessageWindowUI extends Window {
 
     public NewMessageWindowUI(BigInteger senderId, BigInteger receiverId) {
         super();
+        setResizable(false);
         initWindow(senderId, receiverId);
     }
 

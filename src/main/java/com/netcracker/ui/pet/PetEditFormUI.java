@@ -37,7 +37,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         this.isFileResource = false;
         setCaption("Information about pet");
         setModal(true);
-
+        setResizable(false);
         VerticalLayout mainLayout = new VerticalLayout();
 
         GridLayout avatarLayout = new GridLayout(2, 1);

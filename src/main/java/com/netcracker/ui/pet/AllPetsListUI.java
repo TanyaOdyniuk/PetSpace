@@ -50,6 +50,9 @@ public class AllPetsListUI extends VerticalLayout {
     private void initPetsPage(int pageNumber){
         petRecordsLayout.removeAllComponents();
         List<Pet> petList = getAllPets(pageNumber);
+        if(petList.isEmpty()){
+            petRecordsLayout.addComponents(new Label("Unfortunately, no pets were found"));
+        }
         for (Pet pet : petList) {
             HorizontalLayout petRecord = new HorizontalLayout();
             VerticalLayout petInfoLayout = new VerticalLayout();
