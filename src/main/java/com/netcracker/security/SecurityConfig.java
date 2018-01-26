@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/news/**").authenticated()
 ////                .antMatchers("/pets/**").authenticated()
 ////                .antMatchers("/pet/**").authenticated()
-////                .antMatchers("/profile/**").authenticated()
+//                .antMatchers("/profile/**").authenticated()
 ////                .antMatchers("/records/**").authenticated()
 ////                .antMatchers("/request/**").authenticated()
 //                .antMatchers("/securitybook/**").authenticated()

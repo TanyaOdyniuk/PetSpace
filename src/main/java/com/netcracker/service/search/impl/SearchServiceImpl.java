@@ -60,8 +60,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<Profile> searchForPeopleByEmail(String email) {
         List<Profile> foundFriends = new ArrayList<>();
-        BigInteger ProfileId = userDetailsService.loadUserByUsername(email).getProfile().getObjectId();
-        foundFriends.add(entityManagerService.getById(ProfileId, Profile.class));
+        User curUser = userDetailsService.loadUserByUsername(email);
+        if (curUser != null) {
+            BigInteger ProfileId = curUser.getProfile().getObjectId();
+            foundFriends.add(entityManagerService.getById(ProfileId, Profile.class));
+        }
         return foundFriends;
     }
 
