@@ -5,11 +5,10 @@ import com.netcracker.model.comment.PhotoRecordComment;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.CommentsPanel;
+import com.netcracker.ui.PageElements;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 
-import java.math.BigInteger;
 import java.util.List;
 
 public class HorizontalGallery extends Window {
@@ -27,16 +26,10 @@ public class HorizontalGallery extends Window {
         imageLayout = new HorizontalLayout();
         index = i;
 
-//        Panel imagePanel = new Panel();
-//        imagePanel.setWidth("400px");
-//        imagePanel.setHeight("400px");
-//        imagePanel.setContent(imageLayout);
         PhotoRecord currentRecord = list.get(index);
         image = new Image();
-        image.setSource(new ExternalResource(currentRecord.getPhoto()));
+        PageElements.setImageSource(image, currentRecord.getPhoto());
         image.setDescription(currentRecord.getDescription());
-        //panel.setWidth(900, Unit.PIXELS);//1100
-        //panel.setHeight(630, Unit.PIXELS);//650
 
         Button arrowLeft = new Button();
         arrowLeft.setWidth(10, Unit.PIXELS);
@@ -48,7 +41,7 @@ public class HorizontalGallery extends Window {
                 index--;
                 if (index < 0)
                     index = list.size() - 1;
-                image.setSource(new ExternalResource(list.get(index).getPhoto()));
+                PageElements.setImageSource(image, list.get(index).getPhoto());
                 image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }
@@ -64,7 +57,7 @@ public class HorizontalGallery extends Window {
                 index++;
                 if (index == list.size())
                     index = 0;
-                image.setSource(new ExternalResource(list.get(index).getPhoto()));
+                PageElements.setImageSource(image, list.get(index).getPhoto());
                 image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }

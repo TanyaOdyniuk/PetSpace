@@ -11,6 +11,7 @@ import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.ZoneId;
@@ -30,11 +31,9 @@ public class AlbumsUI extends HorizontalLayout{
         super();
         addStyleName("v-scrollable");
         setHeight("100%");
-
         this.profileId = profileId;
 
         albums = getAlbumList(profileId);
-
         panel = new Panel();
         albumLayout = new VerticalLayout();
 
@@ -57,17 +56,6 @@ public class AlbumsUI extends HorizontalLayout{
             }
             grid.setHeight(height,Unit.PIXELS);
         }
-//        OPEN GALLERY
-//        for(PhotoAlbum album : albums){
-//            Button albumName = PageElements.createClickedLabel(album.getPhotoAlbumName());
-//            albumName.addClickListener(new AbstractClickListener() {
-//                @Override
-//                public void buttonClickListener() {
-//                    ((StubVaadinUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(album.getObjectId()));
-//                }
-//            });
-//            albumLayout.addComponents(albumName);
-//        }
         panel.setContent(albumLayout);
         addComponent(panel);
     }
@@ -115,8 +103,12 @@ public class AlbumsUI extends HorizontalLayout{
                     @Override
                     public void buttonClickListener() {
                         addAlbumButton.setComponentError(null);
-                        createAlbum(albumName.getValue(),description.getValue(), petsComboBox.getValue().getObjectId());
-                        newAlbumWindow.close();
+                        if(!petsComboBox.isEmpty()) {
+                            BigInteger petID = petsComboBox.getValue().getObjectId();
+                            createAlbum(albumName.getValue(), description.getValue(), petID);
+                            newAlbumWindow.close();
+                        } else
+                            Notification.show("You should select you pet!");
                     }
                 });
         Button cancelAddingNewAlbum = new Button("Cancel", click -> newAlbumWindow.close());
@@ -140,16 +132,16 @@ public class AlbumsUI extends HorizontalLayout{
     }
 
     private void createAlbum(String albumName, String description, BigInteger petId) {
-        ObjectAssert.isNullOrEmpty(albumName);
-        PhotoAlbum createdAlbum = new PhotoAlbum();
-        createdAlbum.setPhotoAlbumName(albumName);
-        createdAlbum.setPhotoAlbumDesc(description);
-        createdAlbum.setPhotoAlbumDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
-        HttpEntity<PhotoAlbum> albumEntity = new HttpEntity<>(createdAlbum);
-        createdAlbum = CustomRestTemplate.getInstance()
-                .customPostForObject("/albums/"+ petId +"/add", albumEntity, PhotoAlbum.class);
-        Notification.show("Album successfully added!");
-        ((MainUI)UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
+            ObjectAssert.isNullOrEmpty(albumName);
+            PhotoAlbum createdAlbum = new PhotoAlbum();
+            createdAlbum.setPhotoAlbumName(albumName);
+            createdAlbum.setPhotoAlbumDesc(description);
+            createdAlbum.setPhotoAlbumDate(Timestamp.valueOf(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+            HttpEntity<PhotoAlbum> albumEntity = new HttpEntity<>(createdAlbum);
+            createdAlbum = CustomRestTemplate.getInstance()
+                    .customPostForObject("/albums/" + petId + "/add", albumEntity, PhotoAlbum.class);
+            Notification.show("Album successfully added!");
+            ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
     }
 
     private List<PhotoRecord> getLastPhotos(){

@@ -8,5 +8,5 @@ public interface PhotoAlbumConstant {
         int PA_CONTPHOTO = 304;
         int PET_PHOTOALBUM = 302;
 
-        int PA_STATE = 214;
+        int PA_STATE = 350;
 }
