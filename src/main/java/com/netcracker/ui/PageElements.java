@@ -1,5 +1,6 @@
 package com.netcracker.ui;
 
+import com.netcracker.asserts.CommonDataAssert;
 import com.netcracker.asserts.PetDataAssert;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -80,15 +81,14 @@ public class PageElements {
         return new Image("", new ExternalResource(UIConstants.NO_IMAGE_URL));
     }
 
-    public static Image setImageSource(Image image, String source){
+    public static void setImageSource(Image image, String source){
         if (source != null) {
-            if (PetDataAssert.isAvatarURL(source))
+            if (CommonDataAssert.isCommonURL(source))
                 image.setSource(new ExternalResource(source));
             else
                 image.setSource(new FileResource(new File(source)));
         } else
             image.setSource(new ExternalResource(UIConstants.NO_IMAGE_URL));
-        return image;
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

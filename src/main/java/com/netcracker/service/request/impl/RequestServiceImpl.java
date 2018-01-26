@@ -34,12 +34,12 @@ public class RequestServiceImpl implements RequestService {
                 "    SELECT OBJECT_ID \n" +
                 "    FROM OBJREFERENCE\n" +
                 "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_TO +
-                "    AND REFERENCE = " + profileId + ")" +
+                "    AND REFERENCE = " + profileId + ")"/* +
                 " and OBJECT_ID not in( SELECT OBJECT_ID\n" +
                 "    FROM OBJREFERENCE\n" +
                 "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_FROM +
                 "    AND " + IGNORING_DELETED_ELEMENTS_IN_REF +
-                ")";
+                ")"*/;
         return entityManagerService.getObjectsBySQL(requestsQuery, FriendRequest.class, new QueryDescriptor());
     }
 

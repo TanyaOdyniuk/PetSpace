@@ -120,7 +120,7 @@ public class NewMessageWindowUI extends Window {
     private void sendMessage(Message message){
         CustomRestTemplate.getInstance().customPostForObject("/message/send", message, Message.class);
         close();
-        Notification.show("Сообщение отправлено!");
+        Notification.show("Message was sent!");
     }
 
     private List<Profile> getFriends(BigInteger profileId){
