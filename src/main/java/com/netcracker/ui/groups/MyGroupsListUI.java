@@ -1,33 +1,38 @@
 package com.netcracker.ui.groups;
 
 import com.netcracker.asserts.ObjectAssert;
+import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.group.Group;
 import com.netcracker.service.util.RestResponsePage;
-import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.PageElements;
-import com.netcracker.ui.PagingBar;
-import com.netcracker.ui.MainUI;
+import com.netcracker.ui.*;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.netcracker.ui.util.VaadinValidationBinder;
+import com.netcracker.ui.util.upload.ImageUpload;
+import com.netcracker.ui.util.upload.UploadableComponent;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MyGroupsListUI extends Panel {
+public class MyGroupsListUI extends Panel implements UploadableComponent {
     private VerticalLayout mainLayout;
     private Window newGroupWindow;
     private BigInteger profileId;
@@ -39,8 +44,9 @@ public class MyGroupsListUI extends Panel {
     private RestResponsePage<Group> administerGroups;
     private RestResponsePage<Group> myGroups;
     private PagingBar pagingLayout;
-
-    private String stubAvatar = "https://goo.gl/6eEoWo";
+    private Image avatar;
+    private Boolean isFileResource;
+    private String avatarPath;
 
 
     public MyGroupsListUI(BigInteger profileId) {
@@ -165,17 +171,12 @@ public class MyGroupsListUI extends Panel {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            groupAvatar.setSource(groupsList.get(i).getGroupAvatar() == null? new ExternalResource(stubAvatar): new ExternalResource(groupsList.get(i).getGroupAvatar()));
+            PageElements.setImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;
             List<Group> finalGroupsList = groupsList;
-            groupAvatar.addClickListener(new MouseEvents.ClickListener() {
-                @Override
-                public void click(MouseEvents.ClickEvent clickEvent) {
-                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(finalGroupsList.get(finalI).getObjectId()));
-                }
-            });
+            groupAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(finalGroupsList.get(finalI).getObjectId())));
             infoGroupLayout = new VerticalLayout();
             infoGroupLayout.addComponents(new Label(groupsList.get(i).getGroupName(), ContentMode.PREFORMATTED),
                     new Label("72630 subscribers"));
@@ -268,14 +269,12 @@ public class MyGroupsListUI extends Panel {
             @Override
             public void buttonClickListener() {
                 List<Group> foundGroups = new ArrayList<>();
-                for (Group group : groupList) {
+                for (Group group : groupList)
                     if (findGroupField.getValue().equals(group.getGroupName()))
                         foundGroups.add(group);
-                }
                 if (foundGroups.size() != 0) {
-                    if(pagingLayout != null){
+                    if(pagingLayout != null)
                         mainLayout.removeComponent(pagingLayout);
-                    }
                     mainLayout.removeComponent(allGroupsLayout);
                     showGroups(foundGroups);
                     amountOfMyGroups.setValue("All selected groups " + foundGroups.size());
@@ -295,7 +294,8 @@ public class MyGroupsListUI extends Panel {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            groupAvatar.setSource(new ExternalResource(groupsList.get(i).getGroupAvatar()));
+            PageElements.setImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
+//            groupAvatar.setSource(new ExternalResource(groupsList.get(i).getGroupAvatar()));
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;
@@ -314,16 +314,40 @@ public class MyGroupsListUI extends Panel {
     private void getNewGroupWindow() {
         newGroupWindow = new Window();
         newGroupWindow.setModal(true);
-        newGroupWindow.setResizable(false);
-        newGroupWindow.setWidth("400px");
-        newGroupWindow.setHeight("320px");
+        newGroupWindow.setWidth("450px");
+        newGroupWindow.setHeight("495px");
         newGroupWindow.setCaption("Creating a new group:");
         VerticalLayout windowContent = new VerticalLayout();
         HorizontalLayout addAlbumButtonsLayout = new HorizontalLayout();
 
+        GridLayout avatarLayout = new GridLayout(2, 1);
+        VerticalLayout avatarContext = new VerticalLayout();
+        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
+        avatar = PageElements.getNoImage();
+        avatar.setHeight("200px");
+        avatar.setWidth("200px");
+
+        Button avatarSelect = new Button("Set URL");
+        avatarSelect.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                avatarSelect.setComponentError(null);
+                updateImage(avatarField.getValue(), avatar);
+            }
+        });
+        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_PHOTOS,
+                profileId == null ? getCurrentUserProfileId() : profileId, this);
+        avatarSelect.setWidth("100%");
+        uploadAvatar.setWidth("100%");
+
+        avatarContext.addComponents(avatarField, avatarSelect, uploadAvatar);
+        avatarContext.setComponentAlignment(avatarSelect, Alignment.MIDDLE_CENTER);
+        avatarContext.setComponentAlignment(uploadAvatar, Alignment.MIDDLE_CENTER);
+
+        avatarLayout.addComponent(avatar, 0, 0);
+        avatarLayout.addComponent(avatarContext, 1, 0);
+
         TextField groupName = PageElements.createTextField("Enter group name:", "group name", true);
-        groupName.setWidth("100%");
-        TextField groupAvatar = PageElements.createTextField("Enter group avatar link:", "group avatar", false);
         groupName.setWidth("100%");
         TextField description = PageElements.createTextField("Enter group description:", "group description", false);
         description.setWidth("100%");
@@ -333,14 +357,14 @@ public class MyGroupsListUI extends Panel {
             @Override
             public void buttonClickListener() {
                 addGroupButton.setComponentError(null);
-                createGroup(groupName.getValue(), groupAvatar.getValue(), description.getValue(), profileId);
+                createGroup(groupName.getValue(), avatarPath, description.getValue(), profileId);
                 newGroupWindow.close();
                 Notification.show("You have just created a new group!");
             }
         });
         Button cancelAddingNewAlbum = new Button("Cancel", click -> newGroupWindow.close());
         addAlbumButtonsLayout.addComponentsAndExpand(addGroupButton, cancelAddingNewAlbum);
-        windowContent.addComponents(groupName, groupAvatar, description, addAlbumButtonsLayout);
+        windowContent.addComponents(avatarLayout, groupName, description, addAlbumButtonsLayout);
 
         newGroupWindow.setContent(windowContent);
         newGroupWindow.center();
@@ -348,9 +372,32 @@ public class MyGroupsListUI extends Panel {
 
     private void createGroup(String groupName, String groupAvatar, String description, BigInteger profileId) {
         ObjectAssert.isNullOrEmpty(groupAvatar);
+        ObjectAssert.isNullOrEmpty(groupName);
+        if (!isFileResource)
+            groupAvatar = PetDataAssert.assertAvatarURL(groupAvatar);
         Group createdGroup = new Group(groupName, description, groupAvatar);
         HttpEntity<Group> group = new HttpEntity<>(createdGroup);
         CustomRestTemplate.getInstance().customPostForObject("/groupList/" + profileId + "/add", group, Group.class);
         ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new MyGroupsListUI(profileId));
+    }
+
+    private void updateImage(String imageURL, Image imageToUpdate) {
+        imageURL = PetDataAssert.assertAvatarURL(imageURL);
+        imageToUpdate.setSource(new ExternalResource(imageURL));
+        isFileResource = false;
+        avatarPath = imageURL;
+    }
+
+    private BigInteger getCurrentUserProfileId() {
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        return CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
+    }
+
+    @Override
+    public void updateImage(File imageFile) {
+        avatar.setSource(new FileResource(imageFile));
+        isFileResource = true;
+        avatarPath = imageFile.getPath();
     }
 }
