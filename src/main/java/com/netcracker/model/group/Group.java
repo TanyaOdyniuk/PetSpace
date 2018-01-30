@@ -17,8 +17,6 @@ public class Group extends BaseEntity {
     private String groupDescription;
     @Attribute(GroupConstant.GR_AVATAR)
     private String groupAvatar;
-    @Reference(value = GroupConstant.GR_GROUPTYPE, isParentChild = 0)
-    private GroupType groupType;
     @Reference(value = GroupConstant.GR_STATUS, isParentChild = 0)
     private Status groupStatus;
     @Reference(value = GroupConstant.GR_ADMIN, isParentChild = 0)
@@ -53,14 +51,6 @@ public class Group extends BaseEntity {
 
     public void setGroupDescription(String groupDescription) {
         this.groupDescription = groupDescription;
-    }
-
-    public GroupType getGroupType() {
-        return groupType;
-    }
-
-    public void setGroupType(GroupType groupType) {
-        this.groupType = groupType;
     }
 
     public Status getGroupStatus() {
@@ -101,7 +91,6 @@ public class Group extends BaseEntity {
                 "groupName='" + groupName + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
                 ", groupAvatar='" + groupAvatar + '\'' +
-                ", groupType=" + groupType +
                 ", groupStatus=" + groupStatus +
                 ", groupAdmin=" + groupAdmin +
                 ", groupParticipants=" + groupParticipants +

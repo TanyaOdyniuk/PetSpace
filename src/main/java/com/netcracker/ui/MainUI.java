@@ -6,6 +6,7 @@ import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
 import com.netcracker.ui.gallery.AlbumsUI;
+import com.netcracker.ui.groups.AllGroupsListUI;
 import com.netcracker.ui.groups.MyGroupsListUI;
 import com.netcracker.ui.messages.MessagesListUI;
 import com.netcracker.ui.news.NewsView;
@@ -93,6 +94,9 @@ public class MainUI extends UI implements Button.ClickListener {
                 break;
             case "Bulletin board":
                 primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
+                break;
+            case "All groups":
+                primaryAreaLayout.addComponentsAndExpand(new AllGroupsListUI());
                 break;
             case "My pets":
                 primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
