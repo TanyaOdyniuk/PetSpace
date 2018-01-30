@@ -28,7 +28,7 @@ public class GalleryUI extends VerticalLayout{
         for (int i = 0; i < photos.size(); i++) {
             Panel singlePhotoPanel = new Panel();
             Image singlePhotoImage = new Image();
-            PageElements.setImageSource(singlePhotoImage, photos.get(i).getPhoto());
+            PageElements.setDefaultImageSource(singlePhotoImage, photos.get(i).getPhoto());
             singlePhotoImage.setWidth(300, Unit.PIXELS);
             singlePhotoImage.setHeight(320, Unit.PIXELS);
             Integer clickPhotoIndex = i;

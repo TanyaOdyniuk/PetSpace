@@ -1,5 +1,6 @@
 package com.netcracker.ui.pet;
 
+import com.netcracker.asserts.CommonDataAssert;
 import com.netcracker.asserts.PetDataAssert;
 import com.netcracker.model.pet.Pet;
 import com.netcracker.model.pet.PetSpecies;
@@ -45,7 +46,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         String petAvatarSource = pet.getPetAvatar();
         avatar = new Image();
         TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
-        PageElements.setImageSource(avatar, petAvatarSource);
+        PageElements.setPetImageSource(avatar, petAvatarSource);
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 
@@ -161,7 +162,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
     }
 
     private void updateImage(String imageURL, Image imageToUpdate) {
-        imageURL = PetDataAssert.assertAvatarURL(imageURL);
+        imageURL = PetDataAssert.assertURL(imageURL);
         pet.setPetAvatar(imageURL);
         imageToUpdate.setSource(new ExternalResource(imageURL));
         this.isFileResource = false;

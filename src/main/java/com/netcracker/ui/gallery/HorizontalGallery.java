@@ -29,7 +29,7 @@ class HorizontalGallery extends Window {
 
         PhotoRecord currentRecord = list.get(index);
         image = new Image();
-        PageElements.setImageSource(image, currentRecord.getPhoto());
+        PageElements.setDefaultImageSource(image, currentRecord.getPhoto());
         image.setDescription(currentRecord.getDescription());
 
         Button arrowLeft = new Button();
@@ -42,7 +42,7 @@ class HorizontalGallery extends Window {
                 index--;
                 if (index < 0)
                     index = list.size() - 1;
-                PageElements.setImageSource(image, list.get(index).getPhoto());
+                PageElements.setDefaultImageSource(image, list.get(index).getPhoto());
                 image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }
@@ -58,7 +58,7 @@ class HorizontalGallery extends Window {
                 index++;
                 if (index == list.size())
                     index = 0;
-                PageElements.setImageSource(image, list.get(index).getPhoto());
+                PageElements.setDefaultImageSource(image, list.get(index).getPhoto());
                 image.setDescription(list.get(index).getDescription());
                 imageLayout.addComponents(image);
             }

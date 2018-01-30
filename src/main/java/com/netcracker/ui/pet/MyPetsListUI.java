@@ -75,7 +75,7 @@ public class MyPetsListUI extends VerticalLayout {
             petAvatar.setHeight(250, Unit.PIXELS);
             petAvatar.setWidth(250, Unit.PIXELS);
             String petAvatarSource = pet.getPetAvatar();
-            PageElements.setImageSource(petAvatar, petAvatarSource);
+            PageElements.setPetImageSource(petAvatar, petAvatarSource);
             petAvatar.setDescription("Pet avatar");
             petAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new PetPageUI(pet.getObjectId())));
 

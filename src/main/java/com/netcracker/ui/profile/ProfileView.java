@@ -71,7 +71,7 @@ public class ProfileView extends VerticalLayout {
         Image avatarImage = new Image();
         avatarImage.setHeight(250, Unit.PIXELS);
         avatarImage.setWidth(250, Unit.PIXELS);
-        PageElements.setImageSource(avatarImage, profile.getProfileAvatar());
+        PageElements.setProfileImageSource(avatarImage, profile.getProfileAvatar());
         avatarImage.setDescription("Profile avatar");
 
         addToFriendsButton = new Button();
@@ -134,7 +134,7 @@ public class ProfileView extends VerticalLayout {
             for (Pet singlePet : petList) {
                 Image petMiniImage = new Image();
                 String petAvatar = singlePet.getPetAvatar();
-                PageElements.setImageSource(petMiniImage, petAvatar);
+                PageElements.setPetImageSource(petMiniImage, petAvatar);
                 petMiniImage.setHeight(55, Unit.PIXELS);
                 petMiniImage.setWidth(55, Unit.PIXELS);
                 petMiniImage.setDescription(singlePet.getPetName());
@@ -174,7 +174,7 @@ public class ProfileView extends VerticalLayout {
                 Image friendMiniImage = new Image();
                 friendMiniImage.setHeight(55, Unit.PIXELS);
                 friendMiniImage.setWidth(55, Unit.PIXELS);
-                PageElements.setImageSource(friendMiniImage, singleFriendAvatar);
+                PageElements.setProfileImageSource(friendMiniImage, singleFriendAvatar);
                 friendMiniImage.setDescription(singleFriend.getProfileName() + " " + singleFriend.getProfileSurname());
                 friendMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
                         ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(singleFriend.getObjectId())));

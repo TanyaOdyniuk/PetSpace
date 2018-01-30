@@ -49,7 +49,7 @@ public class NewMessageWindowUI extends Window {
         if(receiverId != null){
             this.receiver = getProfile(receiverId);
             imageAvatar = new Image();
-            PageElements.setImageSource(imageAvatar, receiver.getProfileAvatar());
+            PageElements.setProfileImageSource(imageAvatar, receiver.getProfileAvatar());
 
             Label nameLabel = PageElements.createStandartLabel(receiver.getProfileName() + " " + receiver.getProfileSurname());
 
@@ -66,7 +66,7 @@ public class NewMessageWindowUI extends Window {
             }
             this.receiver = friendsList.get(0);
             imageAvatar = new Image();
-            PageElements.setImageSource(imageAvatar, receiver.getProfileAvatar());
+            PageElements.setProfileImageSource(imageAvatar, receiver.getProfileAvatar());
             ComboBox<Profile> receiverSelect = new ComboBox<>("", friendsList);
             receiverSelect.setItemCaptionGenerator(Profile::getProfileFullName);
             receiverSelect.setEmptySelectionAllowed(false);
@@ -78,7 +78,7 @@ public class NewMessageWindowUI extends Window {
 
             receiverSelect.addSelectionListener(event -> {
                     String avatarURL = receiverSelect.getValue().getProfileAvatar();
-                    PageElements.setImageSource((Image)infoLayout.getComponent(0,0), avatarURL);
+                    PageElements.setProfileImageSource((Image)infoLayout.getComponent(0,0), avatarURL);
                     this.receiver = receiverSelect.getValue();
             });
         }

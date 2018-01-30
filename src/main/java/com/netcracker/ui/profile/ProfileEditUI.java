@@ -53,7 +53,7 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         avatar = new Image();
         avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         avatarField.setValue(currentProfile.getProfileAvatar());
-        PageElements.setImageSource(avatar, profileAvatarSource);
+        PageElements.setProfileImageSource(avatar, profileAvatarSource);
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 

@@ -1,16 +1,18 @@
 package com.netcracker.ui;
 
 import com.netcracker.asserts.CommonDataAssert;
-import com.netcracker.asserts.PetDataAssert;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 
+@Service
 public class PageElements {
 
     public static Label createGrayLabel(String text) {
@@ -81,14 +83,37 @@ public class PageElements {
         return new Image("", new ExternalResource(UIConstants.NO_IMAGE_URL));
     }
 
-    public static void setImageSource(Image image, String source){
+    public static void setProfileImageSource(Image image, String source){
+        setImageSource(image, source, "profile");
+    }
+
+    public static void setPetImageSource(Image image, String source){
+        setImageSource(image, source, "pet");
+    }
+
+    public static void setDefaultImageSource(Image image, String source){
+        setImageSource(image, source, "default");
+    }
+
+    private static void setImageSource(Image image, String source, String imageType){
         if (source != null) {
             if (CommonDataAssert.isCommonURL(source))
                 image.setSource(new ExternalResource(source));
             else
                 image.setSource(new FileResource(new File(source)));
-        } else
-            image.setSource(new ExternalResource(UIConstants.NO_IMAGE_URL));
+        } else {
+            switch(imageType){
+                case "profile":
+                    image.setSource(new ExternalResource(UIConstants.PROFILE_NO_IMAGE_URL));
+                    break;
+                case "pet":
+                    image.setSource(new ExternalResource(UIConstants.PET_NO_IMAGE_URL));
+                    break;
+                default:
+                    image.setSource(new ExternalResource(UIConstants.NO_IMAGE_URL));
+                    break;
+            }
+        }
     }
 
     public static String htmlTabulation = "&nbsp&nbsp&nbsp&nbsp";

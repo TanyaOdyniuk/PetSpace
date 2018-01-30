@@ -19,7 +19,11 @@ public class PetDataAssert {
         if (!(url == null || "".equals(url)))
             return commomURLValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.PET_VALIDATION_AVATAR_URL);
         else
-            return UIConstants.NO_IMAGE_URL;
+            return UIConstants.PET_NO_IMAGE_URL;
+    }
+
+    public static String assertURL(String url) throws PetDataValidationException {
+        return commomURLValidation(url, RegexTemplate.URL, ErrorMessage.PET_VALIDATION_AVATAR_URL);
     }
 
     public static Boolean isAvatarURL(String url) {

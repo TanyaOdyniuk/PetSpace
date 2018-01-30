@@ -66,7 +66,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         Image avatar = new Image();
         avatar.setWidth("240px");
         avatar.setHeight("215px");
-        PageElements.setImageSource(avatar, curGroup.getGroupAvatar());
+        PageElements.setDefaultImageSource(avatar, curGroup.getGroupAvatar());
         headerLayout.addComponents(infoGroupPanel, avatar);
         //-----------------HEADER
 
@@ -120,7 +120,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         adminPanel.setWidth("215px");
         adminPanel.setHeight("110px");
         Image adminImage = new Image();
-        PageElements.setImageSource(adminImage, admin.getProfileAvatar());
+        PageElements.setDefaultImageSource(adminImage, admin.getProfileAvatar());
         adminImage.setWidth("52px");
         adminImage.setHeight("45px");
         adminImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
@@ -212,7 +212,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         VerticalLayout avatarContext = new VerticalLayout();
         TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         String groupAvatarSource = group.getGroupAvatar();
-        PageElements.setImageSource(avatar, groupAvatarSource);
+        PageElements.setDefaultImageSource(avatar, groupAvatarSource);
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 
@@ -274,7 +274,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         for (Profile user : list) {
             Panel singlePhotoPanel = new Panel();
             Image singlePhotoImage = new Image();
-            PageElements.setImageSource(singlePhotoImage, user.getProfileAvatar());
+            PageElements.setProfileImageSource(singlePhotoImage, user.getProfileAvatar());
             singlePhotoImage.setWidth("52px");
             singlePhotoImage.setHeight("45px");
             singlePhotoImage.addClickListener((MouseEvents.ClickListener) clickEvent ->

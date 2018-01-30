@@ -53,7 +53,7 @@ public class RequestsUI extends VerticalLayout {
                 buttonsLayout.setWidth("100%");
 
                 Image profileAvatar = new Image();
-                PageElements.setImageSource(profileAvatar, requesterProfile.getProfileAvatar());
+                PageElements.setProfileImageSource(profileAvatar, requesterProfile.getProfileAvatar());
                 profileAvatar.setWidth("150px");
                 profileAvatar.setHeight("150px");
 

@@ -58,7 +58,7 @@ public class PetPageUI extends VerticalLayout {
 
         Image petAvatar = new Image();
         String petAvatarSource = pet.getPetAvatar();
-        PageElements.setImageSource(petAvatar, petAvatarSource);
+        PageElements.setPetImageSource(petAvatar, petAvatarSource);
         petAvatar.setHeight(225, Unit.PIXELS);
         petAvatar.setWidth(225, Unit.PIXELS);
         petAvatar.setDescription("Pet avatar");

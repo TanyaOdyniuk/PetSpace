@@ -171,7 +171,7 @@ public class MyGroupsListUI extends Panel implements UploadableComponent {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            PageElements.setImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
+            PageElements.setDefaultImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
             int finalI = i;
@@ -294,7 +294,7 @@ public class MyGroupsListUI extends Panel implements UploadableComponent {
         for (int i = 0; i < groupsList.size(); i++) {
             everyGroupLayout = new HorizontalLayout();
             Image groupAvatar = new Image();
-            PageElements.setImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
+            PageElements.setDefaultImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
 //            groupAvatar.setSource(new ExternalResource(groupsList.get(i).getGroupAvatar()));
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
