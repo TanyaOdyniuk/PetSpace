@@ -31,14 +31,14 @@ public class SearchServiceImpl implements SearchService {
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
-                "AND attr.value = '" + name + "'" +
+                "AND attr.value LIKE '%" + name + "%'" +
                 " INTERSECT " +
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
-                "AND attr.value = '" + surname + "'";
+                "AND attr.value LIKE '%" + surname + "%'";
         return entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
     }
 
@@ -50,10 +50,10 @@ public class SearchServiceImpl implements SearchService {
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
-                "AND attr.value = '" + name + "' " +
+                "AND attr.value LIKE '%" + name + "%' " +
                 "OR " +
                 "attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
-                "AND attr.value = '" + name + "' ";
+                "AND attr.value LIKE '%" + name + "%'";
         return entityManagerService.getObjectsBySQL(surnameQuery, Profile.class, new QueryDescriptor());
     }
 
@@ -72,7 +72,7 @@ public class SearchServiceImpl implements SearchService {
     public List<Profile> searchForFriendsByFullName(String name, String surname, List<Profile> friendList) {
         List<Profile> foundFriends = new ArrayList<>();
         for (Profile p : friendList) {
-            if (name.equals(p.getProfileName()) && surname.equals(p.getProfileSurname())) {
+            if (p.getProfileName().toLowerCase().matches(".*" + name.toLowerCase() + ".*") && p.getProfileSurname().toLowerCase().matches(".*" + surname.toLowerCase() + ".*")) {
                 foundFriends.add(p);
             }
         }
@@ -96,7 +96,7 @@ public class SearchServiceImpl implements SearchService {
     public List<Profile> searchFriendsByNameOrSurname(String name, List<Profile> friendList) {
         List<Profile> foundFriends = new ArrayList<>();
         for (Profile p : friendList) {
-            if (name.equals(p.getProfileName()) || name.equals(p.getProfileSurname())) {
+            if (p.getProfileName().toLowerCase().matches(".*" + name.toLowerCase() + ".*") || p.getProfileSurname().toLowerCase().matches(".*" + name.toLowerCase() + ".*")) {
                 foundFriends.add(p);
             }
         }
