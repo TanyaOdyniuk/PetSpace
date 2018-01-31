@@ -1,14 +1,14 @@
 package com.netcracker.error.exceptions;
 
-public class PetDataValidationException extends IllegalArgumentException {
+public class DataValidationException extends IllegalArgumentException {
 
     private String message;
 
-    public PetDataValidationException() {
+    public DataValidationException() {
         super();
     }
 
-    public PetDataValidationException(String message) {
+    public DataValidationException(String message) {
         super(message);
         this.message = message;
     }

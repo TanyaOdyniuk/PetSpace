@@ -1,6 +1,7 @@
 package com.netcracker.ui.friendlist;
 
 import com.netcracker.model.user.Profile;
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
@@ -26,8 +27,8 @@ public class FriendListUI extends VerticalLayout {
 
         mainLayout = new VerticalLayout();
         List<Profile> friendList = getProfileFriends(profileId);
-        mainLayout.addComponent(genSearchContent(), 0);
-        mainLayout.addComponent(genFriendsList(friendList), 1);
+        mainLayout.addComponents(genSearchContent(), PageElements.getSeparator());
+        mainLayout.addComponent(genFriendsList(friendList));
 
         mainPanel.setContent(mainLayout);
         addComponent(mainPanel);
@@ -36,7 +37,6 @@ public class FriendListUI extends VerticalLayout {
     private VerticalLayout genSearchContent() {
         VerticalLayout layoutContent = new VerticalLayout();
         TextField searchField = new TextField();
-        searchField.setIcon(VaadinIcons.SEARCH);
         searchField.setPlaceholder("Enter name or login to search for someone in your friend list");
         searchField.setWidth("600");
         Button searchButton = new Button("Search", new Button.ClickListener() {
@@ -59,13 +59,14 @@ public class FriendListUI extends VerticalLayout {
                         foundPeople = searchForFriendsByNameOrSurname(searchRequest, profileId);
                     }
                     if (foundPeople.isEmpty()) {
-                        mainLayout.replaceComponent(mainLayout.getComponent(1), new Label("No person with such name or email in your friend list, please try again."));
+                        mainLayout.replaceComponent(mainLayout.getComponent(2), new Label("No person with such name or email in your friend list, please try again."));
                     } else {
-                        mainLayout.replaceComponent(mainLayout.getComponent(1), genFriendsList(foundPeople));
+                        mainLayout.replaceComponent(mainLayout.getComponent(2), genFriendsList(foundPeople));
                     }
                 }
             }
         });
+        searchButton.setIcon(VaadinIcons.SEARCH);
         layoutContent.addComponent(searchField);
         layoutContent.addComponent(searchButton);
         return layoutContent;

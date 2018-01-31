@@ -92,11 +92,11 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public void deleteWallRecord(AbstractRecord wallRecord) {
+    public void deleteRecord(AbstractRecord record) {
 /*        List<AbstractComment> list = commentService.getWallRecordComments(wallRecord.getObjectId());
         for (AbstractComment ac : list){
             entityManagerService.delete(ac.getObjectId(), -1);
         }*/
-        entityManagerService.delete(wallRecord.getObjectId(), -1);
+        entityManagerService.delete(record.getObjectId(), -1);
     }
 }

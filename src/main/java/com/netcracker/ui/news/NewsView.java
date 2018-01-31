@@ -44,8 +44,9 @@ public class NewsView extends VerticalLayout {
         HorizontalLayout mainLayout = new HorizontalLayout();
         browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
         browserWidth = UI.getCurrent().getPage().getBrowserWindowWidth();
-        mainLayout.setHeight(browserHeight - 250, Sizeable.Unit.PIXELS);
-        mainLayout.setWidth(browserWidth - 450, Sizeable.Unit.PIXELS);
+        //mainLayout.setSizeFull();
+        //mainLayout.setHeight(browserHeight - 250, Unit.PIXELS);
+        //mainLayout.setWidth(browserWidth - 450, Unit.PIXELS);
         Panel leftPartPanel = new Panel();
         leftPartPanel.setHeight("100%");
         leftPartPanel.setWidth(250, Sizeable.Unit.PIXELS);

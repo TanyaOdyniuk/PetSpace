@@ -40,6 +40,7 @@ public class MyPetsListUI extends VerticalLayout {
         this.addStyleName("v-scrollable");
         this.setHeightUndefined();
 
+        VerticalLayout main = new VerticalLayout();
         mainPanel = new Panel();
         mainPanel.setWidth("100%");
         mainPanel.setHeight(browserHeight - 300, Unit.PIXELS);
@@ -56,7 +57,9 @@ public class MyPetsListUI extends VerticalLayout {
         initMyPetsPage(1);
 
         mainPanel.setContent(petRecordsLayout);
-        addComponents(addNewPet, mainPanel);
+        main.addComponent(addNewPet);
+        main.addComponentsAndExpand(mainPanel);
+        addComponent(main);
     }
 
     private void initMyPetsPage(int pageNumber) {

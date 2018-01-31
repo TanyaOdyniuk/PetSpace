@@ -1,6 +1,6 @@
 package com.netcracker.ui.profile;
 
-import com.netcracker.asserts.PetDataAssert;
+import com.netcracker.asserts.ProfileDataAssert;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
 import com.netcracker.ui.MainUI;
@@ -68,7 +68,7 @@ public class ProfileEditUI extends Window implements UploadableComponent {
             }
         });
 
-        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PET,
+        Upload uploadAvatar = new ImageUpload(UIConstants.PATH_TO_AVATAR_PROFILE,
                 currentProfile.getObjectId() == null ? currentProfile.getObjectId() : currentProfile.getObjectId(), this);
 
         avatarSelect.setWidth("100%");
@@ -88,11 +88,11 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         infoLayout.setSpacing(true);
 
         //Fields
-        nameField = PageElements.createTextField(currentProfile.getProfileName(), currentProfile.getProfileName(), true);
+        nameField = PageElements.createTextField(currentProfile.getProfileName(), "Your desired name", true);
         nameField.setWidth("100%");
         nameField.setValue(currentProfile.getProfileName());
 
-        surnameField = PageElements.createTextField(currentProfile.getProfileSurname(), currentProfile.getProfileSurname(), true);
+        surnameField = PageElements.createTextField(currentProfile.getProfileSurname(), "Your desired surname", true);
         surnameField.setWidth("100%");
         surnameField.setValue(currentProfile.getProfileSurname());
 
@@ -138,10 +138,15 @@ public class ProfileEditUI extends Window implements UploadableComponent {
             @Override
             public void buttonClickListener() {
                 result.setComponentError(null);
-                currentProfile.setProfileAvatar(avatarField.getValue());
+                if (!isFileResource)
+                    currentProfile.setProfileAvatar(ProfileDataAssert.assertAvatarURL(avatarField.getValue()));
+                else
+                    currentProfile.setProfileAvatar(avatarField.getValue());
+                ProfileDataAssert.assertName(nameField.getValue());
                 currentProfile.setProfileName(nameField.getValue());
+                ProfileDataAssert.assertName(surnameField.getValue());
                 currentProfile.setProfileSurname(surnameField.getValue());
-                currentProfile.setProfileAge(Integer.valueOf(ageField.getValue()));
+                currentProfile.setProfileAge(ProfileDataAssert.assertAge(ageField.getValue()));
                 String hobbiesString = hobbiesField.getValue().trim();
                 if (!hobbiesString.equals("")) {
                     String[] hobbiesArray = hobbiesString.split(" *, *");
@@ -169,10 +174,11 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         avatar.setSource(new FileResource(imageFile));
         this.isFileResource = true;
         this.avatarPath = imageFile.getPath();
+        avatarField.setValue(avatarPath);
     }
 
     private void updateImage(String imageURL, Image imageToUpdate) {
-        imageURL = PetDataAssert.assertAvatarURL(imageURL);
+        imageURL = ProfileDataAssert.assertAvatarURL(imageURL);
         currentProfile.setProfileAvatar(imageURL);
         imageToUpdate.setSource(new ExternalResource(imageURL));
         this.isFileResource = false;

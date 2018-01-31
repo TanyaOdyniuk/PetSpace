@@ -45,6 +45,7 @@ public class MessagesListUI extends VerticalLayout {
         mainPanel.setWidth("100%");
         mainPanel.setHeight(browserHeight * 0.7f - 50, Unit.PIXELS);
 
+        VerticalLayout main = new VerticalLayout();
         mainLayout = new VerticalLayout();
 
         sendNewMessage = new Button("Create message", VaadinIcons.PLUS);
@@ -60,7 +61,9 @@ public class MessagesListUI extends VerticalLayout {
         initMessagePage(1);
 
         mainPanel.setContent(mainLayout);
-        addComponents(sendNewMessage, mainPanel);
+        main.addComponents(sendNewMessage);
+        main.addComponentsAndExpand(mainPanel);
+        addComponent(main);
         setPagingLayout();
     }
 

@@ -2,8 +2,11 @@ package com.netcracker.ui.users;
 
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.MainUI;
+import com.netcracker.ui.PageElements;
+import com.netcracker.ui.pet.PetPageUI;
 import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
+import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Sizeable;
@@ -28,8 +31,8 @@ public class UsersUI extends VerticalLayout {
         mainPanel.setHeight(browserHeight * 0.695f, Unit.PIXELS);
 
         mainLayout = new VerticalLayout();
-        mainLayout.addComponent(genSearchContent(), 0);
-        mainLayout.addComponent(new Label("People with your search request will be here"), 1);
+        mainLayout.addComponents(genSearchContent(), PageElements.getSeparator());
+        mainLayout.addComponent(new Label("People with your search request will be here"));
 
         mainPanel.setContent(mainLayout);
         addComponent(mainPanel);
@@ -38,7 +41,6 @@ public class UsersUI extends VerticalLayout {
     private VerticalLayout genSearchContent() {
         VerticalLayout layoutContent = new VerticalLayout();
         TextField searchField = new TextField();
-        searchField.setIcon(VaadinIcons.SEARCH);
         searchField.setPlaceholder("Enter name or login to search for someone");
         searchField.setWidth("400");
         Button searchButton = new Button("Search", new Button.ClickListener() {
@@ -49,6 +51,7 @@ public class UsersUI extends VerticalLayout {
                 searchForPeople(searchRequest);
             }
         });
+        searchButton.setIcon(VaadinIcons.SEARCH_MINUS);
         layoutContent.addComponent(searchField);
         layoutContent.addComponent(searchButton);
         return layoutContent;
@@ -70,19 +73,16 @@ public class UsersUI extends VerticalLayout {
         VerticalLayout layoutContent = new VerticalLayout();
         for (Profile p : people) {
             HorizontalLayout friendRecord = new HorizontalLayout();
-            VerticalLayout friendInfoLayout = new VerticalLayout();
 
             Image friendAvatar = new Image();
             friendAvatar.setHeight(250, Sizeable.Unit.PIXELS);
             friendAvatar.setWidth(250, Sizeable.Unit.PIXELS);
-            try {
-                friendAvatar.setSource(new ExternalResource(p.getProfileAvatar()));
-            } catch (Exception e) {
-                friendAvatar.setSource(new ExternalResource("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png"));
-            }
+            PageElements.setProfileImageSource(friendAvatar, p.getProfileAvatar());
             friendAvatar.setDescription("Friend's avatar");
+            friendAvatar.addClickListener((MouseEvents.ClickListener) clickEvent ->
+                    ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(p.getObjectId())));
 
-            Button friendName = new Button(p.getProfileName());
+            Button friendName = new Button(p.getProfileName() + "\r\n" + p.getProfileSurname());
             friendName.setStyleName(ValoTheme.BUTTON_LINK);
             friendName.addClickListener(new Button.ClickListener() {
                 @Override
@@ -90,13 +90,10 @@ public class UsersUI extends VerticalLayout {
                     ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(p.getObjectId()));
                 }
             });
-            Label friendInfo = new Label(p.getProfileSurname());
-
-            //FRIEND INFO
-            friendInfoLayout.addComponents(friendName, friendInfo);
 
             //INFO + AVATAR
-            friendRecord.addComponents(friendAvatar, friendInfoLayout);
+            friendRecord.addComponents(friendAvatar, friendName);
+            friendRecord.setComponentAlignment(friendRecord.getComponent(1), Alignment.MIDDLE_CENTER);
 
             layoutContent.addComponents(friendRecord);
         }
@@ -120,9 +117,9 @@ public class UsersUI extends VerticalLayout {
                 foundPeople = searchPeopleByNameOrSurname(searchRequest);
             }
             if (foundPeople.isEmpty()) {
-                mainLayout.replaceComponent(mainLayout.getComponent(1), new Label("No person with such name or email, please try again."));
+                mainLayout.replaceComponent(mainLayout.getComponent(2), new Label("No person with such name or email, please try again."));
             } else {
-                mainLayout.replaceComponent(mainLayout.getComponent(1), genPeopleList(foundPeople));
+                mainLayout.replaceComponent(mainLayout.getComponent(2), genPeopleList(foundPeople));
             }
         }
     }

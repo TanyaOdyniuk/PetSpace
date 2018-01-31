@@ -51,7 +51,9 @@ public class MainUI extends UI implements Button.ClickListener {
         topPanel = new TopBarUI(this);
         leftPanel = new LeftBarUI(this);
         mainLayout = new VerticalLayout();
+        mainLayout.setMargin(false);
         primaryAreaLayout = new HorizontalLayout();
+        primaryAreaLayout.setMargin(false);
     }
 
     @Override
@@ -60,14 +62,15 @@ public class MainUI extends UI implements Button.ClickListener {
         String login = o.getAuthentication().getPrincipal().toString();
         profileId = CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
 
-        primaryAreaLayout.addComponents(leftPanel, new ProfileView(profileId));
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        ProfileView defaultView = new ProfileView(profileId);
+        primaryAreaLayout.addComponents(leftPanel, defaultView);
+        setRatioAndDimensions();
 
-        mainLayout.addComponentsAndExpand(topPanel, primaryAreaLayout);
+        mainLayout.addComponents(topPanel, primaryAreaLayout);
         mainLayout.setExpandRatio(mainLayout.getComponent(0), 1.0f);
         mainLayout.setExpandRatio(mainLayout.getComponent(1), 9.0f);
         setContent(mainLayout);
+
         /*UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
@@ -84,40 +87,40 @@ public class MainUI extends UI implements Button.ClickListener {
         }
         switch (clickedButtonCaption) {
             case "News":
-                primaryAreaLayout.addComponentsAndExpand(new NewsView(profileId, 1, true));
+                primaryAreaLayout.addComponent(new NewsView(profileId, 1, true));
                 break;
             case "My profile":
-                primaryAreaLayout.addComponentsAndExpand(new ProfileView(profileId));
+                primaryAreaLayout.addComponent(new ProfileView(profileId));
                 break;
             case "My adverts":
-                primaryAreaLayout.addComponentsAndExpand(new MyBulletinBoardListContent(profileId));
+                primaryAreaLayout.addComponent(new MyBulletinBoardListContent(profileId));
                 break;
             case "Bulletin board":
-                primaryAreaLayout.addComponentsAndExpand(new BulletinBoardListContent());
+                primaryAreaLayout.addComponent(new BulletinBoardListContent());
                 break;
             case "All groups":
-                primaryAreaLayout.addComponentsAndExpand(new AllGroupsListUI());
+                primaryAreaLayout.addComponent(new AllGroupsListUI());
                 break;
             case "My pets":
-                primaryAreaLayout.addComponentsAndExpand(new MyPetsListUI(profileId));
+                primaryAreaLayout.addComponent(new MyPetsListUI(profileId));
                 break;
             case "Pets":
-                primaryAreaLayout.addComponentsAndExpand(new AllPetsListUI());
+                primaryAreaLayout.addComponent(new AllPetsListUI());
                 break;
             case "My messages":
-                primaryAreaLayout.addComponentsAndExpand(new MessagesListUI(profileId));
+                primaryAreaLayout.addComponent(new MessagesListUI(profileId));
                 break;
             case "My albums":
-                primaryAreaLayout.addComponentsAndExpand(new AlbumsUI(profileId));
+                primaryAreaLayout.addComponent(new AlbumsUI(profileId));
                 break;
             case "My groups":
-                primaryAreaLayout.addComponentsAndExpand(new MyGroupsListUI(profileId));
+                primaryAreaLayout.addComponent(new MyGroupsListUI(profileId));
                 break;
             case "My friends":
-                primaryAreaLayout.addComponentsAndExpand(new FriendListUI(profileId));
+                primaryAreaLayout.addComponent(new FriendListUI(profileId));
                 break;
             case "Users":
-                primaryAreaLayout.addComponentsAndExpand(new UsersUI(profileId));
+                primaryAreaLayout.addComponent(new UsersUI(profileId));
                 break;
             case "Logout":
                 getPage().setLocation("/authorization");
@@ -125,32 +128,40 @@ public class MainUI extends UI implements Button.ClickListener {
                 getSession().close();
                 break;
             case "Settings":
-                primaryAreaLayout.addComponentsAndExpand(new SecurityBookUI(profileId));
+                primaryAreaLayout.addComponent(new SecurityBookUI(profileId));
                 break;
             case "My requests":
-                primaryAreaLayout.addComponentsAndExpand(new RequestsUI(profileId));
+                primaryAreaLayout.addComponent(new RequestsUI(profileId));
                 break;
             default:
-                primaryAreaLayout.addComponentsAndExpand(new VerticalLayout());
+                primaryAreaLayout.addComponent(new VerticalLayout());
                 break;
         }
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        setRatioAndDimensions();
     }
 
-    public void changePrimaryAreaLayout(AbstractOrderedLayout layoutToSet) {
+    public void changePrimaryAreaLayout(AbstractComponent layoutToSet) {
         ObjectAssert.isNull(layoutToSet);
         primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-        primaryAreaLayout.addComponentsAndExpand(layoutToSet);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        primaryAreaLayout.addComponents(layoutToSet);
+        setRatioAndDimensions();
     }
 
-    public void changePrimaryAreaLayout(Panel panel) {
-        ObjectAssert.isNull(panel);
-        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-        primaryAreaLayout.addComponentsAndExpand(panel);
+    private void setRatioAndDimensions() {
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
         primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+        AbstractOrderedLayout child = (AbstractOrderedLayout) primaryAreaLayout.getComponent(1);
+        child.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - topPanel.getHeight() - 55, Unit.PIXELS);
+        child.setWidth(UI.getCurrent().getPage().getBrowserWindowWidth() - leftPanel.getWidth() - 15, Unit.PIXELS);
+        child.getComponent(0).setSizeFull();
+        child.setMargin(false);
     }
+
+/*    public void changePrimaryAreaLayout(AbstractComponent panel) {
+        ObjectAssert.isNull(panel);
+        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
+        primaryAreaLayout.addComponents(panel);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
+        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
+    }*/
 }

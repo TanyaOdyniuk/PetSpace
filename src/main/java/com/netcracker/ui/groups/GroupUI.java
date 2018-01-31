@@ -45,6 +45,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
 
         Group curGroup = getGroup(groupId);
 
+        VerticalLayout main = new VerticalLayout();
         headerLayout = new HorizontalLayout();
         contentLayout = new HorizontalLayout();
         //HEADER
@@ -191,7 +192,9 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         mainRightLayout.addComponents(subscribersPanel, adminPanel);
         mainRightPanel.setContent(mainRightLayout);
         contentLayout.addComponents(mainLeftPanel, mainRightPanel);
-        addComponents(headerLayout, contentLayout);
+        main.addComponent(headerLayout);
+        main.addComponentsAndExpand(contentLayout);
+        addComponent(main);
     }
 
     private void editGroup(Group group) {

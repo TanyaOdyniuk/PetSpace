@@ -41,12 +41,12 @@ public class PetPageUI extends VerticalLayout {
         HorizontalLayout mainLayout = new HorizontalLayout();
         VerticalLayout leftPageLayout = new VerticalLayout();
         VerticalLayout rightPagePart = new VerticalLayout();
-        VerticalLayout avatarLayout = new VerticalLayout();
         VerticalLayout infoLayout = new VerticalLayout();
 
         Panel rightPagePanel = new Panel();
-        rightPagePanel.setHeight(browserHeight - 250, Unit.PIXELS);
-        rightPagePanel.setWidth(browserWidth * 0.7f - 252, Unit.PIXELS);
+        rightPagePanel.setSizeFull();
+        //rightPagePanel.setHeight(browserHeight - 250, Unit.PIXELS);
+        //rightPagePanel.setWidth(browserWidth * 0.7f - 252, Unit.PIXELS);
 
         Panel avatarPanel = new Panel();
         avatarPanel.setWidth("252px");
@@ -105,7 +105,6 @@ public class PetPageUI extends VerticalLayout {
 
         leftPageLayout.addComponents(albums);
         avatarPanel.setContent(leftPageLayout);
-        avatarLayout.addComponents(avatarPanel);
 
         Label petName = PageElements.createLabel(5, pet.getPetName());
 
@@ -156,7 +155,8 @@ public class PetPageUI extends VerticalLayout {
 
         rightPagePart.addComponent(infoPanel);
         rightPagePanel.setContent(rightPagePart);
-        mainLayout.addComponents(avatarPanel, rightPagePanel);
+        mainLayout.addComponent(avatarPanel);
+        mainLayout.addComponentsAndExpand(rightPagePanel);
         addComponents(mainLayout);
     }
 

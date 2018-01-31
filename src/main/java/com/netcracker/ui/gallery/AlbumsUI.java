@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class AlbumsUI extends HorizontalLayout{
+public class AlbumsUI extends VerticalLayout{
     private Panel panel;
     private VerticalLayout albumLayout;
     private Window newAlbumWindow;
@@ -29,8 +29,6 @@ public class AlbumsUI extends HorizontalLayout{
 
     public AlbumsUI(BigInteger profileId) {
         super();
-        addStyleName("v-scrollable");
-        setHeight("100%");
         this.profileId = profileId;
 
         albums = getAlbumList(profileId);

@@ -15,13 +15,18 @@ public interface ErrorMessage {
     String VALIDATION_AGE = "Validation error!\nPlease, check entered age.";
     String VALIDATION_WRONG = "Validation error!\nPlease, check entered data.";
     String VALIDATION_URL = "Validation error!\nPlease, check entered URL.";
+    String VALIDATION_AVATAR_URL = "Please, check entered\navatar's URL!";
 
     //PET_VALIDATION
     String PET_VALIDATION_NAME = "Please, check entered\npet's name!";
-    String PET_VALIDATION_AVATAR_URL = "Please, check entered\navatar's URL!";
     String PET_VALIDATION_HEIGHT = "Please, check entered\npet's height!";
     String PET_VALIDATION_WEIGHT = "Please, check entered\npet's weight!";
     String PET_VALIDATION_AGE = "Please, check entered\npet's age!";
+
+    //PROFILE_VALIDATION
+    String PROFILE_VALIDATION_NAME = "Please, check entered\nprofile's name!";
+    String PROFILE_VALIDATION_SURNAME = "Please, check entered\nprofile's surname!";
+    String PROFILE_VALIDATION_AGE = "Please, check entered\nprofile's age!";
 
     //PRIVILIGIES
     String PRIVILIGIES_GROUP = "У вас недостаточно прав\nдля просмотра данной группы.";

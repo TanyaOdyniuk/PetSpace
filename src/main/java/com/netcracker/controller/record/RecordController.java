@@ -58,6 +58,6 @@ public class RecordController {
 
     @PostMapping("/delete")
     public void deleteWallRecord(@RequestBody AbstractRecord wallRecord){
-        recordService.deleteWallRecord(wallRecord);
+        recordService.deleteRecord(wallRecord);
     }
 }

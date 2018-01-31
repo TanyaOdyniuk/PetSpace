@@ -53,15 +53,13 @@ public class ProfileView extends VerticalLayout {
         HorizontalLayout mainLayout = new HorizontalLayout();
         browserHeight = UI.getCurrent().getPage().getBrowserWindowHeight();
         browserWidth = UI.getCurrent().getPage().getBrowserWindowWidth();
-        mainLayout.setHeight(browserHeight - 250, Unit.PIXELS);
-        mainLayout.setWidth(browserWidth - 450, Unit.PIXELS);
+
         Panel leftPartPanel = new Panel();
         leftPartPanel.setHeight("100%");
         leftPartPanel.setWidth(250, Unit.PIXELS);
         Panel rightPartPanel = new Panel();
         rightPartPanel.setHeight("100%");
-        //rightPartPanel.setHeight(750, Unit.PIXELS);
-        //rightPartPanel.setWidth(100, Unit.PERCENTAGE);
+
         VerticalLayout leftPartLayout = new VerticalLayout();
         leftPartLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         VerticalLayout rightPartLayout = new VerticalLayout();
@@ -188,7 +186,7 @@ public class ProfileView extends VerticalLayout {
         friendsPanel.setContent(friendsLayout);
 
         //Elements for right part
-        Panel nameAndBalancePanel = new Panel();
+        Panel nameAndManagePanel = new Panel();
         HorizontalLayout nameAndBalanceLayout = new HorizontalLayout();
         nameAndBalanceLayout.addComponents(
                 new Label(profile.getProfileName() + " " + profile.getProfileSurname())/*,
@@ -200,7 +198,7 @@ public class ProfileView extends VerticalLayout {
             );
         }
         nameAndBalanceLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        nameAndBalancePanel.setContent(nameAndBalanceLayout);
+        nameAndManagePanel.setContent(nameAndBalanceLayout);
 
         Panel simpleInfoPanel = new Panel();
         VerticalLayout simpleInfoLayout = new VerticalLayout();
@@ -234,24 +232,6 @@ public class ProfileView extends VerticalLayout {
                 favBreedsLayout
         );
         simpleInfoPanel.setContent(simpleInfoLayout);
-
-        Panel photosPanel = new Panel();
-        photosPanel.setWidth("100%");
-        VerticalLayout photosLayout = new VerticalLayout();
-        int photosColumns = 5, photosRows = 3;
-        GridLayout photosGrid = new GridLayout(photosColumns, photosRows);
-        photosGrid.setSpacing(true);
-        Resource photoResource = new ExternalResource("https://image.ibb.co/d9Oc9b/2004039.png");
-        for (int i = 0; i < photosColumns * photosRows; i++) {
-            Panel singlePhotoPanel = new Panel();
-            Image singlePhotoImage = new Image();
-            singlePhotoImage.setSource(photoResource);
-            singlePhotoImage.setDescription("Photo " + (i + 1));
-            singlePhotoPanel.setContent(singlePhotoImage);
-            photosGrid.addComponent(singlePhotoPanel);
-        }
-        photosLayout.addComponentsAndExpand(new Label("Last photos"), photosGrid);
-        photosPanel.setContent(photosLayout);
 
         //Profile wall with records
         Panel wallPanel = new Panel();
@@ -303,7 +283,8 @@ public class ProfileView extends VerticalLayout {
             }
         } else
             leftPartLayout.addComponents(avatarImage, petsPanel, friendsPanel);
-        rightPartLayout.addComponents(nameAndBalancePanel, simpleInfoPanel, photosPanel, wallPanel);
+
+        rightPartLayout.addComponents(nameAndManagePanel, simpleInfoPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);
         mainLayout.addComponent(leftPartPanel);
@@ -331,6 +312,27 @@ public class ProfileView extends VerticalLayout {
             }
         });
         return result;
+    }
+
+    private Panel getLastPhotos() {
+        Panel photosPanel = new Panel();
+        photosPanel.setWidth("100%");
+        VerticalLayout photosLayout = new VerticalLayout();
+        int photosColumns = 5, photosRows = 3;
+        GridLayout photosGrid = new GridLayout(photosColumns, photosRows);
+        photosGrid.setSpacing(true);
+        Resource photoResource = new ExternalResource("https://image.ibb.co/d9Oc9b/2004039.png");
+        for (int i = 0; i < photosColumns * photosRows; i++) {
+            Panel singlePhotoPanel = new Panel();
+            Image singlePhotoImage = new Image();
+            singlePhotoImage.setSource(photoResource);
+            singlePhotoImage.setDescription("Photo " + (i + 1));
+            singlePhotoPanel.setContent(singlePhotoImage);
+            photosGrid.addComponent(singlePhotoPanel);
+        }
+        photosLayout.addComponentsAndExpand(new Label("Last photos"), photosGrid);
+        photosPanel.setContent(photosLayout);
+        return photosPanel;
     }
 
     private List<WallRecord> getWallRecords(BigInteger profileId) {

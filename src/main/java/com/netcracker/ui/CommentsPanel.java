@@ -95,7 +95,7 @@ public class CommentsPanel<T extends AbstractComment> extends Panel {
             Image commentatorMiniImage = new Image();
             commentatorMiniImage.setHeight(55, Unit.PIXELS);
             commentatorMiniImage.setWidth(55, Unit.PIXELS);
-            commentatorMiniImage.setSource(new ExternalResource(singleFriendAvatar == null ? stubAvatar : singleFriendAvatar));
+            PageElements.setProfileImageSource(commentatorMiniImage, singleFriendAvatar);
             commentatorMiniImage.setDescription(authorNameAndSurname);
             commentatorMiniImage.addClickListener((MouseEvents.ClickListener) clickEvent ->
                     ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(commentator.getObjectId())));

@@ -41,5 +41,5 @@ public interface RecordService {
     void updateGroupRecord(GroupRecord record);
 
     //Delete wall record
-    void deleteWallRecord(AbstractRecord wallRecord);
+    void deleteRecord(AbstractRecord wallRecord);
 }

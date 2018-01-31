@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MyGroupsListUI extends Panel implements UploadableComponent {
+public class MyGroupsListUI extends VerticalLayout implements UploadableComponent {
     private VerticalLayout mainLayout;
     private Window newGroupWindow;
     private BigInteger profileId;
@@ -49,8 +49,10 @@ public class MyGroupsListUI extends Panel implements UploadableComponent {
 
     public MyGroupsListUI(BigInteger profileId) {
         this.profileId = profileId;
-        addStyleName("v-scrollable");
-        setHeight("100%");
+
+        Panel mainPanel = new Panel();
+        mainPanel.addStyleName("v-scrollable");
+        mainPanel.setHeight("100%");
         mainLayout = new VerticalLayout();
 
         VerticalLayout headerLayout = new VerticalLayout();
@@ -100,12 +102,13 @@ public class MyGroupsListUI extends Panel implements UploadableComponent {
         findGroupLayout.setComponentAlignment(myCreatedGroups, Alignment.MIDDLE_RIGHT);
 
         headerLayout.addComponents(createGroupLayout, findGroupLayout);
-        mainLayout.addComponents(headerLayout);
+        mainLayout.addComponents(headerLayout, PageElements.getSeparator());
 
         allGroupsLayout = new VerticalLayout();
-        setContent(mainLayout);
+        mainPanel.setContent(mainLayout);
         initShowGroupsWithPaging(1, true);
         setPagingLayout(true);
+        addComponent(mainPanel);
     }
 
 

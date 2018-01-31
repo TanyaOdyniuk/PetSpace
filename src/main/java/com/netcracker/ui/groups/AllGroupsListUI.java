@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AllGroupsListUI extends Panel {
+public class AllGroupsListUI extends VerticalLayout {
     private VerticalLayout mainLayout;
     private VerticalLayout allGroupsLayout;
     private PagingBar pagingLayout;
@@ -31,9 +31,8 @@ public class AllGroupsListUI extends Panel {
     private RestResponsePage<Group> allGroups;
 
     public AllGroupsListUI(){
-        addStyleName("v-scrollable");
-        setHeight("100%");
-
+        super();
+        Panel mainPanel = new Panel();
         mainLayout = new VerticalLayout();
         List<Group> allGroupsList = Arrays.asList(CustomRestTemplate.getInstance()
                 .customGetForObject("/groupList/all", Group[].class));
@@ -49,10 +48,11 @@ public class AllGroupsListUI extends Panel {
         headerLayout.addComponents(amountOfMyGroups, findGroupLayout);
 
         allGroupsLayout = new VerticalLayout();
-        mainLayout.addComponents(headerLayout);
-        setContent(mainLayout);
+        mainLayout.addComponents(headerLayout, PageElements.getSeparator());
+        mainPanel.setContent(mainLayout);
         initShowGroupsWithPaging(1);
         setPagingLayout();
+        addComponent(mainPanel);
     }
 
     private List<Group> getAllGroupsPaging(int pageNumber) {

@@ -70,7 +70,7 @@ public class RecordPanel extends Panel {
         HorizontalLayout recordInfoLayout = new HorizontalLayout();
         String commentatorAvatar = recordAuthor.getProfileAvatar();
         Image recordAuthorAvatar = new Image();
-        recordAuthorAvatar.setSource(new ExternalResource(commentatorAvatar == null ? stubAvatar : commentatorAvatar));
+        PageElements.setProfileImageSource(recordAuthorAvatar, commentatorAvatar);
         recordAuthorAvatar.setDescription(createDescription(isFromNews, currentRecord, recordAuthor));
         recordAuthorAvatar.setHeight(100, Sizeable.Unit.PIXELS);
         recordAuthorAvatar.setWidth(100, Sizeable.Unit.PIXELS);

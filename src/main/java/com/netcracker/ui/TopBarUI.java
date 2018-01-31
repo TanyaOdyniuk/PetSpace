@@ -15,6 +15,7 @@ class TopBarUI extends HorizontalLayout {
     @Autowired
     TopBarUI(Button.ClickListener clickListener) {
         setSpacing(false);
+        setMargin(false);
         setWidth("100%");
         Button newsButton = getNewButton("News", VaadinIcons.HOME, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button allUsersButton = getNewButton("Users", VaadinIcons.USER, ValoTheme.BUTTON_FRIENDLY, clickListener);

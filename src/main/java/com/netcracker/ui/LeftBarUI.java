@@ -18,8 +18,8 @@ public class LeftBarUI extends VerticalLayout {
 
     @Autowired
     public LeftBarUI(Button.ClickListener clickListener) {
-        super();
         setSpacing(false);
+        setMargin(false);
         setWidth(UIConstants.LEFT_BAR_WIDTH, Unit.PIXELS);
         setHeight("100%");
         Panel panel = new Panel();
