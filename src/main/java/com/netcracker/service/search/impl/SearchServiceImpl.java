@@ -31,14 +31,20 @@ public class SearchServiceImpl implements SearchService {
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
-                "AND attr.value LIKE '%" + name + "%'" +
+                "AND attr.value LIKE '%" + name + "%' " +
+                "OR " +
+                "attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
+                "AND attr.value LIKE '%" + name.toLowerCase() + "%' " +
                 " INTERSECT " +
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE obj.object_type_id = " + UsersProfileConstant.PROFILE_TYPE + " " +
                 "AND attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
-                "AND attr.value LIKE '%" + surname + "%'";
+                "AND attr.value LIKE '%" + surname + "%' " +
+                "OR " +
+                "attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
+                "AND attr.value LIKE '%" + surname.toLowerCase() + "%'";
         return entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
     }
 
@@ -52,8 +58,14 @@ public class SearchServiceImpl implements SearchService {
                 "AND attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
                 "AND attr.value LIKE '%" + name + "%' " +
                 "OR " +
+                "attr.attrtype_id = " + BigInteger.valueOf(413) + " " +
+                "AND attr.value LIKE '%" + name.toLowerCase() + "%' " +
+                "OR " +
                 "attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
-                "AND attr.value LIKE '%" + name + "%'";
+                "AND attr.value LIKE '%" + name + "%' " +
+                "OR " +
+                "attr.attrtype_id = " + BigInteger.valueOf(414) + " " +
+                "AND attr.value LIKE '%" + name.toLowerCase() + "%'";
         return entityManagerService.getObjectsBySQL(surnameQuery, Profile.class, new QueryDescriptor());
     }
 
