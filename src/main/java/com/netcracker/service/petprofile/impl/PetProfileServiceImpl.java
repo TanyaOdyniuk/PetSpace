@@ -1,5 +1,6 @@
 package com.netcracker.service.petprofile.impl;
 
+import com.netcracker.dao.manager.query.Query;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.pet.Pet;
@@ -34,7 +35,12 @@ public class PetProfileServiceImpl implements PetProfileService {
 
     @Autowired
     private StatusService statusService;
-
+    private String allPetsQuery = "SELECT object_id " +
+            "FROM Objects " +
+            "WHERE object_id in (SELECT OBJECT_ID FROM OBJREFERENCE " +
+            "                       WHERE ATTRTYPE_ID = " + PetConstant.PET_OWNER + " AND " + Query.IGNORING_DELETED_ELEMENTS_IN_REF +
+            " )" +
+            "and object_type_id = ";
     private String profilePetsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
             "WHERE ATTRTYPE_ID = " + PetConstant.PET_OWNER + " AND REFERENCE = ";
 
@@ -47,7 +53,7 @@ public class PetProfileServiceImpl implements PetProfileService {
     @Override
     public int getAllPetsPageCount() {
         Integer ptsPageCapacity = new Integer(petsPageCapacity);
-        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getAllCount(BigInteger.valueOf(PetConstant.PET_TYPE)));
+        return pageCounterService.getPageCount(ptsPageCapacity, entityManagerService.getBySqlCount(allPetsQuery + BigInteger.valueOf(PetConstant.PET_TYPE)));
     }
 
     @Override
@@ -91,7 +97,7 @@ public class PetProfileServiceImpl implements PetProfileService {
     public List<Pet> getAllPets(int page) {
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addPagingDescriptor(page, Integer.valueOf(petsPageCapacity));
-        return entityManagerService.getAll(BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, descriptor);
+        return entityManagerService.getObjectsBySQL(allPetsQuery + BigInteger.valueOf(PetConstant.PET_TYPE), Pet.class, descriptor);
     }
 
     @Override

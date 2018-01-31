@@ -7,6 +7,8 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 
+import static com.netcracker.ui.validation.UiValidationConstants.CHECK_FULLNESS;
+
 public class PagingBar extends HorizontalLayout {
     private final Label pageLabel;
     private final TextField pageNumberField;

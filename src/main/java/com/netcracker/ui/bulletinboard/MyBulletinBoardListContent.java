@@ -186,7 +186,7 @@ public class MyBulletinBoardListContent extends VerticalLayout {
         Grid.Column topicColumn = grid.addColumn(ad ->
                 ad.getAdTopic()).setCaption("Topic").setWidth(150).setSortable(false);
         Grid.Column informationColumn = grid.addColumn(ad ->
-                ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(200).setSortable(false);
+                ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(300).setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setCaption("Date").setSortable(false);
         /*Grid.Column statusColumn = grid.addColumn(ad ->
@@ -295,7 +295,8 @@ public class MyBulletinBoardListContent extends VerticalLayout {
                 public void handleAction(Object o, Object o1) {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
-                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
+                        String number = ((TextField) pagingLayout.getComponent(3)).getValue();
+                        pagingLayout.currentPageNumber = Integer.valueOf(number.trim());
                         getData(isNotSelectedCategories, isTopicFilter, pagingLayout.currentPageNumber);
                     }
                 }

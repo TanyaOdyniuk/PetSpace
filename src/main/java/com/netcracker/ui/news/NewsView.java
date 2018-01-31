@@ -196,7 +196,8 @@ public class NewsView extends VerticalLayout {
                 public void handleAction(Object o, Object o1) {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
-                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
+                        String number = ((TextField) pagingLayout.getComponent(3)).getValue();
+                        pagingLayout.currentPageNumber = Integer.valueOf(number.trim());
                         pageNumber = pagingLayout.currentPageNumber;
                         getData(pagingLayout.currentPageNumber, isFriendsNews);
                     }

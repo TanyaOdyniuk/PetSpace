@@ -1,5 +1,6 @@
 package com.netcracker.service.message.impl;
 
+import com.netcracker.dao.manager.query.Query;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.messages.Message;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
-import static com.netcracker.dao.manager.query.Query.IGNORING_DELETED_ELEMENTS_IN_REF;
-
 @Service
 public class MessageServiceImpl implements MessageService {
 
@@ -23,7 +22,11 @@ public class MessageServiceImpl implements MessageService {
 
     private String getMessagesQuery = "SELECT OBJECT_ID \n" +
             "FROM OBJREFERENCE \n" +
-            "WHERE ATTRTYPE_ID = " + MessageConstants.MESSAGE_RECEIVER + " \n" +
+            "WHERE object_id in " +
+            "           (select object_id from objreference " +
+            "               where ATTRTYPE_ID = " + MessageConstants.MESSAGE_SENDER +
+            "               and " + Query.IGNORING_DELETED_ELEMENTS_IN_REF + " ) " +
+            " AND ATTRTYPE_ID = " + MessageConstants.MESSAGE_RECEIVER + " \n" +
             "AND REFERENCE = ";
 
     @Autowired
@@ -40,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getProfileMessages(BigInteger profileId, int page) {
-        String query = this.getMessagesQuery + profileId + " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+        String query = this.getMessagesQuery + profileId;
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addSortingDesc(MessageConstants.MESSAGE_DATE, "DESC", true);
         descriptor.addPagingDescriptor(page, Integer.valueOf(messagePageCapacity));

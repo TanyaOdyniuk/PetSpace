@@ -11,8 +11,7 @@ public interface Query {
             "AND o.REFERENCE = 9)";
     String SELECT_FROM_OBJECTS_BY_ID = "SELECT * " +
             "FROM OBJECTS " +
-            "WHERE object_id=? " +
-            "and " + IGNORING_DELETED_ELEMENTS;
+            "WHERE object_id=? ";
     String SELECT_FROM_ATTRIBUTES_BY_ID = "SELECT value, date_value, nvl(seq_no,0) as sn, attrtype_id " +
             "from  attributes " +
             "WHERE OBJECT_ID = ? " +

@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import static com.netcracker.error.ErrorMessage.ERROR_UNKNOWN;
+
 public class ClientExceptionHandler implements ErrorHandler {
 
     @Override
     public void error(ErrorEvent event) {
-        showNotification(event.getThrowable().getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
+        showNotification(/*event.getThrowable().getLocalizedMessage()*/ ERROR_UNKNOWN, Notification.Type.WARNING_MESSAGE);
     }
 
     public static void handle(Exception ex){

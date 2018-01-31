@@ -28,6 +28,8 @@ public class CommentServiceImpl implements CommentService {
     public List<WallRecordComment> getWallRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF +
+                " and object_id in (select object_id from objreference where attrtype_id =" + CommentConstant.COM_AUTOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF + " ) "+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecordComment.class, new QueryDescriptor());
     }
@@ -36,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
     public List<GroupRecordComment> getGroupRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.REC_COMREF +
+                " and object_id in (select object_id from objreference where attrtype_id =" + CommentConstant.COM_AUTOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF + " ) "+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecordComment.class, new QueryDescriptor());
     }
@@ -44,6 +48,8 @@ public class CommentServiceImpl implements CommentService {
     public List<PhotoRecordComment> getPhotoRecordComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + RecordConstant.PR_COMMENTS +
+                " and object_id in (select object_id from objreference where attrtype_id =" + CommentConstant.COM_AUTOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF + " ) "+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, PhotoRecordComment.class, new QueryDescriptor());
     }
@@ -52,6 +58,8 @@ public class CommentServiceImpl implements CommentService {
     public List<AdvertisementComment> getAdvertisementComments(BigInteger recordID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + recordID + " AND ATTRTYPE_ID = " + AdvertisementConstant.AD_COM +
+                " and object_id in (select object_id from objreference where attrtype_id =" + CommentConstant.COM_AUTOR +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF + " ) "+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addSortingDesc(CommentConstant.COM_DATE, "DESC", true);

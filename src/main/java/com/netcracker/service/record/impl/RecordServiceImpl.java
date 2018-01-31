@@ -33,6 +33,8 @@ public class RecordServiceImpl implements RecordService {
     public List<WallRecord> getWallRecords(BigInteger profileID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileID + " AND ATTRTYPE_ID = " + RecordConstant.REC_WALLOWNER +
+                "and OBJECT_ID in (select OBJECT_ID FROM OBJREFERENCE " +
+                "                   WHERE ATTRTYPE_ID =" + RecordConstant.REC_AUTOR +" and "  + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, WallRecord.class, new QueryDescriptor());
     }
@@ -41,6 +43,8 @@ public class RecordServiceImpl implements RecordService {
     public List<GroupRecord> getGroupRecords(BigInteger groupID) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + groupID + " AND ATTRTYPE_ID = " + GroupConstant.GR_RECORDS +
+                "and OBJECT_ID in (select OBJECT_ID FROM OBJREFERENCE " +
+                "                   WHERE ATTRTYPE_ID =" + GroupConstant.GR_AUTOR +" and "  + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecord.class, new QueryDescriptor());
     }

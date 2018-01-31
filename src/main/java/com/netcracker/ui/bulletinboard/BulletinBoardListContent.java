@@ -178,13 +178,13 @@ public class BulletinBoardListContent extends VerticalLayout {
                 ad.getAdAuthor().getProfileSurname() + " " +
                         ad.getAdAuthor().getProfileName()).setCaption("Author").setWidth(120).setSortable(false);
         Grid.Column informationColumn = grid.addColumn(ad ->
-                ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(200).setSortable(false);
+                ad.getAdBasicInfo()).setCaption("Basic Info").setWidth(300).setSortable(false);
         Grid.Column dateColumn = grid.addColumn(ad ->
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setWidth(130).setCaption("Date");
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ad.getAdDate())).setWidth(200).setCaption("Date").setSortable(false);
         /*Grid.Column statusColumn = grid.addColumn(ad ->
                 (ad.isAdIsVip() ? "yes" : "no")).setCaption("VIP").setWidth(65).setSortable(false);*/
         Grid.Column categoryColumn = grid.addColumn(ad ->
-                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setWidth(130).setSortable(false);
+                (ad.getAdCategory() != null ? ad.getAdCategory().getCategoryName() : "")).setCaption("Category").setWidth(160).setSortable(false);
         grid.addItemClickListener(event -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new AdvertisementView(event.getItem())));
     }
 
@@ -284,7 +284,8 @@ public class BulletinBoardListContent extends VerticalLayout {
                 public void handleAction(Object o, Object o1) {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
-                        pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
+                        String number = ((TextField) pagingLayout.getComponent(3)).getValue();
+                        pagingLayout.currentPageNumber = Integer.valueOf(number.trim());
                         getData(isNotSelectedCategories, isTopicFilter, pagingLayout.currentPageNumber);
                     }
                 }

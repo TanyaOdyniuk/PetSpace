@@ -68,6 +68,8 @@ public class NewsServiceImpl implements NewsService {
                 "  WHERE reference = " + profileId +
                 "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +")" +
                 "  and " + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
+                " and OBJECT_ID in (select OBJECT_ID FROM OBJREFERENCE " +
+        "                   WHERE ATTRTYPE_ID =" + GroupConstant.GR_AUTOR +" and "  + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
                 "  and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(newsGroupsCapacity, entityManagerService.getBySqlCount(getQuery));
     }
@@ -114,6 +116,8 @@ public class NewsServiceImpl implements NewsService {
                 "  WHERE reference = " + profileId +
                 "  and ATTRTYPE_ID in (" + GroupConstant.GR_ADMIN + ", " + GroupConstant.GR_PARTICIPANTS +")" +
                 "  and " + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
+                " and OBJECT_ID in (select OBJECT_ID FROM OBJREFERENCE " +
+                "                   WHERE ATTRTYPE_ID =" + GroupConstant.GR_AUTOR +" and "  + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
                 "  and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor queryDescriptor = new QueryDescriptor();
         queryDescriptor.addPagingDescriptor(pageNumber, new Integer(newsGroupsCapacityProp));

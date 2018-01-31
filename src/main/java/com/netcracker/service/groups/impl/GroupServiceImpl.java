@@ -1,5 +1,6 @@
 package com.netcracker.service.groups.impl;
 
+import com.netcracker.dao.manager.query.Query;
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
 import com.netcracker.model.group.Group;
@@ -29,7 +30,12 @@ public class GroupServiceImpl implements GroupService {
     private PageCounterService pageCounterService;
     @Value("${groups.pageCapacity}")
     private String allGroupsPageCapacity;
-
+    private String allGroupsQuery = "SELECT object_id " +
+            "FROM Objects " +
+            "WHERE object_id in (SELECT OBJECT_ID FROM OBJREFERENCE " +
+            "                       WHERE ATTRTYPE_ID = " + GroupConstant.GR_ADMIN + " AND " + Query.IGNORING_DELETED_ELEMENTS_IN_REF +
+            " )" +
+            "and object_type_id = ";
 
     @Override
     public Group getGroup(BigInteger groupId) {
@@ -41,6 +47,9 @@ public class GroupServiceImpl implements GroupService {
         Integer profileGroupsCapacity = new Integer(allGroupsPageCapacity);
         String query = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and object_id in (select object_id from objreference " +
+                "                   where  ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +"" +
+                "                   and " + IGNORING_DELETED_ELEMENTS_IN_REF +")"+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return pageCounterService.getPageCount(profileGroupsCapacity, entityManagerService.getBySqlCount(query));
     }
@@ -49,6 +58,9 @@ public class GroupServiceImpl implements GroupService {
     public List<Group> getMyGroups(BigInteger profileId) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and object_id in (select object_id from objreference " +
+                "                   where  ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +"" +
+                "                   and " + IGNORING_DELETED_ELEMENTS_IN_REF +")"+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         return entityManagerService.getObjectsBySQL(sqlQuery, Group.class, new QueryDescriptor());
     }
@@ -57,6 +69,9 @@ public class GroupServiceImpl implements GroupService {
     public List<Group> getMyGroupsList(BigInteger profileId, Integer page) {
         String sqlQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
                 "WHERE REFERENCE = " + profileId + " AND ATTRTYPE_ID = " + GroupConstant.GR_PARTICIPANTS +
+                " and object_id in (select object_id from objreference " +
+                "                   where  ATTRTYPE_ID = " + GroupConstant.GR_ADMIN +"" +
+                "                   and " + IGNORING_DELETED_ELEMENTS_IN_REF +")"+
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addPagingDescriptor(page, Integer.valueOf(allGroupsPageCapacity));
@@ -120,12 +135,12 @@ public class GroupServiceImpl implements GroupService {
     public int getAllGroupsPageCount() {
         Integer allGroupsCapacity = new Integer(allGroupsPageCapacity);
         return pageCounterService.getPageCount(allGroupsCapacity,
-                entityManagerService.getAllCount(BigInteger.valueOf(GroupConstant.GR_TYPE)));
+                entityManagerService.getBySqlCount(allGroupsQuery + BigInteger.valueOf(GroupConstant.GR_TYPE)));
     }
 
     @Override
     public List<Group> getAllGroups() {
-        return entityManagerService.getAll(BigInteger.valueOf(GroupConstant.GR_TYPE), Group.class, new QueryDescriptor());
+        return entityManagerService.getObjectsBySQL(allGroupsQuery + BigInteger.valueOf(GroupConstant.GR_TYPE), Group.class, new QueryDescriptor());
     }
 
     @Override
@@ -133,7 +148,7 @@ public class GroupServiceImpl implements GroupService {
         Integer allGroupsCapacity = new Integer(allGroupsPageCapacity);
         QueryDescriptor descriptor = new QueryDescriptor();
         descriptor.addPagingDescriptor(page, allGroupsCapacity);
-        return entityManagerService.getAll(BigInteger.valueOf(GroupConstant.GR_TYPE), Group.class, descriptor);
+        return entityManagerService.getObjectsBySQL(allGroupsQuery + BigInteger.valueOf(GroupConstant.GR_TYPE), Group.class, descriptor);
     }
 
     @Override

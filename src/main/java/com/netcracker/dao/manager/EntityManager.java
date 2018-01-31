@@ -31,7 +31,7 @@ public class EntityManager {
     @Autowired
     public EntityManager(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.setResultsMapCaseInsensitive(true);
+        //jdbcTemplate.setResultsMapCaseInsensitive(true);
     }
 
     public Integer getNextSeqNoObjRef(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id) {
@@ -84,7 +84,7 @@ public class EntityManager {
         }
         return entity;
     }
-
+    @Transactional
     public void update(Entity entity) {
         executeObjectJdbcCall(entity, 0, null);
 
@@ -101,7 +101,7 @@ public class EntityManager {
             }
         }
     }
-
+    @Transactional
     public void delete(BigInteger objectId, Integer forceDelete) {
         Entity temp = new Entity();
         temp.setObjectId(objectId);

@@ -8,6 +8,7 @@ import com.netcracker.ui.CommentsPanel;
 import com.netcracker.ui.PageElements;
 import com.netcracker.ui.MainUI;
 import com.netcracker.ui.pet.PetPageUI;
+import com.netcracker.ui.profile.ProfileView;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinSession;
@@ -79,13 +80,21 @@ public class AdvertisementView extends VerticalLayout {
         } else {
             authorStr = adv.getAdAuthor().getProfileName() + " " + adv.getAdAuthor().getProfileSurname();
         }
-        Label authorLabel = new Label("Author: " + authorStr);
+        //Label authorLabel = new Label("Author: ");
+        Button author = PageElements.createBlueClickedLabel("Author: " + authorStr, null);
+        author.setWidth("100px");
+        author.addClickListener(new AbstractClickListener() {
+            @Override
+            public void buttonClickListener() {
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new ProfileView(adv.getAdAuthor().getObjectId()));
+            }
+        });
         dateAuthorPetLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         Panel petPanel = getAdPetPanel();
         if(petPanel != null){
-            dateAuthorPetLayout.addComponentsAndExpand(petPanel);
+            dateAuthorPetLayout.addComponents(petPanel);
         }
-        dateAuthorPetLayout.addComponentsAndExpand(dateLabel, authorLabel);
+        dateAuthorPetLayout.addComponents(dateLabel,/*, authorLabel,*/ author );
         return dateAuthorPetLayout;
     }
     private Panel getAdPetPanel(){

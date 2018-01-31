@@ -2,6 +2,8 @@ package com.netcracker.ui;
 
 import com.netcracker.asserts.ObjectAssert;
 
+import com.netcracker.error.ErrorMessage;
+import com.netcracker.error.handler.ClientExceptionHandler;
 import com.netcracker.ui.bulletinboard.BulletinBoardListContent;
 import com.netcracker.ui.bulletinboard.MyBulletinBoardListContent;
 import com.netcracker.ui.friendlist.FriendListUI;
@@ -19,14 +21,17 @@ import com.netcracker.ui.users.UsersUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigInteger;
 
@@ -70,14 +75,14 @@ public class MainUI extends UI implements Button.ClickListener {
         mainLayout.setExpandRatio(mainLayout.getComponent(0), 1.0f);
         mainLayout.setExpandRatio(mainLayout.getComponent(1), 9.0f);
         setContent(mainLayout);
-
-        /*UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
+        /*
+        UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
                 ClientExceptionHandler.handle(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR), ErrorMessage.ERROR_500);
             }
-        });*/
-        //UI.getCurrent().setErrorHandler(new ClientExceptionHandler());
+        });
+        UI.getCurrent().setErrorHandler(new ClientExceptionHandler());*/
     }
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
