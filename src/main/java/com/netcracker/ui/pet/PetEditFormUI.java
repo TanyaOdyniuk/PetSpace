@@ -45,12 +45,15 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         VerticalLayout avatarContext = new VerticalLayout();
         String petAvatarSource = pet.getPetAvatar();
         avatar = new Image();
-        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         PageElements.setPetImageSource(avatar, petAvatarSource);
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 
+        TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         avatarField.setWidth("100%");
+        if(petAvatarSource != null && PetDataAssert.isAvatarURL(petAvatarSource) && !petAvatarSource.equals(UIConstants.PET_NO_IMAGE_URL) ){
+            avatarField.setValue(petAvatarSource);
+        }
 
         Button avatarSelect = new Button("Set URL");
         avatarSelect.addClickListener(new AbstractClickListener() {

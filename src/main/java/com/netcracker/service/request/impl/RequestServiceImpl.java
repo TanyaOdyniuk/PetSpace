@@ -30,17 +30,19 @@ public class RequestServiceImpl implements RequestService {
                 "WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_STATUS +
                 " AND REFERENCE = " + StatusConstant.ST_IS_PENDING +
                 /*" AND SEQ_NO = 1\n" +*/
-                "AND OBJECT_ID IN(\n" +
+                " AND OBJECT_ID IN(\n" +
                 "    SELECT OBJECT_ID \n" +
                 "    FROM OBJREFERENCE\n" +
                 "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_TO +
-                "    AND REFERENCE = " + profileId + ")"/* +
-                " and OBJECT_ID not in( SELECT OBJECT_ID\n" +
+                "    AND REFERENCE = " + profileId +
+                ")" +
+                " AND OBJECT_ID IN ( SELECT OBJECT_ID\n" +
                 "    FROM OBJREFERENCE\n" +
                 "    WHERE ATTRTYPE_ID = " + FriendRequestConstant.REQ_FROM +
                 "    AND " + IGNORING_DELETED_ELEMENTS_IN_REF +
-                ")"*/;
-        return entityManagerService.getObjectsBySQL(requestsQuery, FriendRequest.class, new QueryDescriptor());
+                ")";
+        List<FriendRequest> list = entityManagerService.getObjectsBySQL(requestsQuery, FriendRequest.class, new QueryDescriptor());
+        return list;
     }
 
     @Override
@@ -59,7 +61,14 @@ public class RequestServiceImpl implements RequestService {
     public void confirmRequest(FriendRequest request) {
         Status status = entityManagerService.getById(BigInteger.valueOf(StatusConstant.ST_IS_FRIEND), Status.class);
         request.setRequestStatus(status);
-        entityManagerService.update(request);
+        entityManagerService.delete(request.getObjectId(), 0);
+
+        FriendRequest newRequest = new FriendRequest();
+        newRequest.setReqFrom(request.getReqFrom());
+        newRequest.setReqTo(request.getReqTo());
+        newRequest.setRequestStatus(status);
+
+        entityManagerService.create(newRequest);
     }
 
     @Override
