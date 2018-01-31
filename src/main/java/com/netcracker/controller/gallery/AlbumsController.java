@@ -2,6 +2,7 @@ package com.netcracker.controller.gallery;
 
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.record.PhotoRecord;
+import com.netcracker.model.user.Profile;
 import com.netcracker.service.media.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,15 @@ public class AlbumsController {
     @GetMapping("/lastPhotos")
     public List<PhotoRecord> getLastPhotos(){
         return mediaService.getLastPhotos();
+    }
+
+    @GetMapping("/delete/{id}")
+    public void deleteAlbum(@PathVariable("id") BigInteger albumId){
+        mediaService.deleteAlbum(albumId);
+    }
+
+    @GetMapping("/profileId/{id}")
+    public Profile getUserProfileIdOfAlbum(@PathVariable("id") BigInteger albumId){
+        return mediaService.getUserProfileIdOfAlbum(albumId);
     }
 }

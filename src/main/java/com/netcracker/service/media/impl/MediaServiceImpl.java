@@ -10,6 +10,7 @@ import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.media.MediaService;
+import com.netcracker.service.record.RecordService;
 import com.netcracker.service.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,6 @@ public class MediaServiceImpl implements MediaService {
     private EntityManagerService entityManagerService;
     @Autowired
     private StatusService statusService;
-
-    @Override
-    public PhotoRecord imageRotation(Profile profile) {
-        return null;
-    }
 
     @Override
     public List<PhotoRecord> getImagesGallery(BigInteger albumId) {
@@ -57,7 +53,7 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public PhotoAlbum createAlbum(PhotoAlbum album, BigInteger petId) {
         Pet pet = entityManagerService.getById(petId, Pet.class);
-//        album.setAlbumStatus(statusService.getActiveStatus());
+        album.setPhotoAlbumStatus(statusService.getActiveStatus());
         album.setPet(pet);
         album.setName("album");
         return entityManagerService.create(album);
@@ -73,30 +69,29 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<PhotoRecord> getLastPhotos() {
+    public List<PhotoRecord> getLastPhotos(/*BigInteger profileId*/) {
         String getRecordsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE Y, ( SELECT O.REFERENCE, MAX(O.SEQ_NO) MM  " +
                 "FROM OBJREFERENCE O, ( SELECT REFERENCE RE, SEQ_NO AS S FROM OBJREFERENCE " +
                 "WHERE REFERENCE IN ( " +
                 "SELECT OBJECT_ID FROM OBJREFERENCE WHERE REFERENCE IN ( " +
-                "SELECT OBJECT_ID FROM OBJREFERENCE WHERE REFERENCE = 25 AND ATTRTYPE_ID = 303" +
-                ") AND ATTRTYPE_ID = 302) AND ATTRTYPE_ID = 304) X WHERE X.RE = o.REFERENCE AND X.S = O.SEQ_NO " +
-                "AND O.OBJECT_ID IN ( SELECT OBJECT_ID ODJ FROM OBJREFERENCE Z WHERE Z.ATTRTYPE_ID = 431 AND REFERENCE = 8)" +
+                "SELECT OBJECT_ID FROM OBJREFERENCE WHERE REFERENCE = " + 25 + " AND ATTRTYPE_ID = 303" +
+                ") AND ATTRTYPE_ID = 302) AND ATTRTYPE_ID = 304) X WHERE X.RE = O.REFERENCE AND X.S = O.SEQ_NO " +
+                "AND O.OBJECT_ID IN ( SELECT OBJECT_ID ODJ FROM OBJREFERENCE Z WHERE Z.ATTRTYPE_ID = 431 AND REFERENCE = 8) " +
                 "GROUP BY O.REFERENCE) N WHERE Y.REFERENCE = N.REFERENCE AND Y.SEQ_NO = N.MM ORDER BY Y.REFERENCE";
+//        String sql = "SELECT OBJECT_ID FROM OBJECTS WHERE OBJECT_ID = 167";
         return entityManagerService.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, new QueryDescriptor());
     }
 
     @Override
-    public void createAndEditPetAlbum(Profile profile) {
-
+    public void deleteAlbum(BigInteger albumId) {
+        entityManagerService.delete(albumId, -1);
     }
 
     @Override
-    public void addNewMedia(AbstractRecord abstractRecord, Profile profile) {
-
-    }
-
-    @Override
-    public void mediaSecurity(Profile profile) {
-
+    public Profile getUserProfileIdOfAlbum(BigInteger albumId) {
+        String query = "SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = 303" +
+                "AND OBJECT_ID = (SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = 302 AND OBJECT_ID = " + albumId + ")";
+        List<Profile> profs = entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
+        return profs.get(0);
     }
 }

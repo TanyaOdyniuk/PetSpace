@@ -21,9 +21,8 @@ public class PhotoAlbum extends BaseEntity {
     private Timestamp photoAlbumDate;
     @Reference(value = PetConstant.PET_PHOTOALBUM, isParentChild = 0)
     private Pet pet;
-//    @Reference(value = /*PhotoAlbumConstant.PA_STATE*/, isParentChild = 0)
-//    private Status photoAlbumStatus;
-
+    @Reference(value = PhotoAlbumConstant.PA_STATE, isParentChild = 0)
+    private Status photoAlbumStatus;
 
     public PhotoAlbum() {
     }
@@ -68,18 +67,18 @@ public class PhotoAlbum extends BaseEntity {
         this.pet = pet;
     }
 
-//    public Status getAlbumStatus() {
-//        return photoAlbumStatus;
-//    }
-//
-//    public void setAlbumStatus(Status albumStatus) {
-//        this.photoAlbumStatus = albumStatus;
-//    }
+    public Status getPhotoAlbumStatus() {
+        return photoAlbumStatus;
+    }
+
+    public void setPhotoAlbumStatus(Status photoAlbumStatus) {
+        this.photoAlbumStatus = photoAlbumStatus;
+    }
 
     @Override
     public String toString() {
         return "PhotoAlbum{" +
-//                "photoAlbumState='" + photoAlbumStatus + '\'' +
+                "photoAlbumState='" + photoAlbumStatus + '\'' +
                 "photoAlbumName='" + photoAlbumName + '\'' +
                 ", photoAlbumDesc='" + photoAlbumDesc + '\'' +
                 ", photoAlbumDate='" + photoAlbumDate + '\'' +

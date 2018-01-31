@@ -29,10 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GroupUI extends VerticalLayout implements UploadableComponent {
-    private HorizontalLayout headerLayout;
-    private HorizontalLayout contentLayout;
     private Window newGroupWindow;
-
     private Image avatar;
     private Boolean isFileResource;
     private String avatarPath;
@@ -46,8 +43,8 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         Group curGroup = getGroup(groupId);
 
         VerticalLayout main = new VerticalLayout();
-        headerLayout = new HorizontalLayout();
-        contentLayout = new HorizontalLayout();
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        HorizontalLayout contentLayout = new HorizontalLayout();
         //HEADER
         Panel infoGroupPanel = new Panel();
         infoGroupPanel.setWidth("730px");
@@ -67,7 +64,6 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         avatar.setHeight("215px");
         PageElements.setDefaultImageSource(avatar, curGroup.getGroupAvatar());
         headerLayout.addComponents(infoGroupPanel, avatar);
-        //-----------------HEADER
 
         //MAIN
         Panel mainLeftPanel = new Panel();
@@ -88,20 +84,6 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
 
         Panel mainRightPanel = new Panel();
         mainRightPanel.setWidth("240px");
-        //SUBSCRIBED FRIENDS
-//        List<Profile> friends = new ArrayList<>(
-//                Arrays.asList(new Profile(), new Profile(), new Profile(), new Profile(), new Profile()));
-//        for (int i = 0; i < 5; i++)
-//            friends.get(i).setProfileAvatar("https://goo.gl/h9Dg5U");
-//        Panel friendSubscribersPanel = new Panel();
-//        friendSubscribersPanel.setWidth("215px");
-//        friendSubscribersPanel.setHeight("110px");
-//        GridLayout friendsGrid = getPhotosGrid(friends);
-//        VerticalLayout friendsLayout = new VerticalLayout();
-//        friendsLayout.addComponents(new Label("Your friends already here"), friendsGrid);
-//        friendSubscribersPanel.setContent(friendsLayout);
-        //-----------------SUBSCRIBED FRIENDS
-
         //SUBSCRIBERS
         List<Profile> subscribers = getGroupSubscribers(groupId);
         Panel subscribersPanel = new Panel();
@@ -111,7 +93,6 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         VerticalLayout subscribersLayout = new VerticalLayout();
         subscribersLayout.addComponents(new Label("Subscribers"), subscribersGrid);
         subscribersPanel.setContent(subscribersLayout);
-        //-----------------SUBSCRIBERS
 
         //ADMIN
         Profile admin = getGroupAdmin(groupId);
@@ -127,7 +108,6 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         VerticalLayout adminLayout = new VerticalLayout();
         adminLayout.addComponents(new Label("Admin"), adminImage);
         adminPanel.setContent(adminLayout);
-        //-----------------ADMIN
 
         VerticalLayout mainRightLayout = new VerticalLayout();
         Button subscribeButton = new Button("Subscribe", VaadinIcons.ENTER_ARROW);
@@ -237,7 +217,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         avatarLayout.addComponent(avatar, 0, 0);
         avatarLayout.addComponent(avatarContext, 1, 0);
 
-        TextField groupName = PageElements.createTextField("Change the name:", group.getGroupName(), false);
+        TextField groupName = PageElements.createTextField("Change the name:", group.getGroupName(), true);
         groupName.setWidth("100%");
         TextField description = PageElements.createTextField("Change the group description:", group.getGroupDescription(), false);
         description.setWidth("100%");
@@ -249,7 +229,6 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
             @Override
             public void buttonClickListener() {
                 editGroupButton.setComponentError(null);
-
                 if(avatarPath == null)
                     avatarPath = group.getGroupAvatar();
                 group.setGroupAvatar(avatarPath);

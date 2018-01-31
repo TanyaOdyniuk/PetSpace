@@ -2,7 +2,6 @@ package com.netcracker.service.groups;
 
 import com.netcracker.model.group.Group;
 import com.netcracker.model.user.Profile;
-import com.netcracker.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -40,13 +39,5 @@ public interface GroupService {
 
     void deleteGroup(BigInteger groupId);
 
-//    Система должна позволять администратору наделять определенных участников группы вносить изменения в группу.
-    void empowerForGroup(Group group, BigInteger userId);
-
-    void inviteUserToGroup(Profile invited, Group linkToGroup);
-
     void removeParticipantFromGroup(Group group, BigInteger userID);
-
-//    Приглашенный пользователь должен подтвердить свое участие в группе
-    boolean confirmInvitationToGroup(Profile invited);
 }

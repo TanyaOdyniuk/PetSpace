@@ -153,28 +153,15 @@ public class GroupServiceImpl implements GroupService {
     public void editGroup(Group group) {
         entityManagerService.update(group);
     }
+
     @Override
     public void deleteGroup(BigInteger groupId) {
         entityManagerService.delete(groupId, -1);
     }
 
-    @Override
-    public void empowerForGroup(Group group, BigInteger userId) {
-
-    }
-
-    @Override
-    public void inviteUserToGroup(Profile invited, Group linkToGroup) {
-
-    }
 
     @Override
     public void removeParticipantFromGroup(Group group, BigInteger userID) {
 
-    }
-
-    @Override
-    public boolean confirmInvitationToGroup(Profile invited) {
-        return false;
     }
 }

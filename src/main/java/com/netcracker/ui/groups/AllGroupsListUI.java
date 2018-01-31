@@ -77,7 +77,7 @@ public class AllGroupsListUI extends VerticalLayout {
                 @Override
                 public void buttonClickListener() {
                     Integer page = (Integer) ((Button) pagingLayout.getComponent(0)).getData();
-                    initShowGroupsWithPaging(page/*, p, pp*/);
+                    initShowGroupsWithPaging(page);
                     pagingLayout.currentPageNumber = 1;
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
                 }
@@ -86,7 +86,7 @@ public class AllGroupsListUI extends VerticalLayout {
                 @Override
                 public void buttonClickListener() {
                     Integer page = (Integer) ((Button) pagingLayout.getComponent(6)).getData();
-                    initShowGroupsWithPaging(page/*, p, pp*/);
+                    initShowGroupsWithPaging(page);
                     pagingLayout.currentPageNumber = page;
                     ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(page));
                 }
@@ -96,7 +96,7 @@ public class AllGroupsListUI extends VerticalLayout {
                 public void buttonClickListener() {
                     if (pagingLayout.currentPageNumber > 1) {
                         --pagingLayout.currentPageNumber;
-                        initShowGroupsWithPaging(pagingLayout.currentPageNumber/*, p, pp*/);
+                        initShowGroupsWithPaging(pagingLayout.currentPageNumber);
                         ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
                     }
                 }
@@ -107,7 +107,7 @@ public class AllGroupsListUI extends VerticalLayout {
                 public void buttonClickListener() {
                     if (pagingLayout.currentPageNumber < finalPageCount) {
                         ++pagingLayout.currentPageNumber;
-                        initShowGroupsWithPaging(pagingLayout.currentPageNumber/*, p, pp*/);
+                        initShowGroupsWithPaging(pagingLayout.currentPageNumber);
                         ((TextField) pagingLayout.getComponent(3)).setValue(String.valueOf(pagingLayout.currentPageNumber));
                     }
                 }
@@ -119,7 +119,7 @@ public class AllGroupsListUI extends VerticalLayout {
                     BinderValidationStatus<VaadinValidationBinder> status = pagingLayout.pageNumberFieldBinder.validate();
                     if (!status.hasErrors()) {
                         pagingLayout.currentPageNumber = Integer.valueOf(((TextField) pagingLayout.getComponent(3)).getValue());
-                        initShowGroupsWithPaging(pagingLayout.currentPageNumber/*, p, pp*/);
+                        initShowGroupsWithPaging(pagingLayout.currentPageNumber);
                     }
                 }
             });
@@ -141,6 +141,7 @@ public class AllGroupsListUI extends VerticalLayout {
             PageElements.setDefaultImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
+            groupAvatar.setDescription("Group avatar");
             int finalI = i;
             List<Group> finalGroupsList = groupsList;
             groupAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(finalGroupsList.get(finalI).getObjectId())));
@@ -193,6 +194,7 @@ public class AllGroupsListUI extends VerticalLayout {
             PageElements.setDefaultImageSource(groupAvatar, groupsList.get(i).getGroupAvatar());
             groupAvatar.setWidth("120px");
             groupAvatar.setHeight("120px");
+            groupAvatar.setDescription("Group avatar");
             int finalI = i;
             groupAvatar.addClickListener((MouseEvents.ClickListener) clickEvent -> ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GroupUI(groupsList.get(finalI).getObjectId())));
             infoGroupLayout = new VerticalLayout();

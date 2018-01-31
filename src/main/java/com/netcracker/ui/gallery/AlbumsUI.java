@@ -9,8 +9,11 @@ import com.netcracker.ui.PageElements;
 import com.netcracker.ui.MainUI;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -20,8 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 public class AlbumsUI extends VerticalLayout{
-    private Panel panel;
-    private VerticalLayout albumLayout;
     private Window newAlbumWindow;
     private Grid<PhotoAlbum> grid;
     private List<PhotoAlbum> albums;
@@ -32,10 +33,11 @@ public class AlbumsUI extends VerticalLayout{
         this.profileId = profileId;
 
         albums = getAlbumList(profileId);
-        panel = new Panel();
-        albumLayout = new VerticalLayout();
+        Panel mainPanel = new Panel();
+        VerticalLayout albumLayout = new VerticalLayout();
 
         getNewAlbumWindow();
+
         Button addNewAlbumButton = new Button("Add album", VaadinIcons.PLUS);
         addNewAlbumButton.addClickListener(new AbstractClickListener() {
             @Override
@@ -43,7 +45,10 @@ public class AlbumsUI extends VerticalLayout{
                 UI.getCurrent().addWindow(newAlbumWindow);
             }
         });
-        albumLayout.addComponent(addNewAlbumButton);
+        BigInteger currentProfileId = getCurrentUserProfileId();
+
+        if(currentProfileId.equals(profileId))
+            albumLayout.addComponent(addNewAlbumButton);
 
         if(albums.size() != 0) {
             getGrid();
@@ -54,8 +59,8 @@ public class AlbumsUI extends VerticalLayout{
             }
             grid.setHeight(height,Unit.PIXELS);
         }
-        panel.setContent(albumLayout);
-        addComponent(panel);
+        mainPanel.setContent(albumLayout);
+        addComponent(mainPanel);
     }
 
     private void getGrid() {
@@ -125,8 +130,8 @@ public class AlbumsUI extends VerticalLayout{
 
     private List<PhotoAlbum> getAlbumList(BigInteger profileId){
         return Arrays.asList(
-                CustomRestTemplate.getInstance().customGetForObject(
-                        "/albums/" + profileId , PhotoAlbum[].class));
+                CustomRestTemplate.getInstance()
+                        .customGetForObject("/albums/" + profileId , PhotoAlbum[].class));
     }
 
     private void createAlbum(String albumName, String description, BigInteger petId) {
@@ -140,6 +145,12 @@ public class AlbumsUI extends VerticalLayout{
                     .customPostForObject("/albums/" + petId + "/add", albumEntity, PhotoAlbum.class);
             Notification.show("Album successfully added!");
             ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
+    }
+
+    private BigInteger getCurrentUserProfileId() {
+        SecurityContext o = (SecurityContext) VaadinSession.getCurrent().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        String login = o.getAuthentication().getPrincipal().toString();
+        return CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
     }
 
     private List<PhotoRecord> getLastPhotos(){
