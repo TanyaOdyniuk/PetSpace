@@ -45,18 +45,25 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         setCaption("Profile information");
         setModal(true);
         setResizable(false);
-        VerticalLayout mainLayout = new VerticalLayout();
 
+        VerticalLayout mainLayout = new VerticalLayout();
         GridLayout avatarLayout = new GridLayout(2, 1);
         VerticalLayout avatarContext = new VerticalLayout();
+
         String profileAvatarSource = currentProfile.getProfileAvatar();
         avatar = new Image();
-        avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
-        avatarField.setValue(currentProfile.getProfileAvatar());
         PageElements.setProfileImageSource(avatar, profileAvatarSource);
+        avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
+        if (profileAvatarSource != null && !profileAvatarSource.equals(UIConstants.PROFILE_NO_IMAGE_URL)) {
+            if (ProfileDataAssert.isAvatarURL(profileAvatarSource)) {
+                avatarField.setValue(currentProfile.getProfileAvatar());
+            } else {
+                isFileResource = true;
+                avatarPath = currentProfile.getProfileAvatar();
+            }
+        }
         avatar.setHeight("200px");
         avatar.setWidth("200px");
-
         avatarField.setWidth("100%");
 
         Button avatarSelect = new Button("Set URL");
@@ -141,7 +148,7 @@ public class ProfileEditUI extends Window implements UploadableComponent {
                 if (!isFileResource)
                     currentProfile.setProfileAvatar(ProfileDataAssert.assertAvatarURL(avatarField.getValue()));
                 else
-                    currentProfile.setProfileAvatar(avatarField.getValue());
+                    currentProfile.setProfileAvatar(avatarPath);
                 ProfileDataAssert.assertName(nameField.getValue());
                 currentProfile.setProfileName(nameField.getValue());
                 ProfileDataAssert.assertName(surnameField.getValue());
@@ -201,5 +208,4 @@ public class ProfileEditUI extends Window implements UploadableComponent {
         return CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + currentProfileId, Profile.class);
     }
-
 }

@@ -18,6 +18,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -84,7 +85,7 @@ public class ProfileView extends VerticalLayout {
             sendDirectMessage.addClickListener(new AbstractClickListener() {
                 @Override
                 public void buttonClickListener() {
-                    NewMessageWindowUI sub = new NewMessageWindowUI(currentProfileId/*SENDER*/, profileId/*RECEIVER*/);
+                    NewMessageWindowUI sub = new NewMessageWindowUI(currentProfileId, profileId);
                     UI.getCurrent().addWindow(sub);
                 }
             });
@@ -199,6 +200,7 @@ public class ProfileView extends VerticalLayout {
         }
         nameAndBalanceLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         nameAndManagePanel.setContent(nameAndBalanceLayout);
+        nameAndManagePanel.setHeight(45, Unit.PIXELS);
 
         Panel simpleInfoPanel = new Panel();
         VerticalLayout simpleInfoLayout = new VerticalLayout();
@@ -284,7 +286,7 @@ public class ProfileView extends VerticalLayout {
         } else
             leftPartLayout.addComponents(avatarImage, petsPanel, friendsPanel);
 
-        rightPartLayout.addComponents(nameAndManagePanel, simpleInfoPanel, wallPanel);
+        rightPartLayout.addComponents(nameAndBalanceLayout, simpleInfoPanel, wallPanel);
         leftPartPanel.setContent(leftPartLayout);
         rightPartPanel.setContent(rightPartLayout);
         mainLayout.addComponent(leftPartPanel);

@@ -18,10 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GalleryUI extends VerticalLayout{
-    private HorizontalGallery horizontalGallery;
 
     public GalleryUI(BigInteger albumId) {
-        super();
 
         Panel mainPanel = new Panel();
         mainPanel.addStyleName("v-scrollable");
@@ -35,13 +33,13 @@ public class GalleryUI extends VerticalLayout{
         for (int i = 0; i < photos.size(); i++) {
             Panel singlePhotoPanel = new Panel();
             Image singlePhotoImage = new Image();
-            PageElements.setDefaultImageSource(singlePhotoImage, photos.get(i).getPhoto());
+            PhotoRecord currentPhotoRecord = photos.get(i);
+            PageElements.setDefaultImageSource(singlePhotoImage, currentPhotoRecord.getPhoto());
             singlePhotoImage.setWidth(300, Unit.PIXELS);
             singlePhotoImage.setHeight(320, Unit.PIXELS);
             Integer clickPhotoIndex = i;
             singlePhotoImage.addClickListener((MouseEvents.ClickListener) clickEvent -> {
-                 horizontalGallery = new HorizontalGallery(photos, clickPhotoIndex);
-                UI.getCurrent().addWindow(horizontalGallery);
+                ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new HorizontalGallery(photos.get(clickPhotoIndex).getObjectId()));
             });
             singlePhotoPanel.setContent(singlePhotoImage);
             photosGrid.addComponent(singlePhotoPanel);

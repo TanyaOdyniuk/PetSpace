@@ -21,7 +21,7 @@ class TopBarUI extends HorizontalLayout {
         Button allUsersButton = getNewButton("Users", VaadinIcons.USER, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button allPetsButton = getNewButton("Pets", VaadinIcons.MEDAL, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button allBulletinsButton = getNewButton("Bulletin board", VaadinIcons.CALENDAR_USER, ValoTheme.BUTTON_FRIENDLY, clickListener);
-        Button allGroupsButton = getNewButton("All groups", VaadinIcons.HAND, ValoTheme.BUTTON_FRIENDLY, clickListener);
+        Button allGroupsButton = getNewButton("All groups", VaadinIcons.FAMILY, ValoTheme.BUTTON_FRIENDLY, clickListener);
         Button logoutButton = getNewButton("Logout", VaadinIcons.EXIT, ValoTheme.BUTTON_DANGER, clickListener);
         addComponentsAndExpand(newsButton, allUsersButton, allPetsButton, allBulletinsButton, allGroupsButton, logoutButton);
     }

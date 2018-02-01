@@ -161,12 +161,4 @@ public class MainUI extends UI implements Button.ClickListener {
         child.getComponent(0).setSizeFull();
         child.setMargin(false);
     }
-
-/*    public void changePrimaryAreaLayout(AbstractComponent panel) {
-        ObjectAssert.isNull(panel);
-        primaryAreaLayout.removeComponent(primaryAreaLayout.getComponent(1));
-        primaryAreaLayout.addComponents(panel);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(0), 2.0f);
-        primaryAreaLayout.setExpandRatio(primaryAreaLayout.getComponent(1), 9.0f);
-    }*/
 }

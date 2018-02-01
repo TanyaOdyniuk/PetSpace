@@ -13,10 +13,6 @@ public class ProfileDataAssert {
         commonStringValidation(name, RegexTemplate.NAME, ErrorMessage.PROFILE_VALIDATION_NAME);
     }
 
-    public static void assertSurname(String name) throws DataValidationException {
-        commonStringValidation(name, RegexTemplate.NAME, ErrorMessage.PROFILE_VALIDATION_SURNAME);
-    }
-
     public static String assertAvatarURL(String url) throws DataValidationException {
         if (!(url == null || "".equals(url)))
             return commonURLValidation(url, RegexTemplate.URL_IMAGE, ErrorMessage.VALIDATION_AVATAR_URL);
@@ -24,18 +20,12 @@ public class ProfileDataAssert {
             return UIConstants.PROFILE_NO_IMAGE_URL;
     }
 
+    public static Boolean isAvatarURL(String url) {
+        return isMatchingRegex(url, RegexTemplate.URL_IMAGE);
+    }
+
     public static Integer assertAge(String age) throws DataValidationException {
-        try {
-            ObjectAssert.isNullOrEmpty(age, ErrorMessage.PROFILE_VALIDATION_AGE);
-            if (ObjectAssert.isConvertibleToInteger(age)) {
-                Integer result = Integer.parseInt(age);
-                if (result > 0)
-                    return result;
-            }
-            throw new IllegalArgumentException();
-        } catch (IllegalArgumentException ex) {
-            throw new DataValidationException(ErrorMessage.PROFILE_VALIDATION_AGE);
-        }
+        return commonAgeValidation(age, ErrorMessage.PROFILE_VALIDATION_AGE);
     }
 
     private static void commonStringValidation(String toCheck, String regex, String messageToThrow) throws DataValidationException {
@@ -56,6 +46,18 @@ public class ProfileDataAssert {
         } catch (IllegalArgumentException ex) {
             throw new DataValidationException(messageToThrow);
         }
+    }
+
+    private static Integer commonAgeValidation(String toCheck, String messageToThrow) throws DataValidationException {
+        if ("".equals(toCheck))
+            return null;
+        if (ObjectAssert.isConvertibleToInteger(toCheck)) {
+            Integer number = Integer.parseInt(toCheck);
+            if (number < 0)
+                throw new DataValidationException(messageToThrow);
+            return number;
+        }
+        throw new DataValidationException(messageToThrow);
     }
 
     private static boolean isMatchingRegex(String toCheck, String regex) {

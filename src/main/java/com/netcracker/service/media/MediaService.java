@@ -13,6 +13,8 @@ public interface MediaService {
 
     List<PhotoRecord> getImagesGallery(BigInteger albumId);
 
+    List<PhotoRecord> getImagesGalleryByPhotoRecord(BigInteger recordId);
+
     List<PhotoAlbum> getMyAlbums(BigInteger profileId);
 
     PhotoAlbum createAlbum(PhotoAlbum album, BigInteger petId);
@@ -24,4 +26,6 @@ public interface MediaService {
     void deleteAlbum(BigInteger albumId);
 
     Profile getUserProfileIdOfAlbum(BigInteger albumId);
+
+    Profile getUserProfileIdOfAlbumByPhotoRecord(BigInteger recordId);
 }

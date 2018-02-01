@@ -39,6 +39,19 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
+    public List<PhotoRecord> getImagesGalleryByPhotoRecord(BigInteger recordId) {
+        String getRecordsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
+                "WHERE REFERENCE = (SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + recordId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF +  ") " +
+                "AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO +
+                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addSortingDesc(408, "DESC", true);
+        return entityManagerService.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, queryDescriptor);
+    }
+
+    @Override
     public List<PhotoAlbum> getMyAlbums(BigInteger profileId) {
         String getAlbumsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE\n" +
                 "WHERE REFERENCE IN(SELECT OBJECT_ID FROM OBJREFERENCE WHERE " +
@@ -64,7 +77,8 @@ public class MediaServiceImpl implements MediaService {
         PhotoAlbum album = entityManagerService.getById(albumId, PhotoAlbum.class);
         photoRecord.setRecordState(statusService.getActiveStatus());
         photoRecord.setPhotoAlbum(album);
-        photoRecord.setName("protoRecord");
+        photoRecord.setName("PhotoRecord");
+        photoRecord.setName("For album №" + album.getObjectId());
         return entityManagerService.create(photoRecord);
     }
 
@@ -91,6 +105,16 @@ public class MediaServiceImpl implements MediaService {
     public Profile getUserProfileIdOfAlbum(BigInteger albumId) {
         String query = "SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = 303" +
                 "AND OBJECT_ID = (SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = 302 AND OBJECT_ID = " + albumId + ")";
+        List<Profile> profs = entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
+        return profs.get(0);
+    }
+
+    @Override
+    public Profile getUserProfileIdOfAlbumByPhotoRecord(BigInteger recordId) {
+        String query = "SELECT REFERENCE FROM OBJREFERENCE WHERE ATTRTYPE_ID = " + PetConstant.PET_OWNER +
+                "AND OBJECT_ID = (SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE ATTRTYPE_ID = " + PhotoAlbumConstant.PET_PHOTOALBUM + " AND OBJECT_ID = " +
+                "(SELECT REFERENCE FROM OBJREFERENCE WHERE OBJECT_ID = " + recordId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO + "))";
         List<Profile> profs = entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
         return profs.get(0);
     }
