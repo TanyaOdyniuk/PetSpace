@@ -2,6 +2,7 @@ package com.netcracker.controller.record;
 
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.record.RecordService;
@@ -54,6 +55,11 @@ public class RecordController {
     @PostMapping("/group/update")
     public void updateGroupRecord(@RequestBody GroupRecord record){
         recordService.updateGroupRecord(record);
+    }
+
+    @PostMapping("/photo/update")
+    public void updatePhotoRecord(@RequestBody PhotoRecord record){
+        recordService.updatePhotoRecord(record);
     }
 
     @PostMapping("/delete")

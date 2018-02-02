@@ -195,8 +195,7 @@ public class ProfileView extends VerticalLayout {
         );
         if (profileID.equals(currentProfileId)) {
             nameAndBalanceLayout.addComponents(
-                    new Label("(it`s your page)"), getEditProfileButton(), getDeleteProfileButton()
-            );
+                    new Label("(it`s your page)"), getEditProfileButton());
         }
         nameAndBalanceLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         nameAndManagePanel.setContent(nameAndBalanceLayout);
@@ -213,7 +212,7 @@ public class ProfileView extends VerticalLayout {
         } else {
             for (String singleInterest : profile.getProfileHobbies()) {
                 if (singleInterest != null)
-                    interestsLayout.addComponent(new Button(singleInterest));
+                    interestsLayout.addComponent(new Label(singleInterest));
             }
         }
         HorizontalLayout favBreedsLayout = new HorizontalLayout();
@@ -225,7 +224,7 @@ public class ProfileView extends VerticalLayout {
         } else {
             for (String singleFavBreed : profile.getProfileFavouriteBreeds()) {
                 if (singleFavBreed != null)
-                    favBreedsLayout.addComponent(new Button(singleFavBreed));
+                    favBreedsLayout.addComponent(new Label(singleFavBreed));
             }
         }
         simpleInfoLayout.addComponents(

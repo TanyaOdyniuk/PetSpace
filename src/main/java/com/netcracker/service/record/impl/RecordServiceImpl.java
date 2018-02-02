@@ -6,10 +6,7 @@ import com.netcracker.model.comment.AbstractComment;
 import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
-import com.netcracker.model.record.AbstractRecord;
-import com.netcracker.model.record.GroupRecord;
-import com.netcracker.model.record.RecordConstant;
-import com.netcracker.model.record.WallRecord;
+import com.netcracker.model.record.*;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.comment.CommentService;
 import com.netcracker.service.record.RecordService;
@@ -96,11 +93,12 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public void updatePhotoRecord(PhotoRecord record) {
+        entityManagerService.update(record);
+    }
+
+    @Override
     public void deleteRecord(AbstractRecord record) {
-/*        List<AbstractComment> list = commentService.getWallRecordComments(wallRecord.getObjectId());
-        for (AbstractComment ac : list){
-            entityManagerService.delete(ac.getObjectId(), -1);
-        }*/
         entityManagerService.delete(record.getObjectId(), -1);
     }
 }

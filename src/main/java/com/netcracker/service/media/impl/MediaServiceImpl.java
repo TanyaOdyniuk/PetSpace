@@ -39,19 +39,6 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<PhotoRecord> getImagesGalleryByPhotoRecord(BigInteger recordId) {
-        String getRecordsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE " +
-                "WHERE REFERENCE = (SELECT REFERENCE FROM OBJREFERENCE " +
-                "WHERE OBJECT_ID = " + recordId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO +
-                " and " + IGNORING_DELETED_ELEMENTS_IN_REF +  ") " +
-                "AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO +
-                " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
-        QueryDescriptor queryDescriptor = new QueryDescriptor();
-        queryDescriptor.addSortingDesc(408, "DESC", true);
-        return entityManagerService.getObjectsBySQL(getRecordsQuery, PhotoRecord.class, queryDescriptor);
-    }
-
-    @Override
     public List<PhotoAlbum> getMyAlbums(BigInteger profileId) {
         String getAlbumsQuery = "SELECT OBJECT_ID FROM OBJREFERENCE\n" +
                 "WHERE REFERENCE IN(SELECT OBJECT_ID FROM OBJREFERENCE WHERE " +
@@ -117,5 +104,21 @@ public class MediaServiceImpl implements MediaService {
                 "(SELECT REFERENCE FROM OBJREFERENCE WHERE OBJECT_ID = " + recordId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO + "))";
         List<Profile> profs = entityManagerService.getObjectsBySQL(query, Profile.class, new QueryDescriptor());
         return profs.get(0);
+    }
+
+    @Override
+    public Pet getPetByAlbum(BigInteger albumId) {
+        String query = "SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + albumId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PET_PHOTOALBUM;
+        List<Pet> albums = entityManagerService.getObjectsBySQL(query, Pet.class, new QueryDescriptor());
+        return albums.get(0);
+    }
+
+    @Override
+    public PhotoAlbum getAlbumByPhotoRecord(BigInteger recordId) {
+        String query = "SELECT REFERENCE FROM OBJREFERENCE " +
+                "WHERE OBJECT_ID = " + recordId + " AND ATTRTYPE_ID = " + PhotoAlbumConstant.PA_CONTPHOTO;
+        List<PhotoAlbum> albums = entityManagerService.getObjectsBySQL(query, PhotoAlbum.class, new QueryDescriptor());
+        return albums.get(0);
     }
 }

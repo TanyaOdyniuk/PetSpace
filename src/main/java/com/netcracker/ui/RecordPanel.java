@@ -48,7 +48,6 @@ public class RecordPanel extends Panel {
     private static final Resource dislikeOff = VaadinIcons.THUMBS_DOWN_O;
     private Window updateWallRecordWindow;
     private Window confirmDeleteWindow;
-    private String stubAvatar = "https://goo.gl/6eEoWo";
     private Profile currentProfile;
     private BigInteger currentProfileId;
     private final BaseEntity reloadTo;
@@ -394,8 +393,6 @@ public class RecordPanel extends Panel {
                     deleteComment((AbstractComment) entity);
                     Notification.show("Comment deleted!");
                 }
-/*                ComponentContainer parent = (ComponentContainer) currentPanel.getParent();
-                parent.removeComponent(currentPanel);*/
                 confirmDeleteWindow.close();
                 checkAndReload();
             }

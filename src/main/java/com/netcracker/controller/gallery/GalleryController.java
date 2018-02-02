@@ -20,11 +20,6 @@ public class GalleryController {
         return mediaService.getImagesGallery(albumId);
     }
 
-    @GetMapping("/fromrecord/{id}")
-    public List<PhotoRecord> getImagesGalleryByPhotoRecord(@PathVariable("id") BigInteger recordId){
-        return mediaService.getImagesGalleryByPhotoRecord(recordId);
-    }
-
     @GetMapping("/profileId/{id}")
     public Profile getUserProfileIdOfAlbumByPhotoRecord(@PathVariable("id") BigInteger recordId){
         return mediaService.getUserProfileIdOfAlbumByPhotoRecord(recordId);

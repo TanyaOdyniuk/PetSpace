@@ -4,6 +4,7 @@ import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
+import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.record.WallRecord;
 import com.netcracker.model.user.Profile;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public interface RecordService {
 
     //Update existing group record (with already filled fields)
     void updateGroupRecord(GroupRecord record);
+
+    //Update existing photo record (with already filled fields)
+    void updatePhotoRecord(PhotoRecord record);
 
     //Delete wall record
     void deleteRecord(AbstractRecord wallRecord);

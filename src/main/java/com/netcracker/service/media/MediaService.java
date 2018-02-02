@@ -1,6 +1,7 @@
 package com.netcracker.service.media;
 
 import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,6 @@ import java.util.List;
 public interface MediaService {
 
     List<PhotoRecord> getImagesGallery(BigInteger albumId);
-
-    List<PhotoRecord> getImagesGalleryByPhotoRecord(BigInteger recordId);
 
     List<PhotoAlbum> getMyAlbums(BigInteger profileId);
 
@@ -28,4 +27,8 @@ public interface MediaService {
     Profile getUserProfileIdOfAlbum(BigInteger albumId);
 
     Profile getUserProfileIdOfAlbumByPhotoRecord(BigInteger recordId);
+
+    Pet getPetByAlbum(BigInteger albumId);
+
+    PhotoAlbum getAlbumByPhotoRecord(BigInteger recordId);
 }

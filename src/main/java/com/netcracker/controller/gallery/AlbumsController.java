@@ -1,6 +1,7 @@
 package com.netcracker.controller.gallery;
 
 import com.netcracker.model.album.PhotoAlbum;
+import com.netcracker.model.pet.Pet;
 import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.service.media.MediaService;
@@ -38,5 +39,15 @@ public class AlbumsController {
     @GetMapping("/profileId/{id}")
     public Profile getUserProfileIdOfAlbum(@PathVariable("id") BigInteger albumId){
         return mediaService.getUserProfileIdOfAlbum(albumId);
+    }
+
+    @GetMapping("/pet/{id}")
+    public Pet getPetByAlbum(@PathVariable("id") BigInteger albumId){
+        return mediaService.getPetByAlbum(albumId);
+    }
+
+    @GetMapping("/contains/{id}")
+    public PhotoAlbum getAlbumByPhotoRecord(@PathVariable("id") BigInteger recordId){
+        return mediaService.getAlbumByPhotoRecord(recordId);
     }
 }
