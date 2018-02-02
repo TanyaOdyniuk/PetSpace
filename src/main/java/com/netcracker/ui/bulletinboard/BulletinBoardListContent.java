@@ -135,7 +135,7 @@ public class BulletinBoardListContent extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 if (!topicField.isEmpty()) {
-                    topic = topicField.getValue();
+                    topic = topicField.getValue().trim().replaceAll(" +", " ");
                     if (categoryFilter.getSelectedItems().size() > 0) {
                         selectedCategories = new Category[categoryFilter.getSelectedItems().size()];
                         categoryFilter.getSelectedItems().toArray(selectedCategories);
@@ -205,12 +205,9 @@ public class BulletinBoardListContent extends VerticalLayout {
     }
 
     private void advertisementList(int pageNumber, String topic, Category[] categories) {
-        if (topic.isEmpty()) {
-            topic = "empty";
-        }
         HttpEntity<Category[]> createRequest = new HttpEntity<>(categories);
         ResponseEntity<RestResponsePage<Advertisement>> pageResponseEntity =
-                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/categorytopic/" + topic + '/' + pageNumber, HttpMethod.POST,
+                CustomRestTemplate.getInstance().customExchangeForParametrizedTypes("/bulletinboard/categorytopic/" + pageNumber+ "?topic=" + topic, HttpMethod.POST,
                         createRequest, new ParameterizedTypeReference<RestResponsePage<Advertisement>>(){});
         ads = pageResponseEntity.getBody();
         List<Advertisement> advertisements = ads.getContent();

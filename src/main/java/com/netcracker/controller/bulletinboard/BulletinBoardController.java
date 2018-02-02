@@ -33,22 +33,16 @@ public class BulletinBoardController {
         return new RestResponsePage<>(advertisements, null, count);
     }
 
-    @PostMapping("/categorytopic/{topic}/{pageNumber}")
-    public RestResponsePage<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("topic") String topic, @RequestBody Category[] categories){
-        if(topic.equals("empty")){
-            topic = "";
-        }
+    @PostMapping("/categorytopic/{pageNumber}")
+    public RestResponsePage<Advertisement> getProfileAds(@PathVariable("pageNumber") Integer pageNumber, @RequestParam("topic") String topic, @RequestBody Category[] categories){
         Integer count = bulletinBoardService.getAllAdPageCount(topic, categories);
         List<Advertisement> advertisements = bulletinBoardService.getProfileAds(pageNumber, topic, categories);
         return new RestResponsePage<>(advertisements, null, count);
     }
 
-    @PostMapping("/my/categorytopic/{profileId}/{topic}/{pageNumber}")
+    @PostMapping("/my/categorytopic/{profileId}/{pageNumber}")
     public RestResponsePage<Advertisement>getProfileAds(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("profileId") BigInteger profileId,
-                                             @PathVariable("topic") String topic, @RequestBody Category[] categories){
-        if(topic.equals("empty")){
-            topic = "";
-        }
+                                             @RequestParam("topic") String topic, @RequestBody Category[] categories){
         Integer count = bulletinBoardService.getMyProfileAdPageCount(profileId, topic, categories);
         List<Advertisement> advertisements =  bulletinBoardService.getMyProfileAds(pageNumber, profileId, topic, categories);
         return new RestResponsePage<>(advertisements, null, count);

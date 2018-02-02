@@ -31,7 +31,6 @@ public class EntityManager {
     @Autowired
     public EntityManager(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        //jdbcTemplate.setResultsMapCaseInsensitive(true);
     }
 
     public Integer getNextSeqNoObjRef(BigInteger obj_id, BigInteger ref_id, BigInteger attr_type_id) {
