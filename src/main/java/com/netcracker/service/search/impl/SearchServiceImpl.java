@@ -8,6 +8,7 @@ import com.netcracker.model.user.UsersProfileConstant;
 import com.netcracker.service.search.SearchService;
 import com.netcracker.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Service
 public class SearchServiceImpl implements SearchService {
+
+    @Value("${userlist.pageCapacity}")
+    String userListPageCapacity;
 
     @Autowired
     EntityManagerService entityManagerService;

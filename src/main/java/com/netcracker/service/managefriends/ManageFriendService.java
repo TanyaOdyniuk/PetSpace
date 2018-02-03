@@ -25,9 +25,13 @@ public interface ManageFriendService {
 
     List<Profile> getFriendList(BigInteger profileId);
 
+    List<Profile> getFriendList(BigInteger profileId, int page);
+
     List<Profile> searchForPeopleByFullName(String name, String surname);
 
     List<Profile> searchForPeopleByEmail(String email);
 
     List<Profile> searchPeopleByNameOrSurname(String name);
+
+    int getAllFriendsPageCount(BigInteger id);
 }
