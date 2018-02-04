@@ -36,7 +36,6 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         super();
         this.pet = pet;
         this.isFileResource = false;
-        setCaption("Information about pet");
         setModal(true);
         setResizable(false);
         VerticalLayout mainLayout = new VerticalLayout();
@@ -128,6 +127,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
 
         Button addPet;
         if (pet.getObjectId() == null) {
+            setCaption("Create new pet");
             addPet = new Button("Add pet");
             addPet.setWidth("100%");
             addPet.addClickListener(new AbstractClickListener() {
@@ -139,6 +139,7 @@ public class PetEditFormUI extends Window implements UploadableComponent {
                 }
             });
         } else {
+            setCaption("Information about pet");
             addPet = new Button("Update information");
             addPet.setWidth("100%");
             addPet.addClickListener(new AbstractClickListener() {
