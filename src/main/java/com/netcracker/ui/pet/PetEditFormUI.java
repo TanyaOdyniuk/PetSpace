@@ -223,7 +223,8 @@ public class PetEditFormUI extends Window implements UploadableComponent {
         Double weight = PetDataAssert.assertWeight(petWeight);
         Double height = PetDataAssert.assertHeight(petHeight);
 
-        pet.setPetAvatar(avatarPath);
+        if(pet.getPetAvatar().equals(UIConstants.PET_NO_IMAGE_URL))
+            pet.setPetAvatar(avatarPath);
         pet.setPetName(petName);
         pet.setPetAge(age);
         pet.setPetSpecies(petSpecies);

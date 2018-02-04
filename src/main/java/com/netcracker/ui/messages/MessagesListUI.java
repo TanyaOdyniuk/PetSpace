@@ -12,6 +12,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import org.springframework.core.ParameterizedTypeReference;
@@ -90,9 +91,10 @@ public class MessagesListUI extends VerticalLayout {
                 Panel messagePanel = new Panel();
                 messagePanel.setWidth("100%");
                 HorizontalLayout messageMainLayout = new HorizontalLayout();
-                messageMainLayout.setMargin(new MarginInfo(false, true, false, true));
+                messageMainLayout.setMargin(new MarginInfo(true, true, false, true));
                 Profile senderProfile = getProfile(message.getMessageSender().getObjectId());
-                Image senderAvatar = new Image("", new ExternalResource(senderProfile.getProfileAvatar() == null ? UIConstants.NO_IMAGE_URL : senderProfile.getProfileAvatar()));
+                Image senderAvatar = new Image();
+                PageElements.setProfileImageSource(senderAvatar, senderProfile.getProfileAvatar());
                 senderAvatar.setHeight("100px");
                 senderAvatar.setWidth("100px");
 
