@@ -172,7 +172,7 @@ public class HorizontalGallery extends VerticalLayout {
         leftPanel.setContent(mainLayout);
         main.addComponents(leftPanel);
         main.addComponents(rightPanel);
-        main.setExpandRatio(main.getComponent(0), 2.0f);
+        main.setExpandRatio(main.getComponent(0), 3.2f);
         main.setExpandRatio(main.getComponent(1), 3.5f);
         addComponent(main);
     }
