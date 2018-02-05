@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,6 +76,7 @@ public class FriendListUI extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 String searchRequest = searchField.getValue();
+                searchRequest = searchRequest.trim().replaceAll(" +", " ");
                 searchForFriends(searchRequest);
             }
         });
@@ -91,16 +93,24 @@ public class FriendListUI extends VerticalLayout {
         if (searchRequest.trim().length() == 0) {
             Notification.show("Please fill the search field");
         } else {
-            searchRequest = searchRequest.trim().replaceAll(" +", " ");
+
             List<Profile> foundPeople;
-            if ((searchRequest.contains("@"))) {
+            if ((searchRequest.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"))) {
+                searchRequest = searchRequest.trim().replaceAll(" +", " ");
                 foundPeople = searchForFriendsByEmail(searchRequest, profileId);
             } else if (searchRequest.contains(" ")) {
+                searchRequest = validateSearchRequest(searchRequest);
                 String[] buf = searchRequest.split(" ");
-                String name = buf[0];
-                String surname = buf[1];
-                foundPeople = searchForFriendsByFullName(name, surname, profileId);
+                if (buf.length >= 2) {
+                    String name = buf[0];
+                    String surname = buf[1];
+                    foundPeople = searchForFriendsByFullName(name, surname, profileId);
+                } else {
+                    foundPeople = new ArrayList<>();
+                }
             } else {
+                searchRequest = validateSearchRequest(searchRequest);
                 foundPeople = searchForFriendsByNameOrSurname(searchRequest, profileId);
             }
             if (foundPeople.isEmpty()) {
@@ -109,6 +119,12 @@ public class FriendListUI extends VerticalLayout {
                 mainLayout.replaceComponent(mainLayout.getComponent(2), genFriendsList(foundPeople));
             }
         }
+    }
+
+    private String validateSearchRequest(String searchRequest) {
+        searchRequest = searchRequest.replaceAll("[^a-zA-Z ]+", "");
+        searchRequest = searchRequest.trim().replaceAll(" +", " ");
+        return searchRequest;
     }
 
     private List<Profile> getProfileFriends(BigInteger profileId, int pageNumber) {

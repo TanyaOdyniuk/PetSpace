@@ -143,16 +143,24 @@ public class UsersUI extends VerticalLayout {
         if (searchRequest.trim().length() == 0) {
             Notification.show("Please fill the search field");
         } else {
-            searchRequest = searchRequest.trim().replaceAll(" +", " ");
             List<Profile> foundPeople;
-            if ((searchRequest.contains("@"))) {
+            if ((searchRequest.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"))) {
+                searchRequest = searchRequest.trim().replaceAll(" +", " ");
                 foundPeople = searchPeopleByEmail(searchRequest);
             } else if (searchRequest.contains(" ")) {
+                searchRequest = validateSearchRequest(searchRequest);
                 String[] buf = searchRequest.split(" ");
-                String name = buf[0];
-                String surname = buf[1];
-                foundPeople = searchPeopleByFullName(name, surname);
+                if (buf.length >= 2) {
+                    String name = buf[0];
+                    String surname = buf[1];
+                    foundPeople = searchPeopleByFullName(name, surname);
+                } else {
+                    foundPeople = new ArrayList<>();
+                }
+
             } else {
+                searchRequest = validateSearchRequest(searchRequest);
                 foundPeople = searchPeopleByNameOrSurname(searchRequest);
             }
             if (foundPeople.isEmpty()) {
@@ -161,6 +169,12 @@ public class UsersUI extends VerticalLayout {
                 mainLayout.replaceComponent(mainLayout.getComponent(2), genPeopleList(foundPeople));
             }
         }
+    }
+
+    private String validateSearchRequest(String searchRequest) {
+        searchRequest = searchRequest.replaceAll("[^a-zA-Z ]+", "");
+        searchRequest = searchRequest.trim().replaceAll(" +", " ");
+        return searchRequest;
     }
 
     private void setAllUsersPagingLayout() {
