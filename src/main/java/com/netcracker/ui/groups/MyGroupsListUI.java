@@ -239,17 +239,24 @@ public class MyGroupsListUI extends VerticalLayout implements UploadableComponen
             @Override
             public void buttonClickListener() {
                 List<Group> foundGroups = new ArrayList<>();
-                for (Group group : groupList)
-                    if (findGroupField.getValue().equals(group.getGroupName()))
+                for (Group group : groupList){
+                    if(group.getGroupName().toLowerCase().matches(".*" + findGroupField.getValue().toLowerCase() + ".*")){
                         foundGroups.add(group);
+                    }
+                }
+                if (findGroupField.getValue().isEmpty()) {
+                    Notification.show("You should enter group name!");
+                    foundGroups.clear();
+                }
                 if (foundGroups.size() != 0) {
                     if(pagingLayout != null)
                         mainLayout.removeComponent(pagingLayout);
                     mainLayout.removeComponent(allGroupsLayout);
                     showGroups(foundGroups);
                     amountOfMyGroups.setValue("All selected groups " + foundGroups.size());
-                } else if (findGroupField.getValue().isEmpty())
+                } else if (findGroupField.getValue().isEmpty()) {
                     Notification.show("You should enter group name!");
+                }
                 else
                     Notification.show("No groups with this name!");
             }

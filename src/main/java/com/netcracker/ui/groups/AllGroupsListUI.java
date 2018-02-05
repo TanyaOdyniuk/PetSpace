@@ -166,9 +166,15 @@ public class AllGroupsListUI extends VerticalLayout {
             @Override
             public void buttonClickListener() {
                 List<Group> foundGroups = new ArrayList<>();
-                for (Group group : groupList)
-                    if (findGroupField.getValue().equals(group.getGroupName()))
+                for (Group group : groupList){
+                    if(group.getGroupName().toLowerCase().matches(".*" + findGroupField.getValue().toLowerCase() + ".*")){
                         foundGroups.add(group);
+                    }
+                }
+                if (findGroupField.getValue().isEmpty()) {
+                    Notification.show("You should enter group name!");
+                    foundGroups.clear();
+                }
                 if (foundGroups.size() != 0) {
                     if(pagingLayout != null)
                         mainLayout.removeComponent(pagingLayout);
