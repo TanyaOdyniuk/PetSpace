@@ -20,8 +20,6 @@ public interface MediaService {
 
     PhotoRecord createPhotoRecord(PhotoRecord photoRecord, BigInteger albumId);
 
-    List<PhotoRecord> getLastPhotos(/*BigInteger profileId*/);
-
     void deleteAlbum(BigInteger albumId);
 
     Profile getUserProfileIdOfAlbum(BigInteger albumId);

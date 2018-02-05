@@ -2,13 +2,10 @@ package com.netcracker.service.record.impl;
 
 import com.netcracker.dao.manager.query.QueryDescriptor;
 import com.netcracker.dao.managerservice.EntityManagerService;
-import com.netcracker.model.comment.AbstractComment;
-import com.netcracker.model.comment.WallRecordComment;
 import com.netcracker.model.group.Group;
 import com.netcracker.model.group.GroupConstant;
 import com.netcracker.model.record.*;
 import com.netcracker.model.user.Profile;
-import com.netcracker.service.comment.CommentService;
 import com.netcracker.service.record.RecordService;
 import com.netcracker.service.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +40,9 @@ public class RecordServiceImpl implements RecordService {
                 "and OBJECT_ID in (select OBJECT_ID FROM OBJREFERENCE " +
                 "                   WHERE ATTRTYPE_ID =" + GroupConstant.GR_AUTOR +" and "  + IGNORING_DELETED_ELEMENTS_IN_REF + ")" +
                 " and " + IGNORING_DELETED_ELEMENTS_IN_REF;
-        return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecord.class, new QueryDescriptor());
+        QueryDescriptor queryDescriptor = new QueryDescriptor();
+        queryDescriptor.addSortingDesc(408, "DESC", true);
+        return entityManagerService.getObjectsBySQL(sqlQuery, GroupRecord.class, queryDescriptor);
     }
 
     @Override

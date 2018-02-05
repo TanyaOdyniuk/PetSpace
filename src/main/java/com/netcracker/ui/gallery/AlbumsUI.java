@@ -3,11 +3,10 @@ package com.netcracker.ui.gallery;
 import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.model.album.PhotoAlbum;
 import com.netcracker.model.pet.Pet;
-import com.netcracker.model.record.PhotoRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.AbstractClickListener;
-import com.netcracker.ui.PageElements;
 import com.netcracker.ui.MainUI;
+import com.netcracker.ui.PageElements;
 import com.netcracker.ui.util.CustomRestTemplate;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinSession;
@@ -75,7 +74,6 @@ public class AlbumsUI extends VerticalLayout {
     private void getGrid() {
         grid = new Grid<>();
         grid.setWidth("900px");
-//        List<PhotoRecord> lastRecords = getLastPhotos();
 
         grid.addColumn(al ->
                 getPetByAlbum(al.getObjectId()).getPetName()).setCaption("Assigned to").setWidth(200).setSortable(true);
@@ -162,7 +160,7 @@ public class AlbumsUI extends VerticalLayout {
         ((MainUI) UI.getCurrent()).changePrimaryAreaLayout(new GalleryUI(createdAlbum.getObjectId()));
     }
 
-    private Profile getProfile(BigInteger profileId){
+    private Profile getProfile(BigInteger profileId) {
         return CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + profileId, Profile.class);
     }
@@ -174,10 +172,5 @@ public class AlbumsUI extends VerticalLayout {
         currentProfile = CustomRestTemplate.getInstance().
                 customGetForObject("/profile/" + currentProfileId, Profile.class);
         this.currentProfileId = currentProfile.getObjectId();
-    }
-
-    private List<PhotoRecord> getLastPhotos() {
-        return Arrays.asList(
-                CustomRestTemplate.getInstance().customGetForObject("/albums/lastPhotos", PhotoRecord[].class));
     }
 }

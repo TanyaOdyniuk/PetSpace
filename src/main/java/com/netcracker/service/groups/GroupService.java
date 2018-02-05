@@ -38,6 +38,4 @@ public interface GroupService {
     void editGroup(Group groupForChangeOnlyAdmin);
 
     void deleteGroup(BigInteger groupId);
-
-    void removeParticipantFromGroup(Group group, BigInteger userID);
 }

@@ -173,10 +173,4 @@ public class GroupServiceImpl implements GroupService {
     public void deleteGroup(BigInteger groupId) {
         entityManagerService.delete(groupId, -1);
     }
-
-
-    @Override
-    public void removeParticipantFromGroup(Group group, BigInteger userID) {
-
-    }
 }

@@ -2,8 +2,8 @@ package com.netcracker.ui.groups;
 
 import com.netcracker.asserts.ObjectAssert;
 import com.netcracker.asserts.PetDataAssert;
+import com.netcracker.asserts.ProfileDataAssert;
 import com.netcracker.model.group.Group;
-import com.netcracker.model.record.AbstractRecord;
 import com.netcracker.model.record.GroupRecord;
 import com.netcracker.model.user.Profile;
 import com.netcracker.ui.*;
@@ -25,7 +25,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import java.io.File;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class GroupUI extends VerticalLayout implements UploadableComponent {
@@ -39,7 +38,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
     public GroupUI(BigInteger groupId) {
         addStyleName("v-scrollable");
         setHeight("100%");
-
+        this.isFileResource = false;
         Group curGroup = getGroup(groupId);
 
         VerticalLayout main = new VerticalLayout();
@@ -76,7 +75,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         wallListAddRecordayout.addComponents(new Label("Wall " + groupRecords.size() + " records"), addRecordButton);
         wallListAddRecordayout.setComponentAlignment(addRecordButton, Alignment.TOP_RIGHT);
         groupRecordsLayout.addComponents(wallListAddRecordayout);
-        for(GroupRecord currentRecord : groupRecords) {
+        for (GroupRecord currentRecord : groupRecords) {
             Panel singleRecord = new RecordPanel(currentRecord, curGroup, false, 0, false);
             groupRecordsLayout.addComponent(singleRecord);
         }
@@ -177,9 +176,9 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         addComponent(main);
     }
 
+
     private void editGroup(Group group) {
         this.group = group;
-        this.isFileResource = false;
         this.avatar = new Image();
         newGroupWindow = new Window();
         newGroupWindow.setModal(true);
@@ -194,6 +193,14 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         TextField avatarField = PageElements.createTextField("Avatar", "Avatar's URL");
         String groupAvatarSource = group.getGroupAvatar();
         PageElements.setDefaultImageSource(avatar, groupAvatarSource);
+        if (groupAvatarSource != null && !groupAvatarSource.equals(UIConstants.PROFILE_NO_IMAGE_URL)) {
+            if (ProfileDataAssert.isAvatarURL(groupAvatarSource)) {
+                avatarField.setValue(groupAvatarSource);
+            } else {
+                isFileResource = true;
+                avatarPath = groupAvatarSource;
+            }
+        }
         avatar.setHeight("200px");
         avatar.setWidth("200px");
 
@@ -229,7 +236,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
             @Override
             public void buttonClickListener() {
                 editGroupButton.setComponentError(null);
-                if(avatarPath == null)
+                if (avatarPath == null)
                     avatarPath = group.getGroupAvatar();
                 group.setGroupAvatar(avatarPath);
                 group.setGroupName(groupName.getValue());
@@ -280,16 +287,14 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
     }
 
     private List<GroupRecord> getWallRecords(BigInteger groupId) {
-        List<GroupRecord> result = Arrays.asList(CustomRestTemplate.getInstance().
+        return Arrays.asList(CustomRestTemplate.getInstance().
                 customGetForObject("/records/group/" + groupId, GroupRecord[].class));
-        result.sort(Comparator.comparing(AbstractRecord::getRecordDate));
-        return result;
     }
 
     private void updateGroup(Group group) {
         ObjectAssert.isNullOrEmpty(group.getGroupAvatar());
-        if (!isFileResource)
-            avatarPath = PetDataAssert.assertAvatarURL(avatarPath);
+        if (!this.isFileResource)
+            avatarPath = ProfileDataAssert.assertAvatarURL(avatarPath);
         ObjectAssert.isNullOrEmpty(group.getGroupName());
         HttpEntity<Group> request = new HttpEntity<>(group);
         CustomRestTemplate.getInstance().customPostForObject("/groups/update", request, Group.class);
@@ -298,8 +303,8 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
     @Override
     public void updateImage(File imageFile) {
         avatar.setSource(new FileResource(imageFile));
-        isFileResource = true;
-        avatarPath = imageFile.getPath();
+        this.isFileResource = true;
+        this.avatarPath = imageFile.getPath();
     }
 
     private void updateImage(String imageURL, Image imageToUpdate) {
@@ -316,7 +321,7 @@ public class GroupUI extends VerticalLayout implements UploadableComponent {
         return CustomRestTemplate.getInstance().customPostForObject("/user/profileId", login, BigInteger.class);
     }
 
-    private void getDeleteConfirmationWindow(BigInteger groupId, BigInteger profileId){
+    private void getDeleteConfirmationWindow(BigInteger groupId, BigInteger profileId) {
         deleteGroupWindow = new Window();
         deleteGroupWindow.setCaption("Confirm the action");
         deleteGroupWindow.setDraggable(false);
