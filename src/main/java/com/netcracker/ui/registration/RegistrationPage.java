@@ -136,7 +136,7 @@ public class RegistrationPage extends UI {
             @Override
             public void buttonClickListener() {
                 if (userBinder.validate().isOk() && profileBinder.validate().isOk()) {
-                    setErrorMessage("User with your email is already exist\n\nor incorrect email of person, who invited you");
+                    setErrorMessage("User with your email is already exist");
 
                     Profile profile = new Profile();
                     profile.setProfileName(userNameField.getValue());

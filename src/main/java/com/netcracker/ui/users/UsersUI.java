@@ -46,22 +46,23 @@ public class UsersUI extends VerticalLayout {
 
         mainPanel.setContent(mainLayout);
         addComponent(mainPanel);
-        setAllUsersPagingLayout();
+        //setAllUsersPagingLayout();
     }
 
     private void initUsersPage(int pageNumber) {
         mainLayout.removeAllComponents();
         List<Profile> userList = getAllUsers(pageNumber);
+        mainLayout.addComponents(genSearchContent(), PageElements.getSeparator());
         if (userList.isEmpty()) {
             mainLayout.addComponent(new Label("No people were found"));
         }
-        mainLayout.addComponents(genSearchContent(), PageElements.getSeparator());
-        mainLayout.addComponents(genPeopleList(getAllUsers(pageNumber)), PageElements.getSeparator());
-
         if (pagingLayout != null) {
             mainLayout.addComponent(pagingLayout);
         } else
             setAllUsersPagingLayout();
+        mainLayout.addComponents(genPeopleList(getAllUsers(pageNumber)), PageElements.getSeparator());
+
+
     }
 
     private HorizontalLayout genSearchContent() {
@@ -136,7 +137,9 @@ public class UsersUI extends VerticalLayout {
     }
 
     private void searchForPeople(String searchRequest) {
-        mainLayout.removeComponent(pagingLayout);
+        if (pagingLayout != null) {
+            mainLayout.removeComponent(pagingLayout);
+        }
         if (searchRequest.trim().length() == 0) {
             Notification.show("Please fill the search field");
         } else {

@@ -48,23 +48,22 @@ public class FriendListUI extends VerticalLayout {
 
         mainPanel.setContent(mainLayout);
         addComponent(mainPanel);
-
-        setAllUsersPagingLayout();
+        //setAllUsersPagingLayout();
     }
 
     private void initFriendsPage(int pageNumber) {
         mainLayout.removeAllComponents();
         List<Profile> userList = getProfileFriends(profileId, pageNumber);
-        if (userList.isEmpty()) {
-            mainLayout.addComponent(new Label("No friends were found"));
-        }
         mainLayout.addComponents(genSearchContent(), PageElements.getSeparator());
-        mainLayout.addComponents(genFriendsList(getProfileFriends(profileId, pageNumber)), PageElements.getSeparator());
-
         if (pagingLayout != null) {
             mainLayout.addComponent(pagingLayout);
         } else
             setAllUsersPagingLayout();
+
+        if (userList.isEmpty()) {
+            mainLayout.addComponent(new Label("No friends were found"));
+        }
+        mainLayout.addComponents(genFriendsList(getProfileFriends(profileId, pageNumber)), PageElements.getSeparator());
     }
 
     private HorizontalLayout genSearchContent() {
@@ -86,7 +85,9 @@ public class FriendListUI extends VerticalLayout {
     }
 
     private void searchForFriends(String searchRequest) {
-        mainLayout.removeComponent(pagingLayout);
+        if (pagingLayout != null) {
+            mainLayout.removeComponent(pagingLayout);
+        }
         if (searchRequest.trim().length() == 0) {
             Notification.show("Please fill the search field");
         } else {
